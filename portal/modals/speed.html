@@ -1,0 +1,168 @@
+<button class="feature-modal-close" onclick="closeFeatureModal()">✕</button>
+
+<div class="feature-header">
+    <div class="feature-header-icon">🚀</div>
+    <h2>1000배 빠른 처리 속도</h2>
+    <p>선형 확장 가능한 TPS (Transactions Per Second)</p>
+</div>
+
+<!-- 속도 비교 차트 -->
+<div class="comparison-chart">
+    <div class="comparison-item">
+        <div class="comparison-label">비트코인</div>
+        <div class="comparison-value" style="color:#ff4444;">7 TPS</div>
+        <div class="comparison-bar"><div class="comparison-bar-fill" style="width:0.01%;background:#ff4444;"></div></div>
+        <div class="comparison-note">10분 블록 생성 대기</div>
+    </div>
+    <div class="comparison-item">
+        <div class="comparison-label">이더리움</div>
+        <div class="comparison-value" style="color:#ffa500;">30 TPS</div>
+        <div class="comparison-bar"><div class="comparison-bar-fill" style="width:0.04%;background:#ffa500;"></div></div>
+        <div class="comparison-note">12초 블록 생성 대기</div>
+    </div>
+    <div class="comparison-item highlight">
+        <div class="comparison-label">오픈해시</div>
+        <div class="comparison-value">70,000+ TPS</div>
+        <div class="comparison-bar"><div class="comparison-bar-fill" style="width:100%;background:linear-gradient(90deg,#00ff88,#00d4ff);"></div></div>
+        <div class="comparison-note">실시간 처리 (4ms 응답)</div>
+    </div>
+</div>
+
+<!-- 선형 확장 공식 -->
+<div class="diagram-container">
+    <div class="diagram-title">📈 선형 확장 가능 TPS 공식</div>
+    <div style="text-align:center; padding:30px; background:rgba(0,0,0,0.3); border-radius:15px; margin:20px 0;">
+        <div style="font-size:2rem; color:#00d4ff; font-family:monospace; margin-bottom:20px;">
+            TPS<sub>total</sub> = N × TPS<sub>node</sub> × η
+        </div>
+        <div style="display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin:20px 0;">
+            <div style="text-align:center;">
+                <div style="font-size:1.2rem; color:#00ff88;">N</div>
+                <div style="color:#888; font-size:0.8rem;">노드 수</div>
+            </div>
+            <div style="text-align:center;">
+                <div style="font-size:1.2rem; color:#00ff88;">80</div>
+                <div style="color:#888; font-size:0.8rem;">노드당 TPS</div>
+            </div>
+            <div style="text-align:center;">
+                <div style="font-size:1.2rem; color:#00ff88;">0.75~0.95</div>
+                <div style="color:#888; font-size:0.8rem;">네트워크 효율 (η)</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 확장 시뮬레이션 -->
+    <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:30px;">
+        <div class="scale-card">
+            <div class="scale-nodes">11개 노드</div>
+            <div class="scale-tps">481 TPS</div>
+            <div class="scale-note">테스트베드</div>
+        </div>
+        <div class="scale-arrow">→</div>
+        <div class="scale-card">
+            <div class="scale-nodes">1,000개 노드</div>
+            <div class="scale-tps">70,000 TPS</div>
+            <div class="scale-note">소규모 배포</div>
+        </div>
+        <div class="scale-arrow">→</div>
+        <div class="scale-card">
+            <div class="scale-nodes">10,000개 노드</div>
+            <div class="scale-tps">500,000 TPS</div>
+            <div class="scale-note">대규모 배포</div>
+        </div>
+    </div>
+</div>
+
+<!-- 처리 흐름 애니메이션 -->
+<div class="diagram-container">
+    <div class="diagram-title">⚡ 실시간 처리 흐름</div>
+    <div class="flow-container">
+        <div class="flow-node">📄 문서 생성</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">🔐 SHA-256<br>재해싱</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">🎯 확률적<br>계층 선택</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">✅ 기록 완료</div>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+        <span style="font-size:2rem; color:#00ff88;">⏱️ 평균 4ms</span>
+        <span style="color:#888; margin-left:15px;">(블록체인 10분+ 대비)</span>
+    </div>
+</div>
+
+<!-- 핵심 통계 -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon">⏱️</div>
+        <div class="stat-card-value">4ms</div>
+        <div class="stat-card-label">평균 응답 시간</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon">📊</div>
+        <div class="stat-card-value">68.8x</div>
+        <div class="stat-card-label">비트코인 대비 속도</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon">🔄</div>
+        <div class="stat-card-value">실시간</div>
+        <div class="stat-card-label">검증 및 기록</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-icon">📈</div>
+        <div class="stat-card-value">선형 증가</div>
+        <div class="stat-card-label">노드 추가 시 TPS</div>
+    </div>
+</div>
+
+<!-- 상세 설명 -->
+<div class="feature-list">
+    <div class="feature-list-item">
+        <div class="feature-list-icon">🌐</div>
+        <div class="feature-list-content">
+            <h4>무제한 수평 확장성</h4>
+            <p>기존 블록체인은 노드가 추가되어도 TPS가 불변(오히려 감소)하지만, 
+            오픈해시는 <strong>노드 수에 비례하여 성능이 선형 향상</strong>됩니다. 
+            이론적 상한선은 네트워크 대역폭(10Gbps 기준 약 500,000 TPS)에 의해서만 제한됩니다.</p>
+        </div>
+    </div>
+    <div class="feature-list-item">
+        <div class="feature-list-icon">⚡</div>
+        <div class="feature-list-content">
+            <h4>블록 생성 대기 없는 실시간 처리</h4>
+            <p>비트코인 10분, 이더리움 12초의 블록 생성 대기 시간이 없습니다. 
+            트랜잭션은 즉시 검증되고 기록되어 <strong>밀리초 단위 응답</strong>을 제공합니다.</p>
+        </div>
+    </div>
+    <div class="feature-list-item">
+        <div class="feature-list-icon">🔀</div>
+        <div class="feature-list-content">
+            <h4>계층별 병렬 처리</h4>
+            <p>각 계층이 독립적으로 트랜잭션을 처리하여 병목 현상이 없습니다. 
+            Layer 1에서 70%를 즉시 처리하고, 중요 데이터만 상위 계층으로 전달됩니다.</p>
+        </div>
+    </div>
+    <div class="feature-list-item">
+        <div class="feature-list-icon">📊</div>
+        <div class="feature-list-content">
+            <h4>AWS 실증 실험 결과</h4>
+            <p>11개 노드 테스트베드에서 481.4 TPS 달성 (비트코인 7 TPS의 68.8배). 
+            Merkle Tree 동기화로 대역폭 90% 절감, 137바이트 패킷만으로 검증 완료.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.scale-card {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 12px;
+    padding: 20px 30px;
+    text-align: center;
+    min-width: 150px;
+}
+.scale-nodes { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
+.scale-tps { color: #00ff88; font-size: 1.5rem; font-weight: bold; }
+.scale-note { color: #666; font-size: 0.75rem; margin-top: 5px; }
+.scale-arrow { font-size: 2rem; color: #00d4ff; display: flex; align-items: center; }
+</style>

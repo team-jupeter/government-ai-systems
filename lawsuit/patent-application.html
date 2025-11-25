@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>특허출원서 작성 - AI 대화형 자동 생성</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        .steps-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #4caf50;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        /* AI 채팅 인터페이스 */
+        .ai-chat-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.ai {
+            background: white;
+            border-left: 4px solid #667eea;
+        }
+
+        .chat-message.user {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            margin-left: 40px;
+        }
+
+        .chat-author {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .chat-message.user .chat-author {
+            color: #2196f3;
+        }
+
+        .chat-content {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .chat-input-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .chat-send-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            background: #764ba2;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 15px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .auto-generated-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .preview-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h4 {
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            line-height: 1.6;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success-box h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .chat-message.user {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function PatentApplication() {
+            const [currentStep, setCurrentStep] = useState(1);
+            const [aiInterviewActive, setAiInterviewActive] = useState(false);
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [chatMessages, setChatMessages] = useState([]);
+            const [userInput, setUserInput] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const [interviewAnswers, setInterviewAnswers] = useState({});
+            const chatEndRef = useRef(null);
+            
+            const [formData, setFormData] = useState({
+                inventionTitleKo: '',
+                inventionTitleEn: '',
+                applicantName: '',
+                inventorName: '',
+                technicalField: '',
+                ipcClass: '',
+                backgroundArt: '',
+                priorArtProblems: '',
+                technicalProblem: '',
+                technicalSolution: '',
+                advantageousEffects: '',
+                claims: [],
+                detailedDescription: '',
+                industrialApplicability: ''
+            });
+
+            const aiQuestions = [
+                {
+                    id: 'problem',
+                    question: '안녕하세요! 특허 AI 어시스턴트입니다. 이 발명이 해결하고자 하는 주요 문제가 무엇인가요?',
+                    placeholder: '예: 기존 블록체인은 에너지 소비가 너무 높습니다'
+                },
+                {
+                    id: 'prior_art_limit',
+                    question: '기존 기술(선행기술)의 한계나 문제점은 무엇인가요?',
+                    placeholder: '예: Proof-of-Work는 막대한 전력을 소비하고 처리 속도가 느립니다'
+                },
+                {
+                    id: 'solution',
+                    question: '이 발명은 어떤 방식으로 문제를 해결하나요? 핵심 구성요소를 설명해주세요.',
+                    placeholder: '예: 오픈해시 기술을 사용하여 SHA-512 해시 체인을 구성합니다'
+                },
+                {
+                    id: 'components',
+                    question: '시스템의 주요 구성요소나 단계는 무엇인가요?',
+                    placeholder: '예: 1) Edge 계층 2) Core 계층 3) Archive 계층'
+                },
+                {
+                    id: 'effects',
+                    question: '이 발명의 주요 효과나 장점은 무엇인가요?',
+                    placeholder: '예: 블록체인 대비 98.5% 에너지 절감, 82배 빠른 처리 속도'
+                },
+                {
+                    id: 'application',
+                    question: '이 기술이 적용될 수 있는 산업 분야는 어디인가요?',
+                    placeholder: '예: 지식재산권 관리, 금융, 의료 기록 관리'
+                }
+            ];
+
+            const steps = [
+                { number: 1, label: '기본정보' },
+                { number: 2, label: 'AI 인터뷰' },
+                { number: 3, label: '자동생성' },
+                { number: 4, label: '검토수정' },
+                { number: 5, label: '완료' }
+            ];
+
+            useEffect(() => {
+                if (chatEndRef.current) {
+                    chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, [chatMessages]);
+
+            const handleInputChange = (field, value) => {
+                setFormData(prev => ({
+                    ...prev,
+                    [field]: value
+                }));
+            };
+
+            const translateToEnglish = (koreanText) => {
+                // 간단한 번역 시뮬레이션 (실제로는 번역 API 사용)
+                const translations = {
+                    '시스템': 'System',
+                    '방법': 'Method',
+                    '장치': 'Apparatus',
+                    '기반': 'Based',
+                    '자동': 'Automatic',
+                    '분산': 'Distributed',
+                    '관리': 'Management'
+                };
+                
+                let englishTitle = koreanText;
+                Object.keys(translations).forEach(key => {
+                    englishTitle = englishTitle.replace(key, translations[key]);
+                });
+                
+                return englishTitle;
+            };
+
+            const determineIPC = (technicalField) => {
+                const ipcMapping = {
+                    '블록체인': 'H04L9/32',
+                    '분산': 'H04L9/32',
+                    'AI': 'G06N3/08',
+                    '인공지능': 'G06N3/08',
+                    '데이터': 'G06F16/00',
+                    '상거래': 'G06Q20/00',
+                    '금융': 'G06Q40/00',
+                    '통신': 'H04L29/00'
+                };
+                
+                for (const [keyword, ipc] of Object.entries(ipcMapping)) {
+                    if (technicalField.includes(keyword)) {
+                        return ipc;
+                    }
+                }
+                
+                return 'G06F';
+            };
+
+            const startAIInterview = () => {
+                if (!formData.inventionTitleKo || !formData.applicantName) {
+                    alert('발명의 명칭과 출원인을 먼저 입력해주세요.');
+                    return;
+                }
+                
+                setAiInterviewActive(true);
+                setCurrentStep(2);
+                
+                // 첫 번째 질문 표시
+                setTimeout(() => {
+                    setChatMessages([{
+                        type: 'ai',
+                        content: aiQuestions[0].question
+                    }]);
+                }, 500);
+            };
+
+            const handleSendMessage = () => {
+                if (!userInput.trim()) return;
+                
+                // 사용자 메시지 추가
+                const newMessages = [...chatMessages, {
+                    type: 'user',
+                    content: userInput
+                }];
+                setChatMessages(newMessages);
+                
+                // 답변 저장
+                const currentQuestion = aiQuestions[currentQuestionIndex];
+                setInterviewAnswers(prev => ({
+                    ...prev,
+                    [currentQuestion.id]: userInput
+                }));
+                
+                setUserInput('');
+                setIsTyping(true);
+                
+                // AI 응답 시뮬레이션
+                setTimeout(() => {
+                    setIsTyping(false);
+                    
+                    if (currentQuestionIndex < aiQuestions.length - 1) {
+                        // 다음 질문
+                        const nextQuestion = aiQuestions[currentQuestionIndex + 1];
+                        setChatMessages(prev => [...prev, {
+                            type: 'ai',
+                            content: nextQuestion.question
+                        }]);
+                        setCurrentQuestionIndex(prev => prev + 1);
+                    } else {
+                        // 인터뷰 완료
+                        setChatMessages(prev => [...prev, {
+                            type: 'ai',
+                            content: '감사합니다! 모든 정보를 수집했습니다. 이제 자동으로 명세서와 청구항을 생성하겠습니다. ✨'
+                        }]);
+                        
+                        setTimeout(() => {
+                            generatePatentDocuments();
+                        }, 2000);
+                    }
+                }, 1500);
+            };
+
+            const generatePatentDocuments = () => {
+                setCurrentStep(3);
+                
+                // 영문 명칭 자동 생성
+                const autoEnglishTitle = translateToEnglish(formData.inventionTitleKo);
+                
+                // IPC 분류 자동 선택
+                const autoIPC = determineIPC(formData.inventionTitleKo);
+                
+                // 기술분야 생성
+                const technicalField = `본 발명은 ${interviewAnswers.solution}에 관한 것으로, 특히 ${interviewAnswers.problem}를 해결하기 위한 시스템 및 방법에 관한 것이다.`;
+                
+                // 배경기술 생성
+                const backgroundArt = `종래 기술에서는 ${interviewAnswers.prior_art_limit}의 문제가 있었다. ${interviewAnswers.problem}로 인해 실용화에 어려움이 있었다.`;
+                
+                // 해결하고자 하는 과제
+                const technicalProblem = interviewAnswers.problem;
+                
+                // 과제의 해결 수단
+                const technicalSolution = `${interviewAnswers.solution}. 구체적으로, ${interviewAnswers.components}.`;
+                
+                // 발명의 효과
+                const advantageousEffects = `본 발명에 따르면, ${interviewAnswers.effects}의 효과를 얻을 수 있다.`;
+                
+                // 산업상 이용가능성
+                const industrialApplicability = `본 발명은 ${interviewAnswers.application} 분야에 광범위하게 적용될 수 있으며, 높은 산업상 이용가능성을 가진다.`;
+                
+                // 상세한 설명
+                const detailedDescription = `본 발명의 일 실시예에 따르면, ${interviewAnswers.solution}.\n\n주요 구성요소는 다음과 같다:\n${interviewAnswers.components}\n\n이를 통해 ${interviewAnswers.effects}의 효과를 달성할 수 있다.`;
+                
+                // 청구항 자동 생성
+                const claim1 = `${interviewAnswers.solution}을 포함하는 것을 특징으로 하는 ${formData.inventionTitleKo}.`;
+                
+                const claim2 = `제1항에 있어서, ${interviewAnswers.components}를 더 포함하는 것을 특징으로 하는 ${formData.inventionTitleKo}.`;
+                
+                const claim3 = `제1항에 있어서, ${interviewAnswers.effects}의 효과를 제공하는 것을 특징으로 하는 ${formData.inventionTitleKo}.`;
+                
+                // 폼 데이터 업데이트
+                setFormData(prev => ({
+                    ...prev,
+                    inventionTitleEn: autoEnglishTitle,
+                    ipcClass: autoIPC,
+                    technicalField: technicalField,
+                    backgroundArt: backgroundArt,
+                    priorArtProblems: interviewAnswers.prior_art_limit,
+                    technicalProblem: technicalProblem,
+                    technicalSolution: technicalSolution,
+                    advantageousEffects: advantageousEffects,
+                    industrialApplicability: industrialApplicability,
+                    detailedDescription: detailedDescription,
+                    claims: [
+                        { number: 1, type: 'independent', content: claim1 },
+                        { number: 2, type: 'dependent', content: claim2, dependsOn: [1] },
+                        { number: 3, type: 'dependent', content: claim3, dependsOn: [1] }
+                    ]
+                }));
+                
+                setTimeout(() => {
+                    setCurrentStep(4);
+                }, 1500);
+            };
+
+            const downloadPDF = () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                let yPos = 20;
+                
+                doc.setFontSize(20);
+                doc.text('특 허 출 원 서', 105, yPos, { align: 'center' });
+                yPos += 20;
+                
+                doc.setFontSize(14);
+                doc.text('【발명의 명칭】', 20, yPos);
+                yPos += 10;
+                doc.setFontSize(12);
+                doc.text(formData.inventionTitleKo, 20, yPos);
+                yPos += 10;
+                doc.text(formData.inventionTitleEn, 20, yPos);
+                yPos += 20;
+                
+                doc.setFontSize(14);
+                doc.text('【출원인】', 20, yPos);
+                yPos += 10;
+                doc.setFontSize(12);
+                doc.text(formData.applicantName, 30, yPos);
+                yPos += 20;
+                
+                doc.setFontSize(14);
+                doc.text('【청구범위】', 20, yPos);
+                yPos += 10;
+                
+                formData.claims.forEach(claim => {
+                    doc.setFontSize(12);
+                    const claimText = `【청구항 ${claim.number}】 ${claim.content}`;
+                    const lines = doc.splitTextToSize(claimText, 170);
+                    
+                    lines.forEach(line => {
+                        if (yPos > 280) {
+                            doc.addPage();
+                            yPos = 20;
+                        }
+                        doc.text(line, 20, yPos);
+                        yPos += 7;
+                    });
+                    yPos += 5;
+                });
+                
+                doc.save('특허출원서_AI자동생성.pdf');
+            };
+
+            const renderStep1 = () => (
+                <div className="form-section">
+                    <h2>1단계: 기본 정보 입력</h2>
+                    
+                    <div className="info-box">
+                        <h4>🤖 AI 자동 생성 안내</h4>
+                        <p>
+                            기본 정보를 입력하고 "AI 상담 시작" 버튼을 누르면, AI가 질문을 하고 답변을 바탕으로 
+                            <strong> 영문 명칭, IPC 분류, 명세서, 청구항을 자동으로 작성</strong>합니다.
+                        </p>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>발명의 명칭 (국문) *</label>
+                        <input
+                            type="text"
+                            placeholder="예: 오픈해시 기반 지식재산 데이터 신뢰도 체인 시스템"
+                            value={formData.inventionTitleKo}
+                            onChange={(e) => handleInputChange('inventionTitleKo', e.target.value)}
+                            maxLength={50}
+                        />
+                        <div className="form-hint">{formData.inventionTitleKo.length}/50자</div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>출원인 명칭 *</label>
+                        <input
+                            type="text"
+                            placeholder="예: 대한민국(관리부서: 지식재산처)"
+                            value={formData.applicantName}
+                            onChange={(e) => handleInputChange('applicantName', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>발명자 성명</label>
+                        <input
+                            type="text"
+                            placeholder="예: 홍길동"
+                            value={formData.inventorName}
+                            onChange={(e) => handleInputChange('inventorName', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="button-group">
+                        <button className="btn btn-ai" onClick={startAIInterview}>
+                            🤖 AI 상담 시작
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const renderStep2 = () => (
+                <div className="form-section">
+                    <h2>2단계: AI와 대화하기</h2>
+                    
+                    <div className="info-box">
+                        <h4>💬 AI가 질문합니다</h4>
+                        <p>AI의 질문에 답변하면 자동으로 명세서와 청구항이 생성됩니다.</p>
+                    </div>
+                    
+                    <div className="ai-chat-container">
+                        {chatMessages.map((msg, index) => (
+                            <div key={index} className={`chat-message ${msg.type}`}>
+                                <div className="chat-author">
+                                    {msg.type === 'ai' ? '🤖 AI 어시스턴트' : '👤 발명자'}
+                                </div>
+                                <div className="chat-content">{msg.content}</div>
+                            </div>
+                        ))}
+                        
+                        {isTyping && (
+                            <div className="typing-indicator">
+                                <div className="typing-dot"></div>
+                                <div className="typing-dot"></div>
+                                <div className="typing-dot"></div>
+                            </div>
+                        )}
+                        
+                        <div ref={chatEndRef}></div>
+                    </div>
+                    
+                    {currentQuestionIndex < aiQuestions.length && (
+                        <div className="chat-input-container">
+                            <input
+                                type="text"
+                                className="chat-input"
+                                placeholder={aiQuestions[currentQuestionIndex].placeholder}
+                                value={userInput}
+                                onChange={(e) => setUserInput(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                            />
+                            <button className="chat-send-btn" onClick={handleSendMessage}>
+                                전송
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const renderStep3 = () => (
+                <div className="form-section">
+                    <h2>3단계: AI가 자동 생성 중...</h2>
+                    
+                    <div style={{textAlign: 'center', padding: '60px 20px'}}>
+                        <div className="typing-indicator" style={{justifyContent: 'center', marginBottom: '20px'}}>
+                            <div className="typing-dot"></div>
+                            <div className="typing-dot"></div>
+                            <div className="typing-dot"></div>
+                        </div>
+                        <h3 style={{color: '#667eea', marginBottom: '15px'}}>
+                            🤖 명세서와 청구항을 작성하고 있습니다...
+                        </h3>
+                        <p style={{color: '#666'}}>
+                            영문 명칭 번역 중<br/>
+                            IPC 분류 선택 중<br/>
+                            기술분야 작성 중<br/>
+                            배경기술 작성 중<br/>
+                            청구항 생성 중...
+                        </p>
+                    </div>
+                </div>
+            );
+
+            const renderStep4 = () => (
+                <div className="form-section">
+                    <h2>4단계: 검토 및 수정</h2>
+                    
+                    <div className="success-box" style={{marginBottom: '30px'}}>
+                        <h3>✅ AI가 자동으로 작성을 완료했습니다!</h3>
+                        <p>내용을 검토하고 필요시 수정하세요.</p>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>
+                            발명의 영문 명칭
+                            <span className="auto-generated-badge">✨ AI 자동 생성</span>
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.inventionTitleEn}
+                            onChange={(e) => handleInputChange('inventionTitleEn', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>
+                            IPC 분류
+                            <span className="auto-generated-badge">✨ AI 자동 선택</span>
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.ipcClass}
+                            onChange={(e) => handleInputChange('ipcClass', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>
+                            기술분야
+                            <span className="auto-generated-badge">✨ AI 자동 생성</span>
+                        </label>
+                        <textarea
+                            value={formData.technicalField}
+                            onChange={(e) => handleInputChange('technicalField', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>
+                            배경기술
+                            <span className="auto-generated-badge">✨ AI 자동 생성</span>
+                        </label>
+                        <textarea
+                            value={formData.backgroundArt}
+                            onChange={(e) => handleInputChange('backgroundArt', e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label>
+                            청구항 (총 {formData.claims.length}개)
+                            <span className="auto-generated-badge">✨ AI 자동 생성</span>
+                        </label>
+                        {formData.claims.map((claim, index) => (
+                            <div key={index} style={{marginBottom: '15px'}}>
+                                <strong>청구항 {claim.number} ({claim.type === 'independent' ? '독립항' : '종속항'})</strong>
+                                <textarea
+                                    style={{width: '100%', minHeight: '80px', marginTop: '8px', padding: '10px', border: '1px solid #e0e0e0', borderRadius: '5px'}}
+                                    value={claim.content}
+                                    onChange={(e) => {
+                                        const newClaims = [...formData.claims];
+                                        newClaims[index].content = e.target.value;
+                                        setFormData(prev => ({...prev, claims: newClaims}));
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="button-group">
+                        <button className="btn btn-secondary" onClick={() => setCurrentStep(2)}>
+                            ← AI 인터뷰 다시하기
+                        </button>
+                        <button className="btn btn-primary" onClick={() => setCurrentStep(5)}>
+                            최종 확인 →
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const renderStep5 = () => (
+                <div className="form-section">
+                    <h2>5단계: 최종 확인 및 다운로드</h2>
+                    
+                    <div className="success-box">
+                        <h3>🎉 특허출원서 작성 완료!</h3>
+                        <p>AI가 자동으로 작성한 특허출원서를 확인하고 PDF로 다운로드하세요.</p>
+                    </div>
+                    
+                    <div className="preview-section">
+                        <h3>특 허 출 원 서</h3>
+                        <div className="preview-content">
+                            <strong>【발명의 명칭】</strong><br/>
+                            {formData.inventionTitleKo}<br/>
+                            {formData.inventionTitleEn}<br/><br/>
+                            
+                            <strong>【출원인】</strong><br/>
+                            {formData.applicantName}<br/><br/>
+                            
+                            <strong>【발명자】</strong><br/>
+                            {formData.inventorName || '(미입력)'}<br/><br/>
+                            
+                            <strong>【기술분야】</strong><br/>
+                            {formData.technicalField}<br/><br/>
+                            
+                            <strong>【배경기술】</strong><br/>
+                            {formData.backgroundArt}<br/><br/>
+                            
+                            <strong>【발명의 효과】</strong><br/>
+                            {formData.advantageousEffects}<br/><br/>
+                            
+                            <strong>【청구범위】</strong><br/>
+                            {formData.claims.map(claim => (
+                                <div key={claim.number} style={{marginBottom: '15px'}}>
+                                    【청구항 {claim.number}】 {claim.content}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="button-group">
+                        <button className="btn btn-secondary" onClick={() => setCurrentStep(4)}>
+                            ← 수정하기
+                        </button>
+                        <button className="btn btn-success" onClick={downloadPDF}>
+                            📄 PDF 다운로드
+                        </button>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="container">
+                    <a href="patent-portal.html" className="back-button">← 포털로 돌아가기</a>
+                    
+                    <div className="header">
+                        <h1>📝 특허출원서 작성 - AI 대화형 자동 생성</h1>
+                        <p>AI와 대화하면 영문 명칭, IPC 분류, 명세서, 청구항을 자동으로 작성합니다.</p>
+                    </div>
+                    
+                    <div className="steps-container">
+                        <div className="steps">
+                            {steps.map(step => (
+                                <div 
+                                    key={step.number}
+                                    className={`step ${
+                                        step.number === currentStep ? 'active' : 
+                                        step.number < currentStep ? 'completed' : ''
+                                    }`}
+                                >
+                                    <div className="step-number">{step.number}</div>
+                                    <div className="step-label">{step.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {currentStep === 1 && renderStep1()}
+                    {currentStep === 2 && renderStep2()}
+                    {currentStep === 3 && renderStep3()}
+                    {currentStep === 4 && renderStep4()}
+                    {currentStep === 5 && renderStep5()}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<PatentApplication />, document.getElementById('root'));
+    </script>
+</body>
+</html>

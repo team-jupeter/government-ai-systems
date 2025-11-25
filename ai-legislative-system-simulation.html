@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 기반 해시체인 입법 시스템 시뮬레이션</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes flowArrow {
+            0% { opacity: 0.3; transform: translateX(-10px); }
+            50% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0.3; transform: translateX(10px); }
+        }
+        @keyframes blockChain {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-20px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .slide-in { animation: slideIn 0.5s ease-out; }
+        .flow-arrow { animation: flowArrow 2s ease-in-out infinite; }
+        .block-chain { animation: blockChain 2s linear infinite; }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        .rotate { animation: rotate 3s linear infinite; }
+        .shake { animation: shake 0.5s ease-in-out; }
+        
+        .hash-block {
+            position: relative;
+            padding: 15px;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .hash-link {
+            width: 30px;
+            height: 2px;
+            background: #3b82f6;
+        }
+        
+        .tamper-attempt {
+            animation: shake 0.5s ease-in-out;
+            border-color: #ef4444 !important;
+            background: #fee2e2 !important;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [isSimulating, setIsSimulating] = useState(false);
+            const [progress, setProgress] = useState(0);
+            const [results, setResults] = useState(null);
+            const [showModal, setShowModal] = useState(false);
+            const [showTamperAttempt, setShowTamperAttempt] = useState(false);
+            const [blockChainBlocks, setBlockChainBlocks] = useState([]);
+            const [showVerification, setShowVerification] = useState(false);
+
+            const startSimulation = async () => {
+                setIsSimulating(true);
+                setProgress(0);
+                setResults(null);
+
+                const progressInterval = setInterval(() => {
+                    setProgress(prev => {
+                        if (prev >= 95) {
+                            clearInterval(progressInterval);
+                            return 95;
+                        }
+                        return prev + 5;
+                    });
+                }, 400);
+
+                try {
+                    const response = await fetch('/api-legislative/start-legislative-simulation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+
+                    const data = await response.json();
+                    clearInterval(progressInterval);
+                    setProgress(100);
+                    setTimeout(() => {
+                        setResults(data);
+                        setIsSimulating(false);
+                    }, 500);
+                } catch (error) {
+                    console.error('Error:', error);
+                    clearInterval(progressInterval);
+                    setIsSimulating(false);
+                    alert('시뮬레이션 중 오류가 발생했습니다.');
+                }
+            };
+
+            const simulateTamperAttempt = () => {
+                setShowTamperAttempt(true);
+                setTimeout(() => {
+                    setShowTamperAttempt(false);
+                    setShowVerification(true);
+                    setTimeout(() => setShowVerification(false), 3000);
+                }, 2000);
+            };
+
+            useEffect(() => {
+                if (showModal) {
+                    // 블록체인 생성 애니메이션
+                    const blocks = [
+                        { id: 1, hash: 'a3f9c2...', data: '법안 발의', prev: '000000...' },
+                        { id: 2, hash: 'b7e1d4...', data: '위원회 심사', prev: 'a3f9c2...' },
+                        { id: 3, hash: 'c9a2f8...', data: '본회의 표결', prev: 'b7e1d4...' }
+                    ];
+                    
+                    setBlockChainBlocks([]);
+                    blocks.forEach((block, idx) => {
+                        setTimeout(() => {
+                            setBlockChainBlocks(prev => [...prev, block]);
+                        }, 500 + idx * 800);
+                    });
+                }
+            }, [showModal]);
+
+            const getProgressStage = () => {
+                if (progress < 10) return "초기화 중...";
+                if (progress < 25) return "법안 발의 처리 중...";
+                if (progress < 45) return "AI 전문성 평가 중...";
+                if (progress < 65) return "시민 참여 분석 중...";
+                if (progress < 85) return "해시체인 검증 중...";
+                return "민주적 의사결정 완료 중...";
+            };
+
+            return (
+                <div className="container mx-auto px-4 py-8">
+                    <div className="text-center mb-8 slide-in">
+                        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                            🏛️ AI 기반 해시체인 입법 시스템 시뮬레이션
+                        </h1>
+                        <p className="text-xl text-gray-600">
+                            5,200만 국민 대상 하이브리드 입법 과정 실시간 시각화
+                        </p>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                        <div className="flex gap-4 justify-center mb-4">
+                            <button
+                                onClick={startSimulation}
+                                disabled={isSimulating}
+                                className={`px-8 py-3 rounded-lg font-bold text-white transition-all ${
+                                    isSimulating 
+                                        ? 'bg-gray-400 cursor-not-allowed' 
+                                        : 'bg-blue-600 hover:bg-blue-700'
+                                }`}
+                            >
+                                {isSimulating ? '시뮬레이션 실행 중...' : '🚀 시뮬레이션 시작'}
+                            </button>
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition-all"
+                            >
+                                ℹ️ OpenHash 기술 설명
+                            </button>
+                        </div>
+
+                        {isSimulating && (
+                            <div className="mt-4">
+                                <div className="flex justify-between mb-2">
+                                    <span className="text-sm font-medium text-gray-700">{getProgressStage()}</span>
+                                    <span className="text-sm font-medium text-gray-700">{progress}%</span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-4">
+                                    <div 
+                                        className="bg-blue-600 h-4 rounded-full transition-all duration-500"
+                                        style={{ width: `${progress}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {results && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {/* 4계층 네트워크 구조 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">🏛️ 4계층 네트워크 구조</h3>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded">
+                                        <span className="font-medium">제1계층 (상임위원회)</span>
+                                        <span className="text-2xl font-bold text-blue-600">{results.network_status.layer1_committees}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-green-50 rounded">
+                                        <span className="font-medium">제2계층 (정당)</span>
+                                        <span className="text-2xl font-bold text-green-600">{results.network_status.layer2_parties}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded">
+                                        <span className="font-medium">제3계층 (본회의)</span>
+                                        <span className="text-2xl font-bold text-purple-600">{results.network_status.layer3_assembly}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-red-50 rounded">
+                                        <span className="font-medium">제4계층 (국가)</span>
+                                        <span className="text-2xl font-bold text-red-600">{results.network_status.layer4_national}</span>
+                                    </div>
+                                    <div className="mt-4 p-3 bg-gray-50 rounded">
+                                        <div className="flex justify-between">
+                                            <span className="text-sm">총 노드 수</span>
+                                            <span className="font-bold">{results.network_status.total_nodes}개</span>
+                                        </div>
+                                        <div className="flex justify-between mt-2">
+                                            <span className="text-sm">동기화율</span>
+                                            <span className="font-bold text-green-600">{results.network_status.sync_rate}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* AI 전문성 평가 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">🎓 AI 전문성 평가 5개 지표</h3>
+                                <div className="space-y-4">
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">학력 (30%)</span>
+                                            <span className="text-sm font-bold text-blue-600">{results.ai_expertise_scores.education}점</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-blue-600 h-3 rounded-full" style={{width: `${(results.ai_expertise_scores.education/40)*100}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">경력 (35%)</span>
+                                            <span className="text-sm font-bold text-green-600">{results.ai_expertise_scores.experience}점</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-green-600 h-3 rounded-full" style={{width: `${(results.ai_expertise_scores.experience/40)*100}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">자격 (20%)</span>
+                                            <span className="text-sm font-bold text-purple-600">{results.ai_expertise_scores.license}점</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-purple-600 h-3 rounded-full" style={{width: `${(results.ai_expertise_scores.license/40)*100}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">연구 (10%)</span>
+                                            <span className="text-sm font-bold text-orange-600">{results.ai_expertise_scores.research}점</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-orange-600 h-3 rounded-full" style={{width: `${(results.ai_expertise_scores.research/40)*100}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">사회기여 (5%)</span>
+                                            <span className="text-sm font-bold text-red-600">{results.ai_expertise_scores.social_contribution}점</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-red-600 h-3 rounded-full" style={{width: `${(results.ai_expertise_scores.social_contribution/40)*100}%`}}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 차등적 동의권 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">⚖️ 차등적 동의권 분포</h3>
+                                <div className="space-y-3">
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">전문가 2.0x</span>
+                                            <span className="text-sm font-bold text-red-600">{results.differential_consent.expert_2_0x}%</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-red-600 h-3 rounded-full" style={{width: `${results.differential_consent.expert_2_0x}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">전문가 1.8x</span>
+                                            <span className="text-sm font-bold text-orange-600">{results.differential_consent.expert_1_8x}%</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-orange-600 h-3 rounded-full" style={{width: `${results.differential_consent.expert_1_8x}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">전문가 1.5x</span>
+                                            <span className="text-sm font-bold text-yellow-600">{results.differential_consent.expert_1_5x}%</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-yellow-600 h-3 rounded-full" style={{width: `${results.differential_consent.expert_1_5x}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">일반 시민 1.2x</span>
+                                            <span className="text-sm font-bold text-green-600">{results.differential_consent.general_1_2x}%</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-green-600 h-3 rounded-full" style={{width: `${results.differential_consent.general_1_2x}%`}}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between mb-1">
+                                            <span className="text-sm font-medium">일반 시민 1.0x</span>
+                                            <span className="text-sm font-bold text-blue-600">{results.differential_consent.general_1_0x}%</span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                            <div className="bg-blue-600 h-3 rounded-full" style={{width: `${results.differential_consent.general_1_0x}%`}}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 시민 참여 통계 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">👥 시민 참여 실시간 통계</h3>
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-blue-50 rounded-lg">
+                                        <div className="text-sm text-gray-600">참여율</div>
+                                        <div className="text-3xl font-bold text-blue-600">{results.citizen_participation.participation_rate}%</div>
+                                        <div className="text-xs text-gray-500 mt-1">5% → 25% (5배 증가)</div>
+                                    </div>
+                                    <div className="p-4 bg-green-50 rounded-lg">
+                                        <div className="text-sm text-gray-600">의견 품질 점수</div>
+                                        <div className="text-3xl font-bold text-green-600">{results.citizen_participation.opinion_quality_score}</div>
+                                        <div className="text-xs text-gray-500 mt-1">100점 만점</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium mb-2">신뢰도 분포</div>
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm">높음</span>
+                                                <span className="font-bold text-green-600">{results.citizen_participation.trust_distribution.high}%</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm">중간</span>
+                                                <span className="font-bold text-yellow-600">{results.citizen_participation.trust_distribution.medium}%</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm">낮음</span>
+                                                <span className="font-bold text-red-600">{results.citizen_participation.trust_distribution.low}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 하이브리드 시스템 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">🔗 하이브리드 시스템 협업</h3>
+                                <div className="space-y-4">
+                                    <div className="p-3 bg-purple-50 rounded">
+                                        <div className="text-sm text-gray-600">국회체인 블록</div>
+                                        <div className="text-2xl font-bold text-purple-600">{results.hybrid_system.assembly_chain_blocks.toLocaleString()}</div>
+                                    </div>
+                                    <div className="p-3 bg-indigo-50 rounded">
+                                        <div className="text-sm text-gray-600">시민체인 블록</div>
+                                        <div className="text-2xl font-bold text-indigo-600">{results.hybrid_system.citizen_chain_blocks.toLocaleString()}</div>
+                                    </div>
+                                    <div className="p-3 bg-blue-50 rounded">
+                                        <div className="text-sm text-gray-600">브리지 트랜잭션</div>
+                                        <div className="text-2xl font-bold text-blue-600">{results.hybrid_system.bridge_transactions}</div>
+                                    </div>
+                                    <div className="p-3 bg-green-50 rounded">
+                                        <div className="text-sm text-gray-600">합의율</div>
+                                        <div className="text-2xl font-bold text-green-600">{results.hybrid_system.consensus_rate}%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 종합 성과 지표 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">📊 종합 성과 지표</h3>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-green-100 rounded">
+                                        <span className="font-medium">입법 투명성</span>
+                                        <span className="text-xl font-bold text-green-600">{results.performance_metrics.transparency}%</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded">
+                                        <span className="font-medium">참여율 증가</span>
+                                        <span className="text-xl font-bold text-blue-600">{results.performance_metrics.citizen_participation_growth}%</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50 to-purple-100 rounded">
+                                        <span className="font-medium">처리시간 단축</span>
+                                        <span className="text-xl font-bold text-purple-600">{results.performance_metrics.processing_time_reduction}%</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded">
+                                        <span className="font-medium">비용 절감</span>
+                                        <span className="text-xl font-bold text-yellow-600">{results.performance_metrics.cost_savings_billion}억원</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50 to-green-100 rounded">
+                                        <span className="font-medium">에너지 효율</span>
+                                        <span className="text-xl font-bold text-green-600">{results.performance_metrics.energy_efficiency}%</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-red-50 to-red-100 rounded">
+                                        <span className="font-medium">처리량</span>
+                                        <span className="text-xl font-bold text-red-600">{results.performance_metrics.throughput_tps}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 법안 예시 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in md:col-span-2 lg:col-span-3">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">📜 실시간 법안 처리 예시</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">법안 번호</span>
+                                            <span className="text-blue-600 font-bold">{results.bill_example.bill_number}</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">법안 제목</span>
+                                            <span className="font-bold">{results.bill_example.title}</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">발의자</span>
+                                            <span className="font-bold">{results.bill_example.proposer}</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">배정 계층</span>
+                                            <span className="font-bold">{results.bill_example.layer_assigned}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">배정 확률</span>
+                                            <span className="text-purple-600 font-bold">{results.bill_example.probability}</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">현재 단계</span>
+                                            <span className="font-bold">{results.bill_example.current_stage}</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">지지율</span>
+                                            <span className="text-green-600 font-bold">{results.bill_example.support_rate}%</span>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded">
+                                            <span className="font-medium">전문가 가중치</span>
+                                            <span className="text-orange-600 font-bold">{results.bill_example.expert_weight_applied}x</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 3단계 민주적 검증 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in md:col-span-2 lg:col-span-3">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">✅ 3단계 민주적 검증</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="p-4 border-2 border-blue-200 rounded-lg">
+                                        <div className="text-center mb-3">
+                                            <div className="text-4xl mb-2">👥</div>
+                                            <div className="font-bold text-lg">1단계: 시민배심원단</div>
+                                        </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span>총 인원</span>
+                                                <span className="font-bold">{results.three_stage_verification.citizen_jury.total}명</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>선발 방법</span>
+                                                <span className="font-bold text-xs">{results.three_stage_verification.citizen_jury.selected_method}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>승인율</span>
+                                                <span className="font-bold text-green-600">{results.three_stage_verification.citizen_jury.approval_rate}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 border-2 border-purple-200 rounded-lg">
+                                        <div className="text-center mb-3">
+                                            <div className="text-4xl mb-2">🎓</div>
+                                            <div className="font-bold text-lg">2단계: 전문가 패널</div>
+                                        </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span>총 인원</span>
+                                                <span className="font-bold">{results.three_stage_verification.expert_panel.total}명</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>균형 선발</span>
+                                                <span className="font-bold text-xs">{results.three_stage_verification.expert_panel.balanced_selection}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>승인율</span>
+                                                <span className="font-bold text-green-600">{results.three_stage_verification.expert_panel.approval_rate}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 border-2 border-green-200 rounded-lg">
+                                        <div className="text-center mb-3">
+                                            <div className="text-4xl mb-2">🗳️</div>
+                                            <div className="font-bold text-lg">3단계: 전국민 투표</div>
+                                        </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span>투표율</span>
+                                                <span className="font-bold">{results.three_stage_verification.national_vote.turnout}%</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>승인율</span>
+                                                <span className="font-bold text-green-600">{results.three_stage_verification.national_vote.approval_rate}%</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>최종 결정</span>
+                                                <span className="font-bold text-green-600">{results.three_stage_verification.national_vote.final_decision}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 해시체인 무결성 */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 slide-in md:col-span-2 lg:col-span-3">
+                                <h3 className="text-xl font-bold mb-4 text-gray-800">🔒 OpenHash 해시체인 무결성 보장</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div className="p-4 bg-green-50 rounded-lg text-center">
+                                        <div className="text-3xl mb-2">🛡️</div>
+                                        <div className="text-sm text-gray-600">문서 무결성</div>
+                                        <div className="text-2xl font-bold text-green-600">{results.hashchain_integrity.document_integrity}%</div>
+                                    </div>
+                                    <div className="p-4 bg-red-50 rounded-lg text-center">
+                                        <div className="text-3xl mb-2">🚫</div>
+                                        <div className="text-sm text-gray-600">위변조 차단</div>
+                                        <div className="text-2xl font-bold text-red-600">{results.hashchain_integrity.tamper_attempts_blocked}건</div>
+                                    </div>
+                                    <div className="p-4 bg-blue-50 rounded-lg text-center">
+                                        <div className="text-3xl mb-2">⚡</div>
+                                        <div className="text-sm text-gray-600">검증 속도</div>
+                                        <div className="text-2xl font-bold text-blue-600">{results.hashchain_integrity.verification_speed_ms}ms</div>
+                                    </div>
+                                    <div className="p-4 bg-purple-50 rounded-lg text-center">
+                                        <div className="text-3xl mb-2">🔗</div>
+                                        <div className="text-sm text-gray-600">크로스체인 동기화</div>
+                                        <div className="text-2xl font-bold text-purple-600">{results.hashchain_integrity.cross_chain_sync}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* OpenHash 상세 설명 모달 */}
+                    {showModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowModal(false)}>
+                            <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto p-8" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-3xl font-bold text-gray-800">🔒 OpenHash 기술 완전 가이드</h2>
+                                    <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700 text-3xl">×</button>
+                                </div>
+
+                                {/* 핵심 메시지 */}
+                                <div className="p-6 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 rounded-lg mb-6">
+                                    <h3 className="text-2xl font-bold text-red-700 mb-3">⚠️ 왜 OpenHash가 절대적으로 필요한가?</h3>
+                                    <div className="space-y-2 text-gray-700">
+                                        <p className="text-lg"><strong>입법 문서 위변조 = 법적 효력 상실 = 국가 통치 시스템 붕괴</strong></p>
+                                        <p>• 단 한 글자만 변경되어도 법의 의미가 완전히 달라집니다</p>
+                                        <p>• 기존 중앙화 DB는 관리자가 마음대로 수정 가능 → 신뢰성 제로</p>
+                                        <p>• 기존 블록체인은 느리고(7-15 TPS), 에너지 낭비(PoW)</p>
+                                        <p className="text-red-600 font-bold mt-3">→ OpenHash는 위변조를 원천 차단하면서도 빠르고 효율적입니다</p>
+                                    </div>
+                                </div>
+
+                                {/* 해시체인 동작 원리 시각화 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">🔗 해시체인 동작 원리</h3>
+                                    <div className="bg-blue-50 p-6 rounded-lg">
+                                        <p className="text-gray-700 mb-4">각 법안은 블록으로 저장되며, 이전 블록의 해시값을 포함합니다. 단 1바이트라도 변경되면 해시값이 완전히 달라져 즉시 감지됩니다.</p>
+                                        
+                                        {/* 블록체인 시각화 */}
+                                        <div className="flex items-center justify-center overflow-x-auto py-4">
+                                            {blockChainBlocks.map((block, idx) => (
+                                                <React.Fragment key={block.id}>
+                                                    <div className="hash-block slide-in">
+                                                        <div className="text-xs text-gray-500 mb-2">블록 #{block.id}</div>
+                                                        <div className="text-sm font-bold text-blue-600 mb-1">{block.data}</div>
+                                                        <div className="text-xs text-gray-600">
+                                                            <div>이전: {block.prev}</div>
+                                                            <div className="font-mono text-green-600">해시: {block.hash}</div>
+                                                        </div>
+                                                    </div>
+                                                    {idx < blockChainBlocks.length - 1 && (
+                                                        <div className="hash-link flow-arrow"></div>
+                                                    )}
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+
+                                        {/* 위변조 시도 시뮬레이션 */}
+                                        <div className="mt-6">
+                                            <button
+                                                onClick={simulateTamperAttempt}
+                                                disabled={showTamperAttempt}
+                                                className="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all disabled:bg-gray-400"
+                                            >
+                                                💀 위변조 시도하기 (시뮬레이션)
+                                            </button>
+                                            
+                                            {showTamperAttempt && (
+                                                <div className="mt-4 p-4 bg-red-100 border-2 border-red-500 rounded-lg shake">
+                                                    <div className="text-center">
+                                                        <div className="text-5xl mb-2">🚨</div>
+                                                        <div className="font-bold text-red-700 text-xl">위변조 감지!</div>
+                                                        <div className="text-red-600 mt-2">블록 #2의 데이터를 수정하려고 시도했습니다...</div>
+                                                        <div className="text-red-600">해시값 불일치 발견! 즉시 차단합니다!</div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            
+                                            {showVerification && (
+                                                <div className="mt-4 p-4 bg-green-100 border-2 border-green-500 rounded-lg slide-in">
+                                                    <div className="text-center">
+                                                        <div className="text-5xl mb-2">✅</div>
+                                                        <div className="font-bold text-green-700 text-xl">시스템 무결성 검증 완료</div>
+                                                        <div className="text-green-600 mt-2">모든 블록의 해시값이 정상입니다</div>
+                                                        <div className="text-green-600">12.3ms 만에 전체 체인 검증 완료</div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 블록 구조 상세 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">📦 입법 블록 상세 구조</h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                                            <h4 className="font-bold text-purple-700 mb-2">블록 헤더</h4>
+                                            <ul className="text-sm text-gray-700 space-y-1">
+                                                <li>• 이전 블록 해시값 (연결 고리)</li>
+                                                <li>• 타임스탬프 (생성 시각)</li>
+                                                <li>• 블록 높이 (순서 번호)</li>
+                                                <li>• 버전 정보</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                            <h4 className="font-bold text-blue-700 mb-2">법안 정보</h4>
+                                            <ul className="text-sm text-gray-700 space-y-1">
+                                                <li>• 법안 번호 (고유 식별자)</li>
+                                                <li>• 법안 제목 및 내용</li>
+                                                <li>• 발의자 정보</li>
+                                                <li>• 소관 위원회</li>
+                                                <li>• 법안 유형 및 긴급도</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <h4 className="font-bold text-green-700 mb-2">절차 정보</h4>
+                                            <ul className="text-sm text-gray-700 space-y-1">
+                                                <li>• 현재 처리 단계</li>
+                                                <li>• 다음 기한</li>
+                                                <li>• 필요 표결 수</li>
+                                                <li>• 표결자 명단</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                                            <h4 className="font-bold text-orange-700 mb-2">디지털 서명</h4>
+                                            <ul className="text-sm text-gray-700 space-y-1">
+                                                <li>• 발의자 서명</li>
+                                                <li>• 위원회 위원장 서명</li>
+                                                <li>• 국회의장 서명</li>
+                                                <li>• 암호학적 검증 가능</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 4계층 적응형 구조 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">🏗️ 4계층 적응형 네트워크 구조</h3>
+                                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                                        <p className="text-gray-700 mb-4">법안의 중요도와 유형에 따라 최적의 계층에서 처리됩니다.</p>
+                                        <div className="grid md:grid-cols-4 gap-4">
+                                            <div className="p-4 bg-white rounded-lg shadow">
+                                                <div className="text-3xl mb-2 text-center">🏛️</div>
+                                                <div className="font-bold text-center mb-2">제1계층</div>
+                                                <div className="text-sm text-gray-600">17개 상임위원회</div>
+                                                <div className="text-xs text-gray-500 mt-2">일반 법안 70%</div>
+                                            </div>
+                                            <div className="p-4 bg-white rounded-lg shadow">
+                                                <div className="text-3xl mb-2 text-center">🎯</div>
+                                                <div className="font-bold text-center mb-2">제2계층</div>
+                                                <div className="text-sm text-gray-600">5개 정당</div>
+                                                <div className="text-xs text-gray-500 mt-2">일반 법안 20%</div>
+                                            </div>
+                                            <div className="p-4 bg-white rounded-lg shadow">
+                                                <div className="text-3xl mb-2 text-center">⚖️</div>
+                                                <div className="font-bold text-center mb-2">제3계층</div>
+                                                <div className="text-sm text-gray-600">본회의</div>
+                                                <div className="text-xs text-gray-500 mt-2">중요 법안 50%</div>
+                                            </div>
+                                            <div className="p-4 bg-white rounded-lg shadow">
+                                                <div className="text-3xl mb-2 text-center">🇰🇷</div>
+                                                <div className="font-bold text-center mb-2">제4계층</div>
+                                                <div className="text-sm text-gray-600">국가 통합</div>
+                                                <div className="text-xs text-gray-500 mt-2">헌법 개정 50%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 물리적 분산 저장 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">💾 물리적 분산 저장</h3>
+                                    <div className="bg-green-50 p-6 rounded-lg">
+                                        <p className="text-gray-700 mb-4">데이터를 전국 17개 시도의 물리적 서버에 분산 저장하여 단일 실패점을 제거합니다.</p>
+                                        <div className="grid md:grid-cols-3 gap-4">
+                                            <div className="p-4 bg-white rounded-lg">
+                                                <div className="font-bold text-green-700 mb-2">✅ 장점 1: 고가용성</div>
+                                                <p className="text-sm text-gray-600">한 서버가 다운되어도 다른 16개 서버에서 데이터 제공</p>
+                                            </div>
+                                            <div className="p-4 bg-white rounded-lg">
+                                                <div className="font-bold text-green-700 mb-2">✅ 장점 2: 속도</div>
+                                                <p className="text-sm text-gray-600">가장 가까운 서버에서 데이터 조회 → 지연시간 최소화</p>
+                                            </div>
+                                            <div className="p-4 bg-white rounded-lg">
+                                                <div className="font-bold text-green-700 mb-2">✅ 장점 3: 보안</div>
+                                                <p className="text-sm text-gray-600">한 곳을 해킹해도 전체 시스템에 영향 없음</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 영지식증명 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">🔐 영지식증명 (Zero-Knowledge Proof)</h3>
+                                    <div className="bg-indigo-50 p-6 rounded-lg">
+                                        <p className="text-gray-700 mb-4">개인정보를 노출하지 않고도 자격을 증명할 수 있습니다.</p>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div className="p-4 bg-red-100 border-2 border-red-300 rounded-lg">
+                                                <div className="font-bold text-red-700 mb-2">❌ 기존 방식</div>
+                                                <ul className="text-sm text-gray-700 space-y-1">
+                                                    <li>• 이름: 홍길동</li>
+                                                    <li>• 학교: 서울대학교</li>
+                                                    <li>• 전공: 법학</li>
+                                                    <li>• 학위: 박사</li>
+                                                    <li className="text-red-600 mt-2">→ 개인정보 전부 노출!</li>
+                                                </ul>
+                                            </div>
+                                            <div className="p-4 bg-green-100 border-2 border-green-300 rounded-lg">
+                                                <div className="font-bold text-green-700 mb-2">✅ OpenHash 방식</div>
+                                                <ul className="text-sm text-gray-700 space-y-1">
+                                                    <li>• 법학 박사 학위 보유: ✓</li>
+                                                    <li>• 2010-2020년 졸업: ✓</li>
+                                                    <li>• 인증된 대학: ✓</li>
+                                                    <li>• 전문가 가중치: 1.8x</li>
+                                                    <li className="text-green-600 mt-2">→ 개인정보 보호 완벽!</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 실시간 검증 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">⚡ 실시간 검증 시스템</h3>
+                                    <div className="bg-yellow-50 p-6 rounded-lg">
+                                        <div className="grid md:grid-cols-3 gap-4">
+                                            <div className="text-center">
+                                                <div className="text-5xl mb-2 rotate">🔍</div>
+                                                <div className="font-bold text-yellow-700">1단계: 해시 검증</div>
+                                                <p className="text-sm text-gray-600 mt-2">모든 블록의 해시값 연쇄 검증 (12.3ms)</p>
+                                            </div>
+                                            <div className="text-center">
+                                                <div className="text-5xl mb-2 rotate">📝</div>
+                                                <div className="font-bold text-yellow-700">2단계: 서명 검증</div>
+                                                <p className="text-sm text-gray-600 mt-2">디지털 서명 유효성 확인</p>
+                                            </div>
+                                            <div className="text-center">
+                                                <div className="text-5xl mb-2 rotate">🌐</div>
+                                                <div className="font-bold text-yellow-700">3단계: 분산 합의</div>
+                                                <p className="text-sm text-gray-600 mt-2">17개 노드 간 데이터 일치 확인</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 기술 비교표 */}
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">📊 기술 비교: OpenHash vs 기존 시스템</h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse">
+                                            <thead>
+                                                <tr className="bg-gray-100">
+                                                    <th className="border p-3 text-left">비교 항목</th>
+                                                    <th className="border p-3 text-center">기존 블록체인</th>
+                                                    <th className="border p-3 text-center">중앙화 DB</th>
+                                                    <th className="border p-3 text-center bg-green-50">OpenHash</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">처리 속도</td>
+                                                    <td className="border p-3 text-center text-red-600">7-15 TPS ❌</td>
+                                                    <td className="border p-3 text-center">1000+ TPS</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">481.4 TPS ✅</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">에너지 효율</td>
+                                                    <td className="border p-3 text-center text-red-600">높은 소비 ❌</td>
+                                                    <td className="border p-3 text-center">✅ 낮음</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 98.5% 절감</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">위변조 방지</td>
+                                                    <td className="border p-3 text-center">✅ 우수</td>
+                                                    <td className="border p-3 text-center text-red-600">❌ 취약</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 100% 차단</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">법적 증거력</td>
+                                                    <td className="border p-3 text-center text-yellow-600">⚠️ 부분적</td>
+                                                    <td className="border p-3 text-center text-red-600">❌ 없음</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 절대적</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">확장성</td>
+                                                    <td className="border p-3 text-center text-yellow-600">⚠️ 제한적</td>
+                                                    <td className="border p-3 text-center">✅ 우수</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 무제한</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">프라이버시 보호</td>
+                                                    <td className="border p-3 text-center text-yellow-600">⚠️ 부분적</td>
+                                                    <td className="border p-3 text-center text-red-600">❌ 취약</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 영지식증명</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="border p-3 font-medium">단일 실패점</td>
+                                                    <td className="border p-3 text-center">✅ 없음</td>
+                                                    <td className="border p-3 text-center text-red-600">❌ 존재</td>
+                                                    <td className="border p-3 text-center bg-green-50 font-bold text-green-600">✅ 완벽 제거</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {/* 실제 효과 */}
+                                <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                                    <h3 className="text-2xl font-bold mb-4 text-indigo-800">💡 OpenHash의 실제 효과</h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <ul className="space-y-3 text-gray-700">
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>투명성:</strong> 60% → 95% (35%p 향상)</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>시민 참여:</strong> 5% → 25% (5배 증가)</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>처리 시간:</strong> 30% 단축</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>비용 절감:</strong> 연간 50억원</span>
+                                            </li>
+                                        </ul>
+                                        <ul className="space-y-3 text-gray-700">
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>에너지 효율:</strong> 98.5% 개선</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>문서 무결성:</strong> 100% 보장</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>위변조 차단:</strong> 0건 (완벽 방어)</span>
+                                            </li>
+                                            <li className="flex items-start">
+                                                <span className="text-green-600 mr-2 text-xl">✅</span>
+                                                <span><strong>검증 속도:</strong> 12.3ms (초고속)</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

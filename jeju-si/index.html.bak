@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주시 행정 시스템 - OpenHash Platform</title>
+    <link rel="stylesheet" href="/shared/common.css">
+<link rel="stylesheet" href="/shared/inject.css">
+</head>
+<body>
+<a href="/" class="openhash-portal-btn">🏠 포털</a>
+<div class="openhash-badge">⛓️ OpenHash Powered</div>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🏝️</div>
+            <div class="logo-text"><h1>제주시 행정 시스템</h1><p>OpenHash Government AI</p></div>
+        </div>
+        <div class="header-actions">
+            <a href="/" class="btn btn-outline">🏠 포털</a>
+            <button class="btn btn-primary" onclick="document.querySelector('.chat-section').scrollIntoView({behavior:'smooth'})">💬 AI 상담</button>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-badge">⛓️ Powered by OpenHash Technology</div>
+        <h2>제주시 행정 시스템</h2>
+        <p class="hero-subtitle">제주시 특화 행정 서비스</p>
+        <div class="stats-banner">
+            <div class="stat-box"><div class="stat-icon">🤖</div><div class="stat-value">5+</div><div class="stat-label">AI 에이전트</div></div>
+            <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-value">4ms</div><div class="stat-label">응답 시간</div></div>
+            <div class="stat-box"><div class="stat-icon">🔒</div><div class="stat-value">100%</div><div class="stat-label">무결성</div></div>
+            <div class="stat-box"><div class="stat-icon">🌐</div><div class="stat-value">24/7</div><div class="stat-label">서비스</div></div>
+        </div>
+    </section>
+    <main class="main-container">
+        <div class="section-title"><h3>🤖 AI 에이전트</h3><p>전문 AI가 업무를 지원합니다</p></div>
+        <div class="agent-list"><span class="agent-tag">🤖 관광 안내</span><span class="agent-tag">🤖 환경 관리</span><span class="agent-tag">🤖 문화 행사</span><span class="agent-tag">🤖 교통 정보</span><span class="agent-tag">🤖 민원 서비스</span></div>
+        <section class="chat-section">
+            <div class="chat-header"><span style="font-size:2rem">💬</span><h3>AI 상담</h3></div>
+            <div class="chat-messages" id="chatMessages"><div class="chat-message assistant">안녕하세요! <strong>제주시 행정 시스템</strong> AI입니다. 무엇을 도와드릴까요?</div></div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button class="btn btn-primary" onclick="sendMessage()">전송</button>
+            </div>
+        </section>
+        <section style="margin-top:50px">
+            <div class="section-title"><h3>✨ 주요 기능</h3></div>
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">⚡</div><h4>실시간 처리</h4><p>4ms 이내 즉각 응답</p></div>
+                <div class="feature-card"><div class="feature-icon">🔒</div><h4>데이터 보안</h4><p>OpenHash 무결성 보장</p></div>
+                <div class="feature-card"><div class="feature-icon">🤖</div><h4>AI 자동화</h4><p>24시간 업무 지원</p></div>
+                <div class="feature-card"><div class="feature-icon">📊</div><h4>투명 기록</h4><p>불변 기록 및 추적</p></div>
+            </div>
+        </section>
+        <div class="info-box"><h4>ℹ️ OpenHash 기술</h4><p>블록체인 대비 98.5% 에너지 절감, 1000배 빠른 처리 속도, 확률적 계층 선택으로 데이터 무결성 보장</p></div>
+    </main>
+    <footer class="footer">
+        <div class="footer-logo">⛓️</div>
+        <p><strong>제주시 행정 시스템</strong></p>
+        <p>OpenHash Government AI Platform</p>
+        <div class="footer-links"><a href="/">🏠 포털</a><a href="/api/jeju-si/info">📡 API</a></div>
+        <p style="margin-top:20px;font-size:0.85rem">© 2025 OpenHash Foundation</p>
+    </footer>
+    <script>
+        async function sendMessage(){
+            const input=document.getElementById('chatInput'),messages=document.getElementById('chatMessages'),text=input.value.trim();
+            if(!text)return;
+            messages.innerHTML+='<div class="chat-message user">'+text+'</div>';
+            input.value='';messages.scrollTop=messages.scrollHeight;
+            const lid='l'+Date.now();
+            messages.innerHTML+='<div class="chat-message assistant" id="'+lid+'">⏳ 응답 중...</div>';
+            messages.scrollTop=messages.scrollHeight;
+            try{
+                const r=await fetch('/api/jeju-si/consultation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,agent_type:'default'})});
+                const d=await r.json();
+                document.getElementById(lid).innerHTML=d.response||'죄송합니다. 응답 오류입니다.';
+            }catch(e){document.getElementById(lid).innerHTML='⚠️ 연결 오류';}
+            messages.scrollTop=messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7단계 개인-사회 통합 최적화 AI 교육 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); }
+        .card-hover { transition: all 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes progress { from { width: 0; } }
+        .progress-animate { animation: progress 1s ease-out; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="text-6xl mb-4 float">🎓</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">7단계 AI 교육 최적화 시스템</h1>
+            <p class="text-xl opacity-90 mb-6">개인 맞춤 + 사회 수요 통합 | OpenHash 학습 이력 관리</p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🧠 6개 AI 에이전트</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">📊 실시간 최적화</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🔗 위변조 불가 이력</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="bg-gray-800 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-purple-400 hover:text-purple-300">← 포털로 돌아가기</a>
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('stages').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-purple-400">7단계</button>
+                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-purple-400">시뮬레이터</button>
+                <button onclick="document.getElementById('agents').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-purple-400">AI 에이전트</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem Statement -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">현행 교육 시스템의 한계</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6">
+                <div class="text-3xl mb-3">📚</div>
+                <h3 class="font-bold text-red-400 mb-2">획일화된 커리큘럼</h3>
+                <p class="text-sm text-gray-400">개인의 학습 속도, 관심사, 적성을 무시한 일률적 교육</p>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6">
+                <div class="text-3xl mb-3">🎯</div>
+                <h3 class="font-bold text-red-400 mb-2">수요-공급 불일치</h3>
+                <p class="text-sm text-gray-400">사회가 필요로 하는 인재와 교육 산출물 간 괴리</p>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6">
+                <div class="text-3xl mb-3">📝</div>
+                <h3 class="font-bold text-red-400 mb-2">이력 위변조</h3>
+                <p class="text-sm text-gray-400">학력, 자격증, 성적 등 교육 이력의 위조 가능성</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7 Stages -->
+    <div id="stages" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📈 7단계 교육 최적화 프로세스</h2>
+            <div class="space-y-4">
+                <!-- Stage 1 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">개인 특성 분석</h3>
+                            <p class="text-sm text-gray-400">학습 스타일, 인지 능력, 관심사, 적성 등 다차원 프로파일링</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.015ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 2 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">사회 수요 예측</h3>
+                            <p class="text-sm text-gray-400">산업 동향, 직업 전망, 기술 변화 분석 및 인력 수요 예측</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.023ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 3 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">3</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">맞춤형 경로 설계</h3>
+                            <p class="text-sm text-gray-400">개인 특성과 사회 수요를 매칭한 최적 학습 경로 생성</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.031ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 4 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">4</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">적응형 콘텐츠 제공</h3>
+                            <p class="text-sm text-gray-400">학습 진도와 이해도에 따른 실시간 콘텐츠 난이도 조절</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.012ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 5 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">5</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">실시간 평가 및 피드백</h3>
+                            <p class="text-sm text-gray-400">학습 성과 분석 및 즉각적인 개선 방향 제시</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.008ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 6 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">6</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">이력 블록체인 기록</h3>
+                            <p class="text-sm text-gray-400">OpenHash 분산원장에 학습 이력, 자격, 성취 위변조 불가 기록</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.005ms</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stage 7 -->
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">7</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-purple-400">취업 및 진로 연계</h3>
+                            <p class="text-sm text-gray-400">학습 완료 후 최적의 직업/진학 기회 자동 매칭</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500">AI 처리시간</div>
+                            <div class="text-blue-400 font-bold">0.018ms</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulator -->
+    <div id="simulator" class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🎮 학습 경로 시뮬레이터</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-6 text-purple-400">학습자 정보 입력</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">이름</label>
+                        <input type="text" id="studentName" placeholder="홍길동"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 focus:border-purple-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">현재 학년</label>
+                        <select id="grade" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="elementary">초등학교</option>
+                            <option value="middle">중학교</option>
+                            <option value="high" selected>고등학교</option>
+                            <option value="university">대학교</option>
+                            <option value="adult">성인 학습자</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">관심 분야</label>
+                        <select id="interest" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="science">과학/공학</option>
+                            <option value="humanities">인문/사회</option>
+                            <option value="arts">예술/디자인</option>
+                            <option value="business">경영/경제</option>
+                            <option value="medical">의료/보건</option>
+                            <option value="it">IT/컴퓨터</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">학습 스타일</label>
+                        <select id="style" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="visual">시각적 학습</option>
+                            <option value="auditory">청각적 학습</option>
+                            <option value="kinesthetic">체험적 학습</option>
+                            <option value="reading">읽기/쓰기 학습</option>
+                        </select>
+                    </div>
+                    <button onclick="simulateLearning()"
+                        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 font-bold py-4 rounded-lg hover:from-purple-500 hover:to-pink-500 transition">
+                        🚀 최적 학습 경로 생성
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-6 text-green-400">AI 추천 학습 경로</h3>
+                <div id="learningResult">
+                    <div class="text-center text-gray-500 py-12">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <p>학습자 정보를 입력하고<br/>최적 경로를 생성하세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Agents -->
+    <div id="agents" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🤖 6개 AI 에이전트 협업 시스템</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">🔍</div>
+                    <h3 class="font-bold text-blue-400 mb-2">분석 에이전트</h3>
+                    <p class="text-sm text-gray-400">학습자 특성, 행동 패턴, 성과 데이터 분석</p>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">📊</div>
+                    <h3 class="font-bold text-green-400 mb-2">예측 에이전트</h3>
+                    <p class="text-sm text-gray-400">산업 동향, 직업 전망, 기술 변화 예측</p>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">🗺️</div>
+                    <h3 class="font-bold text-yellow-400 mb-2">경로 설계 에이전트</h3>
+                    <p class="text-sm text-gray-400">최적의 학습 커리큘럼 및 진로 경로 설계</p>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">📚</div>
+                    <h3 class="font-bold text-purple-400 mb-2">콘텐츠 에이전트</h3>
+                    <p class="text-sm text-gray-400">맞춤형 학습 콘텐츠 생성 및 큐레이션</p>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">✅</div>
+                    <h3 class="font-bold text-red-400 mb-2">평가 에이전트</h3>
+                    <p class="text-sm text-gray-400">학습 성과 평가 및 피드백 제공</p>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-3xl mb-3">🔗</div>
+                    <h3 class="font-bold text-cyan-400 mb-2">연계 에이전트</h3>
+                    <p class="text-sm text-gray-400">취업/진학 기회 매칭 및 추천</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold mb-2">340%</div>
+                <div class="text-sm text-gray-300">학습 효율성 향상</div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold mb-2">89%</div>
+                <div class="text-sm text-gray-300">취업 매칭 성공률</div>
+            </div>
+            <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold mb-2">100%</div>
+                <div class="text-sm text-gray-300">이력 위변조 방지</div>
+            </div>
+            <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold mb-2">67%</div>
+                <div class="text-sm text-gray-300">교육비 절감</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>7단계 AI 교육 최적화 시스템 © 2025 | OpenHash 학습 이력 관리</p>
+            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
+        </div>
+    </div>
+
+    <script>
+        function simulateLearning() {
+            const name = document.getElementById('studentName').value || '학습자';
+            const grade = document.getElementById('grade').value;
+            const interest = document.getElementById('interest').value;
+            const style = document.getElementById('style').value;
+
+            const resultDiv = document.getElementById('learningResult');
+            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 분석 중...</p></div>';
+
+            setTimeout(() => {
+                const careers = {
+                    'science': ['연구원', '엔지니어', '데이터 과학자'],
+                    'humanities': ['기자', '외교관', '교수'],
+                    'arts': ['디자이너', '감독', '아트 디렉터'],
+                    'business': ['컨설턴트', '마케터', 'CEO'],
+                    'medical': ['의사', '약사', '연구원'],
+                    'it': ['개발자', 'AI 엔지니어', '보안 전문가']
+                };
+                const courses = {
+                    'science': ['물리학 심화', '데이터 분석', '연구 방법론'],
+                    'humanities': ['비판적 사고', '글로벌 이슈', '커뮤니케이션'],
+                    'arts': ['창의적 표현', '디지털 미디어', '프로젝트 관리'],
+                    'business': ['재무 분석', '전략 경영', '리더십'],
+                    'medical': ['생명과학', '임상 실습', '의료 윤리'],
+                    'it': ['알고리즘', '시스템 설계', 'AI/ML 기초']
+                };
+
+                resultDiv.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+                            <div class="text-sm text-gray-400">학습자</div>
+                            <div class="font-bold text-lg">${name}</div>
+                        </div>
+                        <div class="p-4 bg-gray-900 rounded-lg">
+                            <div class="text-sm text-gray-400 mb-2">추천 학습 과정</div>
+                            <ul class="space-y-2">
+                                ${courses[interest].map((c, i) => `
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-xs">${i+1}</span>
+                                        <span>${c}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-900 rounded-lg">
+                            <div class="text-sm text-gray-400 mb-2">예상 진로</div>
+                            <div class="flex flex-wrap gap-2">
+                                ${careers[interest].map(c => `<span class="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-sm">${c}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">예상 취업 매칭률</span>
+                                <span class="text-blue-400 font-bold">89%</span>
+                            </div>
+                            <div class="flex justify-between text-sm mt-2">
+                                <span class="text-gray-400">AI 분석 시간</span>
+                                <span class="text-green-400 font-bold">0.112ms</span>
+                            </div>
+                        </div>
+                        <div class="text-center text-green-400 text-sm pt-2">
+                            ✅ OpenHash 학습 이력 기록 완료
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 다중 에이전트 자율주행 교통 관제 시스템 - 실시간 시뮬레이션</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .metric-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            margin: 10px;
+        }
+        .metric-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        .loading-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+        .spinner {
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 100%;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            overflow: hidden;
+            margin: 30px 0;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .stage-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        .stage {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            margin: 0 5px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .stage.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+        }
+        .stage.completed {
+            background: rgba(255,255,255,0.3);
+            opacity: 0.7;
+        }
+        .ai-agent-visual {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        .iteration-step {
+            padding: 15px;
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+            border-radius: 4px;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .time-estimate {
+            font-size: 1.1em;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        
+        /* 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f7fafc;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-close:hover {
+            background: #e2e8f0;
+            transform: rotate(90deg);
+        }
+        
+        /* Nash Equilibrium 애니메이션 */
+        .nash-canvas {
+            width: 100%;
+            height: 400px;
+            background: #f7fafc;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-ball {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: converge 3s ease-in-out infinite;
+        }
+        .agent-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation-delay: 0s;
+        }
+        .agent-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation-delay: 0.5s;
+        }
+        .agent-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            animation-delay: 1s;
+        }
+        @keyframes converge {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(var(--target-x), var(--target-y));
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+        .equilibrium-point {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 4px dashed #667eea;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            animation: pulseEquilibrium 2s infinite;
+        }
+        @keyframes pulseEquilibrium {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+        
+        /* 차량 감축 애니메이션 */
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        .vehicle-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: all 0.5s;
+        }
+        .vehicle-icon.removed {
+            opacity: 0;
+            transform: scale(0);
+        }
+        
+        /* 3계층 다이어그램 */
+        .layer-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .layer-box {
+            padding: 30px;
+            border-radius: 12px;
+            color: white;
+            position: relative;
+        }
+        .layer-box::after {
+            content: '↓';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            color: #667eea;
+        }
+        .layer-box:last-child::after {
+            display: none;
+        }
+        
+        /* 비교 테이블 */
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .comparison-card {
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .before-card {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        .after-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function ExplainerModal({ isOpen, onClose }) {
+            const [animationStep, setAnimationStep] = useState(0);
+            const [removedVehicles, setRemovedVehicles] = useState([]);
+
+            useEffect(() => {
+                if (isOpen) {
+                    setAnimationStep(0);
+                    setRemovedVehicles([]);
+                    
+                    // 차량 감축 애니메이션
+                    const timer = setTimeout(() => {
+                        const toRemove = [];
+                        for (let i = 0; i < 92; i++) {
+                            setTimeout(() => {
+                                setRemovedVehicles(prev => [...prev, i]);
+                            }, i * 50);
+                        }
+                    }, 2000);
+                    
+                    return () => clearTimeout(timer);
+                }
+            }, [isOpen]);
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={onClose}>×</button>
+                        
+                        <h1 style={{fontSize: '2.5em', fontWeight: 'bold', marginBottom: '10px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+                            🎬 작동 원리 쉽게 이해하기
+                        </h1>
+                        <p style={{fontSize: '1.2em', color: '#666', marginBottom: '40px'}}>
+                            복잡한 AI 시스템을 쉬운 비유로 설명합니다
+                        </p>
+
+                        {/* 1. 교차로 비유 */}
+                        <div className="card" style={{background: '#f0f9ff', marginBottom: '30px'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>💡 교차로 비유로 이해하기</h2>
+                            <p style={{fontSize: '1.2em', lineHeight: '1.8', color: '#333'}}>
+                                3방향에서 차가 동시에 교차로에 도착했다고 상상해보세요.<br/>
+                                각 차는 먼저 가고 싶지만, 모두가 동시에 가면 사고가 납니다.<br/>
+                                <strong style={{color: '#667eea'}}>서로 양보하며 최적의 순서를 찾는 과정이 바로 Nash Equilibrium입니다!</strong>
+                            </p>
+                            <div style={{fontSize: '3em', textAlign: 'center', margin: '30px 0'}}>
+                                🚗 → ← 🚙<br/>
+                                　　↑<br/>
+                                　　🚕
+                            </div>
+                        </div>
+
+                        {/* 2. Nash Equilibrium 애니메이션 */}
+                        <div className="card" style={{marginBottom: '30px'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>⚖️ Nash Equilibrium 수렴 과정</h2>
+                            <p style={{fontSize: '1.1em', marginBottom: '20px', color: '#666'}}>
+                                3개의 공(AI 에이전트)이 서로 다른 목표를 가지고 있지만,<br/>
+                                점차 중앙의 균형점으로 수렴하는 모습을 보세요!
+                            </p>
+                            <div className="nash-canvas">
+                                <div className="agent-ball agent-1" style={{top: '20px', left: '20px', '--target-x': '250px', '--target-y': '150px'}}>
+                                    1️⃣
+                                </div>
+                                <div className="agent-ball agent-2" style={{top: '20px', right: '20px', '--target-x': '-250px', '--target-y': '150px'}}>
+                                    2️⃣
+                                </div>
+                                <div className="agent-ball agent-3" style={{bottom: '20px', left: '50%', marginLeft: '-30px', '--target-x': '0', '--target-y': '-150px'}}>
+                                    3️⃣
+                                </div>
+                                <div className="equilibrium-point">⚖️</div>
+                            </div>
+                            <div style={{marginTop: '20px', padding: '15px', background: '#f7fafc', borderRadius: '8px'}}>
+                                <strong>1️⃣ 제1 AI:</strong> "전체 비용을 줄이자!" (사회적 최적화)<br/>
+                                <strong>2️⃣ 제2 AI:</strong> "내 구간으로 더 많은 차량을!" (경쟁적 협력)<br/>
+                                <strong>3️⃣ 제3 AI:</strong> "내 수익을 높이자!" (개별 생존)<br/>
+                                <strong>⚖️ 결과:</strong> 세 목표가 균형을 이루는 최적점 발견!
+                            </div>
+                        </div>
+
+                        {/* 3. 차량 감축 시각화 */}
+                        <div className="card" style={{marginBottom: '30px'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>🚗 차량 감축 과정 (100대 → 8대)</h2>
+                            <p style={{fontSize: '1.1em', marginBottom: '20px', color: '#666'}}>
+                                AI가 최적화를 통해 불필요한 차량을 제거합니다 (92.8% 감축!)
+                            </p>
+                            <div className="vehicle-grid">
+                                {Array.from({length: 100}, (_, i) => (
+                                    <div 
+                                        key={i} 
+                                        className={`vehicle-icon ${removedVehicles.includes(i) ? 'removed' : ''}`}
+                                    >
+                                        🚗
+                                    </div>
+                                ))}
+                            </div>
+                            <p style={{textAlign: 'center', marginTop: '20px', fontSize: '1.3em', fontWeight: 'bold', color: '#667eea'}}>
+                                {100 - removedVehicles.length}대 남음
+                            </p>
+                        </div>
+
+                        {/* 4. 3계층 구조 다이어그램 */}
+                        <div className="card" style={{marginBottom: '30px'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>🏗️ 3계층 AI 에이전트 구조</h2>
+                            <div className="layer-diagram">
+                                <div className="layer-box" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                                    <div style={{fontSize: '2em', marginBottom: '10px'}}>🧠 제1계층: 중앙 교통관제</div>
+                                    <p style={{fontSize: '1.1em', opacity: 0.9}}>
+                                        역할: 도시 전체를 보고 사회적 비용 최소화<br/>
+                                        비유: 도시 시장 (전체를 책임짐)
+                                    </p>
+                                </div>
+                                <div className="layer-box" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
+                                    <div style={{fontSize: '2em', marginBottom: '10px'}}>🛣️ 제2계층: 도로 구간별</div>
+                                    <p style={{fontSize: '1.1em', opacity: 0.9}}>
+                                        역할: 자기 구간으로 차량 유치 경쟁<br/>
+                                        비유: 구청장 (자기 구역을 발전시킴)
+                                    </p>
+                                </div>
+                                <div className="layer-box" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'}}>
+                                    <div style={{fontSize: '2em', marginBottom: '10px'}}>🚗 제3계층: 개별 차량</div>
+                                    <p style={{fontSize: '1.1em', opacity: 0.9}}>
+                                        역할: 자신의 수익과 만족도 최대화<br/>
+                                        비유: 택시 기사 (자기 수익 챙김)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 5. Before/After 비교 */}
+                        <div className="card" style={{marginBottom: '30px'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>📊 최적화 전후 비교</h2>
+                            <div className="comparison-table">
+                                <div className="comparison-card before-card">
+                                    <div style={{fontSize: '3em', marginBottom: '20px'}}>😵</div>
+                                    <h3 style={{fontSize: '1.8em', marginBottom: '15px'}}>최적화 전</h3>
+                                    <div style={{fontSize: '1.2em', lineHeight: '2'}}>
+                                        🚗 차량: 100대<br/>
+                                        💰 비용: 높음<br/>
+                                        ⏱️ 대기시간: 길음<br/>
+                                        😤 혼잡도: 심각<br/>
+                                        📉 효율성: 낮음
+                                    </div>
+                                </div>
+                                <div className="comparison-card after-card">
+                                    <div style={{fontSize: '3em', marginBottom: '20px'}}>😊</div>
+                                    <h3 style={{fontSize: '1.8em', marginBottom: '15px'}}>최적화 후</h3>
+                                    <div style={{fontSize: '1.2em', lineHeight: '2'}}>
+                                        🚗 차량: 8대 (-92%)<br/>
+                                        💰 비용: 84% 절감<br/>
+                                        ⏱️ 대기시간: 짧음<br/>
+                                        😊 혼잡도: 원활<br/>
+                                        📈 효율성: 149% 향상
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 6. 핵심 개념 요약 */}
+                        <div className="card" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
+                            <h2 style={{fontSize: '2em', marginBottom: '20px'}}>✨ 핵심 개념 3줄 요약</h2>
+                            <div style={{fontSize: '1.3em', lineHeight: '2'}}>
+                                1️⃣ <strong>3개의 AI</strong>가 서로 다른 목표를 가지고 경쟁하면서도 협력합니다<br/>
+                                2️⃣ <strong>Nash Equilibrium</strong>을 통해 모두가 만족하는 균형점을 찾습니다<br/>
+                                3️⃣ 결과적으로 <strong>차량 92% 감축, 비용 84% 절감</strong>을 달성합니다!
+                            </div>
+                        </div>
+
+                        <div style={{textAlign: 'center', marginTop: '40px'}}>
+                            <button className="btn btn-primary" style={{fontSize: '1.2em', padding: '15px 40px'}} onClick={onClose}>
+                                이해했어요! 닫기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AutonomousTrafficSimulation() {
+            const [isRunning, setIsRunning] = useState(false);
+            const [metrics, setMetrics] = useState({
+                vehicleReduction: 0,
+                costSaving: 0,
+                systemEfficiency: 100
+            });
+            const [iterations, setIterations] = useState([]);
+            const [currentIteration, setCurrentIteration] = useState(0);
+            const [isLoading, setIsLoading] = useState(false);
+            const [currentStage, setCurrentStage] = useState('');
+            const [progress, setProgress] = useState(0);
+            const [finalResult, setFinalResult] = useState(null);
+            const [errorMessage, setErrorMessage] = useState('');
+            const [showExplainer, setShowExplainer] = useState(false);
+
+            const stages = [
+                { id: 'init', label: '초기화', icon: '🚀' },
+                { id: 'layer1', label: '제1 AI', icon: '🧠' },
+                { id: 'layer2', label: '제2 AI', icon: '🛣️' },
+                { id: 'layer3', label: '제3 AI', icon: '🚗' },
+                { id: 'nash', label: 'Nash 균형', icon: '⚖️' },
+                { id: 'complete', label: '완료', icon: '✅' }
+            ];
+
+            const runRealSimulation = async () => {
+                setIsLoading(true);
+                setIsRunning(true);
+                setIterations([]);
+                setCurrentIteration(0);
+                setErrorMessage('');
+                setFinalResult(null);
+                setProgress(0);
+                setCurrentStage('init');
+
+                try {
+                    const startTime = Date.now();
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    setProgress(10);
+                    
+                    const response = await fetch('/api/start-simulation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        for (let i = 0; i < result.iterations.length; i++) {
+                            const iter = result.iterations[i];
+                            
+                            setCurrentStage('layer1');
+                            setProgress(20 + (i * 20));
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setCurrentStage('layer2');
+                            setProgress(25 + (i * 20));
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setCurrentStage('layer3');
+                            setProgress(30 + (i * 20));
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setCurrentStage('nash');
+                            setProgress(35 + (i * 20));
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            
+                            setCurrentIteration(i + 1);
+                            setIterations(prev => [...prev, iter]);
+                            
+                            setMetrics({
+                                vehicleReduction: iter.reduction_rate,
+                                costSaving: result.cost_saving_rate * (i + 1) / result.iterations.length,
+                                systemEfficiency: 100 + (result.system_efficiency - 100) * (i + 1) / result.iterations.length
+                            });
+                        }
+
+                        setCurrentStage('complete');
+                        setProgress(100);
+                        setFinalResult(result);
+                        setMetrics({
+                            vehicleReduction: result.vehicle_reduction_rate,
+                            costSaving: result.cost_saving_rate,
+                            systemEfficiency: result.system_efficiency
+                        });
+                        
+                        const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                        console.log(`시뮬레이션 완료: ${totalTime}초 소요`);
+                    } else {
+                        setErrorMessage(result.error || '시뮬레이션 실행 중 오류가 발생했습니다.');
+                    }
+                } catch (error) {
+                    console.error('시뮬레이션 오류:', error);
+                    setErrorMessage(`시뮬레이션 실행 실패: ${error.message}`);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const resetSimulation = () => {
+                setIsRunning(false);
+                setMetrics({ vehicleReduction: 0, costSaving: 0, systemEfficiency: 100 });
+                setIterations([]);
+                setCurrentIteration(0);
+                setFinalResult(null);
+                setErrorMessage('');
+                setProgress(0);
+                setCurrentStage('');
+            };
+
+            return (
+                <div className="container">
+                    <ExplainerModal isOpen={showExplainer} onClose={() => setShowExplainer(false)} />
+                    
+                    <div className="card">
+                        <h1 style={{fontSize: '2.5em', fontWeight: 'bold', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '10px'}}>
+                            🚗 AI 다중 에이전트 자율주행 교통 관제 시스템
+                        </h1>
+                        <p style={{fontSize: '1.2em', color: '#666', marginBottom: '20px'}}>
+                            Claude AI 기반 3계층 Nash Equilibrium 실시간 시뮬레이션
+                        </p>
+                        <div style={{display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap'}}>
+                            <button 
+                                className="btn btn-primary" 
+                                onClick={runRealSimulation}
+                                disabled={isRunning || isLoading}
+                            >
+                                {isLoading ? '⏳ AI 최적화 중...' : '▶️ 실제 시뮬레이션 시작'}
+                            </button>
+                            <button 
+                                className="btn btn-success" 
+                                onClick={() => setShowExplainer(true)}
+                            >
+                                🎬 작동 원리 쉽게 보기
+                            </button>
+                            <button 
+                                className="btn btn-secondary" 
+                                onClick={resetSimulation}
+                            >
+                                🔄 초기화
+                            </button>
+                            <a 
+                                href="/ndr-openhash-demo.html" 
+                                className="btn btn-secondary"
+                                style={{textDecoration: 'none', display: 'inline-flex', alignItems: 'center'}}
+                            >
+                                📄 OpenHash 기술
+                            </a>
+                        </div>
+                        <div style={{padding: '10px', background: '#d1fae5', borderRadius: '8px', marginTop: '10px'}}>
+                            <strong>✅ 실제 Claude AI API 연동:</strong> 3계층 AI 에이전트가 독립적으로 의사결정하며 Nash Equilibrium 달성 (약 5-8초)
+                        </div>
+                    </div>
+
+                    {errorMessage && (
+                        <div className="card" style={{background: '#fee', border: '2px solid #f00'}}>
+                            <h3 style={{color: '#c00'}}>❌ 오류 발생</h3>
+                            <p>{errorMessage}</p>
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div className="card">
+                            <div className="loading-container">
+                                <div className="spinner"></div>
+                                <h2 style={{fontSize: '2em', marginBottom: '20px'}}>
+                                    Claude AI가 3계층 에이전트를 실행하고 있습니다
+                                </h2>
+                                
+                                <div className="progress-bar">
+                                    <div className="progress-fill" style={{width: `${progress}%`}}>
+                                        {progress}%
+                                    </div>
+                                </div>
+
+                                <div className="stage-indicator">
+                                    {stages.map((stage, index) => (
+                                        <div 
+                                            key={stage.id}
+                                            className={`stage ${
+                                                currentStage === stage.id ? 'active' : 
+                                                stages.findIndex(s => s.id === currentStage) > index ? 'completed' : ''
+                                            }`}
+                                        >
+                                            <div style={{fontSize: '2em', marginBottom: '10px'}}>{stage.icon}</div>
+                                            <div style={{fontWeight: 'bold'}}>{stage.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="time-estimate">
+                                    ⏱️ 반복 {currentIteration}/3 진행 중 | 예상 남은 시간: {Math.max(0, 8 - (progress / 100 * 8)).toFixed(0)}초
+                                </div>
+
+                                <div style={{marginTop: '30px'}}>
+                                    <div style={{fontSize: '1.2em', marginBottom: '15px'}}>
+                                        {currentStage === 'init' && '🚀 교통 시스템 초기화 중...'}
+                                        {currentStage === 'layer1' && '🧠 제1 AI 에이전트 (중앙 관제) 실행 중...'}
+                                        {currentStage === 'layer2' && '🛣️ 제2 AI 에이전트 (도로 구간) 실행 중...'}
+                                        {currentStage === 'layer3' && '🚗 제3 AI 에이전트 (개별 차량) 실행 중...'}
+                                        {currentStage === 'nash' && '⚖️ Nash Equilibrium 계산 중...'}
+                                        {currentStage === 'complete' && '✅ 시뮬레이션 완료!'}
+                                    </div>
+                                    
+                                    {currentStage === 'layer1' && (
+                                        <div className="ai-agent-visual" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}></div>
+                                    )}
+                                    {currentStage === 'layer2' && (
+                                        <div className="ai-agent-visual" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}></div>
+                                    )}
+                                    {currentStage === 'layer3' && (
+                                        <div className="ai-agent-visual" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'}}></div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '20px'}}>
+                        <div className="metric-card">
+                            <div style={{fontSize: '1.2em', opacity: 0.9}}>차량 감축률</div>
+                            <div className="metric-value">{metrics.vehicleReduction.toFixed(1)}%</div>
+                            <div style={{fontSize: '0.9em', opacity: 0.8}}>목표: 92.8%</div>
+                        </div>
+                        <div className="metric-card">
+                            <div style={{fontSize: '1.2em', opacity: 0.9}}>비용 절감</div>
+                            <div className="metric-value">{metrics.costSaving.toFixed(1)}%</div>
+                            <div style={{fontSize: '0.9em', opacity: 0.8}}>목표: 84.2%</div>
+                        </div>
+                        <div className="metric-card">
+                            <div style={{fontSize: '1.2em', opacity: 0.9}}>시스템 효율성</div>
+                            <div className="metric-value">{metrics.systemEfficiency.toFixed(1)}%</div>
+                            <div style={{fontSize: '0.9em', opacity: 0.8}}>목표: 149.2%</div>
+                        </div>
+                    </div>
+
+                    {iterations.length > 0 && (
+                        <div className="card">
+                            <h2 style={{fontSize: '1.8em', fontWeight: 'bold', marginBottom: '20px'}}>
+                                🔄 반복 학습 과정 (Nash Equilibrium 수렴)
+                            </h2>
+                            {iterations.map((iter, index) => (
+                                <div key={index} className="iteration-step">
+                                    <h3 style={{fontSize: '1.2em', color: '#667eea', marginBottom: '10px'}}>
+                                        ✓ 반복 {iter.iteration}: 차량 {iter.vehicles}대 (감축률 {iter.reduction_rate.toFixed(1)}%)
+                                    </h3>
+                                    
+                                    <div style={{marginTop: '10px', padding: '10px', background: 'white', borderRadius: '6px'}}>
+                                        <strong>제1 AI (중앙 관제):</strong>
+                                        <p style={{margin: '5px 0', color: '#666'}}>{iter.layer1.strategy}</p>
+                                    </div>
+
+                                    <div style={{marginTop: '10px', padding: '10px', background: '#fff3cd', borderRadius: '6px'}}>
+                                        <strong>Nash Equilibrium:</strong>
+                                        <p style={{margin: '5px 0', color: '#666'}}>{iter.nash_equilibrium.explanation}</p>
+                                        <p style={{margin: '5px 0', fontSize: '0.9em'}}>
+                                            수렴률: {iter.nash_equilibrium.convergence_rate}% | 
+                                            {iter.nash_equilibrium.equilibrium_reached ? ' ✅ 균형 달성' : ' ⏳ 수렴 중'}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {finalResult && (
+                        <div className="card" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
+                            <h2 style={{fontSize: '1.8em', fontWeight: 'bold', marginBottom: '20px'}}>
+                                🎯 최종 시뮬레이션 결과
+                            </h2>
+                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px'}}>
+                                <div>
+                                    <h3 style={{fontSize: '1.2em', marginBottom: '10px'}}>차량 최적화</h3>
+                                    <p>초기: {finalResult.initial_vehicles}대</p>
+                                    <p>최종: {finalResult.final_vehicles}대</p>
+                                    <p style={{fontSize: '1.5em', fontWeight: 'bold'}}>
+                                        감축률: {finalResult.vehicle_reduction_rate}%
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 style={{fontSize: '1.2em', marginBottom: '10px'}}>성과 지표</h3>
+                                    <p>비용 절감: {finalResult.cost_saving_rate}%</p>
+                                    <p>시스템 효율성: {finalResult.system_efficiency}%</p>
+                                    <p style={{fontSize: '1.2em', marginTop: '10px'}}>
+                                        ✅ Nash Equilibrium 달성
+                                    </p>
+                                </div>
+                            </div>
+                            <div style={{marginTop: '20px', padding: '15px', background: 'rgba(255,255,255,0.2)', borderRadius: '8px'}}>
+                                <p style={{fontSize: '1.1em'}}>{finalResult.message}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    <div style={{textAlign: 'center', padding: '40px 20px', color: 'white'}}>
+                        <p style={{fontSize: '1.1em', marginBottom: '10px'}}>
+                            🚀 Claude AI로 구현된 혁신적 교통 관제 시스템
+                        </p>
+                        <p style={{fontSize: '0.9em', opacity: 0.8}}>
+                            © 2025 AI Multi-Agent Autonomous Traffic Control System
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<AutonomousTrafficSimulation />, document.getElementById('root'));
+    </script>
+</body>
+</html>

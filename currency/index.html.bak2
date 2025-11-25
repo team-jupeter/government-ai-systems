@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>민간 경쟁형 디지털 화폐 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .card-hover { transition: all 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="text-6xl mb-4 float">💰</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">민간 경쟁형 디지털 화폐 시스템</h1>
+            <p class="text-xl opacity-90 mb-6">OpenHash + FPGA AI 기반 세계 최초 완전 자율 금융 생태계</p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">⚡ 0.032ms 처리속도</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🎯 99.4% 검증 정확도</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🌱 88% 전력 절감</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="bg-gray-800 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-blue-400 hover:text-blue-300">← 포털로 돌아가기</a>
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-yellow-400">시뮬레이터</button>
+                <button onclick="document.getElementById('tech').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-yellow-400">기술</button>
+                <button onclick="document.getElementById('benefits').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-yellow-400">효과</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem & Solution -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">기존 시스템의 한계 vs 본 발명</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6">
+                <h3 class="text-xl font-bold text-red-400 mb-4">❌ 기존 시스템의 한계</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li>• 비트코인: 10분 처리시간, 높은 에너지 소비</li>
+                    <li>• 이더리움: 13초 처리시간, 가스비 변동</li>
+                    <li>• CBDC: 중앙집권적 통제, 프라이버시 우려</li>
+                    <li>• 전통 금융: 3-5일 대출 승인, 높은 수수료</li>
+                </ul>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-xl p-6">
+                <h3 class="text-xl font-bold text-green-400 mb-4">✅ 본 발명의 해결책</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li>• <span class="text-yellow-400 font-bold">0.032ms</span> 초고속 처리 (31만배 향상)</li>
+                    <li>• 민간 경쟁 체제로 서비스 혁신 촉진</li>
+                    <li>• 재무제표 연동으로 분식회계 원천 차단</li>
+                    <li>• 자동 세무처리로 지하경제 87.9% 축소</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Simulator -->
+    <div id="simulator" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">💵 디지털 화폐 발행 시뮬레이터</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 발행 폼 -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-6 text-yellow-400">화폐 발행 신청</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">발행 기관명</label>
+                            <input type="text" id="issuerName" placeholder="예: Jupiter Finance" 
+                                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">화폐 코드 (3자리)</label>
+                            <input type="text" id="currencyCode" placeholder="예: JFC" maxlength="3"
+                                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">담보 예치금 (원화)</label>
+                            <input type="number" id="depositAmount" placeholder="1,000,000,000" 
+                                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <button onclick="simulateIssuance()" 
+                            class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold py-4 rounded-lg hover:from-yellow-400 hover:to-orange-400 transition">
+                            🚀 화폐 발행 시뮬레이션
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 결과 표시 -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-6 text-green-400">발행 결과</h3>
+                    <div id="issuanceResult" class="space-y-4">
+                        <div class="text-center text-gray-500 py-12">
+                            <div class="text-4xl mb-4">📋</div>
+                            <p>화폐 발행 정보를 입력하고<br/>시뮬레이션을 실행하세요</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 환전 시뮬레이터 -->
+            <div class="mt-12 bg-gray-900 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-6 text-blue-400">💱 실시간 환전 시뮬레이터</h3>
+                <div class="grid md:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">보유 화폐</label>
+                        <select id="fromCurrency" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="KRW">🇰🇷 KRW (원화)</option>
+                            <option value="USD">🇺🇸 USD (달러)</option>
+                            <option value="EUR">🇪🇺 EUR (유로)</option>
+                            <option value="JPY">🇯🇵 JPY (엔화)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">금액</label>
+                        <input type="number" id="exchangeAmount" placeholder="1000000" 
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">교환 화폐</label>
+                        <select id="toCurrency" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="JFC">🪙 JFC (Jupiter)</option>
+                            <option value="SDB">🪙 SDB (Seoul Digital)</option>
+                            <option value="KDC">🪙 KDC (Korea Digital)</option>
+                        </select>
+                    </div>
+                    <button onclick="simulateExchange()" 
+                        class="bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-lg transition">
+                        환전 실행
+                    </button>
+                </div>
+                <div id="exchangeResult" class="mt-6 p-4 bg-gray-800 rounded-lg hidden">
+                    <!-- 환전 결과 표시 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div id="tech" class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🔧 핵심 기술 아키텍처</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">⚡</div>
+                <h3 class="text-xl font-bold mb-3 text-yellow-400">FPGA 하드웨어 가속</h3>
+                <ul class="text-gray-400 text-sm space-y-2">
+                    <li>• Xilinx Versal ACAP VCK190</li>
+                    <li>• 412.3MHz 동작 주파수</li>
+                    <li>• 899K 논리셀</li>
+                    <li>• 15.7W 저전력 설계</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">🧠</div>
+                <h3 class="text-xl font-bold mb-3 text-blue-400">AI 검증 엔진</h3>
+                <ul class="text-gray-400 text-sm space-y-2">
+                    <li>• BERT 768차원 임베딩</li>
+                    <li>• CNN+LSTM 앙상블</li>
+                    <li>• 99.4% 검증 정확도</li>
+                    <li>• 96.8% 적대적 공격 방어</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">🔗</div>
+                <h3 class="text-xl font-bold mb-3 text-green-400">OpenHash 분산원장</h3>
+                <ul class="text-gray-400 text-sm space-y-2">
+                    <li>• 481 TPS 처리속도</li>
+                    <li>• 위변조 불가능</li>
+                    <li>• 재무제표 자동 연동</li>
+                    <li>• 크로스체인 상호운용</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits -->
+    <div id="benefits" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📊 경제적 효과</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold gold-gradient mb-2">492만원</div>
+                    <div class="text-sm text-gray-300">개인 연간 혜택</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold gold-gradient mb-2">65%</div>
+                    <div class="text-sm text-gray-300">금융기관 운영비 절감</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold gold-gradient mb-2">87.9%</div>
+                    <div class="text-sm text-gray-300">지하경제 축소</div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold gold-gradient mb-2">40조원</div>
+                    <div class="text-sm text-gray-300">연간 추가 세수</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>민간 경쟁형 디지털 화폐 발행 시스템 © 2025 | OpenHash + FPGA AI 기반</p>
+            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
+        </div>
+    </div>
+
+    <script>
+        function simulateIssuance() {
+            const issuer = document.getElementById('issuerName').value || 'Sample Corp';
+            const code = document.getElementById('currencyCode').value.toUpperCase() || 'SMP';
+            const deposit = parseInt(document.getElementById('depositAmount').value) || 1000000000;
+            
+            const resultDiv = document.getElementById('issuanceResult');
+            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 검증 중...</p></div>';
+            
+            setTimeout(() => {
+                const issuedAmount = deposit;
+                const txHash = '0x' + Math.random().toString(16).substr(2, 16);
+                
+                resultDiv.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
+                            <span class="text-gray-400">발행 기관</span>
+                            <span class="font-bold">${issuer}</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
+                            <span class="text-gray-400">화폐 코드</span>
+                            <span class="font-bold text-yellow-400">${code}</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
+                            <span class="text-gray-400">담보 예치금</span>
+                            <span class="font-bold">₩${deposit.toLocaleString()}</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
+                            <span class="text-gray-400">발행량</span>
+                            <span class="font-bold text-green-400">${issuedAmount.toLocaleString()} ${code}</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
+                            <span class="text-gray-400">처리 시간</span>
+                            <span class="font-bold text-blue-400">0.032ms</span>
+                        </div>
+                        <div class="p-3 bg-green-900/30 border border-green-500/30 rounded-lg">
+                            <div class="text-xs text-gray-400 mb-1">트랜잭션 해시</div>
+                            <div class="font-mono text-xs text-green-400 break-all">${txHash}</div>
+                        </div>
+                        <div class="text-center text-green-400 font-bold pt-4">
+                            ✅ 화폐 발행 완료 (OpenHash 기록됨)
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function simulateExchange() {
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+            const amount = parseInt(document.getElementById('exchangeAmount').value) || 1000000;
+            
+            const rates = { KRW: 1, USD: 1350, EUR: 1450, JPY: 9 };
+            const krwAmount = amount * (rates[from] || 1);
+            const digitalAmount = krwAmount; // 1:1 비율
+            
+            const resultDiv = document.getElementById('exchangeResult');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-gray-400 text-sm">보유 화폐</div>
+                        <div class="text-xl font-bold">${amount.toLocaleString()} ${from}</div>
+                    </div>
+                    <div class="text-3xl">→</div>
+                    <div>
+                        <div class="text-gray-400 text-sm">교환 결과</div>
+                        <div class="text-xl font-bold text-green-400">${digitalAmount.toLocaleString()} ${to}</div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center text-sm text-gray-400">
+                    처리 시간: <span class="text-blue-400">0.032ms</span> | 수수료: <span class="text-green-400">0원</span>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

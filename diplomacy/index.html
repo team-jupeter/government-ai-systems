@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 외교 지원 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .card-hover { transition: all 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="gradient-bg py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="text-6xl mb-4 float">🌐</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 외교 지원 시스템</h1>
+            <p class="text-xl opacity-90 mb-6">국제 정세 분석 | 조약 관리 | 재외국민 보호</p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🌍 글로벌 정세 AI</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">📜 조약 자동 분석</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🛡️ 재외국민 보호</span>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-800 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-blue-400 hover:text-blue-300">← 포털로 돌아가기</a>
+        </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🌐 글로벌 외교 현황</h2>
+        <div class="grid md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 text-center">
+                <div class="text-sm text-gray-400">수교국</div>
+                <div class="text-3xl font-bold text-blue-400">192</div>
+                <div class="text-xs text-blue-500">개국</div>
+            </div>
+            <div class="bg-green-900/30 border border-green-500/30 rounded-xl p-4 text-center">
+                <div class="text-sm text-gray-400">재외공관</div>
+                <div class="text-3xl font-bold text-green-400">169</div>
+                <div class="text-xs text-green-500">개소</div>
+            </div>
+            <div class="bg-yellow-900/30 border border-yellow-500/30 rounded-xl p-4 text-center">
+                <div class="text-sm text-gray-400">재외국민</div>
+                <div class="text-3xl font-bold text-yellow-400">7.3M</div>
+                <div class="text-xs text-yellow-500">명</div>
+            </div>
+            <div class="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 text-center">
+                <div class="text-sm text-gray-400">유효 조약</div>
+                <div class="text-3xl font-bold text-purple-400">3,847</div>
+                <div class="text-xs text-purple-500">건</div>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="font-bold text-blue-400 mb-4">🗺️ 지역별 외교 현황</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
+                        <span>🌏 아시아태평양</span>
+                        <span class="text-green-400">45개국</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
+                        <span>🌍 유럽</span>
+                        <span class="text-green-400">48개국</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
+                        <span>🌎 아메리카</span>
+                        <span class="text-green-400">35개국</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
+                        <span>🌍 중동/아프리카</span>
+                        <span class="text-green-400">64개국</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="font-bold text-yellow-400 mb-4">⚠️ AI 정세 알림</h3>
+                <div class="space-y-3">
+                    <div class="p-3 bg-red-900/30 border border-red-500/30 rounded-lg">
+                        <div class="text-sm font-bold">🚨 중동 긴장 고조</div>
+                        <div class="text-xs text-gray-500">이스라엘-팔레스타인 갈등</div>
+                    </div>
+                    <div class="p-3 bg-yellow-900/30 border border-yellow-500/30 rounded-lg">
+                        <div class="text-sm font-bold">⚠️ 미중 무역 협상</div>
+                        <div class="text-xs text-gray-500">관세 조정 협의 진행 중</div>
+                    </div>
+                    <div class="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                        <div class="text-sm font-bold">ℹ️ 한-EU FTA 개정</div>
+                        <div class="text-xs text-gray-500">디지털 무역 조항 추가 협의</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🛠️ 핵심 기능</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">🌍</div>
+                    <h3 class="text-xl font-bold text-blue-400 mb-3">국제 정세 분석</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• 실시간 뉴스 분석</li>
+                        <li>• 감성/여론 분석</li>
+                        <li>• 갈등 조기 경보</li>
+                        <li>• 시나리오 예측</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">📜</div>
+                    <h3 class="text-xl font-bold text-green-400 mb-3">조약 관리</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• 조약 이행 자동 점검</li>
+                        <li>• 만료/갱신 알림</li>
+                        <li>• 조항 충돌 탐지</li>
+                        <li>• AI 협상 지원</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold text-red-400 mb-3">재외국민 보호</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• 위기 상황 실시간 감지</li>
+                        <li>• 자동 안전 알림</li>
+                        <li>• 대피 경로 안내</li>
+                        <li>• 영사 서비스 AI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🗣️ AI 다국어 지원</h2>
+        <div class="bg-gray-800 rounded-xl p-6">
+            <div class="grid grid-cols-6 gap-3 mb-6">
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇺🇸</div>
+                    <div class="text-xs text-blue-400">영어</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇨🇳</div>
+                    <div class="text-xs text-red-400">중국어</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇯🇵</div>
+                    <div class="text-xs text-pink-400">일본어</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇫🇷</div>
+                    <div class="text-xs text-indigo-400">프랑스어</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇪🇸</div>
+                    <div class="text-xs text-yellow-400">스페인어</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">🇸🇦</div>
+                    <div class="text-xs text-green-400">아랍어</div>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-400">
+                <span class="text-blue-400 font-bold">127개 언어</span> 실시간 번역 지원
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📈 도입 효과</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">24/7</div>
+                    <div class="text-sm text-gray-300">글로벌 모니터링</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">85%</div>
+                    <div class="text-sm text-gray-300">위기 조기 탐지</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">127</div>
+                    <div class="text-sm text-gray-300">지원 언어</div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">70%</div>
+                    <div class="text-sm text-gray-300">업무 효율 향상</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>AI 외교 지원 시스템 © 2025 | OpenHash 외교 기록</p>
+            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
+        </div>
+    </div>
+</body>
+</html>

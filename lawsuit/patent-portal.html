@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시 기반 특허 AI 시뮬레이션 포털</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 오픈해시 강조 배너 */
+        .openhash-banner {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 15px 40px rgba(17, 153, 142, 0.5);
+            }
+        }
+
+        .openhash-banner-content h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .openhash-banner-content p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .openhash-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .openhash-stat {
+            text-align: center;
+        }
+
+        .openhash-stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .openhash-stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* 시스템 설명서 버튼 */
+        .explainer-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .explainer-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+        }
+
+        .explainer-button-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 .openhash-highlight {
+            color: #38ef7d;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(56, 239, 125, 0.5);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .module-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .module-card h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .module-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .module-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-coming {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .module-features {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .module-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .module-features li {
+            padding: 5px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .module-features li::before {
+            content: '✓ ';
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        .tech-stack {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-stack h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .tech-badge.highlight {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-size: 1.1em;
+            padding: 10px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .openhash-banner {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .openhash-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function PatentPortal() {
+            const modules = [
+                {
+                    id: 'patent-application',
+                    icon: '📝',
+                    title: '특허출원서 작성',
+                    description: 'AI 대화형 특허출원서 자동 작성. AI가 질문하고 답변을 바탕으로 명세서와 청구항을 자동 생성합니다.',
+                    status: 'active',
+                    file: 'patent-application.html',
+                    features: [
+                        'AI 대화형 인터뷰',
+                        '명세서 자동 생성',
+                        '청구항 자동 작성',
+                        'PDF 출원서 출력'
+                    ]
+                },
+                {
+                    id: 'prior-art-search',
+                    icon: '🔍',
+                    title: '선행기술조사 (실제 API)',
+                    description: 'KIPRIS Open API와 Google Patents를 연동하여 5대 특허청(한국/미국/유럽/일본/중국)의 실제 특허를 검색합니다.',
+                    status: 'active',
+                    file: 'prior-art-search.html',
+                    features: [
+                        'KIPRIS API 실시간 연동',
+                        '5대 특허청 동시 검색',
+                        'TF-IDF 유사도 분석',
+                        '핵심 선행문헌 5건 추출'
+                    ]
+                },
+                {
+                    id: 'patent-examination',
+                    icon: '⚖️',
+                    title: '특허심사 시뮬레이터',
+                    description: 'AI 심사관이 신규성, 진보성, 산업상 이용가능성을 평가하고 거절이유통지서를 자동 생성합니다.',
+                    status: 'coming',
+                    file: 'patent-examination.html',
+                    features: [
+                        '신규성 평가 (35점)',
+                        '진보성 평가 (35점)',
+                        'SHAP 기여도 분석',
+                        '거절이유통지서 생성'
+                    ]
+                },
+                {
+                    id: 'multi-country',
+                    icon: '🌍',
+                    title: '다국가 등록 가능성 평가',
+                    description: '한국, 중국, 일본, 미국, 유럽 5개국의 특허 등록 가능성을 %로 예측하고 각국 심사 기준을 비교합니다.',
+                    status: 'coming',
+                    file: 'multi-country-evaluation.html',
+                    features: [
+                        '5개국 등록 가능성 % 산출',
+                        '국가별 심사 기준 비교',
+                        'PCT 국제출원 전략',
+                        '우선출원국 추천'
+                    ]
+                },
+                {
+                    id: 'tech-valuation',
+                    icon: '💰',
+                    title: '기술 가치 평가',
+                    description: '신규성, 진보성, 혁신성을 종합 평가하고 시장 규모, NPV, 로열티율을 산출하여 기술의 경제적 가치를 평가합니다.',
+                    status: 'coming',
+                    file: 'technology-valuation.html',
+                    features: [
+                        '기술적 가치 100점 평가',
+                        'NPV 순현재가치 계산',
+                        '시장 규모 추정',
+                        '로열티율 산출'
+                    ]
+                },
+                {
+                    id: 'business-plan',
+                    icon: '📊',
+                    title: '사업화 계획 수립',
+                    description: '컨소시엄 구성, 법인 설립, 조직 구성, 자본금 규모를 자동으로 계획하고 마케팅 전략을 제안합니다.',
+                    status: 'coming',
+                    file: 'business-plan.html',
+                    features: [
+                        '컨소시엄 구성 추천',
+                        '법인 설립 가이드',
+                        '자본금 시뮬레이터',
+                        '조직도 자동 생성'
+                    ]
+                },
+                {
+                    id: 'drawing-generator',
+                    icon: '🎨',
+                    title: '도면 자동 생성',
+                    description: 'Mermaid 다이어그램으로 시스템 아키텍처, 플로우차트를 자동 생성하고 도면부호를 자동 배정합니다.',
+                    status: 'coming',
+                    file: 'drawing-generator.html',
+                    features: [
+                        'Mermaid 다이어그램',
+                        '도면부호 자동 배정',
+                        'SVG/PNG 출력',
+                        'A4 크기 자동 조정'
+                    ]
+                },
+                {
+                    id: 'openhash-demo',
+                    icon: '🔗',
+                    title: '오픈해시 시뮬레이터',
+                    description: '블록체인 대비 98.5% 에너지 절감을 달성하는 오픈해시 기술의 실시간 시뮬레이션을 체험합니다.',
+                    status: 'active',
+                    file: 'ndr-openhash-demo.html',
+                    features: [
+                        'SHA-512 해시 체인',
+                        '4/5계층 아키텍처',
+                        '신뢰도 가중치 시각화',
+                        '98.5% 에너지 절감'
+                    ]
+                }
+            ];
+
+            const stats = [
+                { value: '98.5%', label: '에너지 절감' },
+                { value: '82.3배', label: '처리 속도 향상' },
+                { value: '99.8%', label: '검색 시간 단축' },
+                { value: '95%', label: '검색 정확도' }
+            ];
+
+            const techStack = [
+                { name: 'OpenHash', highlight: true },
+                { name: 'React 18.2', highlight: false },
+                { name: 'SHA-512', highlight: true },
+                { name: 'LPBFT/PBFT', highlight: true },
+                { name: 'KIPRIS Open API', highlight: false },
+                { name: 'Google Patents', highlight: false },
+                { name: 'Llama 3.1 8B', highlight: false },
+                { name: 'TF-IDF', highlight: false },
+                { name: 'Mermaid', highlight: false }
+            ];
+
+            const handleModuleClick = (module) => {
+                if (module.status === 'active') {
+                    window.location.href = module.file;
+                } else {
+                    alert('이 모듈은 곧 출시됩니다!');
+                }
+            };
+
+            return (
+                <div className="container">
+                    <div className="openhash-banner">
+                        <div className="openhash-banner-content">
+                            <h2>🔗 오픈해시(OpenHash) 기반 시스템</h2>
+                            <p>블록체인을 넘어선 차세대 분산 데이터 신뢰도 체인 기술</p>
+                        </div>
+                        <div className="openhash-stats">
+                            <div className="openhash-stat">
+                                <span className="openhash-stat-value">98.5%</span>
+                                <span className="openhash-stat-label">에너지 절감</span>
+                            </div>
+                            <div className="openhash-stat">
+                                <span className="openhash-stat-value">82.3배</span>
+                                <span className="openhash-stat-label">빠른 속도</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="openhash-explainer.html" className="explainer-button">
+                        <span className="explainer-button-icon">📖</span>
+                        오픈해시 시스템 설명서 (일반인용)
+                    </a>
+
+                    <div className="header">
+                        <h1>🏛️ <span className="openhash-highlight">오픈해시</span> 특허 AI 시뮬레이션 포털</h1>
+                        <p>차세대 분산 데이터 신뢰도 체인 및 다층 AI 에이전트</p>
+                        <div className="badge">
+                            특허출원번호: 10-2025-XXXXXXX (시뮬레이션)
+                        </div>
+                    </div>
+
+                    <div className="stats-section">
+                        <h2>📈 오픈해시 핵심 성능 지표</h2>
+                        <div className="stats-grid">
+                            {stats.map((stat, index) => (
+                                <div key={index} className="stat-item">
+                                    <div className="stat-value">{stat.value}</div>
+                                    <div className="stat-label">{stat.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="modules-grid">
+                        {modules.map((module) => (
+                            <div 
+                                key={module.id} 
+                                className="module-card"
+                                onClick={() => handleModuleClick(module)}
+                            >
+                                <div className="module-icon">{module.icon}</div>
+                                <h3>{module.title}</h3>
+                                <p>{module.description}</p>
+                                <span className={`module-status ${module.status === 'active' ? 'status-active' : 'status-coming'}`}>
+                                    {module.status === 'active' ? '사용 가능' : '준비중'}
+                                </span>
+                                <div className="module-features">
+                                    <ul>
+                                        {module.features.map((feature, index) => (
+                                            <li key={index}>{feature}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="tech-stack">
+                        <h2>🛠️ 핵심 기술 스택 (오픈해시 중심)</h2>
+                        <div className="tech-badges">
+                            {techStack.map((tech, index) => (
+                                <span key={index} className={`tech-badge ${tech.highlight ? 'highlight' : ''}`}>
+                                    {tech.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="footer">
+                        <p>© 2025 오픈해시 기반 특허 AI 시뮬레이션 포털</p>
+                        <p style={{marginTop: '10px', fontSize: '0.9em'}}>
+                            <strong>오픈해시</strong>는 블록체인 대비 98.5% 에너지를 절감하고 82.3배 빠른 처리 속도를 달성합니다
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<PatentPortal />, document.getElementById('root'));
+    </script>
+</body>
+</html>

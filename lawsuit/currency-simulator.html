@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>민간 경쟁형 디지털 화폐 시뮬레이터 | 세계 최초 완전 자율 금융 생태계</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.5.0/dist/Recharts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1e3a8a;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fbbf24;
+            border: 2px solid #fbbf24;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .tab-btn {
+            padding: 15px 25px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-color: #3b82f6;
+            color: #fbbf24;
+        }
+
+        .simulator {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .simulator h2 {
+            color: #fbbf24;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-size: 1em;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .card {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        .card-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+
+        .card-label {
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        .progress-container {
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 40px;
+            background: #0f172a;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+        }
+
+        .progress-step.active {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .progress-step.completed {
+            color: #10b981;
+        }
+
+        .transaction-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .transaction-item:hover {
+            border-color: #3b82f6;
+            transform: translateX(5px);
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .transaction-hash {
+            font-family: monospace;
+            color: #3b82f6;
+            font-size: 0.9em;
+        }
+
+        .transaction-time {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .transaction-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .transaction-detail {
+            font-size: 0.85em;
+        }
+
+        .transaction-detail strong {
+            color: #fbbf24;
+        }
+
+        .racing-container {
+            margin: 30px 0;
+        }
+
+        .racing-bar {
+            margin-bottom: 20px;
+        }
+
+        .racing-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .racing-track {
+            width: 100%;
+            height: 50px;
+            background: #0f172a;
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .racing-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.1s linear;
+        }
+
+        .rate-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .rate-item {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .rate-item:hover {
+            border-color: #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .rate-flag {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .rate-currency {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #cbd5e1;
+            margin-bottom: 5px;
+        }
+
+        .rate-value {
+            font-size: 1.5em;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .rate-change {
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .rate-change.up {
+            color: #10b981;
+        }
+
+        .rate-change.down {
+            color: #ef4444;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+
+        .stats-dashboard {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .stats-dashboard h2 {
+            color: #fbbf24;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: #0f172a;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .footer h3 {
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #3b82f6;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .stat-value {
+                font-size: 1.8em;
+            }
+
+            .simulator {
+                padding: 20px;
+            }
+
+            .tab-btn {
+                padding: 12px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .processing {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: slideIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const generateHash = () => {
+            return '0x' + Array.from({length: 8}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('').toUpperCase();
+        };
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        const formatNumber = (num) => {
+            return new Intl.NumberFormat('ko-KR').format(num);
+        };
+
+        const IssuanceSimulator = () => {
+            const [step, setStep] = useState(0);
+            const [formData, setFormData] = useState({
+                companyName: '',
+                currencyCode: '',
+                initialSupply: 1000000,
+                collateral: 'real-estate'
+            });
+            const [processing, setProcessing] = useState(false);
+            const [result, setResult] = useState(null);
+
+            const steps = [
+                '발행 정보 입력',
+                'AI 검증 진행',
+                'FPGA 처리',
+                '발행 완료'
+            ];
+
+            const handleInputChange = (e) => {
+                setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value
+                });
+            };
+
+            const startIssuance = async () => {
+                if (!formData.companyName || !formData.currencyCode) {
+                    alert('모든 필드를 입력해주세요.');
+                    return;
+                }
+
+                setProcessing(true);
+                setStep(1);
+                await delay(1500);
+                setStep(2);
+                await delay(1500);
+                setStep(3);
+                await delay(500);
+                
+                const issuanceResult = {
+                    txHash: generateHash(),
+                    blockHeight: Math.floor(Math.random() * 1000000) + 1000000,
+                    aiScore: 0.994,
+                    suspicionScore: 0.12,
+                    processingTime: 0.032,
+                    timestamp: new Date().toISOString()
+                };
+                setResult(issuanceResult);
+                setProcessing(false);
+            };
+
+            const reset = () => {
+                setStep(0);
+                setResult(null);
+                setFormData({
+                    companyName: '',
+                    currencyCode: '',
+                    initialSupply: 1000000,
+                    collateral: 'real-estate'
+                });
+            };
+
+            return (
+                <div className="simulator fade-in">
+                    <h2>💰 민간 화폐 발행 시뮬레이터</h2>
+                    
+                    {!result ? (
+                        <>
+                            <div className="progress-container">
+                                <div className="progress-bar">
+                                    <div 
+                                        className="progress-fill"
+                                        style={{width: `${(step / (steps.length - 1)) * 100}%`}}
+                                    >
+                                        {Math.round((step / (steps.length - 1)) * 100)}%
+                                    </div>
+                                </div>
+                                <div className="progress-steps">
+                                    {steps.map((label, idx) => (
+                                        <div 
+                                            key={idx}
+                                            className={`progress-step ${
+                                                idx < step ? 'completed' : 
+                                                idx === step ? 'active' : ''
+                                            }`}
+                                        >
+                                            {label}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {step === 0 && (
+                                <div className="grid grid-2">
+                                    <div className="form-group">
+                                        <label>발행 기관명</label>
+                                        <input
+                                            type="text"
+                                            name="companyName"
+                                            value={formData.companyName}
+                                            onChange={handleInputChange}
+                                            placeholder="예: Jupiter Finance"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>화폐 코드 (3자)</label>
+                                        <input
+                                            type="text"
+                                            name="currencyCode"
+                                            value={formData.currencyCode}
+                                            onChange={handleInputChange}
+                                            placeholder="예: JFC"
+                                            maxLength={3}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>초기 발행량</label>
+                                        <input
+                                            type="number"
+                                            name="initialSupply"
+                                            value={formData.initialSupply}
+                                            onChange={handleInputChange}
+                                            min={100000}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>담보 자산</label>
+                                        <select
+                                            name="collateral"
+                                            value={formData.collateral}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="real-estate">부동산</option>
+                                            <option value="bonds">국채</option>
+                                            <option value="gold">금</option>
+                                            <option value="stocks">주식</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            )}
+
+                            {step === 1 && (
+                                <div className="alert alert-info processing">
+                                    <h3>🤖 AI 검증 진행 중...</h3>
+                                    <p>BERT 768차원 임베딩 분석</p>
+                                    <p>신용도 점수 계산</p>
+                                    <p>의심도 점수 산출</p>
+                                </div>
+                            )}
+
+                            {step === 2 && (
+                                <div className="alert alert-info processing">
+                                    <h3>⚡ FPGA 하드웨어 가속 처리 중...</h3>
+                                    <p>Xilinx Versal ACAP VCK190 활용</p>
+                                    <p>899K 논리셀 동작</p>
+                                    <p>영지식 증명 생성</p>
+                                </div>
+                            )}
+
+                            <button 
+                                className="btn btn-primary"
+                                onClick={startIssuance}
+                                disabled={processing || step > 0}
+                                style={{width: '100%', marginTop: '20px'}}
+                            >
+                                {processing ? '처리 중...' : '화폐 발행 시작'}
+                            </button>
+                        </>
+                    ) : (
+                        <div className="fade-in">
+                            <div className="alert alert-success">
+                                <h3>✅ 화폐 발행 완료!</h3>
+                                <p>{formData.companyName}의 {formData.currencyCode} {formatNumber(formData.initialSupply)}개가 성공적으로 발행되었습니다.</p>
+                            </div>
+
+                            <div className="grid grid-3">
+                                <div className="card">
+                                    <h3>트랜잭션</h3>
+                                    <div className="card-value" style={{fontSize: '1.2em'}}>{result.txHash}</div>
+                                    <div className="card-label">블록: #{formatNumber(result.blockHeight)}</div>
+                                </div>
+                                <div className="card">
+                                    <h3>AI 검증</h3>
+                                    <div className="card-value">{(result.aiScore * 100).toFixed(1)}%</div>
+                                    <div className="card-label">의심도: {(result.suspicionScore * 100).toFixed(1)}%</div>
+                                </div>
+                                <div className="card">
+                                    <h3>처리 시간</h3>
+                                    <div className="card-value">{result.processingTime}ms</div>
+                                    <div className="card-label">FPGA 가속 적용</div>
+                                </div>
+                            </div>
+
+                            <button 
+                                className="btn btn-secondary"
+                                onClick={reset}
+                                style={{width: '100%', marginTop: '20px'}}
+                            >
+                                새로운 화폐 발행하기
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const ExchangeSimulator = () => {
+            const [fromCurrency, setFromCurrency] = useState('JFC');
+            const [toCurrency, setToCurrency] = useState('USD');
+            const [amount, setAmount] = useState(1000);
+            const [rates, setRates] = useState({
+                USD: 1.2475,
+                EUR: 1.1820,
+                JPY: 186.25,
+                KRW: 1625,
+                CNY: 8.95,
+                GBP: 0.9850
+            });
+            const [processing, setProcessing] = useState(false);
+            const [result, setResult] = useState(null);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setRates(prev => {
+                        const newRates = {...prev};
+                        Object.keys(newRates).forEach(currency => {
+                            const variation = (Math.random() - 0.5) * 0.01;
+                            newRates[currency] = prev[currency] * (1 + variation);
+                        });
+                        return newRates;
+                    });
+                }, 3000);
+
+                return () => clearInterval(interval);
+            }, []);
+
+            const handleExchange = async () => {
+                setProcessing(true);
+                await delay(1500);
+
+                const rate = rates[toCurrency];
+                const exchangedAmount = amount * rate;
+                const fee = exchangedAmount * 0.001;
+                const netAmount = exchangedAmount - fee;
+
+                setResult({
+                    txHash: generateHash(),
+                    rate: rate,
+                    gross: exchangedAmount,
+                    fee: fee,
+                    net: netAmount,
+                    processingTime: 0.040,
+                    timestamp: new Date().toISOString()
+                });
+
+                setProcessing(false);
+            };
+
+            const getRateChange = () => {
+                const change = (Math.random() - 0.5) * 0.3;
+                return change;
+            };
+
+            return (
+                <div className="simulator fade-in">
+                    <h2>💱 실시간 환전 시뮬레이터</h2>
+
+                    <div className="alert alert-info">
+                        <strong>💡 실시간 환율이 3초마다 업데이트됩니다</strong>
+                    </div>
+
+                    <div className="grid grid-2" style={{marginBottom: '30px'}}>
+                        <div className="form-group">
+                            <label>보유 화폐</label>
+                            <select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
+                                <option value="JFC">JFC (Jupiter Coin)</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>환전 화폐</label>
+                            <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
+                                <option value="USD">USD (미국 달러)</option>
+                                <option value="EUR">EUR (유로)</option>
+                                <option value="JPY">JPY (일본 엔)</option>
+                                <option value="KRW">KRW (한국 원)</option>
+                                <option value="CNY">CNY (중국 위안)</option>
+                                <option value="GBP">GBP (영국 파운드)</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>환전 수량</label>
+                            <input
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(Number(e.target.value))}
+                                min={1}
+                            />
+                        </div>
+                        <div className="card">
+                            <h3>예상 수령액</h3>
+                            <div className="card-value">
+                                {formatNumber((amount * rates[toCurrency] * 0.999).toFixed(2))}
+                            </div>
+                            <div className="card-label">{toCurrency}</div>
+                        </div>
+                    </div>
+
+                    <div className="rate-board">
+                        <div className="rate-item">
+                            <div className="rate-flag">🇺🇸</div>
+                            <div className="rate-currency">USD</div>
+                            <div className="rate-value">${rates.USD.toFixed(4)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div className="rate-item">
+                            <div className="rate-flag">🇪🇺</div>
+                            <div className="rate-currency">EUR</div>
+                            <div className="rate-value">€{rates.EUR.toFixed(4)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div className="rate-item">
+                            <div className="rate-flag">🇯🇵</div>
+                            <div className="rate-currency">JPY</div>
+                            <div className="rate-value">¥{rates.JPY.toFixed(2)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div className="rate-item">
+                            <div className="rate-flag">🇰🇷</div>
+                            <div className="rate-currency">KRW</div>
+                            <div className="rate-value">₩{rates.KRW.toFixed(2)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div className="rate-item">
+                            <div className="rate-flag">🇨🇳</div>
+                            <div className="rate-currency">CNY</div>
+                            <div className="rate-value">¥{rates.CNY.toFixed(4)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                        <div className="rate-item">
+                            <div className="rate-flag">🇬🇧</div>
+                            <div className="rate-currency">GBP</div>
+                            <div className="rate-value">£{rates.GBP.toFixed(4)}</div>
+                            <div className={`rate-change ${getRateChange() >= 0 ? 'up' : 'down'}`}>
+                                {getRateChange() >= 0 ? '▲' : '▼'} {Math.abs(getRateChange()).toFixed(2)}%
+                            </div>
+                        </div>
+                    </div>
+
+                    {result && (
+                        <div className="alert alert-success" style={{marginTop: '30px'}}>
+                            <h3>✅ 환전 완료!</h3>
+                            <div className="grid grid-3" style={{marginTop: '20px'}}>
+                                <div>
+                                    <strong>트랜잭션:</strong> {result.txHash}
+                                </div>
+                                <div>
+                                    <strong>환율:</strong> 1 JFC = {result.rate.toFixed(4)} {toCurrency}
+                                </div>
+                                <div>
+                                    <strong>처리 시간:</strong> {result.processingTime}ms
+                                </div>
+                                <div>
+                                    <strong>환전액:</strong> {formatNumber(result.gross.toFixed(2))} {toCurrency}
+                                </div>
+                                <div>
+                                    <strong>수수료:</strong> {formatNumber(result.fee.toFixed(2))} {toCurrency}
+                                </div>
+                                <div>
+                                    <strong>순수령액:</strong> {formatNumber(result.net.toFixed(2))} {toCurrency}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <button 
+                        className="btn btn-primary"
+                        onClick={handleExchange}
+                        disabled={processing}
+                        style={{width: '100%', marginTop: '20px'}}
+                    >
+                        {processing ? '환전 처리 중...' : '환전 실행'}
+                    </button>
+                </div>
+            );
+        };
+
+        const AutonomousFinanceSimulator = () => {
+            const [service, setService] = useState('bank');
+            const [bankResult, setBankResult] = useState(null);
+            const [insuranceResult, setInsuranceResult] = useState(null);
+            const [stockResult, setStockResult] = useState(null);
+            const [processing, setProcessing] = useState(false);
+
+            const userProfile = {
+                assets: 50000,
+                income: 5000,
+                creditScore: 0.85,
+                debtRatio: 12,
+                age: 35,
+                transactionFreq: 15
+            };
+
+            const simulateBank = async () => {
+                setProcessing(true);
+                await delay(1500);
+
+                setBankResult({
+                    approved: true,
+                    amount: 20000,
+                    interestRate: 3.2,
+                    repaymentProb: 0.92,
+                    processingTime: 0.045
+                });
+
+                setProcessing(false);
+            };
+
+            const simulateInsurance = async () => {
+                setProcessing(true);
+                await delay(1500);
+
+                setInsuranceResult({
+                    approved: true,
+                    monthlyPremium: 45,
+                    coverage: 100000,
+                    riskScore: 0.23,
+                    processingTime: 0.028
+                });
+
+                setProcessing(false);
+            };
+
+            const simulateStock = async () => {
+                setProcessing(true);
+                await delay(1500);
+
+                setStockResult({
+                    stocks: 40,
+                    bonds: 30,
+                    crypto: 20,
+                    cash: 10,
+                    expectedReturn: 8.5,
+                    processingTime: 0.15
+                });
+
+                setProcessing(false);
+            };
+
+            return (
+                <div className="simulator fade-in">
+                    <h2>🤖 완전 자율 금융 시뮬레이터</h2>
+
+                    <div className="alert alert-info">
+                        <strong>👤 사용자 프로필</strong>
+                        <div className="grid grid-3" style={{marginTop: '15px'}}>
+                            <div>보유 자산: {formatNumber(userProfile.assets)} JFC</div>
+                            <div>월 소득: {formatNumber(userProfile.income)} JFC</div>
+                            <div>신용 점수: {(userProfile.creditScore * 100).toFixed(0)}점</div>
+                            <div>부채비율: {userProfile.debtRatio}%</div>
+                            <div>연령: {userProfile.age}세</div>
+                            <div>거래 빈도: 주 {userProfile.transactionFreq}회</div>
+                        </div>
+                    </div>
+
+                    <div className="tab-nav">
+                        <button 
+                            className={`tab-btn ${service === 'bank' ? 'active' : ''}`}
+                            onClick={() => setService('bank')}
+                        >
+                            🏦 자율 은행
+                        </button>
+                        <button 
+                            className={`tab-btn ${service === 'insurance' ? 'active' : ''}`}
+                            onClick={() => setService('insurance')}
+                        >
+                            🛡️ 자율 보험
+                        </button>
+                        <button 
+                            className={`tab-btn ${service === 'stock' ? 'active' : ''}`}
+                            onClick={() => setService('stock')}
+                        >
+                            📈 자율 증권
+                        </button>
+                    </div>
+
+                    {service === 'bank' && (
+                        <div className="fade-in">
+                            <h3 style={{marginBottom: '20px'}}>자동 대출 승인</h3>
+                            <p style={{marginBottom: '20px', color: '#94a3b8'}}>
+                                LSTM 신경망이 상환능력을 분석하고 0.045ms 이내에 자동으로 대출을 승인합니다.
+                            </p>
+
+                            {!bankResult ? (
+                                <button 
+                                    className="btn btn-primary"
+                                    onClick={simulateBank}
+                                    disabled={processing}
+                                    style={{width: '100%'}}
+                                >
+                                    {processing ? '분석 중...' : '대출 신청'}
+                                </button>
+                            ) : (
+                                <div className="alert alert-success">
+                                    <h3>✅ 대출 승인 완료!</h3>
+                                    <div className="grid grid-3" style={{marginTop: '20px'}}>
+                                        <div className="card">
+                                            <h3>승인 금액</h3>
+                                            <div className="card-value">{formatNumber(bankResult.amount)}</div>
+                                            <div className="card-label">JFC</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>이자율</h3>
+                                            <div className="card-value">{bankResult.interestRate}%</div>
+                                            <div className="card-label">연 이자율</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>상환 확률</h3>
+                                            <div className="card-value">{(bankResult.repaymentProb * 100).toFixed(0)}%</div>
+                                            <div className="card-label">AI 예측</div>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop: '20px', textAlign: 'center'}}>
+                                        <strong>처리 시간:</strong> {bankResult.processingTime}ms (FPGA 가속)
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {service === 'insurance' && (
+                        <div className="fade-in">
+                            <h3 style={{marginBottom: '20px'}}>자동 보험 가입</h3>
+                            <p style={{marginBottom: '20px', color: '#94a3b8'}}>
+                                거래 패턴을 분석하여 개인별 위험도를 계산하고 0.028ms 이내에 보험료를 산정합니다.
+                            </p>
+
+                            {!insuranceResult ? (
+                                <button 
+                                    className="btn btn-primary"
+                                    onClick={simulateInsurance}
+                                    disabled={processing}
+                                    style={{width: '100%'}}
+                                >
+                                    {processing ? '분석 중...' : '보험 가입'}
+                                </button>
+                            ) : (
+                                <div className="alert alert-success">
+                                    <h3>✅ 보험 가입 완료!</h3>
+                                    <div className="grid grid-3" style={{marginTop: '20px'}}>
+                                        <div className="card">
+                                            <h3>월 보험료</h3>
+                                            <div className="card-value">{formatNumber(insuranceResult.monthlyPremium)}</div>
+                                            <div className="card-label">JFC</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>보장 한도</h3>
+                                            <div className="card-value">{formatNumber(insuranceResult.coverage)}</div>
+                                            <div className="card-label">JFC</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>위험 점수</h3>
+                                            <div className="card-value">{(insuranceResult.riskScore * 100).toFixed(0)}%</div>
+                                            <div className="card-label">낮음</div>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop: '20px', textAlign: 'center'}}>
+                                        <strong>처리 시간:</strong> {insuranceResult.processingTime}ms (FPGA 가속)
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {service === 'stock' && (
+                        <div className="fade-in">
+                            <h3 style={{marginBottom: '20px'}}>자동 포트폴리오 최적화</h3>
+                            <p style={{marginBottom: '20px', color: '#94a3b8'}}>
+                                100개 자산에 대한 평균-분산 최적화를 0.15ms 이내에 수행합니다.
+                            </p>
+
+                            {!stockResult ? (
+                                <button 
+                                    className="btn btn-primary"
+                                    onClick={simulateStock}
+                                    disabled={processing}
+                                    style={{width: '100%'}}
+                                >
+                                    {processing ? '최적화 중...' : '포트폴리오 최적화'}
+                                </button>
+                            ) : (
+                                <div className="alert alert-success">
+                                    <h3>✅ 포트폴리오 최적화 완료!</h3>
+                                    <div className="grid grid-2" style={{marginTop: '20px'}}>
+                                        <div className="card">
+                                            <h3>주식</h3>
+                                            <div className="card-value">{stockResult.stocks}%</div>
+                                            <div className="card-label">고성장 테크</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>채권</h3>
+                                            <div className="card-value">{stockResult.bonds}%</div>
+                                            <div className="card-label">안전 자산</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>암호화폐</h3>
+                                            <div className="card-value">{stockResult.crypto}%</div>
+                                            <div className="card-label">고위험</div>
+                                        </div>
+                                        <div className="card">
+                                            <h3>현금</h3>
+                                            <div className="card-value">{stockResult.cash}%</div>
+                                            <div className="card-label">유동성</div>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop: '20px', textAlign: 'center'}}>
+                                        <div style={{fontSize: '1.2em', marginBottom: '10px'}}>
+                                            <strong>예상 수익률:</strong> <span style={{color: '#10b981'}}>연 {stockResult.expectedReturn}%</span>
+                                        </div>
+                                        <strong>처리 시간:</strong> {stockResult.processingTime}ms (FPGA 가속)
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const PerformanceSimulator = () => {
+            const [racing, setRacing] = useState(false);
+            const [progress, setProgress] = useState({
+                bitcoin: 0,
+                ethereum: 0,
+                visa: 0,
+                invention: 0
+            });
+
+            const systems = [
+                { name: 'Bitcoin', key: 'bitcoin', time: 600000, color: '#f7931a', icon: '🐌' },
+                { name: 'Ethereum', key: 'ethereum', time: 13000, color: '#627eea', icon: '🚶' },
+                { name: 'Visa AI', key: 'visa', time: 500, color: '#1a1f71', icon: '🏃' },
+                { name: '본 발명', key: 'invention', time: 0.032, color: '#10b981', icon: '🚀' }
+            ];
+
+            const startRace = () => {
+                setRacing(true);
+                setProgress({ bitcoin: 0, ethereum: 0, visa: 0, invention: 0 });
+
+                const maxTime = 600000;
+                const duration = 3000;
+                const fps = 60;
+                const frames = duration * fps / 1000;
+
+                let frame = 0;
+                const interval = setInterval(() => {
+                    frame++;
+                    const progressPercent = (frame / frames) * 100;
+
+                    setProgress({
+                        bitcoin: Math.min(progressPercent, 100),
+                        ethereum: Math.min((progressPercent * maxTime / 13000), 100),
+                        visa: Math.min((progressPercent * maxTime / 500), 100),
+                        invention: 100
+                    });
+
+                    if (frame >= frames) {
+                        clearInterval(interval);
+                        setRacing(false);
+                    }
+                }, 1000 / fps);
+            };
+
+            return (
+                <div className="simulator fade-in">
+                    <h2>⚡ 실시간 성능 비교</h2>
+
+                    <div className="alert alert-info">
+                        <strong>💡 동일한 거래를 처리하는 시간을 비교합니다</strong>
+                    </div>
+
+                    <div className="racing-container">
+                        {systems.map(system => (
+                            <div key={system.key} className="racing-bar">
+                                <div className="racing-label">
+                                    <span>
+                                        {system.icon} {system.name}
+                                    </span>
+                                    <span style={{color: system.color, fontWeight: 'bold'}}>
+                                        {system.time >= 1000 ? 
+                                            `${(system.time / 1000).toFixed(0)}초` : 
+                                            system.time >= 1 ?
+                                            `${system.time.toFixed(0)}ms` :
+                                            `${system.time}ms`
+                                        }
+                                    </span>
+                                </div>
+                                <div className="racing-track">
+                                    <div 
+                                        className="racing-progress"
+                                        style={{
+                                            width: `${progress[system.key]}%`,
+                                            background: `linear-gradient(90deg, ${system.color} 0%, ${system.color}dd 100%)`
+                                        }}
+                                    >
+                                        {progress[system.key] >= 100 && '✓'}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <button 
+                        className="btn btn-primary"
+                        onClick={startRace}
+                        disabled={racing}
+                        style={{width: '100%', marginTop: '20px'}}
+                    >
+                        {racing ? '경주 진행 중...' : '성능 비교 시작'}
+                    </button>
+
+                    {progress.invention >= 100 && (
+                        <div className="alert alert-success" style={{marginTop: '20px'}}>
+                            <h3>🏆 본 발명의 압도적 성능!</h3>
+                            <div className="grid grid-2" style={{marginTop: '15px'}}>
+                                <div>
+                                    <strong>Bitcoin 대비:</strong> <span style={{color: '#10b981'}}>18,750,000배 빠름</span>
+                                </div>
+                                <div>
+                                    <strong>Ethereum 대비:</strong> <span style={{color: '#10b981'}}>406,250배 빠름</span>
+                                </div>
+                                <div>
+                                    <strong>Visa AI 대비:</strong> <span style={{color: '#10b981'}}>15,625배 빠름</span>
+                                </div>
+                                <div>
+                                    <strong>전력 효율:</strong> <span style={{color: '#10b981'}}>GPU 대비 88% 절감</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const TransactionExplorer = () => {
+            const [transactions, setTransactions] = useState([]);
+            const [autoGenerate, setAutoGenerate] = useState(false);
+
+            useEffect(() => {
+                const initial = Array.from({length: 5}, () => generateTransaction());
+                setTransactions(initial);
+            }, []);
+
+            useEffect(() => {
+                if (!autoGenerate) return;
+
+                const interval = setInterval(() => {
+                    setTransactions(prev => [generateTransaction(), ...prev.slice(0, 9)]);
+                }, 2000);
+
+                return () => clearInterval(interval);
+            }, [autoGenerate]);
+
+            const generateTransaction = () => {
+                return {
+                    hash: generateHash(),
+                    from: generateHash(),
+                    to: generateHash(),
+                    amount: Math.floor(Math.random() * 5000) + 100,
+                    aiScore: 0.97 + Math.random() * 0.03,
+                    processingTime: 0.025 + Math.random() * 0.015,
+                    blockHeight: Math.floor(Math.random() * 100000) + 1000000,
+                    timestamp: new Date().toISOString()
+                };
+            };
+
+            return (
+                <div className="simulator fade-in">
+                    <h2>🔍 블록체인 익스플로러</h2>
+
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+                        <div className="alert alert-info" style={{flex: 1, marginRight: '20px', marginBottom: 0}}>
+                            <strong>📊 실시간 거래 모니터링</strong>
+                        </div>
+                        <button 
+                            className={`btn ${autoGenerate ? 'btn-secondary' : 'btn-primary'}`}
+                            onClick={() => setAutoGenerate(!autoGenerate)}
+                        >
+                            {autoGenerate ? '자동 생성 중지' : '자동 생성 시작'}
+                        </button>
+                    </div>
+
+                    <div className="transaction-list">
+                        {transactions.map((tx, idx) => (
+                            <div key={idx} className="transaction-item fade-in">
+                                <div className="transaction-header">
+                                    <span className="transaction-hash">{tx.hash}</span>
+                                    <span className="transaction-time">{tx.processingTime.toFixed(3)}ms</span>
+                                </div>
+                                <div className="transaction-details">
+                                    <div className="transaction-detail">
+                                        <strong>발신:</strong> {tx.from.substring(0, 10)}...
+                                    </div>
+                                    <div className="transaction-detail">
+                                        <strong>수신:</strong> {tx.to.substring(0, 10)}...
+                                    </div>
+                                    <div className="transaction-detail">
+                                        <strong>금액:</strong> {formatNumber(tx.amount)} JFC
+                                    </div>
+                                    <div className="transaction-detail">
+                                        <strong>AI 검증:</strong> {(tx.aiScore * 100).toFixed(1)}%
+                                    </div>
+                                    <div className="transaction-detail">
+                                        <strong>블록:</strong> #{formatNumber(tx.blockHeight)}
+                                    </div>
+                                    <div className="transaction-detail">
+                                        <span className="status-badge status-success">✓ 승인됨</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('issuance');
+
+            const tabs = [
+                { id: 'issuance', label: '💰 화폐 발행', icon: '💰' },
+                { id: 'exchange', label: '💱 환전', icon: '💱' },
+                { id: 'finance', label: '🤖 자율 금융', icon: '🤖' },
+                { id: 'performance', label: '⚡ 성능 비교', icon: '⚡' },
+                { id: 'explorer', label: '🔍 거래 내역', icon: '🔍' }
+            ];
+
+            return (
+                <div className="container">
+                    <div className="hero">
+                        <h1>민간 경쟁형 디지털 화폐</h1>
+                        <p>세계 최초 완전 자율 금융 생태계 - 체험해보세요</p>
+                        <div className="hero-stats">
+                            <div className="stat">
+                                <div className="stat-value">0.032ms</div>
+                                <div className="stat-label">초고속 처리</div>
+                            </div>
+                            <div className="stat">
+                                <div className="stat-value">99.4%</div>
+                                <div className="stat-label">AI 검증 정확도</div>
+                            </div>
+                            <div className="stat">
+                                <div className="stat-value">88%</div>
+                                <div className="stat-label">전력 절감</div>
+                            </div>
+                        </div>
+                        <div className="hero-buttons">
+                            <button className="btn btn-primary" onClick={() => setActiveTab('issuance')}>
+                                시뮬레이션 시작
+                            </button>
+                            <button className="btn btn-secondary" onClick={() => window.open('/특허출원서.pdf', '_blank')}>
+                                특허 문서 보기
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="tab-nav">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                                onClick={() => setActiveTab(tab.id)}
+                            >
+                                {tab.icon} {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {activeTab === 'issuance' && <IssuanceSimulator />}
+                    {activeTab === 'exchange' && <ExchangeSimulator />}
+                    {activeTab === 'finance' && <AutonomousFinanceSimulator />}
+                    {activeTab === 'performance' && <PerformanceSimulator />}
+                    {activeTab === 'explorer' && <TransactionExplorer />}
+
+                    <div className="stats-dashboard">
+                        <h2>📊 실시간 통계</h2>
+                        <div className="grid grid-3">
+                            <div className="card">
+                                <h3>총 발행량</h3>
+                                <div className="card-value">{formatNumber(12847392)}</div>
+                                <div className="card-label">JFC</div>
+                            </div>
+                            <div className="card">
+                                <h3>환전 거래</h3>
+                                <div className="card-value">{formatNumber(45821)}</div>
+                                <div className="card-label">24시간</div>
+                            </div>
+                            <div className="card">
+                                <h3>평균 처리 속도</h3>
+                                <div className="card-value">0.036ms</div>
+                                <div className="card-label">FPGA 가속</div>
+                            </div>
+                            <div className="card">
+                                <h3>AI 검증률</h3>
+                                <div className="card-value">99.4%</div>
+                                <div className="card-label">정확도</div>
+                            </div>
+                            <div className="card">
+                                <h3>전력 효율</h3>
+                                <div className="card-value">15.7W</div>
+                                <div className="card-label">GPU 대비 88% 절감</div>
+                            </div>
+                            <div className="card">
+                                <h3>글로벌 준수</h3>
+                                <div className="card-value">30개국</div>
+                                <div className="card-label">규제 자동 준수</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="footer">
+                        <h3>📄 특허 문서 및 기술 자료</h3>
+                        <p style={{marginBottom: '20px', color: '#94a3b8'}}>
+                            민간 경쟁형 디지털 화폐 발행 시스템 및 FPGA 기반 AI 재무제표 검증 방법
+                        </p>
+                        <div className="footer-links">
+                            <a href="/특허출원서.pdf" className="footer-link" target="_blank">
+                                📥 특허 출원서 다운로드
+                            </a>
+                            <a href="mailto:contact@example.com" className="footer-link">
+                                ✉️ 문의하기
+                            </a>
+                            <a href="#" className="footer-link" onClick={(e) => {
+                                e.preventDefault();
+                                setActiveTab('issuance');
+                                window.scrollTo({top: 0, behavior: 'smooth'});
+                            }}>
+                                🔝 맨 위로
+                            </a>
+                        </div>
+                        <div style={{marginTop: '30px', color: '#64748b', fontSize: '0.9em'}}>
+                            <p>© 2025 민간 경쟁형 디지털 화폐 시스템. All rights reserved.</p>
+                            <p>본 시뮬레이터는 특허 기술의 이해를 돕기 위한 데모용입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

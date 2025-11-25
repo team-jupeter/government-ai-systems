@@ -1,0 +1,169 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import anthropic
+import os
+import logging
+
+app = Flask(__name__)
+CORS(app)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
+client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
+
+SYSTEM_INFO = {
+    "system_name": "제주도청 AI 행정업무 자동화 시스템",
+    "description": "제주특별자치도 행정 전 분야 AI 통합 플랫폼",
+    "departments": 42,
+    "employees": 4500,
+    "daily_documents": 12000,
+    "automation_rate": "89.5%",
+    "budget_managed": "7.2조 원"
+}
+
+DEPARTMENTS = [
+    {"id": "planning", "name": "기획조정실", "icon": "📊", "staff": 120},
+    {"id": "admin", "name": "행정국", "icon": "🏛️", "staff": 180},
+    {"id": "economy", "name": "경제산업국", "icon": "💼", "staff": 150},
+    {"id": "tourism", "name": "관광국", "icon": "🏝️", "staff": 130},
+    {"id": "welfare", "name": "보건복지여성국", "icon": "❤️", "staff": 200},
+    {"id": "environment", "name": "환경보전국", "icon": "🌿", "staff": 140},
+    {"id": "construction", "name": "건설교통국", "icon": "🚧", "staff": 160},
+    {"id": "agriculture", "name": "농축산식품국", "icon": "🌾", "staff": 110},
+    {"id": "culture", "name": "문화체육대외협력국", "icon": "🎭", "staff": 90},
+    {"id": "safety", "name": "안전총괄과", "icon": "🛡️", "staff": 80}
+]
+
+SCENARIOS = [
+    {
+        "icon": "📝",
+        "title": "문서 자동 처리",
+        "problem": "일 12,000건 문서 처리에 공무원 업무시간 60% 소요",
+        "solution": "AI가 문서 분류, 요약, 결재 라인 자동 추천",
+        "savings": "업무시간 72% 절감"
+    },
+    {
+        "icon": "💰",
+        "title": "예산 최적화",
+        "problem": "7.2조 예산 편성에 3개월 소요, 비효율 집행 발생",
+        "solution": "AI가 과거 데이터 분석하여 최적 예산 배분 추천",
+        "savings": "예산 효율 34% 향상"
+    },
+    {
+        "icon": "📞",
+        "title": "민원 자동 응대",
+        "problem": "일 3,500건 민원 전화, 공무원 응대 한계",
+        "solution": "AI가 24시간 민원 응대, 복잡한 건만 담당자 연결",
+        "savings": "민원 처리 시간 85% 단축"
+    },
+    {
+        "icon": "🗓️",
+        "title": "일정 최적화",
+        "problem": "회의, 출장, 행사 일정 조율에 많은 시간 소요",
+        "solution": "AI가 참석자 일정, 장소, 중요도 고려하여 최적 일정 자동 조율",
+        "savings": "일정 조율 시간 90% 절감"
+    }
+]
+
+AGENTS = [
+    {"id": "document_assistant", "name": "📄 문서 처리 Agent"},
+    {"id": "budget_advisor", "name": "💰 예산 분석 Agent"},
+    {"id": "civil_service", "name": "📞 민원 응대 Agent"},
+    {"id": "policy_analyst", "name": "📊 정책 분석 Agent"},
+    {"id": "schedule_manager", "name": "🗓️ 일정 관리 Agent"}
+]
+
+@app.route('/api/jeju-admin/info', methods=['GET'])
+def get_info():
+    return jsonify(SYSTEM_INFO)
+
+@app.route('/api/jeju-admin/departments', methods=['GET'])
+def get_departments():
+    return jsonify({"departments": DEPARTMENTS})
+
+@app.route('/api/jeju-admin/scenarios', methods=['GET'])
+def get_scenarios():
+    return jsonify({"scenarios": SCENARIOS})
+
+@app.route('/api/jeju-admin/agents', methods=['GET'])
+def get_agents():
+    return jsonify({"agents": AGENTS})
+
+@app.route('/api/jeju-admin/consultation', methods=['POST', 'OPTIONS'])
+def consultation():
+    if request.method == 'OPTIONS':
+        return '', 204
+    
+    if not client:
+        return jsonify({"response": "⚠️ API 키가 설정되지 않았습니다."}), 200
+    
+    try:
+        data = request.json
+        message = data.get('message', '')
+        agent_type = data.get('agent_type', 'civil_service')
+        
+        prompts = {
+            "document_assistant": "당신은 제주도청 문서 처리 AI입니다. 공문서 작성, 결재, 보관, 검색을 지원합니다.",
+            "budget_advisor": "당신은 제주도청 예산 분석 AI입니다. 예산 편성, 집행, 결산 분석을 지원합니다.",
+            "civil_service": "당신은 제주도청 민원 응대 AI입니다. 도민의 문의와 민원을 친절히 안내합니다.",
+            "policy_analyst": "당신은 제주도청 정책 분석 AI입니다. 정책 효과 분석, 대안 제시를 지원합니다.",
+            "schedule_manager": "당신은 제주도청 일정 관리 AI입니다. 회의, 행사, 출장 일정을 최적화합니다."
+        }
+        
+        system_prompt = prompts.get(agent_type, prompts["civil_service"])
+        system_prompt += "\n\n제주특별자치도의 행정 업무를 전문적으로 지원합니다. 친절하고 정확하게 안내하세요."
+        
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1500,
+            system=system_prompt,
+            messages=[{"role": "user", "content": message}]
+        )
+        
+        return jsonify({"response": response.content[0].text})
+        
+    except Exception as e:
+        return jsonify({"response": f"오류: {str(e)}"}), 500
+
+@app.route('/api/jeju-admin/process-document', methods=['POST'])
+def process_document():
+    data = request.json
+    doc_type = data.get('type', '일반')
+    
+    result = {
+        "document_id": "JJ-DOC-2025-112400001",
+        "type": doc_type,
+        "status": "처리완료",
+        "ai_summary": "제주시 도시계획 변경 관련 협의 요청 문서입니다.",
+        "recommended_department": "건설교통국",
+        "priority": "보통",
+        "approval_line": ["담당자", "팀장", "과장", "국장"],
+        "processed_at": "2025-11-24T07:40:00Z"
+    }
+    
+    return jsonify({"result": result})
+
+@app.route('/api/jeju-admin/budget-analysis', methods=['POST'])
+def budget_analysis():
+    data = request.json
+    department = data.get('department', 'planning')
+    
+    analysis = {
+        "department": department,
+        "total_budget": "1,850억 원",
+        "executed": "1,234억 원",
+        "execution_rate": "66.7%",
+        "remaining": "616억 원",
+        "ai_recommendation": "4분기 집행률 개선 필요. 미집행 사업 3건 검토 권고.",
+        "risk_items": [
+            {"name": "도로 확장 공사", "risk": "예산 초과 예상", "solution": "설계 변경 검토"}
+        ]
+    }
+    
+    return jsonify({"analysis": analysis})
+
+if __name__ == '__main__':
+    logger.info("🚀 제주도청 AI 행정 시스템 백엔드 시작 (포트 5006)")
+    app.run(host='0.0.0.0', port=5006, debug=False)

@@ -1,0 +1,108 @@
+/* 디지털 화폐 시스템 커스텀 스타일 */
+
+/* 글로우 효과 */
+.glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.glow-green {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+}
+
+.glow-purple {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+.glow-amber {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+/* 버튼 호버 효과 */
+.tech-button {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.tech-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+}
+
+.economic-button {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.economic-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4);
+}
+
+/* 모달 애니메이션 */
+.modal-overlay {
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 그라디언트 텍스트 */
+.gradient-text {
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 카드 배경 */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
+}
+
+/* 펄스 애니메이션 */
+.pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}

@@ -1,0 +1,86 @@
+/* 진단 장비 작동 애니메이션 */
+@keyframes equipmentScanning {
+    0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    50% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+}
+
+.equipment-active {
+    animation: equipmentScanning 2s ease-in-out infinite;
+}
+
+/* AI 진단 중 애니메이션 */
+@keyframes aiThinking {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+.ai-analyzing {
+    animation: aiThinking 1.5s ease-in-out infinite;
+}
+
+/* 데이터 전송 애니메이션 */
+@keyframes dataFlow {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+}
+
+.data-flowing {
+    animation: dataFlow 2s ease-out infinite;
+}
+
+/* 오픈해시 검증 애니메이션 */
+@keyframes hashVerify {
+    0% { border-color: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    50% { border-color: #10b981; box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { border-color: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.hash-verified {
+    animation: hashVerify 2s ease-in-out infinite;
+}
+
+/* 환자 상태 모니터링 펄스 */
+@keyframes vitalsMonitor {
+    0%, 100% { background-color: rgba(16, 185, 129, 0.1); }
+    50% { background-color: rgba(16, 185, 129, 0.3); }
+}
+
+.vitals-monitoring {
+    animation: vitalsMonitor 2s ease-in-out infinite;
+}
+
+/* 처방 완료 애니메이션 */
+@keyframes prescriptionComplete {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.prescription-done {
+    animation: prescriptionComplete 0.5s ease-out;
+}
+
+/* PDV 데이터 전송 애니메이션 */
+@keyframes pdvSync {
+    0% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+}
+
+.pdv-syncing {
+    animation: pdvSync 3s ease-in-out infinite;
+}
+
+/* 열쇠 회전 애니메이션 */
+@keyframes unlockKey {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-30deg); }
+    50% { transform: rotate(30deg); }
+    75% { transform: rotate(-15deg); }
+}
+
+.unlock-animation {
+    display: inline-block;
+    animation: unlockKey 2s ease-in-out infinite;
+}

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 초중고 맞춤 교육 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #059669 0%, #34d399 100%); }
+        .card-hover { transition: all 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="text-6xl mb-4 float">📚</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 초중고 맞춤 교육 시스템</h1>
+            <p class="text-xl opacity-90 mb-6">개인별 학습 속도 | AI 튜터 | 학습 이력 관리</p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">👶 초등 1학년~</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🎓 고등 3학년</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🤖 AI 맞춤 학습</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="bg-gray-800 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-green-400 hover:text-green-300">← 포털로 돌아가기</a>
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-green-400">학습 진단</button>
+                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-green-400">기능</button>
+                <button onclick="document.getElementById('curriculum').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-green-400">교육과정</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Problems -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">현행 초중고 교육의 한계</h2>
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">👥</div>
+                <div class="text-xl font-bold text-red-400 mb-2">30명 획일 교육</div>
+                <div class="text-sm text-gray-400">개인차 무시한 동일 수업</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">📉</div>
+                <div class="text-xl font-bold text-red-400 mb-2">학습 격차</div>
+                <div class="text-sm text-gray-400">상위권/하위권 격차 심화</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">💰</div>
+                <div class="text-xl font-bold text-red-400 mb-2">사교육비 부담</div>
+                <div class="text-sm text-gray-400">연간 가구당 평균 500만원</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">😔</div>
+                <div class="text-xl font-bold text-red-400 mb-2">흥미 상실</div>
+                <div class="text-sm text-gray-400">주입식 교육으로 동기 저하</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Diagnosis Simulator -->
+    <div id="simulator" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🎯 AI 학습 진단 시뮬레이터</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Input -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-6 text-green-400">학생 정보 입력</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">학교급</label>
+                            <select id="schoolLevel" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3" onchange="updateGrades()">
+                                <option value="elementary">초등학교</option>
+                                <option value="middle">중학교</option>
+                                <option value="high" selected>고등학교</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">학년</label>
+                            <select id="grade" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                                <option value="1">1학년</option>
+                                <option value="2" selected>2학년</option>
+                                <option value="3">3학년</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">진단 과목</label>
+                            <select id="subject" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                                <option value="math">수학</option>
+                                <option value="korean">국어</option>
+                                <option value="english">영어</option>
+                                <option value="science">과학</option>
+                                <option value="social">사회</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">현재 성취도 (예상)</label>
+                            <select id="achievement" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                                <option value="high">상위권 (상위 20%)</option>
+                                <option value="mid" selected>중위권 (중위 40%)</option>
+                                <option value="low">하위권 (하위 40%)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">학습 스타일</label>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
+                                    <input type="radio" name="style" value="visual" class="accent-green-500" checked> 시각적
+                                </label>
+                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
+                                    <input type="radio" name="style" value="auditory" class="accent-green-500"> 청각적
+                                </label>
+                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
+                                    <input type="radio" name="style" value="kinesthetic" class="accent-green-500"> 체험적
+                                </label>
+                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
+                                    <input type="radio" name="style" value="reading" class="accent-green-500"> 읽기/쓰기
+                                </label>
+                            </div>
+                        </div>
+                        <button onclick="diagnoseStudent()"
+                            class="w-full bg-gradient-to-r from-green-600 to-teal-600 font-bold py-4 rounded-lg hover:from-green-500 hover:to-teal-500 transition">
+                            🔍 AI 학습 진단
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-6 text-blue-400">AI 진단 결과</h3>
+                    <div id="diagnosisResult">
+                        <div class="text-center text-gray-500 py-12">
+                            <div class="text-4xl mb-4">📊</div>
+                            <p>학생 정보를 입력하고<br/>AI 진단을 실행하세요</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div id="features" class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🎓 핵심 기능</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">🤖</div>
+                <h3 class="text-xl font-bold text-green-400 mb-3">AI 개인 튜터</h3>
+                <ul class="text-sm text-gray-400 space-y-2">
+                    <li>• 24시간 질문 응답</li>
+                    <li>• 개인별 난이도 조절</li>
+                    <li>• 오답 패턴 분석</li>
+                    <li>• 맞춤형 문제 생성</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="text-xl font-bold text-blue-400 mb-3">학습 분석</h3>
+                <ul class="text-sm text-gray-400 space-y-2">
+                    <li>• 실시간 이해도 측정</li>
+                    <li>• 취약 단원 자동 진단</li>
+                    <li>• 성적 향상 예측</li>
+                    <li>• 학부모 리포트</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 card-hover">
+                <div class="text-4xl mb-4">🎮</div>
+                <h3 class="text-xl font-bold text-purple-400 mb-3">게이미피케이션</h3>
+                <ul class="text-sm text-gray-400 space-y-2">
+                    <li>• 학습 포인트 시스템</li>
+                    <li>• 레벨업/뱃지 보상</li>
+                    <li>• 친구와 학습 경쟁</li>
+                    <li>• 학습 동기 유발</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Curriculum -->
+    <div id="curriculum" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📖 AI 맞춤형 교육과정</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- 초등학교 -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <div class="text-center mb-4">
+                        <div class="text-4xl mb-2">🌱</div>
+                        <h3 class="text-xl font-bold text-green-400">초등학교</h3>
+                        <p class="text-xs text-gray-500">1~6학년</p>
+                    </div>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <span>기초 문해력/수리력</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <span>창의력/호기심 개발</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <span>놀이 기반 학습</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <span>AI 친구 튜터</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 중학교 -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <div class="text-center mb-4">
+                        <div class="text-4xl mb-2">🌿</div>
+                        <h3 class="text-xl font-bold text-blue-400">중학교</h3>
+                        <p class="text-xs text-gray-500">1~3학년</p>
+                    </div>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            <span>교과 심화 학습</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            <span>진로 탐색 프로그램</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            <span>자기주도 학습력</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            <span>AI 멘토 시스템</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 고등학교 -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <div class="text-center mb-4">
+                        <div class="text-4xl mb-2">🌳</div>
+                        <h3 class="text-xl font-bold text-purple-400">고등학교</h3>
+                        <p class="text-xs text-gray-500">1~3학년</p>
+                    </div>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span>수능/내신 최적화</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span>대입 전략 컨설팅</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span>과목별 심층 분석</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span>AI 입시 코치</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OpenHash Learning Record -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">🔗 OpenHash 학습 이력 관리</h2>
+        <div class="bg-gray-800 rounded-xl p-6">
+            <div class="grid md:grid-cols-6 gap-3 mb-6">
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">📝</div>
+                    <div class="text-xs font-bold text-green-400">출결</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">📊</div>
+                    <div class="text-xs font-bold text-blue-400">성적</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">🏆</div>
+                    <div class="text-xs font-bold text-yellow-400">수상</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">📚</div>
+                    <div class="text-xs font-bold text-purple-400">독서</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">🎯</div>
+                    <div class="text-xs font-bold text-red-400">활동</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-3 text-center">
+                    <div class="text-xl mb-1">💼</div>
+                    <div class="text-xs font-bold text-cyan-400">봉사</div>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-400">
+                모든 학습 이력 <span class="text-green-400 font-bold">위변조 불가능</span> | 대입 생기부 자동 연동
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits -->
+    <div class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">45%</div>
+                    <div class="text-sm text-gray-300">학습 효율 향상</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">60%</div>
+                    <div class="text-sm text-gray-300">사교육비 절감</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">30%</div>
+                    <div class="text-sm text-gray-300">학습 격차 해소</div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">85%</div>
+                    <div class="text-sm text-gray-300">학습 흥미도</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>AI 초중고 맞춤 교육 시스템 © 2025 | OpenHash 학습 이력 관리</p>
+            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
+        </div>
+    </div>
+
+    <script>
+        function updateGrades() {
+            const level = document.getElementById('schoolLevel').value;
+            const gradeSelect = document.getElementById('grade');
+            
+            if (level === 'elementary') {
+                gradeSelect.innerHTML = `
+                    <option value="1">1학년</option>
+                    <option value="2">2학년</option>
+                    <option value="3">3학년</option>
+                    <option value="4">4학년</option>
+                    <option value="5">5학년</option>
+                    <option value="6">6학년</option>
+                `;
+            } else {
+                gradeSelect.innerHTML = `
+                    <option value="1">1학년</option>
+                    <option value="2">2학년</option>
+                    <option value="3">3학년</option>
+                `;
+            }
+        }
+
+        function diagnoseStudent() {
+            const level = document.getElementById('schoolLevel');
+            const levelName = level.options[level.selectedIndex].text;
+            const grade = document.getElementById('grade').value;
+            const subject = document.getElementById('subject');
+            const subjectName = subject.options[subject.selectedIndex].text;
+            const achievement = document.getElementById('achievement').value;
+            const style = document.querySelector('input[name="style"]:checked').value;
+
+            const resultDiv = document.getElementById('diagnosisResult');
+            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 진단 중...</p></div>';
+
+            setTimeout(() => {
+                const weakPoints = {
+                    math: ['이차방정식', '확률과 통계', '도형의 성질'],
+                    korean: ['비문학 독해', '문법 활용', '서술형 쓰기'],
+                    english: ['관계대명사', '시제 일치', '듣기 빈칸추론'],
+                    science: ['화학반응식', '유전법칙', '뉴턴의 운동법칙'],
+                    social: ['경제 개념', '지리 분석', '역사 연표']
+                };
+
+                const styleNames = {
+                    visual: '시각적 학습자',
+                    auditory: '청각적 학습자',
+                    kinesthetic: '체험적 학습자',
+                    reading: '읽기/쓰기 학습자'
+                };
+
+                const currentScore = achievement === 'high' ? Math.floor(Math.random()*10)+85 : 
+                                    achievement === 'mid' ? Math.floor(Math.random()*20)+60 : 
+                                    Math.floor(Math.random()*20)+40;
+                const predictedScore = Math.min(100, currentScore + Math.floor(Math.random()*15)+10);
+
+                resultDiv.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-sm text-gray-400">학생 정보</div>
+                                    <div class="font-bold">${levelName} ${grade}학년</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-400">진단 과목</div>
+                                    <div class="font-bold text-green-400">${subjectName}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-gray-800 rounded-lg text-center">
+                                <div class="text-xs text-gray-400">현재 예상 점수</div>
+                                <div class="text-2xl font-bold ${currentScore >= 80 ? 'text-green-400' : currentScore >= 60 ? 'text-yellow-400' : 'text-red-400'}">${currentScore}점</div>
+                            </div>
+                            <div class="p-3 bg-gray-800 rounded-lg text-center">
+                                <div class="text-xs text-gray-400">3개월 후 예측</div>
+                                <div class="text-2xl font-bold text-blue-400">${predictedScore}점</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-gray-800 rounded-lg">
+                            <div class="text-sm text-gray-400 mb-2">취약 단원 진단</div>
+                            <ul class="space-y-2">
+                                ${weakPoints[subject.value].map((w, i) => `
+                                    <li class="flex items-center justify-between">
+                                        <span class="text-sm">${w}</span>
+                                        <span class="text-xs px-2 py-1 rounded ${i===0 ? 'bg-red-900/50 text-red-400' : 'bg-yellow-900/50 text-yellow-400'}">${i===0 ? '보강 필요' : '주의'}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="p-3 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                            <div class="text-sm">
+                                <span class="text-gray-400">학습 유형:</span>
+                                <span class="text-blue-400 font-bold ml-2">${styleNames[style]}</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">→ ${style === 'visual' ? '영상/도표 중심 콘텐츠 제공' : style === 'auditory' ? '음성 강의/팟캐스트 제공' : style === 'kinesthetic' ? '실험/체험 활동 중심' : '텍스트/요약 자료 제공'}</div>
+                        </div>
+
+                        <div class="text-center text-xs text-gray-500 pt-2">
+                            AI 분석 시간: 0.045ms | OpenHash 기록 완료
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

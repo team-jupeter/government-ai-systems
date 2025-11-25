@@ -1,0 +1,62 @@
+const TRANSLATIONS = {
+    ko: {
+        langName: "한국어", flag: "🇰🇷", subtitle: "정부 AI 통합 플랫폼",
+        systems: "시스템", online: "온라인", agents: "에이전트",
+        heroTitle: "오픈해시 정부 AI 플랫폼",
+        heroDesc: "오픈해시는 기존 블록체인을 대체하는 차세대 분산 신뢰 기술입니다.",
+        energySaving: "에너지 절감", fasterSpeed: "처리 속도", dataIntegrity: "데이터 무결성",
+        integratedSystems: "통합 시스템", techBanner: "정부 디지털 전환을 위한 분산 신뢰 기술",
+        systemsTitle: "통합 정부 AI 시스템", systemsDesc: "시스템을 클릭하여 AI 에이전트와 대화하세요",
+        searchPlaceholder: "시스템 검색...", search: "검색",
+        catAll: "전체", catJeju: "제주", catAdmin: "행정", catLegal: "법률",
+        catEducation: "교육", catFinance: "금융", catWelfare: "복지", catInfra: "인프라", catTech: "기술",
+        visitSite: "사이트 방문", aiChat: "AI 상담", chatWelcome: "안녕하세요! 무엇을 도와드릴까요?",
+        chatPlaceholder: "메시지를 입력하세요...", send: "전송",
+        footerDesc: "투명하고 효율적인 정부 서비스를 위한 차세대 분산 신뢰 기술",
+        openSite: "사이트 열기", aiConsult: "AI 상담", port: "포트", backToPortal: "포털로 돌아가기"
+    },
+    en: {
+        langName: "English", flag: "🇺🇸", subtitle: "Government AI Integration",
+        systems: "Systems", online: "Online", agents: "Agents",
+        heroTitle: "OpenHash Government AI Platform",
+        heroDesc: "OpenHash is a next-generation distributed trust technology.",
+        energySaving: "Energy Savings", fasterSpeed: "Faster Speed", dataIntegrity: "Data Integrity",
+        integratedSystems: "Integrated Systems", techBanner: "Distributed Trust Technology for Digital Transformation",
+        systemsTitle: "Integrated Government AI Systems", systemsDesc: "Click on any system to interact with AI agents",
+        searchPlaceholder: "Search systems...", search: "Search",
+        catAll: "All", catJeju: "Jeju", catAdmin: "Admin", catLegal: "Legal",
+        catEducation: "Education", catFinance: "Finance", catWelfare: "Welfare", catInfra: "Infra",
+        visitSite: "Visit Site", aiChat: "AI Consultation", chatWelcome: "Hello! How can I help you?",
+        chatPlaceholder: "Type your message...", send: "Send",
+        footerDesc: "Next-generation distributed trust technology",
+        openSite: "Open Site", aiConsult: "AI Consult", port: "Port", backToPortal: "Back to Portal"
+    },
+    zh: {
+        langName: "中文", flag: "🇨🇳", subtitle: "政府AI集成平台",
+        systems: "系统", online: "在线", agents: "代理",
+        heroTitle: "OpenHash政府AI平台", heroDesc: "OpenHash是下一代分布式信任技术。",
+        energySaving: "节能", fasterSpeed: "更快速度", dataIntegrity: "数据完整性",
+        integratedSystems: "集成系统", techBanner: "政府数字化转型的分布式信任技术",
+        systemsTitle: "集成政府AI系统", systemsDesc: "点击系统与AI代理交互",
+        searchPlaceholder: "搜索系统...", search: "搜索",
+        catAll: "全部", catJeju: "济州", catAdmin: "行政", catLegal: "法律",
+        catEducation: "教育", catFinance: "金融", catWelfare: "福利", catInfra: "基础设施", catTech: "技术",
+        visitSite: "访问网站", aiChat: "AI咨询", chatWelcome: "您好！有什么可以帮您？",
+        chatPlaceholder: "输入消息...", send: "发送", footerDesc: "下一代分布式信任技术",
+        openSite: "打开网站", aiConsult: "AI咨询", port: "端口", backToPortal: "返回门户"
+    },
+    ja: {
+        langName: "日本語", flag: "🇯🇵", subtitle: "政府AI統合プラットフォーム",
+        systems: "システム", online: "オンライン", agents: "エージェント",
+        heroTitle: "OpenHash政府AIプラットフォーム", heroDesc: "OpenHashは次世代分散信頼技術です。",
+        energySaving: "省エネ", fasterSpeed: "高速化", dataIntegrity: "データ整合性",
+        integratedSystems: "統合システム", techBanner: "政府デジタル変革のための分散信頼技術",
+        systemsTitle: "統合政府AIシステム", systemsDesc: "システムをクリックしてAIエージェントと対話",
+        searchPlaceholder: "システム検索...", search: "検索",
+        catAll: "すべて", catJeju: "済州", catAdmin: "行政", catLegal: "法律",
+        catEducation: "教育", catFinance: "金融", catWelfare: "福祉", catInfra: "インフラ", catTech: "技術",
+        visitSite: "サイト訪問", aiChat: "AI相談", chatWelcome: "こんにちは！何かお手伝いできますか？",
+        chatPlaceholder: "メッセージを入力...", send: "送信", footerDesc: "次世代分散信頼技術",
+        openSite: "サイトを開く", aiConsult: "AI相談", port: "ポート", backToPortal: "ポータルに戻る"
+    }
+};

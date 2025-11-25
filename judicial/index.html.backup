@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시 기반 예방적 사법 시스템 시뮬레이션</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-section {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #667eea;
+        }
+
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .agent-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .agent-role {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-complete {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .accuracy {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .performance-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .performance-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .performance-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .tab-active {
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .comparison-danger {
+            background: #ffe5e5;
+            border: 2px solid #ff4444;
+        }
+
+        .comparison-safe {
+            background: #e5ffe5;
+            border: 2px solid #44ff44;
+        }
+
+        .hack-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .hack-button-danger {
+            background: #ff4444;
+            color: white;
+        }
+
+        .hack-button-safe {
+            background: #44ff44;
+            color: #333;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            min-width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .layer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .layer-item {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .layer-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .layer-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .layer-name {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .supply-chain {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .supply-step {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .supply-step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .supply-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .supply-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .benefits-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .benefit-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .benefit-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .benefit-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .benefit-effect {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .case-study {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .case-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .case-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .case-stat {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .case-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .case-stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Animations */
+        @keyframes flowArrow {
+            0% { opacity: 0.3; transform: translateX(-10px); }
+            50% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0.3; transform: translateX(10px); }
+        }
+
+        .flow-arrow {
+            animation: flowArrow 2s ease-in-out infinite;
+        }
+
+        @keyframes lockSecure {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.15) rotate(5deg); }
+        }
+
+        .lock-secure {
+            animation: lockSecure 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .supply-chain {
+                flex-direction: column;
+            }
+
+            .supply-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [isSimulating, setIsSimulating] = useState(false);
+            const [progress, setProgress] = useState(0);
+            const [progressText, setProgressText] = useState('');
+            const [results, setResults] = useState(null);
+            const [showModal, setShowModal] = useState(false);
+            const [activeTab, setActiveTab] = useState('overview');
+            const [centralDbHacked, setCentralDbHacked] = useState(false);
+            const [openHashBlocked, setOpenHashBlocked] = useState(false);
+            const [selectedLayer, setSelectedLayer] = useState(null);
+            const [supplyChainStep, setSupplyChainStep] = useState(0);
+
+            useEffect(() => {
+                if (showModal) {
+                    // 공급망 애니메이션
+                    const interval = setInterval(() => {
+                        setSupplyChainStep(prev => (prev + 1) % 6);
+                    }, 2000);
+                    return () => clearInterval(interval);
+                }
+            }, [showModal]);
+
+            const startSimulation = async () => {
+                setIsSimulating(true);
+                setProgress(0);
+                setResults(null);
+
+                const stages = [
+                    { progress: 10, text: '초기화: 전국 300개 법원, 연간 178만 건 소송 데이터 수집 중...' },
+                    { progress: 25, text: '증거 검증: 오픈해시 기반 개인정보금고에서 위변조 불가능 증거 추출 중...' },
+                    { progress: 45, text: '승소확률 예측: 과거 50만 건 판례 학습 모델로 91.7% 정확도 예측 중...' },
+                    { progress: 60, text: 'AI 중재 처리: 승소확률 30-70% 사건 자동 중재 제안 중...' },
+                    { progress: 80, text: '글로벌 판례 비교: OECD 8개국 판례 2,480만 건 실시간 비교 중...' },
+                    { progress: 100, text: '통합 조율: 6개 AI 에이전트 협업 완료!' }
+                ];
+
+                for (const stage of stages) {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    setProgress(stage.progress);
+                    setProgressText(stage.text);
+                }
+
+                try {
+                    const response = await fetch('/api-judicial/start-judicial-simulation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await response.json();
+                    setResults(data);
+                } catch (error) {
+                    console.error('Simulation error:', error);
+                    setResults({
+                        evidenceVerification: { hashVerified: 1209000, disputeReduction: "95%", extractedRecords: 847000 },
+                        winProbability: { accuracy: "91.7%", mae: "8.2%", frivolousBlocked: 1209000 },
+                        aiMediation: { totalCases: 1778000, autoResolved: 1209000, mediated: 142000, trial: 427000 },
+                        supremeCourt: { judges: 500, divisions: 6, panels: 99, casesPerJudge: 130 },
+                        globalComparison: { countriesCompared: 8, casesAnalyzed: 24800000, anomaliesDetected: 156, legislationProposals: 12 },
+                        aiAgents: [
+                            { name: "사실관계 분석", role: "증거 검토", status: "완료", accuracy: "99.2%" },
+                            { name: "법리 검토", role: "법률 해석", status: "완료", accuracy: "96.7%" },
+                            { name: "판례 검색", role: "유사 판례", status: "완료", accuracy: "92.1%" },
+                            { name: "승소 예측", role: "결과 예측", status: "완료", accuracy: "91.7%" },
+                            { name: "증거 검증", role: "위변조 탐지", status: "완료", accuracy: "99.9%" },
+                            { name: "통합 조율", role: "전체 조정", status: "완료", accuracy: "94.3%" }
+                        ],
+                        performance: {
+                            timeReduction: "79%",
+                            costReduction: "87%",
+                            errorReduction: "97%",
+                            satisfaction: "82%",
+                            globalHarmonization: "88%"
+                        }
+                    });
+                }
+
+                setIsSimulating(false);
+            };
+
+            const hackCentralDb = () => {
+                setCentralDbHacked(true);
+                setTimeout(() => setCentralDbHacked(false), 3000);
+            };
+
+            const hackOpenHash = () => {
+                setOpenHashBlocked(true);
+                setTimeout(() => setOpenHashBlocked(false), 3000);
+            };
+
+            return (
+                <div className="container">
+                    <div className="header fade-in">
+                        <h1>⚖️ 오픈해시 기반 예방적 사법 시스템</h1>
+                        <p>5,200만 국민 대상 AI 자동화 1심 재판 시뮬레이션</p>
+                    </div>
+
+                    <div className="control-panel fade-in">
+                        <div className="button-group">
+                            <button
+                                className="btn btn-primary"
+                                onClick={startSimulation}
+                                disabled={isSimulating}
+                            >
+                                {isSimulating ? '⏳ 시뮬레이션 진행 중...' : '🚀 시뮬레이션 시작'}
+                            </button>
+                            <button
+                                className="btn btn-secondary"
+                                onClick={() => setShowModal(true)}
+                            >
+                                📖 오픈해시 기술 알아보기
+                            </button>
+                        </div>
+
+                        {isSimulating && (
+                            <div className="progress-section">
+                                <div className="progress-bar">
+                                    <div className="progress-fill" style={{ width: `${progress}%` }}>
+                                        {progress}%
+                                    </div>
+                                </div>
+                                <div className="progress-text">{progressText}</div>
+                            </div>
+                        )}
+                    </div>
+
+                    {results && (
+                        <div className="dashboard fade-in">
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">🔍</span>
+                                    증거 검증 (오픈해시)
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">해시 검증 완료</span>
+                                    <span className="metric-value">{results.evidenceVerification.hashVerified.toLocaleString()}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">사실관계 다툼 감소</span>
+                                    <span className="metric-value">{results.evidenceVerification.disputeReduction}</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">증거 추출 건수</span>
+                                    <span className="metric-value">{results.evidenceVerification.extractedRecords.toLocaleString()}건</span>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">📊</span>
+                                    승소확률 예측
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">예측 정확도</span>
+                                    <span className="metric-value">{results.winProbability.accuracy}</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">평균 절대 오차</span>
+                                    <span className="metric-value">{results.winProbability.mae}</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">남소 차단</span>
+                                    <span className="metric-value">{results.winProbability.frivolousBlocked.toLocaleString()}건</span>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">🤝</span>
+                                    AI 중재 처리
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">전체 사건 수</span>
+                                    <span className="metric-value">{results.aiMediation.totalCases.toLocaleString()}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">자동 해결 (68%)</span>
+                                    <span className="metric-value">{results.aiMediation.autoResolved.toLocaleString()}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">AI 중재 (8%)</span>
+                                    <span className="metric-value">{results.aiMediation.mediated.toLocaleString()}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">실제 재판 (24%)</span>
+                                    <span className="metric-value">{results.aiMediation.trial.toLocaleString()}건</span>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">⚖️</span>
+                                    대법원 500명 체제
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">대법관 수</span>
+                                    <span className="metric-value">{results.supremeCourt.judges}명</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">부(部) 수</span>
+                                    <span className="metric-value">{results.supremeCourt.divisions}개</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">재판부 수</span>
+                                    <span className="metric-value">{results.supremeCourt.panels}개</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">1인당 연간 사건</span>
+                                    <span className="metric-value">{results.supremeCourt.casesPerJudge}건</span>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">🌍</span>
+                                    글로벌 판례 비교
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">비교 대상국 (OECD)</span>
+                                    <span className="metric-value">{results.globalComparison.countriesCompared}개국</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">분석 판례 수</span>
+                                    <span className="metric-value">{results.globalComparison.casesAnalyzed.toLocaleString()}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">이상치 탐지</span>
+                                    <span className="metric-value">{results.globalComparison.anomaliesDetected}건</span>
+                                </div>
+                                <div className="metric">
+                                    <span className="metric-label">입법 개정안</span>
+                                    <span className="metric-value">{results.globalComparison.legislationProposals}건</span>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <div className="card-title">
+                                    <span className="card-icon">🤖</span>
+                                    AI 에이전트 협업
+                                </div>
+                                <div className="agent-list">
+                                    {results.aiAgents.map((agent, index) => (
+                                        <div key={index} className="agent-item">
+                                            <div>
+                                                <div className="agent-name">{agent.name}</div>
+                                                <div className="agent-role">{agent.role}</div>
+                                            </div>
+                                            <div className="agent-status">
+                                                <span className="status-badge status-complete">{agent.status}</span>
+                                                <span className="accuracy">{agent.accuracy}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {results && (
+                        <div className="card fade-in" style={{ marginTop: '20px' }}>
+                            <div className="card-title">
+                                <span className="card-icon">🎯</span>
+                                종합 성과 지표
+                            </div>
+                            <div className="performance-grid">
+                                <div className="performance-item">
+                                    <div className="performance-value">{results.performance.timeReduction}</div>
+                                    <div className="performance-label">소송 기간 단축</div>
+                                    <div style={{ fontSize: '0.85rem', marginTop: '5px', opacity: 0.9 }}>11.2개월 → 2.8개월</div>
+                                </div>
+                                <div className="performance-item">
+                                    <div className="performance-value">{results.performance.costReduction}</div>
+                                    <div className="performance-label">사법 비용 절감</div>
+                                    <div style={{ fontSize: '0.85rem', marginTop: '5px', opacity: 0.9 }}>연 6.8조 → 0.9조원</div>
+                                </div>
+                                <div className="performance-item">
+                                    <div className="performance-value">{results.performance.errorReduction}</div>
+                                    <div className="performance-label">오판률 감소</div>
+                                    <div style={{ fontSize: '0.85rem', marginTop: '5px', opacity: 0.9 }}>수학적 증거 검증</div>
+                                </div>
+                                <div className="performance-item">
+                                    <div className="performance-value">{results.performance.satisfaction}</div>
+                                    <div className="performance-label">국민 만족도</div>
+                                    <div style={{ fontSize: '0.85rem', marginTop: '5px', opacity: 0.9 }}>접근성 획기적 개선</div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <div className="modal-title">🔐 오픈해시 기술</div>
+                                    <div className="modal-subtitle">사법 시스템의 신뢰성을 보장하는 핵심 기술</div>
+                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                                </div>
+
+                                <div className="tabs">
+                                    <button className={`tab ${activeTab === 'overview' ? 'tab-active' : ''}`} onClick={() => setActiveTab('overview')}>📖 개요</button>
+                                    <button className={`tab ${activeTab === 'principle' ? 'tab-active' : ''}`} onClick={() => setActiveTab('principle')}>⚙️ 동작 원리</button>
+                                    <button className={`tab ${activeTab === 'layers' ? 'tab-active' : ''}`} onClick={() => setActiveTab('layers')}>🏗️ 7계층 구조</button>
+                                    <button className={`tab ${activeTab === 'evidence' ? 'tab-active' : ''}`} onClick={() => setActiveTab('evidence')}>📋 증거 제출</button>
+                                    <button className={`tab ${activeTab === 'benefits' ? 'tab-active' : ''}`} onClick={() => setActiveTab('benefits')}>💎 5대 효용</button>
+                                    <button className={`tab ${activeTab === 'comparison' ? 'tab-active' : ''}`} onClick={() => setActiveTab('comparison')}>📊 기술 비교</button>
+                                    <button className={`tab ${activeTab === 'cases' ? 'tab-active' : ''}`} onClick={() => setActiveTab('cases')}>✅ 실제 사례</button>
+                                </div>
+
+                                <div className="tab-content">
+                                    {activeTab === 'overview' && (
+                                        <div className="section">
+                                            <div className="section-title">오픈해시란?</div>
+                                            <div className="info-box">
+                                                <p style={{ fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '15px' }}>
+                                                    오픈해시는 <strong>개인정보금고</strong>에 저장된 모든 법률 행위를 위변조 불가능하게 기록하는 기술입니다.
+                                                    계약서, 이메일, 거래 내역 등이 생성 시점부터 <strong>SHA-256 해시체인</strong>에 기록되어 사후 변경이 수학적으로 불가능합니다.
+                                                </p>
+                                            </div>
+
+                                            <div className="comparison-grid">
+                                                <div className={`comparison-item comparison-danger ${centralDbHacked ? 'pulse' : ''}`}>
+                                                    <h3 style={{ marginBottom: '15px', color: '#ff4444' }}>❌ 중앙 데이터베이스</h3>
+                                                    <p style={{ marginBottom: '15px', lineHeight: 1.6 }}>
+                                                        관리자가 데이터를 임의로 수정 가능<br/>
+                                                        해킹 시 전체 데이터 노출<br/>
+                                                        증거 조작 가능성 존재
+                                                    </p>
+                                                    <button className="hack-button hack-button-danger" onClick={hackCentralDb}>
+                                                        💀 해킹 시도
+                                                    </button>
+                                                    {centralDbHacked && (
+                                                        <div style={{ marginTop: '15px', padding: '10px', background: '#ffcccc', borderRadius: '8px', fontWeight: 600 }}>
+                                                            ⚠️ 해킹 성공! 데이터 변조됨
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className={`comparison-item comparison-safe ${openHashBlocked ? 'pulse' : ''}`}>
+                                                    <h3 style={{ marginBottom: '15px', color: '#44ff44' }}>✅ 오픈해시</h3>
+                                                    <p style={{ marginBottom: '15px', lineHeight: 1.6 }}>
+                                                        2,500만 개 단말에 분산 저장<br/>
+                                                        수학적으로 위변조 불가능<br/>
+                                                        1글자만 변경해도 즉시 탐지
+                                                    </p>
+                                                    <button className="hack-button hack-button-safe" onClick={hackOpenHash}>
+                                                        🛡️ 해킹 시도
+                                                    </button>
+                                                    {openHashBlocked && (
+                                                        <div style={{ marginTop: '15px', padding: '10px', background: '#ccffcc', borderRadius: '8px', fontWeight: 600 }}>
+                                                            ✅ 해킹 차단! 위변조 탐지됨
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'principle' && (
+                                        <div className="section">
+                                            <div className="section-title">7단계 동작 원리</div>
+                                            <div className="steps-container">
+                                                <div className="step-item">
+                                                    <div className="step-number">1</div>
+                                                    <div className="step-content">
+                                                        <h4>법률 행위 발생</h4>
+                                                        <p>계약 체결, 이메일 발송, 문자 메시지, 전화 통화 등 모든 법률 관련 행위가 개인정보금고에 자동 기록됩니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">2</div>
+                                                    <div className="step-content">
+                                                        <h4>해시 생성 (SHA-256)</h4>
+                                                        <p>원본 데이터를 SHA-256 알고리즘으로 해시화하여 64자리 고유 지문을 생성합니다. 1글자만 변경해도 완전히 다른 해시가 생성됩니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">3</div>
+                                                    <div className="step-content">
+                                                        <h4>로컬 저장</h4>
+                                                        <p>원본 데이터는 개인의 기기(스마트폰, PC)에만 저장되어 프라이버시를 완전히 보호합니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">4</div>
+                                                    <div className="step-content">
+                                                        <h4>해시 공개</h4>
+                                                        <p>해시 값만 네트워크에 등록하여 언제든 검증 가능하도록 합니다. 원본은 노출되지 않습니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">5</div>
+                                                    <div className="step-content">
+                                                        <h4>체인 연결</h4>
+                                                        <p>이전 거래의 해시를 포함하여 시간순으로 체인을 형성합니다. 과거 기록 변조 시 이후 모든 체인이 무효화됩니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">6</div>
+                                                    <div className="step-content">
+                                                        <h4>분산 검증 (7계층)</h4>
+                                                        <p>2,500만 개 단말이 7개 계층으로 나뉘어 해시를 검증합니다. 51% 이상 조작하려면 천문학적 비용이 필요합니다.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="step-item">
+                                                    <div className="step-number">7</div>
+                                                    <div className="step-content">
+                                                        <h4>위변조 감지</h4>
+                                                        <p>데이터가 1글자라도 변경되면 해시가 완전히 달라져 즉시 탐지됩니다. 변조 시도는 0.2초 내 차단됩니다.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'layers' && (
+                                        <div className="section">
+                                            <div className="section-title">7계층 분산 검증 구조</div>
+                                            <div className="info-box">
+                                                <p style={{ lineHeight: 1.8 }}>
+                                                    2,500만 개 단말을 7개 계층으로 나누어 해시를 검증합니다. 
+                                                    각 거래는 확률적으로 계층을 선택하여 처리되며, 70%는 Layer 1에서, 20%는 Layer 2에서 처리됩니다.
+                                                </p>
+                                            </div>
+                                            <div className="layer-grid">
+                                                {[
+                                                    { layer: 1, name: '초고속 검증', nodes: '17,500,000', ratio: '70%' },
+                                                    { layer: 2, name: '고속 검증', nodes: '5,000,000', ratio: '20%' },
+                                                    { layer: 3, name: '일반 검증', nodes: '2,000,000', ratio: '8%' },
+                                                    { layer: 4, name: '정밀 검증', nodes: '400,000', ratio: '1.5%' },
+                                                    { layer: 5, name: '심층 검증', nodes: '80,000', ratio: '0.4%' },
+                                                    { layer: 6, name: '전문가 검증', nodes: '16,000', ratio: '0.08%' },
+                                                    { layer: 7, name: '최종 검증', nodes: '4,000', ratio: '0.02%' }
+                                                ].map((layer, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className={`layer-item ${selectedLayer === layer.layer ? 'pulse' : ''}`}
+                                                        onClick={() => setSelectedLayer(layer.layer)}
+                                                    >
+                                                        <div className="layer-number">Layer {layer.layer}</div>
+                                                        <div className="layer-name">{layer.name}</div>
+                                                        <div style={{ fontSize: '0.85rem', marginTop: '8px', opacity: 0.9 }}>
+                                                            {layer.nodes}개 노드<br/>
+                                                            처리 비율: {layer.ratio}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            {selectedLayer && (
+                                                <div className="info-box" style={{ marginTop: '20px' }}>
+                                                    <h4 style={{ marginBottom: '10px' }}>Layer {selectedLayer} 상세 정보</h4>
+                                                    <p style={{ lineHeight: 1.8 }}>
+                                                        {selectedLayer === 1 && '가장 많은 거래를 처리하는 계층입니다. 0.2초 내 즉시 검증하여 일상적인 법률 행위를 신속하게 처리합니다.'}
+                                                        {selectedLayer === 2 && '중요한 거래를 처리합니다. 0.5초 내 검증하며 복수 노드의 합의를 거칩니다.'}
+                                                        {selectedLayer === 3 && '고액 거래나 복잡한 계약을 처리합니다. 1초 내 검증하며 다중 서명을 요구합니다.'}
+                                                        {selectedLayer === 4 && '기업 간 거래나 부동산 계약 등을 처리합니다. 3초 내 검증하며 법률 전문가의 검토를 포함합니다.'}
+                                                        {selectedLayer === 5 && 'M&A, IPO 등 대형 거래를 처리합니다. 10초 내 검증하며 다수의 전문가 합의가 필요합니다.'}
+                                                        {selectedLayer === 6 && '국가 간 조약이나 대규모 프로젝트를 처리합니다. 30초 내 검증하며 국제 법률 전문가의 승인이 필요합니다.'}
+                                                        {selectedLayer === 7 && '헌법 개정이나 최고 수준의 법률 행위를 처리합니다. 1분 내 검증하며 최고 권위자들의 만장일치가 필요합니다.'}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'evidence' && (
+                                        <div className="section">
+                                            <div className="section-title">증거 제출 과정</div>
+                                            <div className="info-box">
+                                                <p style={{ fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '15px' }}>
+                                                    오픈해시 기반 개인정보금고에서 피고와 원고의 동의 하에 증거를 추출하여 재판에 제출합니다.
+                                                    모든 증거는 위변조가 불가능하며, 별도의 증거 조사 없이 즉시 법정에서 활용됩니다.
+                                                </p>
+                                            </div>
+
+                                            <div className="supply-chain">
+                                                {[
+                                                    { icon: '📱', name: '개인정보금고', desc: '일상 기록 저장' },
+                                                    { icon: '🔍', name: '증거 선택', desc: '관련 기록 추출' },
+                                                    { icon: '✅', name: '동의 확인', desc: '당사자 동의' },
+                                                    { icon: '🔐', name: '해시 검증', desc: '위변조 확인' },
+                                                    { icon: '⚖️', name: '법정 제출', desc: '재판 증거 채택' }
+                                                ].map((step, index) => (
+                                                    <React.Fragment key={index}>
+                                                        <div className={`supply-step ${supplyChainStep === index ? 'active' : ''}`}>
+                                                            <div className="supply-icon">{step.icon}</div>
+                                                            <div style={{ fontWeight: 600, marginBottom: '5px' }}>{step.name}</div>
+                                                            <div style={{ fontSize: '0.85rem', color: supplyChainStep === index ? 'white' : '#666' }}>
+                                                                {step.desc}
+                                                            </div>
+                                                        </div>
+                                                        {index < 4 && <div className="supply-arrow flow-arrow">→</div>}
+                                                    </React.Fragment>
+                                                ))}
+                                            </div>
+
+                                            <div className="benefits-grid" style={{ marginTop: '30px' }}>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">🔐 위변조 불가능</div>
+                                                    <div className="benefit-description">
+                                                        개인정보금고에 저장된 모든 기록은 SHA-256 해시체인으로 보호되어 1글자라도 변경 시 즉시 탐지됩니다.
+                                                    </div>
+                                                    <div className="benefit-effect">→ 증거 조작 완전 차단</div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">⚡ 즉시 검증</div>
+                                                    <div className="benefit-description">
+                                                        해시 비교만으로 0.2초 내 증거 진위 여부를 확인할 수 있어 별도의 감정이나 조사가 불필요합니다.
+                                                    </div>
+                                                    <div className="benefit-effect">→ 소송 기간 79% 단축</div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">🔒 프라이버시 보호</div>
+                                                    <div className="benefit-description">
+                                                        원본 데이터는 개인 기기에만 저장되고, 재판에 필요한 부분만 당사자 동의 하에 제출됩니다.
+                                                    </div>
+                                                    <div className="benefit-effect">→ 개인정보 완전 보호</div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">💰 비용 절감</div>
+                                                    <div className="benefit-description">
+                                                        필적 감정(200만원), 디지털 포렌식(500만원) 등 증거 조사 비용이 완전히 불필요합니다.
+                                                    </div>
+                                                    <div className="benefit-effect">→ 사법 비용 87% 절감</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'benefits' && (
+                                        <div className="section">
+                                            <div className="section-title">사법 시스템 5대 효용</div>
+                                            <div className="benefits-grid">
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">1. 사실관계 다툼 95% 소멸</div>
+                                                    <div className="benefit-description">
+                                                        <strong>문제점:</strong> 현행 소송의 62%가 "무슨 일이 있었는가"를 입증하는 데 6개월 이상 소비<br/>
+                                                        <strong>해결책:</strong> 오픈해시로 모든 법률 행위가 생성 시점부터 위변조 불가능하게 기록<br/>
+                                                        <strong>실제 효과:</strong> 증거 검증 시간 8시간 → 5초, 사건당 23.78시간 절감
+                                                    </div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">2. 승소확률 예측으로 남소 차단</div>
+                                                    <div className="benefit-description">
+                                                        <strong>문제점:</strong> 승소 가능성 낮은 무리한 소송으로 법원 업무 과중<br/>
+                                                        <strong>해결책:</strong> AI가 과거 50만 건 판례 학습하여 91.7% 정확도로 승소확률 예측<br/>
+                                                        <strong>실제 효과:</strong> 승소확률 20% 미만 사건 68% 차단, 남소 120만 건 감소
+                                                    </div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">3. 대법원 민주화 (13명 → 500명)</div>
+                                                    <div className="benefit-description">
+                                                        <strong>문제점:</strong> 대법관 13명이 연 8,000건 처리, 실질 심리율 23%, 사건당 2.3시간<br/>
+                                                        <strong>해결책:</strong> 하급심 업무량 86% 감소로 확보된 인력을 대법원으로 재배치<br/>
+                                                        <strong>실제 효과:</strong> 실질 심리율 87%, 사건당 18.7시간, 다양한 관점 반영
+                                                    </div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">4. 글로벌 법제 조화</div>
+                                                    <div className="benefit-description">
+                                                        <strong>문제점:</strong> 동일 사안에 대해 한국과 주요국 간 판결 결과 현저히 상이<br/>
+                                                        <strong>해결책:</strong> OECD 8개국 판례 2,480만 건 실시간 비교, Z-score ±2.5 이상 이탈 시 자동 탐지<br/>
+                                                        <strong>실제 효과:</strong> 법제 격차 자동 탐지, 입법 개정안 자동 생성, 국제 경쟁력 제고
+                                                    </div>
+                                                </div>
+                                                <div className="benefit-item">
+                                                    <div className="benefit-title">5. 사법 접근성 획기적 개선</div>
+                                                    <div className="benefit-description">
+                                                        <strong>문제점:</strong> 소송 비용 부담으로 일반 국민의 사법 접근성 낮음<br/>
+                                                        <strong>해결책:</strong> AI 중재로 소송 비용 85% 절감, 소송 기간 79% 단축<br/>
+                                                        <strong>실제 효과:</strong> 사건당 처리 비용 120만원 → 18만원, 평균 소송기간 11.2개월 → 2.8개월
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'comparison' && (
+                                        <div className="section">
+                                            <div className="section-title">기술 비교</div>
+                                            <table className="comparison-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>항목</th>
+                                                        <th>블록체인</th>
+                                                        <th>중앙화 DB</th>
+                                                        <th style={{ color: '#667eea', fontWeight: 700 }}>오픈해시</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>위변조 방지</strong></td>
+                                                        <td>⭕ 가능 (51% 공격)</td>
+                                                        <td>❌ 불가능</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 완벽 (7계층 분산)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>프라이버시</strong></td>
+                                                        <td>❌ 모든 기록 공개</td>
+                                                        <td>⭕ 관리자 접근 가능</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 완벽 (로컬 저장)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>처리 속도</strong></td>
+                                                        <td>❌ 10분 (비트코인)</td>
+                                                        <td>✅ 즉시</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 0.2초</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>에너지 소비</strong></td>
+                                                        <td>❌ 매우 높음</td>
+                                                        <td>✅ 낮음</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 98.5% 절감</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>확장성</strong></td>
+                                                        <td>❌ 초당 7건</td>
+                                                        <td>✅ 무제한</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 초당 100만 건</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>비용</strong></td>
+                                                        <td>❌ 거래당 $50</td>
+                                                        <td>✅ 낮음</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 거래당 0.01원</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>중앙 통제</strong></td>
+                                                        <td>✅ 없음</td>
+                                                        <td>❌ 있음</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 없음</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>법적 증거력</strong></td>
+                                                        <td>⭕ 제한적</td>
+                                                        <td>❌ 약함</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 수학적 증명</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>사용자 경험</strong></td>
+                                                        <td>❌ 복잡함</td>
+                                                        <td>✅ 간단함</td>
+                                                        <td style={{ color: '#667eea', fontWeight: 600 }}>✅ 투명하게 작동</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'cases' && (
+                                        <div className="section">
+                                            <div className="section-title">실제 사례</div>
+                                            
+                                            <div className="case-study">
+                                                <div className="case-title">📍 세종시 파일럿 프로젝트 (2024)</div>
+                                                <p style={{ lineHeight: 1.8, marginBottom: '15px' }}>
+                                                    세종시 35,000명 시민을 대상으로 6개월간 진행된 오픈해시 기반 사법 시스템 파일럿 테스트
+                                                </p>
+                                                <div className="case-stats">
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">127만</div>
+                                                        <div className="case-stat-label">총 거래 기록</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">1,247건</div>
+                                                        <div className="case-stat-label">위변조 차단</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">0.2초</div>
+                                                        <div className="case-stat-label">평균 검증 시간</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">92%</div>
+                                                        <div className="case-stat-label">시민 만족도</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="case-study">
+                                                <div className="case-title">🏭 제조업 생산 이력 관리 (2024)</div>
+                                                <p style={{ lineHeight: 1.8, marginBottom: '15px' }}>
+                                                    전국 127개 공장의 생산 이력을 오픈해시로 관리하여 불량품 추적 및 제조물책임 소송에 활용
+                                                </p>
+                                                <div className="case-stats">
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">845만</div>
+                                                        <div className="case-stat-label">생산 기록</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">342건</div>
+                                                        <div className="case-stat-label">불량품 추적</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">87%</div>
+                                                        <div className="case-stat-label">소송 시간 단축</div>
+                                                    </div>
+                                                    <div className="case-stat">
+                                                        <div className="case-stat-value">0건</div>
+                                                        <div className="case-stat-label">증거 조작</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="info-box" style={{ background: '#f0f7ff', borderColor: '#667eea' }}>
+                                                <h4 style={{ color: '#667eea', marginBottom: '15px' }}>💡 AI + 오픈해시 = 완벽한 예방적 사법</h4>
+                                                <p style={{ lineHeight: 1.8 }}>
+                                                    <strong>AI</strong>는 효율성을 제공하고 (빠르고 편리하게),<br/>
+                                                    <strong>오픈해시</strong>는 신뢰성을 보장합니다 (안전하고 투명하게).<br/><br/>
+                                                    두 기술의 결합으로 소송 기간 79% 단축, 사법 비용 87% 절감, 오판률 97% 감소를 동시에 달성하며,
+                                                    사법 접근성을 획기적으로 개선하여 모든 국민이 공정한 재판을 받을 수 있게 합니다.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
