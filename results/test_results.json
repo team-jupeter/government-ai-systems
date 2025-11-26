@@ -1,0 +1,110 @@
+{
+  "test_date": "2025-11-26T08:10:31.482590",
+  "patent_title": "오픈해시 기반 적응형 계층 구조 시스템",
+  "components": {
+    "probabilistic_layer": {
+      "name": "확률적 계층 선택 알고리즘",
+      "passed": true,
+      "details": {
+        "test_documents": 10000,
+        "distribution": [
+          {
+            "layer": "Layer1",
+            "theoretical": "70%",
+            "actual": "70.00%",
+            "deviation": "+0.00%"
+          },
+          {
+            "layer": "Layer2",
+            "theoretical": "20%",
+            "actual": "20.18%",
+            "deviation": "+0.18%"
+          },
+          {
+            "layer": "Layer3",
+            "theoretical": "10%",
+            "actual": "9.82%",
+            "deviation": "-0.18%"
+          }
+        ],
+        "max_deviation": "0.18%",
+        "threshold": "±2%"
+      }
+    },
+    "inter_layer_verification": {
+      "name": "계층 간 상호 검증",
+      "passed": true,
+      "details": {
+        "downward_verification": {
+          "bls_signature": true,
+          "merkle_proof": true,
+          "latency_ms": 0.043
+        },
+        "upward_verification": {
+          "response_time": true,
+          "data_integrity": true
+        },
+        "contamination_detection": {
+          "isolated_nodes": 1,
+          "auto_recovery": true
+        }
+      }
+    },
+    "lpbft_consensus": {
+      "name": "LPBFT 합의 알고리즘",
+      "passed": true,
+      "details": {
+        "4_node_system": {
+          "bft_params": "n=4, f=1, quorum=3",
+          "normal_consensus": true,
+          "byzantine_1_tolerance": true,
+          "byzantine_2_rejection": true
+        },
+        "10_node_representative": {
+          "bft_params": "n=10, f=3, quorum=7",
+          "byzantine_3_tolerance": true
+        }
+      }
+    },
+    "linear_scaling": {
+      "name": "선형 확장 TPS",
+      "passed": true,
+      "details": {
+        "theoretical_tps": {
+          "11_nodes": 748.0,
+          "1000_nodes": 68000.0,
+          "100000_nodes": 4882812.5
+        },
+        "linearity": "Verified (10x nodes → 10x TPS)",
+        "patent_reference": {
+          "aws_measured_11_nodes": "481.4 TPS",
+          "vs_bitcoin": "68.8x"
+        },
+        "bandwidth_limit": "4,882,812 TPS (10 Gbps)"
+      }
+    },
+    "dynamic_node_management": {
+      "name": "동적 노드 관리",
+      "passed": true,
+      "details": {
+        "country_join": {
+          "downtime": "0초",
+          "tps_increase": true,
+          "representative_reconfigured": true
+        },
+        "country_exit": {
+          "downtime": "0초",
+          "data_availability": true,
+          "pbft_threshold_adjusted": true
+        }
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "success_rate": "100%",
+    "elapsed_seconds": 0.31
+  }
+}
