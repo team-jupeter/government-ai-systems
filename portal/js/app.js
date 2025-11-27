@@ -75,7 +75,7 @@ async function checkStatus(sys) {
     const badge = document.getElementById('status-' + sys.port);
     if (!badge) return;
     try {
-        const res = await fetch('/api/' + sys.id + '/info', { method: 'GET' });
+        const res = await fetch('/api/' + sys.id + '/health', { method: 'GET' });
         if (res.ok) {
             badge.textContent = '● Online';
             badge.className = 'status-badge status-online';

@@ -1,0 +1,199 @@
+/* 오픈해시 4계층 고급 시각화 스타일 */
+
+.openhash-network-viz {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: radial-gradient(circle at 50% 50%, #1a1a2e, #0a0e27);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 40px 0;
+}
+
+.network-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.layer-node {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    transition: all 0.3s;
+    cursor: pointer;
+    animation: pulse-node 3s ease-in-out infinite;
+}
+
+@keyframes pulse-node {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+    }
+}
+
+.layer-node.layer-4 {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    border: 3px solid #ff6b9d;
+}
+
+.layer-node.layer-3 {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: 3px solid #7c8adb;
+}
+
+.layer-node.layer-2 {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    border: 3px solid #5db8fe;
+}
+
+.layer-node.layer-1 {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    border: 3px solid #52f0a6);
+}
+
+.data-packet {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #667eea;
+    animation: travel 3s linear infinite;
+}
+
+@keyframes travel {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(500px) translateY(-300px);
+        opacity: 0;
+    }
+}
+
+.probability-indicator {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.probability-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.probability-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 4px;
+    transition: width 0.5s;
+}
+
+.tps-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    font-family: 'Courier New', monospace;
+}
+
+.tps-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #4caf50;
+    text-shadow: 0 0 10px #4caf50;
+}
+
+.connection-line {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        rgba(102, 126, 234, 0.8), 
+        rgba(102, 126, 234, 0.2)
+    );
+    transform-origin: left center;
+    animation: flow 2s linear infinite;
+}
+
+@keyframes flow {
+    0% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.3;
+    }
+}
+
+.hash-visualization {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    padding: 30px;
+    border-radius: 16px;
+    border: 2px solid #667eea;
+    max-width: 500px;
+    backdrop-filter: blur(20px);
+    animation: fadeInHash 0.5s;
+}
+
+@keyframes fadeInHash {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.hash-code {
+    font-family: 'Courier New', monospace;
+    color: #4caf50;
+    word-break: break-all;
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    font-size: 0.85em;
+}
+
+.verification-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(76, 175, 80, 0.2);
+    border-radius: 8px;
+    color: #4caf50;
+    font-weight: 600;
+}

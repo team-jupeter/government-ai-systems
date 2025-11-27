@@ -1,0 +1,332 @@
+{
+  "drug-approval": {
+    "id": "drug-approval",
+    "name": "의약품 허가 심사 AI",
+    "icon": "💊",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 98.4,
+    "annualCases": 1527,
+    "avgProcessTime": {
+      "before": "9.3개월",
+      "after": "3.2개월",
+      "improvement": "65.6%"
+    },
+    "description": "신약·제네릭·바이오의약품 품목허가 심사를 담당하는 전문 AI 에이전트",
+    "capabilities": [
+      "약사법 자동 준수 검증",
+      "GMP 시설 기준 확인",
+      "임상시험 데이터 분석",
+      "유사 허가 사례 검색 (47,000건)",
+      "안전성·유효성 정량 평가"
+    ],
+    "openHashLayer": "Layer 3-4",
+    "processingParams": {
+      "strictness": 0.97,
+      "safetyStandard": 0.95,
+      "documentReview": 0.94,
+      "precedenceDependency": 0.82
+    },
+    "legalBasis": [
+      "약사법 제31조 (품목허가)",
+      "약사법 제42조 (안전성·유효성 심사)",
+      "의약품 등의 안전에 관한 규칙"
+    ]
+  },
+  "clinical-trial": {
+    "id": "clinical-trial",
+    "name": "임상시험 승인 AI",
+    "icon": "🧪",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 95.7,
+    "annualCases": 1850,
+    "avgProcessTime": {
+      "before": "2.8개월",
+      "after": "4주",
+      "improvement": "64.3%"
+    },
+    "description": "임상시험계획 승인 및 변경승인을 신속 처리하는 AI 에이전트",
+    "capabilities": [
+      "프로토콜 타당성 자동 검증",
+      "피험자 안전성 평가",
+      "IRB 승인 여부 실시간 확인",
+      "시험기관 적격성 심사",
+      "동의서 양식 법령 준수 검토"
+    ],
+    "openHashLayer": "Layer 2-3",
+    "processingParams": {
+      "processingSpeed": 0.84,
+      "precedenceDependency": 0.87,
+      "safetyPriority": 0.92,
+      "protocolValidation": 0.89
+    },
+    "legalBasis": [
+      "약사법 제34조 (임상시험)",
+      "약사법 시행규칙 제36조",
+      "의약품 임상시험 관리기준 (KGCP)"
+    ]
+  },
+  "food-permit": {
+    "id": "food-permit",
+    "name": "식품 허가·신고 AI",
+    "icon": "🍱",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 93.8,
+    "annualCases": 185000,
+    "avgProcessTime": {
+      "before": "23일",
+      "after": "7일",
+      "improvement": "69.6%"
+    },
+    "description": "영업허가, 품목제조신고, 수입신고를 대량 처리하는 AI 에이전트",
+    "capabilities": [
+      "식품위생법 자동 적용",
+      "HACCP 인증 여부 확인",
+      "시설 기준 자동 검증",
+      "영양성분 분석 및 표시",
+      "표시·광고 법령 준수 심사"
+    ],
+    "openHashLayer": "Layer 2",
+    "processingParams": {
+      "consistency": 0.93,
+      "qualificationCheck": 0.89,
+      "processingSpeed": 0.88,
+      "automationLevel": 0.91
+    },
+    "legalBasis": [
+      "식품위생법 제37조 (영업허가)",
+      "식품위생법 제43조 (품목제조신고)",
+      "식품 등의 표시·광고에 관한 법률"
+    ]
+  },
+  "import-inspection": {
+    "id": "import-inspection",
+    "name": "수입식품 검사 AI",
+    "icon": "🛃",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 96.2,
+    "annualCases": 420000,
+    "avgProcessTime": {
+      "before": "3-5일",
+      "after": "실시간",
+      "improvement": "실시간 위해 분석"
+    },
+    "description": "통관 단계 서류검사 및 위해요소 자동 탐지 AI 에이전트",
+    "capabilities": [
+      "위해요소 실시간 자동 탐지",
+      "원산지 검증 및 이력 추적",
+      "검역 증명서 자동 확인",
+      "잔류농약·중금속 기준 조회",
+      "통관 우선순위 지능형 판단"
+    ],
+    "openHashLayer": "Layer 1-2",
+    "processingParams": {
+      "legalStrictness": 0.96,
+      "riskVerification": 0.94,
+      "speedPriority": 0.87,
+      "internationalStandard": 0.91
+    },
+    "legalBasis": [
+      "수입식품안전관리 특별법 제20조",
+      "식품위생법 제31조 (검사)",
+      "농수산물 품질관리법"
+    ]
+  },
+  "device-approval": {
+    "id": "device-approval",
+    "name": "의료기기 허가 AI",
+    "icon": "🏥",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 94.5,
+    "annualCases": 28000,
+    "avgProcessTime": {
+      "before": "5.7개월",
+      "after": "2.1개월",
+      "improvement": "63.2%"
+    },
+    "description": "의료기기 품목허가 및 인증을 담당하는 전문 AI 에이전트",
+    "capabilities": [
+      "의료기기법 준수 자동 확인",
+      "임상적 타당성 정량 평가",
+      "전자파 안전성 기준 검증",
+      "생물학적 안전성 심사",
+      "ISO 13485 인증 확인"
+    ],
+    "openHashLayer": "Layer 3",
+    "processingParams": {
+      "safetyStandard": 0.95,
+      "documentReview": 0.92,
+      "clinicalValidity": 0.88,
+      "internationalCompliance": 0.93
+    },
+    "legalBasis": [
+      "의료기기법 제6조 (제조업 허가)",
+      "의료기기법 제15조 (품목허가)",
+      "의료기기 안전 및 성능에 관한 기준"
+    ]
+  },
+  "cosmetic-notify": {
+    "id": "cosmetic-notify",
+    "name": "화장품 신고 AI",
+    "icon": "💄",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 91.3,
+    "annualCases": 92000,
+    "avgProcessTime": {
+      "before": "7일",
+      "after": "2일",
+      "improvement": "71.4%"
+    },
+    "description": "화장품 제조·수입 신고를 대량 고속 처리하는 AI 에이전트",
+    "capabilities": [
+      "화장품법 자동 검증",
+      "성분 안전성 데이터베이스 조회",
+      "알레르기 유발 성분 확인",
+      "기능성 화장품 심사",
+      "표시·광고 규정 준수 검토"
+    ],
+    "openHashLayer": "Layer 1",
+    "processingParams": {
+      "processingSpeed": 0.91,
+      "automationLevel": 0.88,
+      "batchProcessing": 0.95,
+      "componentVerification": 0.87
+    },
+    "legalBasis": [
+      "화장품법 제3조 (제조판매업 등록)",
+      "화장품법 제4조 (기능성화장품 심사)",
+      "화장품 안전기준 등에 관한 규정"
+    ]
+  },
+  "safety-info": {
+    "id": "safety-info",
+    "name": "안전성 정보 관리 AI",
+    "icon": "⚠️",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 97.1,
+    "annualCases": 58000,
+    "avgProcessTime": {
+      "before": "수작업 분석",
+      "after": "실시간",
+      "improvement": "실시간 위해 평가"
+    },
+    "description": "위해정보 수집·분석 및 조기 경보를 발령하는 AI 에이전트",
+    "capabilities": [
+      "다중 소스 위해정보 통합 수집",
+      "패턴 인식 기반 조기 경보",
+      "위해도 정량 평가 (Risk Assessment)",
+      "국제 사고 사례 실시간 연동",
+      "긴급 대응 우선순위 자동 판단"
+    ],
+    "openHashLayer": "Layer 3-4",
+    "processingParams": {
+      "riskVerification": 0.97,
+      "rapidResponse": 0.95,
+      "patternRecognition": 0.94,
+      "internationalMonitoring": 0.92
+    },
+    "legalBasis": [
+      "식품위생법 제86조 (위해평가)",
+      "약사법 제68조의2 (안전관리)",
+      "화학물질관리법"
+    ]
+  },
+  "adverse-monitor": {
+    "id": "adverse-monitor",
+    "name": "부작용 모니터링 AI",
+    "icon": "📊",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 95.8,
+    "annualCases": 145000,
+    "avgProcessTime": {
+      "before": "수동 분석",
+      "after": "AI 실시간",
+      "improvement": "자동화 95%"
+    },
+    "description": "의약품·의료기기 부작용을 실시간 모니터링하는 AI 에이전트",
+    "capabilities": [
+      "부작용 신호 자동 탐지 (Signal Detection)",
+      "인과관계 확률 정량 계산",
+      "중증도 자동 분류 (CTCAE 기반)",
+      "유사 사례 패턴 분석",
+      "의료기관 연동 실시간 모니터링"
+    ],
+    "openHashLayer": "Layer 2-3",
+    "processingParams": {
+      "patternRecognition": 0.96,
+      "causalityAssessment": 0.94,
+      "severityClassification": 0.93,
+      "realTimeMonitoring": 0.97
+    },
+    "legalBasis": [
+      "약사법 제68조 (부작용 보고)",
+      "의료기기법 제31조 (부작용 보고)",
+      "의약품 재평가에 관한 규정"
+    ]
+  },
+  "recall-manage": {
+    "id": "recall-manage",
+    "name": "리콜 및 회수 관리 AI",
+    "icon": "🔴",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 99.1,
+    "annualCases": 2800,
+    "avgProcessTime": {
+      "before": "수동 추적",
+      "after": "즉시",
+      "improvement": "즉시 대응"
+    },
+    "description": "부적합 제품의 신속한 회수·폐기를 관리하는 AI 에이전트",
+    "capabilities": [
+      "리콜 대상 신속 식별 (<1분)",
+      "유통 경로 자동 추적 (블록체인)",
+      "회수율 실시간 모니터링",
+      "소비자 공지 자동 발송",
+      "폐기 확인 및 불변 기록"
+    ],
+    "openHashLayer": "Layer 4",
+    "processingParams": {
+      "urgency": 1.0,
+      "trackingAccuracy": 0.99,
+      "notificationSpeed": 0.98,
+      "complianceVerification": 0.97
+    },
+    "legalBasis": [
+      "식품위생법 제45조 (회수)",
+      "약사법 제76조 (회수·폐기)",
+      "의료기기법 제23조 (회수)"
+    ]
+  },
+  "civil-qa": {
+    "id": "civil-qa",
+    "name": "민원 및 질의응답 AI",
+    "icon": "💬",
+    "model": "DeepSeek R1 670B",
+    "accuracy": 92.7,
+    "annualCases": 165000,
+    "avgProcessTime": {
+      "before": "전화 대기",
+      "after": "즉시",
+      "improvement": "24/7 즉시"
+    },
+    "description": "전화, 온라인, 방문 상담을 24시간 처리하는 AI 에이전트",
+    "capabilities": [
+      "자연어 의도 파악 (NLU)",
+      "법령 기반 정확한 답변 생성",
+      "담당 부서 자동 배정",
+      "다국어 지원 (9개 언어)",
+      "상담 이력 통합 관리"
+    ],
+    "openHashLayer": "Layer 1",
+    "processingParams": {
+      "responseSpeed": 0.93,
+      "accuracy": 0.927,
+      "satisfactionScore": 4.7,
+      "multilingualSupport": 0.89
+    },
+    "legalBasis": [
+      "행정절차법 제26조 (민원)",
+      "전자정부법 제11조 (전자민원)",
+      "개인정보보호법 (상담 기록 관리)"
+    ]
+  }
+}

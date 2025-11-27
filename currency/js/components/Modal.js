@@ -1,35 +1,23 @@
-// Modal.js - 모달 컴포넌트
-const Modal = ({ isOpen, onClose, title, icon, iconBg, children }) => {
+const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
     
     return React.createElement('div', {
-        className: 'fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay',
-        style: { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
+        className: 'fixed inset-0 z-50 flex items-center justify-center p-4',
         onClick: onClose
     },
+        React.createElement('div', { className: 'absolute inset-0 bg-black/70 backdrop-filter backdrop-blur-sm' }),
         React.createElement('div', {
-            className: 'modal-content bg-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden border border-slate-700',
-            onClick: (e) => e.stopPropagation()
+            className: 'relative bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-yellow-500/30 shadow-2xl',
+            onClick: e => e.stopPropagation()
         },
-            // 헤더
-            React.createElement('div', {
-                className: `${iconBg} p-6 border-b border-slate-700`
-            },
-                React.createElement('div', { className: 'flex items-center justify-between' },
-                    React.createElement('div', { className: 'flex items-center gap-4' },
-                        React.createElement('span', { className: 'text-4xl' }, icon),
-                        React.createElement('h2', { className: 'text-2xl font-bold text-white' }, title)
-                    ),
-                    React.createElement('button', {
-                        onClick: onClose,
-                        className: 'text-white/70 hover:text-white text-3xl font-light transition-colors'
-                    }, '×')
-                )
+            React.createElement('div', { className: 'sticky top-0 bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center' },
+                React.createElement('h3', { className: 'text-xl font-bold text-yellow-400' }, title),
+                React.createElement('button', {
+                    onClick: onClose,
+                    className: 'text-gray-400 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700'
+                }, '×')
             ),
-            // 본문
-            React.createElement('div', {
-                className: 'p-6 overflow-y-auto max-h-[60vh] text-gray-300'
-            }, children)
+            React.createElement('div', { className: 'p-6' }, children)
         )
     );
 };

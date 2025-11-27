@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA 및 AI 기반 통합 디지털 화폐 시스템</title>
-    
-    <!-- Tailwind CSS -->
+    <title>FPGA 및 AI 기반 통합 디지털 화폐 시스템 | OpenHash</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
-    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .gradient-currency { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .gradient-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.5); } 50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.8); } }
+        .pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+        .hash-display { font-family: 'Courier New', monospace; font-size: 0.7rem; word-break: break-all; }
+        .stat-bar { transition: width 0.8s ease-out; }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
+<body class="bg-gray-900 text-white">
     <div id="root"></div>
-    
-    <!-- Components -->
-    <script type="text/babel" src="js/components/Modal.js"></script>
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/TechSection.js"></script>
-    <script type="text/babel" src="js/components/EconomicSection.js"></script>
-    <script type="text/babel" src="js/components/SimulatorSection.js"></script>
-    
-    <!-- Main App -->
-    <script type="text/babel" src="js/app.js?v=1"></script>
+    <script src="/shared/banner.js"></script>
+    <script src="js/components/Modal.js?v=2"></script>
+    <script src="js/components/Header.js?v=2"></script>
+    <script src="js/components/FPGASection.js?v=2"></script>
+    <script src="js/components/AIVerification.js?v=2"></script>
+    <script src="js/components/FinancialStatement.js?v=2"></script>
+    <script src="js/components/TaxAutomation.js?v=2"></script>
+    <script src="js/components/CrossChain.js?v=2"></script>
+    <script src="js/components/IntegratedFinance.js?v=2"></script>
+    <script src="js/components/AIConsultation.js?v=2"></script>
+    <script src="js/app.js?v=2"></script>
 </body>
 </html>

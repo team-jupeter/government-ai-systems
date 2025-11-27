@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHash 실시간 시각화</title>
+    <link rel="stylesheet" href="openhash-viz.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0a0e27;
+            font-family: 'Pretendard', sans-serif;
+            color: #fff;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>⛓️ OpenHash 4계층 실시간 네트워크 시각화</h1>
+    
+    <div class="openhash-network-viz" id="networkViz">
+        <canvas id="networkCanvas" class="network-canvas"></canvas>
+        
+        <div class="probability-indicator">
+            <h3 style="margin-top: 0;">확률적 계층 선택</h3>
+            <div>
+                <strong>Layer 1 (75%)</strong>
+                <div class="probability-bar">
+                    <div class="probability-fill" style="width: 75%"></div>
+                </div>
+            </div>
+            <div>
+                <strong>Layer 2 (18%)</strong>
+                <div class="probability-bar">
+                    <div class="probability-fill" style="width: 18%"></div>
+                </div>
+            </div>
+            <div>
+                <strong>Layer 3 (6%)</strong>
+                <div class="probability-bar">
+                    <div class="probability-fill" style="width: 6%"></div>
+                </div>
+            </div>
+            <div>
+                <strong>Layer 4 (직접)</strong>
+                <div class="probability-bar">
+                    <div class="probability-fill" style="width: 100%; background: #f5576c;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tps-counter">
+            <div style="color: #999; margin-bottom: 5px;">실시간 TPS</div>
+            <div class="tps-value" id="tpsValue">0</div>
+            <div style="color: #999; margin-top: 10px; font-size: 0.9em;">
+                목표: 4,240,000 TPS
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 캔버스 크기 설정
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // 노드 정의
+        const nodes = [
+            // Layer 4
+            { x: 0.5, y: 0.15, layer: 4, color: '#f5576c', label: 'L4' },
+            
+            // Layer 3
+            { x: 0.3, y: 0.35, layer: 3, color: '#764ba2', label: 'L3' },
+            { x: 0.5, y: 0.35, layer: 3, color: '#764ba2', label: 'L3' },
+            { x: 0.7, y: 0.35, layer: 3, color: '#764ba2', label: 'L3' },
+            
+            // Layer 2
+            { x: 0.2, y: 0.60, layer: 2, color: '#00f2fe', label: 'L2' },
+            { x: 0.4, y: 0.60, layer: 2, color: '#00f2fe', label: 'L2' },
+            { x: 0.6, y: 0.60, layer: 2, color: '#00f2fe', label: 'L2' },
+            { x: 0.8, y: 0.60, layer: 2, color: '#00f2fe', label: 'L2' },
+            
+            // Layer 1
+            { x: 0.15, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' },
+            { x: 0.3, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' },
+            { x: 0.45, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' },
+            { x: 0.6, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' },
+            { x: 0.75, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' },
+            { x: 0.9, y: 0.85, layer: 1, color: '#38f9d7', label: 'L1' }
+        ];
+        
+        // 데이터 패킷
+        let packets = [];
+        
+        class DataPacket {
+            constructor(startNode, endNode) {
+                this.startX = startNode.x * canvas.width;
+                this.startY = startNode.y * canvas.height;
+                this.endX = endNode.x * canvas.width;
+                this.endY = endNode.y * canvas.height;
+                this.progress = 0;
+                this.speed = 0.01 + Math.random() * 0.02;
+                this.color = startNode.color;
+            }
+            
+            update() {
+                this.progress += this.speed;
+                return this.progress < 1;
+            }
+            
+            draw() {
+                const x = this.startX + (this.endX - this.startX) * this.progress;
+                const y = this.startY + (this.endY - this.startY) * this.progress;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+        
+        // 연결선 그리기
+        function drawConnections() {
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.2)';
+            ctx.lineWidth = 1;
+            
+            nodes.forEach((node, i) => {
+                nodes.forEach((otherNode, j) => {
+                    if (i < j && Math.abs(node.layer - otherNode.layer) === 1) {
+                        ctx.beginPath();
+                        ctx.moveTo(node.x * canvas.width, node.y * canvas.height);
+                        ctx.lineTo(otherNode.x * canvas.width, otherNode.y * canvas.height);
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+        
+        // 노드 그리기
+        function drawNodes() {
+            nodes.forEach(node => {
+                const x = node.x * canvas.width;
+                const y = node.y * canvas.height;
+                const radius = 25;
+                
+                // 외곽 광채
+                ctx.beginPath();
+                ctx.arc(x, y, radius + 5, 0, Math.PI * 2);
+                ctx.fillStyle = node.color + '20';
+                ctx.fill();
+                
+                // 노드 본체
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+                gradient.addColorStop(0, node.color);
+                gradient.addColorStop(1, node.color + '80');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // 테두리
+                ctx.strokeStyle = node.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // 레이블
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.label, x, y);
+            });
+        }
+        
+        // 새 패킷 생성
+        function createPacket() {
+            const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+            const possibleEndNodes = nodes.filter(n => 
+                Math.abs(n.layer - startNode.layer) === 1
+            );
+            
+            if (possibleEndNodes.length > 0) {
+                const endNode = possibleEndNodes[Math.floor(Math.random() * possibleEndNodes.length)];
+                packets.push(new DataPacket(startNode, endNode));
+            }
+        }
+        
+        // TPS 카운터 업데이트
+        let currentTPS = 0;
+        const targetTPS = 4240000;
+        
+        function updateTPS() {
+            currentTPS += Math.floor(Math.random() * 50000) + 10000;
+            if (currentTPS > targetTPS) currentTPS = 0;
+            
+            document.getElementById('tpsValue').textContent = 
+                currentTPS.toLocaleString();
+        }
+        
+        // 애니메이션 루프
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawConnections();
+            drawNodes();
+            
+            // 패킷 업데이트 및 그리기
+            packets = packets.filter(packet => {
+                const alive = packet.update();
+                if (alive) packet.draw();
+                return alive;
+            });
+            
+            // 랜덤하게 새 패킷 생성
+            if (Math.random() < 0.3) {
+                createPacket();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 시작
+        animate();
+        setInterval(updateTPS, 100);
+        
+        // 초기 패킷 생성
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createPacket, i * 200);
+        }
+    </script>
+</body>
+</html>
