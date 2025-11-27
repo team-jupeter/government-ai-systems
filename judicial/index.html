@@ -3,345 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 사법 지원 시스템 | OpenHash 기반</title>
+    <title>AI 예방적 사법 시스템 | OpenHash 기반</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
-        .card-hover { transition: all 0.3s; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .float { animation: float 3s ease-in-out infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes scale { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .scale { animation: scale 2s infinite; }
+        .gradient-judicial { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        @keyframes pulse-gold { 0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.5)} 50%{box-shadow:0 0 40px rgba(212,175,55,0.8)} }
+        .pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+        @keyframes scale-bar { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+        .animate-bar { animation: scale-bar 1s ease-out forwards; transform-origin: left; }
+        @keyframes data-flow { 
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-20px) scale(1.1); opacity: 0.8; }
+            100% { transform: translateY(-40px) scale(0.8); opacity: 0; }
+        }
+        .data-flow { animation: data-flow 1.5s ease-out forwards; }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-    <!-- Header -->
-    <div class="gradient-bg py-16 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="text-6xl mb-4 float">⚖️</div>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 사법 지원 시스템</h1>
-            <p class="text-xl opacity-90 mb-6">OpenHash 증거 관리 | AI 판례 분석 | 공정한 재판 지원</p>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">📚 50만+ 판례 학습</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🔒 증거 위변조 방지</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">⚡ 60% 시간 단축</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="bg-gray-800 py-3 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-blue-400 hover:text-blue-300">← 포털로 돌아가기</a>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">기능</button>
-                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">시뮬레이터</button>
-                <button onclick="document.getElementById('process').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">프로세스</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Current Problems -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">현행 사법 시스템의 과제</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">⏳</div>
-                <div class="text-xl font-bold text-red-400 mb-2">18개월</div>
-                <div class="text-sm text-gray-400">평균 민사 재판 기간</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">📚</div>
-                <div class="text-xl font-bold text-red-400 mb-2">수만 건</div>
-                <div class="text-sm text-gray-400">검토해야 할 유사 판례</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">📝</div>
-                <div class="text-xl font-bold text-red-400 mb-2">증거 관리</div>
-                <div class="text-sm text-gray-400">위변조 및 분실 위험</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">💰</div>
-                <div class="text-xl font-bold text-red-400 mb-2">고비용</div>
-                <div class="text-sm text-gray-400">법률 서비스 접근성 제한</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Features -->
-    <div id="features" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">⚖️ 핵심 기능</h2>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-4xl mb-4">🔍</div>
-                    <h3 class="text-xl font-bold text-blue-400 mb-3">AI 판례 분석</h3>
-                    <ul class="text-sm text-gray-400 space-y-2">
-                        <li>• 50만+ 판례 데이터 학습</li>
-                        <li>• 유사 사건 자동 검색</li>
-                        <li>• 승소율 예측 분석</li>
-                        <li>• 법률 조문 자동 매칭</li>
-                    </ul>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-4xl mb-4">🔐</div>
-                    <h3 class="text-xl font-bold text-green-400 mb-3">OpenHash 증거 관리</h3>
-                    <ul class="text-sm text-gray-400 space-y-2">
-                        <li>• 디지털 증거 위변조 방지</li>
-                        <li>• 타임스탬프 자동 기록</li>
-                        <li>• 체인 오브 커스터디 추적</li>
-                        <li>• 법원 간 증거 공유</li>
-                    </ul>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-4xl mb-4">📋</div>
-                    <h3 class="text-xl font-bold text-purple-400 mb-3">문서 자동화</h3>
-                    <ul class="text-sm text-gray-400 space-y-2">
-                        <li>• 소장/답변서 초안 생성</li>
-                        <li>• 법률 문서 검토 보조</li>
-                        <li>• 판결문 요약 분석</li>
-                        <li>• 다국어 법률 번역</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Simulator -->
-    <div id="simulator" class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">🔍 판례 분석 시뮬레이터</h2>
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Input -->
-            <div class="bg-gray-800 rounded-xl p-6">
-                <h3 class="text-xl font-bold mb-6 text-blue-400">사건 정보 입력</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">사건 유형</label>
-                        <select id="caseType" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3">
-                            <option value="civil">민사 - 손해배상</option>
-                            <option value="contract">민사 - 계약 분쟁</option>
-                            <option value="labor">민사 - 노동 분쟁</option>
-                            <option value="family">가사 - 이혼/양육권</option>
-                            <option value="criminal">형사 - 일반</option>
-                            <option value="admin">행정 - 처분 취소</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">사건 개요</label>
-                        <textarea id="caseSummary" rows="4" placeholder="사건의 주요 내용을 입력하세요..."
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none resize-none"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">청구 금액 (원)</label>
-                        <input type="number" id="claimAmount" placeholder="50,000,000"
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">증거 유형</label>
-                        <div class="grid grid-cols-2 gap-2 text-sm">
-                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
-                                <input type="checkbox" id="docEvidence" class="accent-blue-500" checked> 문서
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
-                                <input type="checkbox" id="witnessEvidence" class="accent-blue-500"> 증인
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
-                                <input type="checkbox" id="digitalEvidence" class="accent-blue-500"> 디지털
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
-                                <input type="checkbox" id="expertEvidence" class="accent-blue-500"> 감정
-                            </label>
-                        </div>
-                    </div>
-                    <button onclick="analyzeCase()"
-                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 font-bold py-4 rounded-lg hover:from-blue-500 hover:to-indigo-500 transition">
-                        🔍 AI 판례 분석 실행
-                    </button>
-                </div>
-            </div>
-
-            <!-- Result -->
-            <div class="bg-gray-800 rounded-xl p-6">
-                <h3 class="text-xl font-bold mb-6 text-green-400">AI 분석 결과</h3>
-                <div id="caseResult">
-                    <div class="text-center text-gray-500 py-12">
-                        <div class="text-4xl mb-4">⚖️</div>
-                        <p>사건 정보를 입력하고<br/>AI 분석을 실행하세요</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Process Flow -->
-    <div id="process" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">📋 AI 사법 지원 프로세스</h2>
-            <div class="grid md:grid-cols-6 gap-3">
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">📥</div>
-                    <div class="text-xs font-bold text-blue-400">1. 사건 접수</div>
-                    <div class="text-xs text-gray-500 mt-1">자동 분류</div>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">🔍</div>
-                    <div class="text-xs font-bold text-blue-400">2. 판례 검색</div>
-                    <div class="text-xs text-gray-500 mt-1">AI 매칭</div>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">📊</div>
-                    <div class="text-xs font-bold text-blue-400">3. 분석</div>
-                    <div class="text-xs text-gray-500 mt-1">승소율 예측</div>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">📝</div>
-                    <div class="text-xs font-bold text-blue-400">4. 문서 작성</div>
-                    <div class="text-xs text-gray-500 mt-1">초안 생성</div>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">🔐</div>
-                    <div class="text-xs font-bold text-blue-400">5. 증거 등록</div>
-                    <div class="text-xs text-gray-500 mt-1">OpenHash</div>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
-                    <div class="text-2xl mb-2">⚖️</div>
-                    <div class="text-xs font-bold text-blue-400">6. 재판 지원</div>
-                    <div class="text-xs text-gray-500 mt-1">실시간 분석</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Case Types -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">📚 지원 사건 유형</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">💼</div>
-                <h3 class="font-bold text-blue-400 mb-2">민사 사건</h3>
-                <p class="text-xs text-gray-400">손해배상, 계약, 부동산, 채권</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">👨‍👩‍👧</div>
-                <h3 class="font-bold text-pink-400 mb-2">가사 사건</h3>
-                <p class="text-xs text-gray-400">이혼, 양육권, 재산분할, 상속</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">⚠️</div>
-                <h3 class="font-bold text-red-400 mb-2">형사 사건</h3>
-                <p class="text-xs text-gray-400">범죄 유형별 양형 분석</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">🏛️</div>
-                <h3 class="font-bold text-green-400 mb-2">행정 사건</h3>
-                <p class="text-xs text-gray-400">처분 취소, 의무이행, 국가배상</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Benefits -->
-    <div class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">60%</div>
-                    <div class="text-sm text-gray-300">재판 기간 단축</div>
-                </div>
-                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">87%</div>
-                    <div class="text-sm text-gray-300">판례 검색 정확도</div>
-                </div>
-                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">100%</div>
-                    <div class="text-sm text-gray-300">증거 무결성 보장</div>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">45%</div>
-                    <div class="text-sm text-gray-300">법률 비용 절감</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="bg-gray-900 py-8 border-t border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>AI 사법 지원 시스템 © 2025 | OpenHash 증거 관리</p>
-            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
-        </div>
-    </div>
-
-    <script>
-        function analyzeCase() {
-            const caseType = document.getElementById('caseType').value;
-            const caseSummary = document.getElementById('caseSummary').value || '계약 불이행으로 인한 손해배상 청구';
-            const claimAmount = parseInt(document.getElementById('claimAmount').value) || 50000000;
-
-            const resultDiv = document.getElementById('caseResult');
-            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 판례 분석 중...</p></div>';
-
-            setTimeout(() => {
-                const caseNames = {
-                    'civil': '손해배상',
-                    'contract': '계약 분쟁',
-                    'labor': '노동 분쟁',
-                    'family': '가사',
-                    'criminal': '형사',
-                    'admin': '행정'
-                };
-
-                const winRate = Math.floor(Math.random() * 30) + 55;
-                const similarCases = Math.floor(Math.random() * 500) + 100;
-                const avgDuration = Math.floor(Math.random() * 12) + 6;
-                const expectedAmount = Math.floor(claimAmount * (0.5 + Math.random() * 0.4));
-
-                resultDiv.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
-                            <div class="text-sm text-gray-400">사건 유형</div>
-                            <div class="font-bold text-lg">${caseNames[caseType]} 사건</div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 bg-gray-900 rounded-lg text-center">
-                                <div class="text-sm text-gray-400">예상 승소율</div>
-                                <div class="text-2xl font-bold ${winRate >= 70 ? 'text-green-400' : winRate >= 50 ? 'text-yellow-400' : 'text-red-400'}">${winRate}%</div>
-                            </div>
-                            <div class="p-4 bg-gray-900 rounded-lg text-center">
-                                <div class="text-sm text-gray-400">유사 판례</div>
-                                <div class="text-2xl font-bold text-blue-400">${similarCases}건</div>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-gray-900 rounded-lg">
-                            <div class="text-sm text-gray-400 mb-2">주요 유사 판례</div>
-                            <ul class="space-y-2 text-sm">
-                                <li class="flex justify-between"><span>대법원 2023다12345</span><span class="text-green-400">원고 승</span></li>
-                                <li class="flex justify-between"><span>서울고법 2022나67890</span><span class="text-green-400">원고 승</span></li>
-                                <li class="flex justify-between"><span>대법원 2021다11111</span><span class="text-red-400">원고 패</span></li>
-                            </ul>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-3 bg-gray-900 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">예상 인용액</div>
-                                <div class="font-bold text-green-400">₩${expectedAmount.toLocaleString()}</div>
-                            </div>
-                            <div class="p-3 bg-gray-900 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">예상 기간</div>
-                                <div class="font-bold text-yellow-400">${avgDuration}개월</div>
-                            </div>
-                        </div>
-                        <div class="text-center text-sm text-gray-400 pt-2">
-                            AI 분석 시간: <span class="text-blue-400 font-bold">0.089ms</span> | OpenHash 기록 완료
-                        </div>
-                    </div>
-                `;
-            }, 2000);
-        }
-    </script>
-<script src="/shared/banner.js"></script>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+    
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/CaseAnalysis.js"></script>
+    <script type="text/babel" src="js/components/PrivateVaultSimulation.js"></script>
+    <script type="text/babel" src="js/components/EvidenceVault.js"></script>
+    <script type="text/babel" src="js/components/GlobalComparison.js"></script>
+    <script type="text/babel" src="js/components/SupremeCourt500.js"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
