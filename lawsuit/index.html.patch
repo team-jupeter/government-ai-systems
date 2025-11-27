@@ -1,0 +1,7 @@
+    <!-- 추가 컴포넌트 -->
+    <script src="js/components/DraftDocuments.js"></script>
+    <script src="js/components/NotificationService.js"></script>
+    <script src="js/components/ElectronicService.js"></script>
+    <script src="js/components/RecordViewer.js"></script>
+    <script src="js/components/DocumentIssuance.js"></script>
+    <script src="js/components/PaymentOrder.js"></script>

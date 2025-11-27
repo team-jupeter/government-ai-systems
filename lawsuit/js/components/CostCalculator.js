@@ -1,0 +1,3 @@
+const CostCalculator = () => {
+    return <FeePayment />;
+};
