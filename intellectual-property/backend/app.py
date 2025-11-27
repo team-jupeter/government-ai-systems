@@ -5,6 +5,10 @@ import os
 import logging
 
 app = Flask(__name__)
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok'}), 200
 CORS(app)
 
 logging.basicConfig(level=logging.DEBUG)
