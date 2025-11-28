@@ -18,6 +18,7 @@ const App = () => {
             case 'pdv': return <PDVManager patientId={patientId} />;
             case 'appointment': return <Appointment patientId={patientId} />;
             case 'hospitals': return <HospitalInfo />;
+            case 'openhash': return <OpenHashInfo />;
             default: return <Dashboard patientId={patientId} onNavigate={setCurrentPage} />;
         }
     };
@@ -30,7 +31,6 @@ const App = () => {
             <main className="pt-16 min-h-screen" style={{ marginLeft: '256px' }}>
                 <div className="p-6">{renderPage()}</div>
             </main>
-            {/* Floating Assistant Button */}
             <FloatingAssistant />
         </div>
     );

@@ -18,12 +18,12 @@ const Sidebar = ({ currentPage, onNavigate }) => {
                 onClick={() => onNavigate('dashboard')}
             >
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                        <i className="fas fa-hospital text-blue-400 text-xl"></i>
+                    <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                        <i className="fas fa-link text-cyan-400 text-xl"></i>
                     </div>
                     <div>
-                        <p className="font-bold text-sm">제주 의료 AI</p>
-                        <p className="text-xs text-gray-400">v3.0 OpenHash</p>
+                        <p className="font-bold text-sm text-cyan-400">OpenHash</p>
+                        <p className="text-xs text-gray-400">의료 자동화 시스템</p>
                     </div>
                 </div>
             </div>
@@ -46,13 +46,19 @@ const Sidebar = ({ currentPage, onNavigate }) => {
                     </button>
                 ))}
             </nav>
+            {/* OpenHash 연동 - 클릭 가능 */}
             <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-lg p-3 border border-cyan-500/30">
+                <div 
+                    className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-lg p-3 border border-cyan-500/30 cursor-pointer hover:border-cyan-400 hover:bg-cyan-900/30 transition-all"
+                    onClick={() => onNavigate('openhash')}
+                >
                     <div className="flex items-center space-x-2 mb-2">
                         <i className="fas fa-link text-cyan-400 text-sm"></i>
-                        <span className="text-xs text-cyan-400">OpenHash 연동</span>
+                        <span className="text-xs text-cyan-400 font-bold">OpenHash 연동</span>
+                        <i className="fas fa-chevron-right text-cyan-400 text-xs ml-auto"></i>
                     </div>
                     <p className="text-xs text-gray-400">데이터 무결성 보장</p>
+                    <p className="text-xs text-green-400 mt-1"><i className="fas fa-check-circle mr-1"></i>검증됨</p>
                 </div>
             </div>
         </aside>
