@@ -30,6 +30,8 @@ const App = () => {
             <main className="pt-16 min-h-screen" style={{ marginLeft: '256px' }}>
                 <div className="p-6">{renderPage()}</div>
             </main>
+            {/* Floating Assistant Button */}
+            <FloatingAssistant />
         </div>
     );
 };

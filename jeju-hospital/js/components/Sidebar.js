@@ -12,7 +12,11 @@ const Sidebar = ({ currentPage, onNavigate }) => {
     ];
     return (
         <aside className="fixed left-0 top-0 bottom-0 w-64 bg-gray-800 border-r border-gray-700 z-50">
-            <div className="p-4 border-b border-gray-700">
+            {/* 로고 - 클릭 시 대시보드로 이동 */}
+            <div 
+                className="p-4 border-b border-gray-700 cursor-pointer hover:bg-gray-700/50 transition-all"
+                onClick={() => onNavigate('dashboard')}
+            >
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
                         <i className="fas fa-hospital text-blue-400 text-xl"></i>
