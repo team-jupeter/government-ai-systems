@@ -1,276 +1,603 @@
+"""
+AI 전자출원 시스템 - Flask 백엔드
+오픈해시 기반 지식재산권 통합 플랫폼
+포트: 5018
+"""
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import anthropic
+from datetime import datetime, timedelta
+import hashlib
+import random
+import string
 import os
 import logging
+import json
 
 app = Flask(__name__)
-
-@app.route('/health', methods=['GET'])
-def health():
-    return jsonify({'status': 'ok'}), 200
 CORS(app)
 
+# 로깅 설정
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Anthropic API 설정 (옵션)
 ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
 
+# ============================================
+# 시스템 정보
+# ============================================
 SYSTEM_INFO = {
-    "system_name": "오픈해시 기반 특허 AI 시뮬레이션 포털",
-    "description": "AI 기반 특허 출원·심사·분석 통합 플랫폼",
-    "total_patents": 2850000,
-    "annual_applications": 285000,
-    "ai_search_speed": "0.3초",
-    "prior_art_accuracy": "99.2%",
-    "processing_time_reduction": "78%",
-    "annual_savings": "연간 4,500억 원"
+    "system_name": "AI 전자출원 시스템",
+    "version": "2.0.0",
+    "description": "오픈해시 기반 지식재산권 통합 플랫폼",
+    "features": [
+        "AI 출원서 자동 작성",
+        "선행기술 조사",
+        "등록 가능성 예측",
+        "오픈해시 우선권 증명",
+        "시장/사업화 분석",
+        "제도개선 제안"
+    ],
+    "database": {
+        "total_patents": 52847293,
+        "korean_patents": 2850000,
+        "us_patents": 12500000,
+        "eu_patents": 8200000,
+        "cn_patents": 22000000,
+        "jp_patents": 7297293
+    },
+    "ai_accuracy": 94.7,
+    "search_speed": "0.3초",
+    "energy_saving": "98.5%"
 }
 
-PATENT_TYPES = [
-    {"id": "invention", "name": "특허(발명)", "icon": "💡", "duration": "20년", "annual": 125000},
-    {"id": "utility", "name": "실용신안", "icon": "🔧", "duration": "10년", "annual": 45000},
-    {"id": "design", "name": "디자인", "icon": "🎨", "duration": "20년", "annual": 72000},
-    {"id": "trademark", "name": "상표", "icon": "™️", "duration": "10년(갱신가능)", "annual": 185000}
-]
-
-TECH_FIELDS = [
-    {"id": "it", "name": "IT·소프트웨어", "icon": "💻", "share": 28.5},
-    {"id": "bio", "name": "바이오·의료", "icon": "🧬", "share": 18.2},
-    {"id": "electronics", "name": "전기·전자", "icon": "⚡", "share": 22.3},
-    {"id": "mechanical", "name": "기계·자동차", "icon": "⚙️", "share": 15.8},
-    {"id": "chemical", "name": "화학·소재", "icon": "🧪", "share": 10.5},
-    {"id": "ai", "name": "AI·빅데이터", "icon": "🤖", "share": 4.7}
-]
-
-SCENARIOS = [
-    {
-        "icon": "🔍",
-        "title": "AI 선행기술 조사",
-        "problem": "심사관이 14일간 수작업 검색, 유사 특허 누락 위험",
-        "solution": "AI가 0.3초 만에 전세계 1.5억 건 특허 DB 검색, 유사도 99.2% 자동 탐지",
-        "savings": "조사 시간 99.9% 단축"
+# IP 유형 정보
+IP_TYPES = {
+    "patent": {
+        "name": "특허 (발명)",
+        "icon": "💡",
+        "duration": "출원일로부터 20년",
+        "fees": {
+            "filing": 46000,
+            "examination_base": 143000,
+            "examination_per_claim": 44000,
+            "registration_base": 45000,
+            "registration_per_claim": 19000
+        }
     },
-    {
-        "icon": "📝",
-        "title": "명세서 자동 작성",
-        "problem": "명세서 작성에 변리사 비용 300만원+, 2-4주 소요",
-        "solution": "AI가 발명 내용 분석하여 청구항, 명세서 자동 생성",
-        "savings": "출원 비용 85% 절감"
+    "utility": {
+        "name": "실용신안",
+        "icon": "🔧",
+        "duration": "출원일로부터 10년",
+        "fees": {
+            "filing": 20000,
+            "examination_base": 71000,
+            "examination_per_claim": 19000,
+            "registration_base": 30000,
+            "registration_per_claim": 13000
+        }
     },
-    {
-        "icon": "⚖️",
-        "title": "특허성 자동 판단",
-        "problem": "출원 전 특허 가능성 판단 어려움, 거절 시 비용 손실",
-        "solution": "AI가 신규성, 진보성, 산업상 이용가능성 사전 분석",
-        "savings": "불필요 출원 72% 감소"
+    "design": {
+        "name": "디자인",
+        "icon": "🎨",
+        "duration": "설정등록일로부터 20년",
+        "fees": {
+            "filing": 45000,
+            "examination": 70000,
+            "registration": 75000
+        }
     },
-    {
-        "icon": "💰",
-        "title": "특허 가치 평가",
-        "problem": "특허 기술이전, 매매 시 가치 산정 어려움",
-        "solution": "AI가 시장성, 기술성, 권리범위 분석하여 객관적 가치 평가",
-        "savings": "기술거래 활성화 340% 증가"
+    "trademark": {
+        "name": "상표",
+        "icon": "™️",
+        "duration": "10년 (갱신 가능)",
+        "fees": {
+            "filing": 62000,
+            "registration": 211000,
+            "renewal": 310000
+        }
     }
+}
+
+# 기술 분야
+TECH_FIELDS = [
+    {"id": "ai", "name": "AI/머신러닝", "icon": "🤖", "ipc": "G06N"},
+    {"id": "blockchain", "name": "블록체인/분산원장", "icon": "⛓️", "ipc": "G06F"},
+    {"id": "iot", "name": "IoT/스마트기기", "icon": "📱", "ipc": "H04L"},
+    {"id": "bio", "name": "바이오/의료", "icon": "🧬", "ipc": "A61"},
+    {"id": "energy", "name": "에너지/환경", "icon": "⚡", "ipc": "H02"},
+    {"id": "material", "name": "신소재/화학", "icon": "🧪", "ipc": "C01"},
+    {"id": "mechanical", "name": "기계/자동차", "icon": "⚙️", "ipc": "B60"},
+    {"id": "electronics", "name": "전기/전자", "icon": "💡", "ipc": "H01"},
+    {"id": "software", "name": "소프트웨어", "icon": "💻", "ipc": "G06F"},
+    {"id": "design", "name": "디자인/UX", "icon": "🎨", "ipc": "D06"}
 ]
 
-AGENTS = [
-    {"id": "prior_art_search", "name": "🔍 선행기술 조사 Agent"},
-    {"id": "drafting_assistant", "name": "📝 명세서 작성 Agent"},
-    {"id": "patentability_judge", "name": "⚖️ 특허성 판단 Agent"},
-    {"id": "valuation_expert", "name": "💰 가치 평가 Agent"},
-    {"id": "infringement_analyzer", "name": "⚠️ 침해 분석 Agent"},
-    {"id": "application_guide", "name": "📋 출원 안내 Agent"}
-]
+# ============================================
+# 헬스체크
+# ============================================
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({
+        "status": "ok",
+        "service": "ai-patent-system",
+        "version": SYSTEM_INFO["version"],
+        "timestamp": datetime.now().isoformat()
+    }), 200
 
-@app.route('/api/patents/info', methods=['GET'])
-def get_info():
-    return jsonify(SYSTEM_INFO)
+# ============================================
+# 시스템 정보
+# ============================================
+@app.route('/info', methods=['GET'])
+def get_system_info():
+    return jsonify(SYSTEM_INFO), 200
 
-@app.route('/api/patents/types', methods=['GET'])
-def get_types():
-    return jsonify({"types": PATENT_TYPES})
+@app.route('/ip-types', methods=['GET'])
+def get_ip_types():
+    return jsonify(IP_TYPES), 200
 
-@app.route('/api/patents/tech-fields', methods=['GET'])
+@app.route('/tech-fields', methods=['GET'])
 def get_tech_fields():
-    return jsonify({"fields": TECH_FIELDS})
+    return jsonify(TECH_FIELDS), 200
 
-@app.route('/api/patents/scenarios', methods=['GET'])
-def get_scenarios():
-    return jsonify({"scenarios": SCENARIOS})
-
-@app.route('/api/patents/agents', methods=['GET'])
-def get_agents():
-    return jsonify({"agents": AGENTS})
-
-@app.route('/api/patents/consultation', methods=['POST', 'OPTIONS'])
-def consultation():
-    if request.method == 'OPTIONS':
-        return '', 204
-    
-    if not client:
-        return jsonify({"response": "⚠️ API 키가 설정되지 않았습니다."}), 200
-    
+# ============================================
+# AI 상담 (Claude API 연동)
+# ============================================
+@app.route('/consultation', methods=['POST'])
+def ai_consultation():
     try:
         data = request.json
         message = data.get('message', '')
-        agent_type = data.get('agent_type', 'application_guide')
+        consultation_type = data.get('type', 'general')
         
-        prompts = {
-            "prior_art_search": "당신은 선행기술 조사 AI입니다. 발명 내용을 분석하여 유사한 기존 특허와 기술을 찾아 설명합니다.",
-            "drafting_assistant": "당신은 특허 명세서 작성 AI입니다. 발명 내용을 청구항, 상세 설명 형식으로 작성합니다.",
-            "patentability_judge": "당신은 특허성 판단 AI입니다. 신규성, 진보성, 산업상 이용가능성을 분석합니다.",
-            "valuation_expert": "당신은 특허 가치 평가 AI입니다. 기술성, 시장성, 권리범위를 분석하여 가치를 평가합니다.",
-            "infringement_analyzer": "당신은 특허 침해 분석 AI입니다. 제품/기술의 특허 침해 가능성을 분석합니다.",
-            "application_guide": "당신은 특허 출원 안내 AI입니다. 출원 절차, 비용, 기간, 필요 서류를 안내합니다."
+        if not message:
+            return jsonify({"error": "메시지를 입력해주세요"}), 400
+        
+        # Claude API 연동 (API 키가 있는 경우)
+        if ANTHROPIC_API_KEY:
+            try:
+                import anthropic
+                client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+                
+                system_prompt = """당신은 AI 특허 상담 전문가입니다. 
+                특허, 실용신안, 디자인, 상표 등 지식재산권 관련 질문에 전문적으로 답변합니다.
+                오픈해시 기술을 활용한 우선권 증명에 대해서도 설명할 수 있습니다.
+                답변은 한국어로 하며, 전문 용어는 쉽게 설명합니다."""
+                
+                response = client.messages.create(
+                    model="claude-sonnet-4-20250514",
+                    max_tokens=1024,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": message}]
+                )
+                
+                return jsonify({
+                    "response": response.content[0].text,
+                    "type": consultation_type,
+                    "timestamp": datetime.now().isoformat()
+                }), 200
+                
+            except Exception as e:
+                logger.error(f"Claude API 오류: {str(e)}")
+        
+        # 폴백: 시뮬레이션 응답
+        responses = {
+            "특허": "특허는 발명을 보호하는 권리로, 출원일로부터 20년간 보호됩니다. AI 전자출원 시스템을 통해 출원서 작성부터 제출까지 자동화할 수 있습니다.",
+            "실용신안": "실용신안은 물품의 형상, 구조, 조합에 관한 고안을 보호합니다. 특허보다 진보성 요건이 완화되어 있으며, 보호기간은 10년입니다.",
+            "상표": "상표는 자신의 상품과 타인의 상품을 식별하기 위한 표장입니다. 등록 후 10년간 보호되며, 갱신을 통해 영구적으로 유지할 수 있습니다.",
+            "오픈해시": "오픈해시는 블록체인 대비 98.5% 에너지를 절감하면서도 데이터 무결성을 보장하는 기술입니다. 발명 시점을 증명하여 선출원주의에서 우선권을 주장할 수 있습니다."
         }
         
-        system_prompt = prompts.get(agent_type, prompts["application_guide"])
-        system_prompt += "\n\n특허 전문 AI로서 정확한 정보를 제공하되, 최종 판단은 변리사 상담을 권고하세요."
+        # 키워드 매칭
+        response_text = "지식재산권에 관한 질문을 해주셨네요. 구체적인 내용을 말씀해 주시면 더 자세히 안내해 드리겠습니다."
+        for keyword, resp in responses.items():
+            if keyword in message:
+                response_text = resp
+                break
         
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            system=system_prompt,
-            messages=[{"role": "user", "content": message}]
-        )
-        
-        return jsonify({"response": response.content[0].text})
+        return jsonify({
+            "response": response_text,
+            "type": consultation_type,
+            "timestamp": datetime.now().isoformat(),
+            "note": "AI 상담 시뮬레이션 응답입니다."
+        }), 200
         
     except Exception as e:
-        return jsonify({"response": f"오류: {str(e)}"}), 500
+        logger.error(f"상담 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/api/patents/search-prior-art', methods=['POST'])
-def search_prior_art():
-    data = request.json
-    invention = data.get('invention', '')
-    
-    results = {
-        "query": invention,
-        "search_time": "0.32초",
-        "total_found": 847,
-        "top_similar": [
-            {
-                "patent_id": "KR10-2023-0012345",
-                "title": "인공지능 기반 데이터 처리 시스템",
-                "applicant": "삼성전자",
-                "date": "2023-05-15",
-                "similarity": 87.3,
-                "status": "등록"
-            },
-            {
-                "patent_id": "KR10-2022-0098765",
-                "title": "머신러닝을 이용한 예측 방법",
-                "applicant": "LG전자",
-                "date": "2022-11-20",
-                "similarity": 72.8,
-                "status": "등록"
-            },
-            {
-                "patent_id": "US11234567B2",
-                "title": "AI-based Data Processing Method",
-                "applicant": "Google LLC",
-                "date": "2023-01-10",
-                "similarity": 68.5,
-                "status": "등록"
+# ============================================
+# 선행기술 조사
+# ============================================
+@app.route('/prior-art-search', methods=['POST'])
+def prior_art_search():
+    try:
+        data = request.json
+        query = data.get('query', '')
+        search_type = data.get('search_type', 'keyword')
+        countries = data.get('countries', ['KR', 'US', 'EP', 'CN', 'JP'])
+        tech_field = data.get('tech_field', 'all')
+        
+        if not query:
+            return jsonify({"error": "검색어를 입력해주세요"}), 400
+        
+        # 시뮬레이션 검색 결과
+        search_time = round(random.uniform(0.1, 0.4), 3)
+        total_count = random.randint(50, 500)
+        
+        patents = []
+        country_data = {
+            'KR': {'prefix': 'KR10-', 'companies': ['삼성전자', 'LG전자', 'SK하이닉스', '네이버', '카카오']},
+            'US': {'prefix': 'US', 'companies': ['Google', 'Microsoft', 'Apple', 'IBM', 'Amazon']},
+            'EP': {'prefix': 'EP', 'companies': ['SAP', 'Siemens', 'Bosch', 'Nokia', 'Ericsson']},
+            'CN': {'prefix': 'CN', 'companies': ['阿里巴巴', '腾讯', '华为', '百度', '京东']},
+            'JP': {'prefix': 'JP', 'companies': ['Sony', 'Toyota', 'Panasonic', 'Fujitsu', 'NTT']}
+        }
+        
+        for country in countries[:3]:
+            if country in country_data:
+                cd = country_data[country]
+                patent_num = f"{cd['prefix']}{random.randint(2020, 2025)}-{random.randint(100000, 999999)}"
+                patents.append({
+                    "id": patent_num,
+                    "country": country,
+                    "title": f"{query} 관련 기술 ({country})",
+                    "applicant": random.choice(cd['companies']),
+                    "filing_date": f"202{random.randint(2, 5)}-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}",
+                    "similarity": random.randint(30, 85),
+                    "status": random.choice(['published', 'granted', 'pending']),
+                    "citations": random.randint(0, 30)
+                })
+        
+        # 유사도 기준 정렬
+        patents.sort(key=lambda x: x['similarity'], reverse=True)
+        
+        return jsonify({
+            "query": query,
+            "search_type": search_type,
+            "total_count": total_count,
+            "search_time": search_time,
+            "patents": patents,
+            "analysis": {
+                "avg_similarity": round(sum(p['similarity'] for p in patents) / len(patents), 1) if patents else 0,
+                "high_risk_count": len([p for p in patents if p['similarity'] >= 70]),
+                "recommendation": "선행기술과의 차별점을 명확히 하여 청구항을 작성하세요."
             }
-        ],
-        "novelty_assessment": "유사 기술 존재, 차별점 명확화 필요"
-    }
-    
-    return jsonify({"results": results})
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"선행기술 검색 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/api/patents/check-patentability', methods=['POST'])
-def check_patentability():
-    data = request.json
-    invention = data.get('invention', '')
-    
-    assessment = {
-        "invention_summary": invention[:100] + "...",
-        "overall_score": 72,
-        "criteria": {
-            "novelty": {"score": 75, "status": "보통", "comment": "유사 선행기술 존재, 차별점 보완 필요"},
-            "inventive_step": {"score": 68, "status": "보통", "comment": "기술적 효과 명확화 필요"},
-            "industrial_applicability": {"score": 85, "status": "양호", "comment": "실용성 높음"}
-        },
-        "patent_probability": {
-            "korea": 72,
-            "usa": 65,
-            "china": 70,
-            "japan": 68,
-            "europe": 62
-        },
-        "recommendations": [
-            "청구항 범위 조정 권장",
-            "기술적 효과 구체화 필요",
-            "도면 보완 권장"
-        ],
-        "estimated_processing": "12-18개월"
-    }
-    
-    return jsonify({"assessment": assessment})
-
-@app.route('/api/patents/evaluate-value', methods=['POST'])
-def evaluate_value():
-    data = request.json
-    patent_id = data.get('patent_id', '')
-    
-    valuation = {
-        "patent_id": patent_id,
-        "valuation_date": "2025-11-24",
-        "technology_score": 82,
-        "market_score": 75,
-        "legal_score": 88,
-        "overall_grade": "A-",
-        "estimated_value": {
-            "min": 250000000,
-            "max": 450000000,
-            "expected": 350000000
-        },
-        "market_analysis": {
-            "target_market_size": "2.5조 원",
-            "growth_rate": "12.5%",
-            "competitors": 8
-        },
-        "license_potential": {
-            "annual_royalty": "3-5%",
-            "expected_revenue": "연간 35억 원"
-        },
-        "recommendations": [
-            "해외 출원 확대 권장",
-            "기술 이전 협상 유리",
-            "포트폴리오 구축 권장"
-        ]
-    }
-    
-    return jsonify({"valuation": valuation})
-
-@app.route('/api/patents/draft-claims', methods=['POST'])
-def draft_claims():
-    data = request.json
-    invention = data.get('invention', '')
-    
-    draft = {
-        "draft_id": "DRAFT-PAT-2025-001",
-        "title": "AI 기반 데이터 처리 시스템 및 방법",
-        "claims": {
-            "independent": [
-                "【청구항 1】\n데이터를 수신하는 입력부;\n상기 데이터를 인공지능 모델을 이용하여 분석하는 처리부; 및\n분석 결과를 출력하는 출력부를 포함하는 AI 기반 데이터 처리 시스템.",
-                "【청구항 5】\n데이터를 수신하는 단계;\n인공지능 모델을 이용하여 상기 데이터를 분석하는 단계; 및\n분석 결과를 출력하는 단계를 포함하는 AI 기반 데이터 처리 방법."
+# ============================================
+# 등록 가능성 예측
+# ============================================
+@app.route('/registration-probability', methods=['POST'])
+def registration_probability():
+    try:
+        data = request.json
+        title = data.get('title', '')
+        tech_field = data.get('tech_field', '')
+        claims = data.get('claims', '')
+        
+        if not title:
+            return jsonify({"error": "발명의 명칭을 입력해주세요"}), 400
+        
+        # 기술 분야별 기본 등록률
+        base_rates = {
+            'ai': 68, 'blockchain': 62, 'bio': 58, 'electronics': 72,
+            'mechanical': 75, 'software': 65, 'iot': 70, 'energy': 67,
+            'material': 63, 'design': 78
+        }
+        
+        base_rate = base_rates.get(tech_field, 65)
+        variance = random.randint(-10, 15)
+        probability = min(95, max(40, base_rate + variance))
+        
+        return jsonify({
+            "title": title,
+            "tech_field": tech_field,
+            "overall_probability": probability,
+            "confidence": random.randint(88, 96),
+            "analysis_time": round(random.uniform(0.2, 0.6), 3),
+            "scores": {
+                "novelty": random.randint(65, 95),
+                "inventive_step": random.randint(60, 90),
+                "industrial_applicability": random.randint(80, 98),
+                "claim_clarity": random.randint(70, 95),
+                "specification": random.randint(70, 95)
+            },
+            "rejection_risks": [
+                {
+                    "code": "29조2항",
+                    "reason": "신규성 결여",
+                    "risk": random.randint(10, 35),
+                    "suggestion": "선행기술과의 차별점을 청구항에 명시하세요"
+                },
+                {
+                    "code": "29조2항",
+                    "reason": "진보성 결여",
+                    "risk": random.randint(15, 45),
+                    "suggestion": "기술적 효과를 구체적으로 기재하세요"
+                }
             ],
-            "dependent": [
-                "【청구항 2】\n제1항에 있어서, 상기 처리부는 딥러닝 알고리즘을 이용하는 것을 특징으로 하는 시스템.",
-                "【청구항 3】\n제1항에 있어서, 상기 입력부는 실시간 스트리밍 데이터를 수신하는 것을 특징으로 하는 시스템."
+            "improvements": [
+                {"priority": "high", "suggestion": "독립청구항의 기술적 특징을 더 구체화하세요", "impact": "+8%"},
+                {"priority": "medium", "suggestion": "종속청구항을 추가하여 권리범위를 확보하세요", "impact": "+5%"}
             ]
-        },
-        "abstract": "본 발명은 인공지능을 이용한 데이터 처리 시스템에 관한 것으로...",
-        "estimated_filing_cost": 450000,
-        "disclaimer": "본 초안은 AI가 생성한 것으로, 최종 출원 전 변리사 검토가 필요합니다."
-    }
-    
-    return jsonify({"draft": draft})
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"등록 가능성 예측 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
+# ============================================
+# 청구항 생성
+# ============================================
+@app.route('/generate-claims', methods=['POST'])
+def generate_claims():
+    try:
+        data = request.json
+        title = data.get('title', '')
+        solution = data.get('solution', '')
+        claim_style = data.get('style', 'standard')
+        
+        if not title or not solution:
+            return jsonify({"error": "발명의 명칭과 기술적 해결수단을 입력해주세요"}), 400
+        
+        claims = [
+            {
+                "number": 1,
+                "type": "independent",
+                "category": "product",
+                "text": f"{title}에 있어서,\n{solution}을 포함하는 것을 특징으로 하는 시스템."
+            },
+            {
+                "number": 2,
+                "type": "dependent",
+                "category": "product",
+                "base_claim": 1,
+                "text": f"제1항에 있어서,\n상기 시스템은 오픈해시 기반의 타임스탬프 모듈을 더 포함하여 데이터 무결성을 검증하는 것을 특징으로 하는 {title}."
+            },
+            {
+                "number": 3,
+                "type": "dependent",
+                "category": "product",
+                "base_claim": 1,
+                "text": f"제1항에 있어서,\n상기 시스템은 AI 에이전트를 통해 자동화된 처리를 수행하는 것을 특징으로 하는 {title}."
+            },
+            {
+                "number": 4,
+                "type": "independent",
+                "category": "method",
+                "text": f"{title}의 처리 방법에 있어서,\n(a) 입력 데이터를 수신하는 단계;\n(b) 상기 데이터를 분석하여 처리하는 단계; 및\n(c) 처리 결과를 출력하는 단계\n를 포함하는 것을 특징으로 하는 방법."
+            }
+        ]
+        
+        return jsonify({
+            "title": title,
+            "style": claim_style,
+            "claims": claims,
+            "claim_count": len(claims),
+            "generation_time": round(random.uniform(1.5, 3.0), 3)
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"청구항 생성 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+# ============================================
+# 오픈해시 타임스탬프
+# ============================================
+@app.route('/openhash/register', methods=['POST'])
+def register_openhash():
+    try:
+        data = request.json
+        title = data.get('title', '')
+        description = data.get('description', '')
+        inventors = data.get('inventors', '')
+        
+        if not title or not description:
+            return jsonify({"error": "발명의 명칭과 설명을 입력해주세요"}), 400
+        
+        # 해시 생성
+        content = f"{title}{description}{inventors}{datetime.now().isoformat()}"
+        hash_value = hashlib.sha256(content.encode()).hexdigest()[:16].upper()
+        openhash_id = f"OH_{hash_value}"
+        
+        # 머클루트 시뮬레이션
+        merkle_root = "0x" + hashlib.sha256(openhash_id.encode()).hexdigest()
+        
+        return jsonify({
+            "success": True,
+            "hash": openhash_id,
+            "timestamp": datetime.now().isoformat(),
+            "block_height": random.randint(1840000, 1850000),
+            "merkle_root": merkle_root,
+            "node_count": random.randint(100, 150),
+            "consensus_time": round(random.uniform(0.1, 0.5), 3),
+            "energy_saved": "98.5%",
+            "certificate": {
+                "issuer": "OpenHash Foundation",
+                "issued_at": datetime.now().isoformat(),
+                "valid_until": (datetime.now() + timedelta(days=365)).isoformat(),
+                "algorithm": "SHA-3-256 + Probabilistic Layer Selection"
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"오픈해시 등록 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/openhash/verify', methods=['POST'])
+def verify_openhash():
+    try:
+        data = request.json
+        hash_value = data.get('hash', '')
+        
+        if not hash_value:
+            return jsonify({"error": "해시값을 입력해주세요"}), 400
+        
+        is_valid = hash_value.startswith('OH_') and len(hash_value) >= 10
+        
+        result = {
+            "hash": hash_value,
+            "valid": is_valid,
+            "verified_at": datetime.now().isoformat()
+        }
+        
+        if is_valid:
+            result["details"] = {
+                "original_timestamp": (datetime.now() - timedelta(days=random.randint(1, 30))).isoformat(),
+                "block_height": random.randint(1800000, 1850000),
+                "confirmations": random.randint(5000, 10000),
+                "integrity": "INTACT",
+                "node_verifications": random.randint(50, 100)
+            }
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        logger.error(f"오픈해시 검증 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+# ============================================
+# 시장 분석
+# ============================================
+@app.route('/market-analysis', methods=['POST'])
+def market_analysis():
+    try:
+        data = request.json
+        tech_keyword = data.get('keyword', '')
+        industry = data.get('industry', '')
+        
+        if not tech_keyword or not industry:
+            return jsonify({"error": "기술 키워드와 산업 분야를 입력해주세요"}), 400
+        
+        return jsonify({
+            "keyword": tech_keyword,
+            "industry": industry,
+            "analysis_date": datetime.now().isoformat(),
+            "domestic_market": {
+                "current_size": random.randint(1000, 5000),
+                "projected_size": random.randint(5000, 15000),
+                "cagr": round(random.uniform(8, 20), 1),
+                "target_year": 2028,
+                "unit": "억원"
+            },
+            "global_market": {
+                "current_size": random.randint(100, 500),
+                "projected_size": random.randint(500, 1500),
+                "cagr": round(random.uniform(12, 25), 1),
+                "target_year": 2028,
+                "unit": "십억달러"
+            },
+            "recommendations": {
+                "target_market": "국내 우선 진출 후 아시아 확장",
+                "business_models": [
+                    {"model": "B2B SaaS", "fit": random.randint(75, 95)},
+                    {"model": "B2G", "fit": random.randint(70, 90)},
+                    {"model": "라이선싱", "fit": random.randint(60, 85)}
+                ]
+            },
+            "openhash_advantage": {
+                "ip_strength": "+15%",
+                "trust_score": "+20%",
+                "global_readiness": "+25%"
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"시장 분석 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+# ============================================
+# 수수료 계산
+# ============================================
+@app.route('/calculate-fees', methods=['POST'])
+def calculate_fees():
+    try:
+        data = request.json
+        ip_type = data.get('type', 'patent')
+        claim_count = data.get('claims', 1)
+        applicant_type = data.get('applicant_type', 'individual')
+        
+        fees = IP_TYPES.get(ip_type, IP_TYPES['patent'])['fees']
+        
+        # 기본 수수료 계산
+        if ip_type in ['patent', 'utility']:
+            filing = fees['filing']
+            examination = fees['examination_base'] + (fees['examination_per_claim'] * claim_count)
+            registration = fees['registration_base'] + (fees['registration_per_claim'] * claim_count)
+            total = filing + examination + registration
+        else:
+            filing = fees['filing']
+            examination = fees.get('examination', 0)
+            registration = fees['registration']
+            total = filing + examination + registration
+        
+        # 감면 적용
+        discount_rate = 0
+        if applicant_type == 'individual':
+            discount_rate = 0.7
+        elif applicant_type == 'sme':
+            discount_rate = 0.5
+        elif applicant_type == 'startup':
+            discount_rate = 0.7
+        
+        discounted_total = int(total * (1 - discount_rate))
+        
+        return jsonify({
+            "ip_type": ip_type,
+            "claim_count": claim_count,
+            "applicant_type": applicant_type,
+            "fees": {
+                "filing": filing,
+                "examination": examination if ip_type in ['patent', 'utility'] else fees.get('examination', 0),
+                "registration": registration,
+                "total": total
+            },
+            "discount": {
+                "rate": discount_rate * 100,
+                "amount": total - discounted_total,
+                "final_total": discounted_total
+            }
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"수수료 계산 오류: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+# ============================================
+# 통계
+# ============================================
+@app.route('/statistics', methods=['GET'])
+def get_statistics():
+    return jsonify({
+        "total_applications": random.randint(2500, 3000),
+        "pending_review": random.randint(100, 200),
+        "approved": random.randint(2000, 2500),
+        "rejected": random.randint(80, 150),
+        "ai_accuracy": 94.7,
+        "avg_process_time": 3.2,
+        "by_type": {
+            "patent": random.randint(1000, 1500),
+            "utility": random.randint(300, 500),
+            "design": random.randint(400, 700),
+            "trademark": random.randint(300, 500)
+        },
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+# ============================================
+# 메인 실행
+# ============================================
 if __name__ == '__main__':
-    logger.info("🚀 특허 AI 시뮬레이션 포털 백엔드 시작 (포트 5018)")
+    print("=" * 60)
+    print("🚀 AI 전자출원 시스템 백엔드 시작")
+    print(f"   버전: {SYSTEM_INFO['version']}")
+    print(f"   포트: 5018")
+    print(f"   DB: {SYSTEM_INFO['database']['total_patents']:,}건")
+    print("=" * 60)
     app.run(host='0.0.0.0', port=5018, debug=False)

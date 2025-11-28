@@ -3,398 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 대학 교육 혁신 시스템 | OpenHash 기반</title>
+    <title>AI 통합대학 | OpenHash University</title>
+    
+    <!-- React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/umd/Recharts.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .card-hover { transition: all 0.3s; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .float { animation: float 3s ease-in-out infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .pulse { animation: pulse 2s infinite; }
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidebar {
+            width: 280px;
+            min-height: calc(100vh - 64px);
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item {
+            transition: all 0.2s ease;
+        }
+        .menu-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .menu-item.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-left: 3px solid #d4af37;
+        }
+        
+        .chat-bubble {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.6);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: #374151;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .difficulty-stars {
+            color: #d4af37;
+        }
+        
+        .tab-active {
+            border-bottom: 2px solid #d4af37;
+            color: #d4af37;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
-    <!-- Header -->
-    <div class="gradient-bg py-16 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="text-6xl mb-4 float">🎓</div>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 대학 교육 혁신 시스템</h1>
-            <p class="text-xl opacity-90 mb-6">맞춤형 학습 | 산학 연계 | 학위 인증 자동화</p>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🧠 AI 튜터링</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🔗 학위 블록체인</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">💼 취업 매칭</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="bg-gray-800 py-3 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-blue-400 hover:text-blue-300">← 포털로 돌아가기</a>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">시뮬레이터</button>
-                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">기능</button>
-                <button onclick="document.getElementById('certification').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-400">학위인증</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Current Problems -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">현행 대학 교육의 한계</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">📚</div>
-                <div class="text-xl font-bold text-red-400 mb-2">획일적 교육</div>
-                <div class="text-sm text-gray-400">개인차 무시한 동일 커리큘럼</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">🔗</div>
-                <div class="text-xl font-bold text-red-400 mb-2">산학 괴리</div>
-                <div class="text-sm text-gray-400">현장과 동떨어진 교육 내용</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">📝</div>
-                <div class="text-xl font-bold text-red-400 mb-2">학력 위조</div>
-                <div class="text-sm text-gray-400">졸업장/성적 위변조 위험</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">💼</div>
-                <div class="text-xl font-bold text-red-400 mb-2">취업 미스매칭</div>
-                <div class="text-sm text-gray-400">전공-직업 불일치 심화</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Learning Path Simulator -->
-    <div id="simulator" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">🎯 맞춤형 학습 경로 시뮬레이터</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Input -->
-                <div class="bg-gray-900 rounded-xl p-6">
-                    <h3 class="text-xl font-bold mb-6 text-blue-400">학생 정보 입력</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">전공 분야</label>
-                            <select id="major" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-                                <option value="cs">컴퓨터공학</option>
-                                <option value="business">경영학</option>
-                                <option value="engineering">기계공학</option>
-                                <option value="medicine">의학</option>
-                                <option value="law">법학</option>
-                                <option value="arts">예술/디자인</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">학년</label>
-                            <select id="year" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-                                <option value="1">1학년</option>
-                                <option value="2">2학년</option>
-                                <option value="3" selected>3학년</option>
-                                <option value="4">4학년</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">현재 학점 (GPA)</label>
-                            <input type="number" id="gpa" placeholder="3.5" step="0.1" min="0" max="4.5"
-                                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-blue-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">희망 진로</label>
-                            <select id="career" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-                                <option value="job">취업</option>
-                                <option value="startup">창업</option>
-                                <option value="graduate">대학원 진학</option>
-                                <option value="research">연구직</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">관심 분야 (복수 선택)</label>
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
-                                    <input type="checkbox" id="ai" class="accent-blue-500" checked> AI/ML
-                                </label>
-                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
-                                    <input type="checkbox" id="data" class="accent-blue-500"> 데이터분석
-                                </label>
-                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
-                                    <input type="checkbox" id="security" class="accent-blue-500"> 보안
-                                </label>
-                                <label class="flex items-center gap-2 bg-gray-800 p-3 rounded-lg cursor-pointer">
-                                    <input type="checkbox" id="cloud" class="accent-blue-500"> 클라우드
-                                </label>
-                            </div>
-                        </div>
-                        <button onclick="generatePath()"
-                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 font-bold py-4 rounded-lg hover:from-blue-500 hover:to-indigo-500 transition">
-                            🎯 학습 경로 생성
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Output -->
-                <div class="bg-gray-900 rounded-xl p-6">
-                    <h3 class="text-xl font-bold mb-6 text-green-400">AI 추천 학습 경로</h3>
-                    <div id="pathResult">
-                        <div class="text-center text-gray-500 py-12">
-                            <div class="text-4xl mb-4">🎓</div>
-                            <p>학생 정보를 입력하고<br/>학습 경로를 생성하세요</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Features -->
-    <div id="features" class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">🏛️ 핵심 기능</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">🤖</div>
-                <h3 class="text-xl font-bold text-blue-400 mb-3">AI 개인 튜터</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 24시간 학습 지원</li>
-                    <li>• 개인별 난이도 조절</li>
-                    <li>• 실시간 질문 응답</li>
-                    <li>• 학습 패턴 분석</li>
-                </ul>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">🔗</div>
-                <h3 class="text-xl font-bold text-green-400 mb-3">산학 연계 시스템</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 기업 프로젝트 매칭</li>
-                    <li>• 현장 실습 자동 연결</li>
-                    <li>• 산업 트렌드 반영</li>
-                    <li>• 취업 파이프라인</li>
-                </ul>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">📊</div>
-                <h3 class="text-xl font-bold text-purple-400 mb-3">학습 분석</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 성취도 실시간 추적</li>
-                    <li>• 약점 영역 진단</li>
-                    <li>• 예상 성적 예측</li>
-                    <li>• 맞춤형 보완 자료</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Degree Certification -->
-    <div id="certification" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">🔗 OpenHash 학위 인증 시스템</h2>
-            <div class="bg-gray-900 rounded-xl p-6">
-                <div class="grid md:grid-cols-5 gap-3 mb-8">
-                    <div class="bg-gray-800 rounded-lg p-4 text-center card-hover">
-                        <div class="text-2xl mb-2">📝</div>
-                        <div class="text-xs font-bold text-blue-400">입학</div>
-                        <div class="text-xs text-gray-500 mt-1">학번 발급</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center card-hover">
-                        <div class="text-2xl mb-2">📚</div>
-                        <div class="text-xs font-bold text-green-400">수강/성적</div>
-                        <div class="text-xs text-gray-500 mt-1">학기별 기록</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center card-hover">
-                        <div class="text-2xl mb-2">🏆</div>
-                        <div class="text-xs font-bold text-yellow-400">자격/수상</div>
-                        <div class="text-xs text-gray-500 mt-1">인증 기록</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center card-hover">
-                        <div class="text-2xl mb-2">🎓</div>
-                        <div class="text-xs font-bold text-purple-400">졸업</div>
-                        <div class="text-xs text-gray-500 mt-1">학위 발급</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center card-hover">
-                        <div class="text-2xl mb-2">✅</div>
-                        <div class="text-xs font-bold text-cyan-400">검증</div>
-                        <div class="text-xs text-gray-500 mt-1">실시간 확인</div>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="p-4 bg-gray-800 rounded-lg">
-                        <h4 class="font-bold text-red-400 mb-3">❌ 기존 방식</h4>
-                        <ul class="text-sm text-gray-400 space-y-2">
-                            <li>• 종이 졸업장 위조 가능</li>
-                            <li>• 성적 증명 발급에 3-5일</li>
-                            <li>• 해외 학력 검증 어려움</li>
-                            <li>• 수동 확인으로 비용 발생</li>
-                        </ul>
-                    </div>
-                    <div class="p-4 bg-gray-800 rounded-lg">
-                        <h4 class="font-bold text-green-400 mb-3">✅ OpenHash 방식</h4>
-                        <ul class="text-sm text-gray-400 space-y-2">
-                            <li>• 위변조 불가능한 기록</li>
-                            <li>• 실시간 즉시 발급</li>
-                            <li>• 글로벌 자동 인증</li>
-                            <li>• 무료 검증 서비스</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Features -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">🤖 AI 교수 시스템</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">💬</div>
-                <h3 class="font-bold text-blue-400 mb-2">AI 질의응답</h3>
-                <p class="text-xs text-gray-400">24시간 실시간 학습 지원</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">📝</div>
-                <h3 class="font-bold text-green-400 mb-2">자동 채점</h3>
-                <p class="text-xs text-gray-400">과제/시험 즉시 피드백</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">📊</div>
-                <h3 class="font-bold text-yellow-400 mb-2">학습 분석</h3>
-                <p class="text-xs text-gray-400">개인별 강약점 진단</p>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 text-center card-hover">
-                <div class="text-3xl mb-3">🎯</div>
-                <h3 class="font-bold text-purple-400 mb-2">진로 상담</h3>
-                <p class="text-xs text-gray-400">데이터 기반 진로 추천</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Benefits -->
-    <div class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">340%</div>
-                    <div class="text-sm text-gray-300">학습 효율 향상</div>
-                </div>
-                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">89%</div>
-                    <div class="text-sm text-gray-300">취업 매칭률</div>
-                </div>
-                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">100%</div>
-                    <div class="text-sm text-gray-300">학력 위조 방지</div>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-900 to-yellow-700 rounded-xl p-6 text-center card-hover">
-                    <div class="text-4xl font-bold mb-2">67%</div>
-                    <div class="text-sm text-gray-300">교육비 절감</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="bg-gray-900 py-8 border-t border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>AI 대학 교육 혁신 시스템 © 2025 | OpenHash 학위 인증</p>
-            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
-        </div>
-    </div>
-
-    <script>
-        function generatePath() {
-            const major = document.getElementById('major');
-            const majorName = major.options[major.selectedIndex].text;
-            const year = document.getElementById('year').value;
-            const gpa = parseFloat(document.getElementById('gpa').value) || 3.5;
-            const career = document.getElementById('career');
-            const careerName = career.options[career.selectedIndex].text;
-
-            const resultDiv = document.getElementById('pathResult');
-            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 분석 중...</p></div>';
-
-            setTimeout(() => {
-                const courses = {
-                    cs: ['알고리즘 심화', '머신러닝', '클라우드 컴퓨팅', '소프트웨어 공학'],
-                    business: ['전략경영', '마케팅분석', '재무관리', '기업가정신'],
-                    engineering: ['CAD/CAM', '로봇공학', '자동화시스템', '품질관리'],
-                    medicine: ['임상실습', '의료AI', '정밀의학', '바이오통계'],
-                    law: ['헌법실무', '기업법', 'AI법률', '국제법'],
-                    arts: ['디지털아트', 'UX디자인', '브랜드전략', '미디어아트']
-                };
-
-                const companies = {
-                    cs: ['네이버', '카카오', '삼성전자', '구글코리아'],
-                    business: ['맥킨지', 'BCG', '삼성물산', 'LG'],
-                    engineering: ['현대자동차', '삼성중공업', 'SK하이닉스', 'LG전자'],
-                    medicine: ['서울대병원', '삼성서울병원', '아산병원', '제약사'],
-                    law: ['김앤장', '법무법인 광장', '대기업 법무팀', '공기관'],
-                    arts: ['네이버', '카카오', '대형 에이전시', '스튜디오']
-                };
-
-                const remainingSemesters = (4 - parseInt(year)) * 2 + 1;
-                const expectedGraduation = new Date().getFullYear() + (4 - parseInt(year)) + 1;
-                const employmentRate = Math.floor(75 + gpa * 5 + Math.random() * 10);
-
-                resultDiv.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
-                            <div class="flex justify-between">
-                                <div>
-                                    <div class="text-sm text-gray-400">전공</div>
-                                    <div class="font-bold">${majorName}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-sm text-gray-400">예상 졸업</div>
-                                    <div class="font-bold text-blue-400">${expectedGraduation}년</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-gray-800 rounded-lg">
-                            <div class="text-sm text-gray-400 mb-3">추천 과목 (남은 ${remainingSemesters}학기)</div>
-                            <div class="space-y-2">
-                                ${courses[major.value].map((c, i) => `
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs">${i+1}</span>
-                                        <span class="text-sm">${c}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-gray-800 rounded-lg">
-                            <div class="text-sm text-gray-400 mb-3">추천 기업 (${careerName})</div>
-                            <div class="flex flex-wrap gap-2">
-                                ${companies[major.value].map(c => `
-                                    <span class="bg-green-900/50 text-green-400 px-3 py-1 rounded-full text-xs">${c}</span>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">현재 GPA</div>
-                                <div class="text-xl font-bold text-yellow-400">${gpa.toFixed(2)}</div>
-                            </div>
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">예상 취업률</div>
-                                <div class="text-xl font-bold text-green-400">${employmentRate}%</div>
-                            </div>
-                        </div>
-
-                        <div class="text-center text-xs text-gray-500 pt-2">
-                            AI 분석 시간: 0.078ms | OpenHash 기록 완료
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-    </script>
-<script src="/shared/banner.js"></script>
+    <div id="root"></div>
+    
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Navigation.js"></script>
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/CourseList.js"></script>
+    <script type="text/babel" src="js/components/MyLearning.js"></script>
+    <script type="text/babel" src="js/components/AIChat.js"></script>
+    <script type="text/babel" src="js/components/OnboardingTour.js"></script>
+    <script type="text/babel" src="js/components/AIProfessor.js"></script>
+    <script type="text/babel" src="js/components/ExamCenter.js"></script>
+    <script type="text/babel" src="js/components/GradeReport.js"></script>
+    <script type="text/babel" src="js/components/ThesisAssistant.js"></script>
+    <script type="text/babel" src="js/components/CareerRecommend.js"></script>
+    <script type="text/babel" src="js/components/CommunityHub.js"></script>
+    <script type="text/babel" src="js/components/PrivateVault.js"></script>
+    <script type="text/babel" src="js/components/FloatingHelp.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
