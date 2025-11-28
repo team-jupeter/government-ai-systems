@@ -1,302 +1,260 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import anthropic
-import os
-import logging
+from datetime import datetime, timedelta
+import random
+import hashlib
+import json
 
 app = Flask(__name__)
+CORS(app)
+
+# 시뮬레이션 데이터
+REGIONS = ['서울', '경기', '부산', '인천', '대전', '광주', '대구', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주']
+TAX_TYPES = ['종합소득세', '법인세', '부가가치세', '원천세', '양도소득세', '상속세', '증여세', '교통세', '주세', '인지세']
+LAYERS = {
+    1: {'name': '읍면동', 'probability': 0.65},
+    2: {'name': '시군구', 'probability': 0.25},
+    3: {'name': '광역시도', 'probability': 0.09},
+    4: {'name': '국가', 'probability': 0.01}
+}
+
+def generate_hash():
+    return hashlib.sha256(str(datetime.now().timestamp()).encode()).hexdigest()
+
+def select_layer():
+    r = random.random()
+    cumulative = 0
+    for layer, data in LAYERS.items():
+        cumulative += data['probability']
+        if r <= cumulative:
+            return layer
+    return 1
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'ok'}), 200
-CORS(app)
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
-
-SYSTEM_INFO = {
-    "system_name": "지능형 국세 행정 자동화 시스템",
-    "description": "AI 기반 세금 신고·납부·환급 통합 플랫폼",
-    "taxpayers": 28500000,
-    "annual_revenue": "382조 원",
-    "automation_rate": "94.5%",
-    "error_reduction": "97.2%",
-    "processing_speed": "기존 대비 85% 향상",
-    "annual_savings": "연간 1.2조 원"
-}
-
-TAX_TYPES = [
-    {"id": "income", "name": "소득세", "icon": "💰", "annual_revenue": "98조 원"},
-    {"id": "corporate", "name": "법인세", "icon": "🏢", "annual_revenue": "72조 원"},
-    {"id": "vat", "name": "부가가치세", "icon": "🧾", "annual_revenue": "82조 원"},
-    {"id": "inheritance", "name": "상속·증여세", "icon": "🎁", "annual_revenue": "15조 원"},
-    {"id": "securities", "name": "증권거래세", "icon": "📈", "annual_revenue": "8조 원"},
-    {"id": "comprehensive_real_estate", "name": "종합부동산세", "icon": "🏠", "annual_revenue": "6조 원"},
-    {"id": "customs", "name": "관세", "icon": "🚢", "annual_revenue": "12조 원"},
-    {"id": "education", "name": "교육세", "icon": "📚", "annual_revenue": "5조 원"}
-]
-
-TAX_CALENDAR = [
-    {"month": 1, "events": ["부가세 확정신고(2기)", "면세사업자 사업장현황신고"]},
-    {"month": 3, "events": ["법인세 신고"]},
-    {"month": 4, "events": ["부가세 예정신고(1기)"]},
-    {"month": 5, "events": ["종합소득세 신고"]},
-    {"month": 7, "events": ["부가세 확정신고(1기)", "재산세 납부(1기)"]},
-    {"month": 9, "events": ["재산세 납부(2기)"]},
-    {"month": 10, "events": ["부가세 예정신고(2기)"]},
-    {"month": 11, "events": ["종합부동산세 납부"]},
-    {"month": 12, "events": ["연말정산 준비"]}
-]
-
-SCENARIOS = [
-    {
-        "icon": "🤖",
-        "title": "AI 자동 세금 계산",
-        "problem": "복잡한 세법으로 신고 오류 발생, 세무사 비용 부담",
-        "solution": "AI가 소득·지출 데이터 분석하여 최적 절세 방안 포함 자동 계산",
-        "savings": "신고 오류 97.2% 감소"
-    },
-    {
-        "icon": "🔍",
-        "title": "지능형 탈세 탐지",
-        "problem": "수작업 세무조사 한계, 탈세 적발률 낮음",
-        "solution": "AI가 빅데이터 분석으로 이상 거래 패턴 자동 탐지",
-        "savings": "탈세 적발률 340% 향상"
-    },
-    {
-        "icon": "💳",
-        "title": "실시간 환급 시스템",
-        "problem": "환급까지 평균 14일 소요, 서류 심사 지연",
-        "solution": "AI가 환급 요건 실시간 검증, 즉시 환급 처리",
-        "savings": "환급 처리 시간 92% 단축"
-    },
-    {
-        "icon": "📊",
-        "title": "맞춤형 절세 안내",
-        "problem": "납세자가 공제 항목 누락, 세금 과다 납부",
-        "solution": "AI가 개인별 데이터 분석, 적용 가능한 공제 항목 자동 안내",
-        "savings": "평균 환급액 23% 증가"
-    }
-]
-
-AGENTS = [
-    {"id": "tax_calculator", "name": "🧮 세금 계산 Agent"},
-    {"id": "deduction_finder", "name": "💡 공제 탐색 Agent"},
-    {"id": "filing_assistant", "name": "📝 신고 도우미 Agent"},
-    {"id": "refund_tracker", "name": "💳 환급 조회 Agent"},
-    {"id": "audit_advisor", "name": "🔍 세무조사 상담 Agent"},
-    {"id": "business_tax", "name": "🏢 사업자 세금 Agent"}
-]
-
-@app.route('/api/tax/info', methods=['GET'])
-def get_info():
-    return jsonify(SYSTEM_INFO)
-
-@app.route('/api/tax/types', methods=['GET'])
-def get_types():
-    return jsonify({"types": TAX_TYPES})
-
-@app.route('/api/tax/calendar', methods=['GET'])
-def get_calendar():
-    return jsonify({"calendar": TAX_CALENDAR})
-
-@app.route('/api/tax/scenarios', methods=['GET'])
-def get_scenarios():
-    return jsonify({"scenarios": SCENARIOS})
-
-@app.route('/api/tax/agents', methods=['GET'])
-def get_agents():
-    return jsonify({"agents": AGENTS})
-
-@app.route('/api/tax/consultation', methods=['POST', 'OPTIONS'])
-def consultation():
-    if request.method == 'OPTIONS':
-        return '', 204
-    
-    if not client:
-        return jsonify({"response": "⚠️ API 키가 설정되지 않았습니다."}), 200
-    
-    try:
-        data = request.json
-        message = data.get('message', '')
-        agent_type = data.get('agent_type', 'filing_assistant')
-        
-        prompts = {
-            "tax_calculator": "당신은 세금 계산 AI입니다. 소득세, 부가세, 법인세 등 각종 세금을 정확하게 계산합니다.",
-            "deduction_finder": "당신은 세금 공제 탐색 AI입니다. 납세자가 받을 수 있는 모든 공제 항목을 찾아 안내합니다.",
-            "filing_assistant": "당신은 세금 신고 도우미 AI입니다. 신고 절차, 필요 서류, 기한을 안내합니다.",
-            "refund_tracker": "당신은 환급 조회 AI입니다. 환급 진행 상황, 예상 환급액, 환급 일정을 안내합니다.",
-            "audit_advisor": "당신은 세무조사 상담 AI입니다. 세무조사 대응 방법, 권리, 절차를 안내합니다.",
-            "business_tax": "당신은 사업자 세금 AI입니다. 사업자등록, 부가세, 종합소득세 등 사업자 관련 세금을 안내합니다."
-        }
-        
-        system_prompt = prompts.get(agent_type, prompts["filing_assistant"])
-        system_prompt += "\n\n국세청 AI 서비스로서 정확한 세금 정보를 제공합니다. 복잡한 사안은 세무사 상담을 권고하세요."
-        
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1500,
-            system=system_prompt,
-            messages=[{"role": "user", "content": message}]
-        )
-        
-        return jsonify({"response": response.content[0].text})
-        
-    except Exception as e:
-        return jsonify({"response": f"오류: {str(e)}"}), 500
-
-@app.route('/api/tax/calculate-income-tax', methods=['POST'])
-def calculate_income_tax():
-    data = request.json
-    annual_income = data.get('annual_income', 0)
-    deductions = data.get('deductions', {})
-    
-    # 간단한 소득세 계산 (2024년 기준 세율)
-    taxable_income = annual_income - sum(deductions.values())
-    
-    if taxable_income <= 14000000:
-        tax = taxable_income * 0.06
-    elif taxable_income <= 50000000:
-        tax = 840000 + (taxable_income - 14000000) * 0.15
-    elif taxable_income <= 88000000:
-        tax = 6240000 + (taxable_income - 50000000) * 0.24
-    elif taxable_income <= 150000000:
-        tax = 15360000 + (taxable_income - 88000000) * 0.35
-    elif taxable_income <= 300000000:
-        tax = 37060000 + (taxable_income - 150000000) * 0.38
-    elif taxable_income <= 500000000:
-        tax = 94060000 + (taxable_income - 300000000) * 0.40
-    elif taxable_income <= 1000000000:
-        tax = 174060000 + (taxable_income - 500000000) * 0.42
-    else:
-        tax = 384060000 + (taxable_income - 1000000000) * 0.45
-    
-    local_tax = tax * 0.1  # 지방소득세 10%
-    
-    result = {
-        "annual_income": annual_income,
-        "total_deductions": sum(deductions.values()),
-        "taxable_income": taxable_income,
-        "income_tax": int(tax),
-        "local_income_tax": int(local_tax),
-        "total_tax": int(tax + local_tax),
-        "effective_rate": round((tax + local_tax) / annual_income * 100, 2) if annual_income > 0 else 0,
-        "deduction_details": deductions
-    }
-    
-    return jsonify({"result": result})
-
-@app.route('/api/tax/find-deductions', methods=['POST'])
-def find_deductions():
-    data = request.json
-    profile = data.get('profile', {})
-    
-    available_deductions = [
-        {"name": "근로소득공제", "amount": 15000000, "eligible": True, "description": "근로소득자 기본 공제"},
-        {"name": "인적공제 (본인)", "amount": 1500000, "eligible": True, "description": "기본공제 150만원"},
-        {"name": "인적공제 (배우자)", "amount": 1500000, "eligible": profile.get('married', False), "description": "배우자 공제"},
-        {"name": "인적공제 (자녀)", "amount": 1500000 * profile.get('children', 0), "eligible": profile.get('children', 0) > 0, "description": "자녀 1인당 150만원"},
-        {"name": "국민연금 공제", "amount": 4500000, "eligible": True, "description": "연금보험료 전액 공제"},
-        {"name": "건강보험료 공제", "amount": 3200000, "eligible": True, "description": "건강보험료 전액 공제"},
-        {"name": "주택자금공제", "amount": 3000000, "eligible": profile.get('housing_loan', False), "description": "주택담보대출 이자"},
-        {"name": "교육비 공제", "amount": 2000000, "eligible": profile.get('children', 0) > 0, "description": "자녀 교육비"},
-        {"name": "의료비 공제", "amount": 1500000, "eligible": True, "description": "총급여 3% 초과분"},
-        {"name": "신용카드 공제", "amount": 2500000, "eligible": True, "description": "총급여 25% 초과 사용분"}
-    ]
-    
-    eligible = [d for d in available_deductions if d['eligible']]
-    total_deduction = sum(d['amount'] for d in eligible)
-    
     return jsonify({
-        "deductions": eligible,
-        "total_available": total_deduction,
-        "tax_savings_estimate": int(total_deduction * 0.15)  # 평균 세율 15% 가정
+        "status": "ok",
+        "service": "tax-automation-system",
+        "version": "2.0.0",
+        "timestamp": datetime.now().isoformat(),
+        "features": {
+            "openhash": True,
+            "ai_detection": True,
+            "fpga_acceleration": True,
+            "layer_network": True
+        }
+    }), 200
+
+@app.route('/stats', methods=['GET'])
+def get_stats():
+    return jsonify({
+        "total_tax_collected": 336500000000000,
+        "today_collection": random.randint(100000000000, 150000000000),
+        "tps": round(350 + random.random() * 50, 2),
+        "active_transactions": random.randint(12000, 18000),
+        "pending_returns": random.randint(2800000, 2900000),
+        "ai_detection_rate": 99.2,
+        "registered_taxpayers": {
+            "individuals": 50000000,
+            "businesses": 3247891
+        },
+        "layer_stats": {
+            "layer1": {"nodes": 3496, "transactions": random.randint(800000, 900000)},
+            "layer2": {"nodes": 226, "transactions": random.randint(200000, 250000)},
+            "layer3": {"nodes": 17, "transactions": random.randint(80000, 100000)},
+            "layer4": {"nodes": 1, "transactions": random.randint(10000, 15000)}
+        }
     })
 
-@app.route('/api/tax/check-refund-status', methods=['POST'])
-def check_refund_status():
-    data = request.json
-    tax_id = data.get('tax_id', '')
+@app.route('/transactions/stream', methods=['GET'])
+def get_transaction_stream():
+    count = int(request.args.get('count', 10))
+    transactions = []
     
-    status = {
-        "tax_id": tax_id,
-        "status": "환급 진행중",
-        "stages": [
-            {"stage": "신고 접수", "completed": True, "date": "2025-05-25"},
-            {"stage": "자동 검증", "completed": True, "date": "2025-05-25"},
-            {"stage": "AI 심사", "completed": True, "date": "2025-05-26"},
-            {"stage": "환급 결정", "completed": True, "date": "2025-05-27"},
-            {"stage": "환급금 지급", "completed": False, "expected": "2025-05-30"}
-        ],
-        "refund_amount": 1250000,
-        "refund_account": "***-***-123456",
-        "expected_date": "2025-05-30",
-        "processing_time": "5일 (AI 자동 처리)"
-    }
-    
-    return jsonify({"status": status})
-
-@app.route('/api/tax/vat-calculate', methods=['POST'])
-def vat_calculate():
-    data = request.json
-    sales = data.get('sales', 0)
-    purchases = data.get('purchases', 0)
-    
-    output_vat = sales * 0.1
-    input_vat = purchases * 0.1
-    vat_payable = output_vat - input_vat
-    
-    result = {
-        "sales": sales,
-        "purchases": purchases,
-        "output_vat": int(output_vat),
-        "input_vat": int(input_vat),
-        "vat_payable": int(vat_payable) if vat_payable > 0 else 0,
-        "vat_refund": int(-vat_payable) if vat_payable < 0 else 0,
-        "filing_deadline": "2025-01-25",
-        "payment_deadline": "2025-01-25"
-    }
-    
-    return jsonify({"result": result})
-
-@app.route('/api/tax/business-registration', methods=['POST'])
-def business_registration():
-    data = request.json
-    business_type = data.get('type', 'individual')
-    
-    requirements = {
-        "individual": {
-            "type": "개인사업자",
-            "documents": [
-                "사업자등록신청서",
-                "신분증 사본",
-                "임대차계약서",
-                "사업허가증 (해당 시)"
-            ],
-            "processing_time": "즉시 (AI 자동 처리)",
-            "fee": "무료",
-            "tax_obligations": ["부가가치세", "종합소득세", "원천세 (직원 있는 경우)"]
-        },
-        "corporation": {
-            "type": "법인사업자",
-            "documents": [
-                "법인설립신고서",
-                "정관 사본",
-                "주주명부",
-                "임대차계약서",
-                "법인등기부등본"
-            ],
-            "processing_time": "1-2일",
-            "fee": "무료",
-            "tax_obligations": ["부가가치세", "법인세", "원천세"]
+    for _ in range(count):
+        layer = select_layer()
+        tx = {
+            "id": f"TX-{generate_hash()[:16]}",
+            "type": random.choice(TAX_TYPES),
+            "amount": random.randint(100000, 500000000),
+            "region": random.choice(REGIONS),
+            "layer": layer,
+            "layer_name": LAYERS[layer]['name'],
+            "taxpayer_type": random.choice(['개인', '법인']),
+            "taxpayer_id": f"{'P' if random.random() < 0.7 else 'C'}-{generate_hash()[:8].upper()}",
+            "timestamp": datetime.now().isoformat(),
+            "hash_chain": f"0x{generate_hash()}",
+            "verified": True,
+            "verification_time_ms": round(random.random() * 0.05, 4)
         }
-    }
+        transactions.append(tx)
     
-    return jsonify({"requirements": requirements.get(business_type, requirements["individual"])})
+    return jsonify({"transactions": transactions})
+
+@app.route('/taxpayer/<taxpayer_id>/financial-statements', methods=['GET'])
+def get_financial_statements(taxpayer_id):
+    # 시뮬레이션 재무제표 데이터
+    base_revenue = random.randint(50000000, 5000000000)
+    
+    return jsonify({
+        "taxpayer_id": taxpayer_id,
+        "type": "개인" if taxpayer_id.startswith('P') else "법인",
+        "financial_statements": {
+            "income_statement": {
+                "revenue": base_revenue,
+                "cost_of_sales": int(base_revenue * 0.6),
+                "gross_profit": int(base_revenue * 0.4),
+                "operating_expenses": int(base_revenue * 0.25),
+                "operating_income": int(base_revenue * 0.15),
+                "net_income": int(base_revenue * 0.1)
+            },
+            "balance_sheet": {
+                "assets": {
+                    "current_assets": int(base_revenue * 0.5),
+                    "non_current_assets": int(base_revenue * 1.2),
+                    "total": int(base_revenue * 1.7)
+                },
+                "liabilities": {
+                    "current_liabilities": int(base_revenue * 0.3),
+                    "non_current_liabilities": int(base_revenue * 0.5),
+                    "total": int(base_revenue * 0.8)
+                },
+                "equity": int(base_revenue * 0.9)
+            },
+            "cash_flow": {
+                "operating": int(base_revenue * 0.12),
+                "investing": int(base_revenue * -0.08),
+                "financing": int(base_revenue * -0.02),
+                "net_change": int(base_revenue * 0.02)
+            },
+            "equity_statement": {
+                "beginning_equity": int(base_revenue * 0.8),
+                "net_income": int(base_revenue * 0.1),
+                "dividends": int(base_revenue * -0.02),
+                "ending_equity": int(base_revenue * 0.88)
+            },
+            "retained_earnings": {
+                "beginning_balance": int(base_revenue * 0.5),
+                "net_income": int(base_revenue * 0.1),
+                "dividends": int(base_revenue * -0.02),
+                "ending_balance": int(base_revenue * 0.58)
+            }
+        },
+        "credit_score": round(random.uniform(0.7, 0.98), 2),
+        "last_updated": datetime.now().isoformat(),
+        "openhash_verified": True
+    })
+
+@app.route('/taxlaw/search', methods=['GET'])
+def search_taxlaw():
+    query = request.args.get('q', '')
+    
+    # 시뮬레이션 세법 검색 결과
+    laws = [
+        {"code": "소득세법 제14조", "title": "과세표준의 계산", "relevance": 0.95},
+        {"code": "법인세법 제13조", "title": "각 사업연도의 소득", "relevance": 0.88},
+        {"code": "부가가치세법 제29조", "title": "과세표준", "relevance": 0.82},
+        {"code": "국세기본법 제26조의2", "title": "기한후신고", "relevance": 0.75}
+    ]
+    
+    return jsonify({
+        "query": query,
+        "results": laws[:3] if query else laws,
+        "total_laws": 18,
+        "total_regulations": 352,
+        "total_rulings": 612
+    })
+
+@app.route('/layers/hierarchy', methods=['GET'])
+def get_layer_hierarchy():
+    return jsonify({
+        "layers": [
+            {
+                "level": 1,
+                "name": "읍면동",
+                "description": "개인/소규모 사업자 관할",
+                "nodes": 3496,
+                "coverage": "전국 읍면동 세무서",
+                "tps": 63.34,
+                "response_time_ms": 124.82,
+                "tax_types": ["종합소득세", "부가가치세", "간이과세"]
+            },
+            {
+                "level": 2,
+                "name": "시군구",
+                "description": "중소기업/법인 관할, Layer 1 취합",
+                "nodes": 226,
+                "coverage": "전국 시군구 세무서",
+                "tps": 292.12,
+                "response_time_ms": 126.62,
+                "tax_types": ["법인세", "원천세", "특별소비세"]
+            },
+            {
+                "level": 3,
+                "name": "광역시도",
+                "description": "대기업 관할, Layer 2 취합",
+                "nodes": 17,
+                "coverage": "7개 지방국세청",
+                "tps": 374.76,
+                "response_time_ms": 126.45,
+                "tax_types": ["대규모 집계", "국제조세", "이전가격"]
+            },
+            {
+                "level": 4,
+                "name": "국가",
+                "description": "전국 총괄, 국제조세",
+                "nodes": 1,
+                "coverage": "국세청 본청",
+                "tps": 1500,
+                "response_time_ms": 50,
+                "tax_types": ["OECD 국제조세", "조세조약", "상호합의절차"]
+            }
+        ],
+        "probabilistic_distribution": {
+            "layer1": 0.65,
+            "layer2": 0.25,
+            "layer3": 0.09,
+            "layer4": 0.01
+        }
+    })
+
+@app.route('/nts/financial-statements', methods=['GET'])
+def get_nts_financials():
+    """국세청 자체 재무제표"""
+    return jsonify({
+        "entity": "대한민국 국세청",
+        "fiscal_year": 2024,
+        "statement_date": datetime.now().isoformat(),
+        "income_statement": {
+            "tax_revenue": 336500000000000,
+            "other_revenue": 2500000000000,
+            "total_revenue": 339000000000000,
+            "operating_expenses": 3200000000000,
+            "net_income": 335800000000000
+        },
+        "balance_sheet": {
+            "assets": {
+                "receivables": 15200000000000,
+                "equipment": 850000000000,
+                "other": 2100000000000,
+                "total": 18150000000000
+            },
+            "liabilities": {
+                "refunds_payable": 8500000000000,
+                "other": 1200000000000,
+                "total": 9700000000000
+            }
+        },
+        "realtime_metrics": {
+            "today_collection": random.randint(100000000000, 150000000000),
+            "pending_refunds": random.randint(500000000000, 800000000000),
+            "active_audits": random.randint(10000, 15000)
+        },
+        "openhash_verified": True,
+        "last_updated": datetime.now().isoformat()
+    })
 
 if __name__ == '__main__':
-    logger.info("🚀 지능형 국세 행정 시스템 백엔드 시작 (포트 5020)")
+    print("🚀 OpenHash 국세 행정 자동화 시스템 백엔드 시작 (포트 5020)")
+    print("📊 Features: OpenHash, AI Detection, FPGA Acceleration, Layer Network")
     app.run(host='0.0.0.0', port=5020, debug=False)
