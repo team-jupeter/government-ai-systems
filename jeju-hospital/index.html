@@ -3,27 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제주 권역 의료 AI 협진 시스템</title>
+    <title>제주 권역 통합 의료 AI 시스템</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .gradient-medical { background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #0ea5e9 100%); }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
-        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
+        .stat-card { background: linear-gradient(145deg, #1f2937 0%, #111827 100%); border: 1px solid #374151; border-radius: 12px; padding: 16px; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .nav-item { transition: all 0.2s; }
+        .nav-item:hover { background: rgba(59, 130, 246, 0.1); }
+        .nav-item.active { background: rgba(59, 130, 246, 0.2); border-left: 3px solid #3b82f6; }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
     <div id="root"></div>
     <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/MedicalInstitutions.js"></script>
-    <script type="text/babel" src="js/components/AIDiagnosis.js"></script>
-    <script type="text/babel" src="js/components/AppointmentBooking.js"></script>
-    <script type="text/babel" src="js/components/PrivateVault.js"></script>
-    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/components/Sidebar.js"></script>
+    <script type="text/babel" src="js/components/SmartphoneVital.js"></script>
+    <script type="text/babel" src="js/components/SmartWatchMonitor.js"></script>
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/MedicalStatus.js"></script>
+    <script type="text/babel" src="js/components/AIDoctorChat.js"></script>
+    <script type="text/babel" src="js/components/AINurseChat.js"></script>
+    <script type="text/babel" src="js/components/VitalMonitor.js"></script>
+    <script type="text/babel" src="js/components/PDVManager.js"></script>
+    <script type="text/babel" src="js/components/Appointment.js"></script>
+    <script type="text/babel" src="js/components/HospitalInfo.js"></script>
+    <script type="text/babel" src="js/components/IntroModal.js"></script>
     <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
