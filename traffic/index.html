@@ -3,358 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 자율주행 교통 시스템 | OpenHash 기반</title>
+    <title>OpenHash 기반 사회적 자율주행 교통 관제 시스템</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/umd/Recharts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .gradient-bg { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); }
-        .card-hover { transition: all 0.3s; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .float { animation: float 3s ease-in-out infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes drive { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .drive { animation: drive 3s linear infinite; }
-        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .blink { animation: blink 1s infinite; }
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); }
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .sidebar-item { transition: all 0.2s ease; }
+        .sidebar-item:hover { background: rgba(99, 102, 241, 0.1); }
+        .sidebar-item.active { background: rgba(99, 102, 241, 0.2); border-left: 3px solid #818cf8; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        @keyframes drive { 0% { transform: translateX(0); } 100% { transform: translateX(10px); } }
+        .driving { animation: drive 0.5s ease-in-out infinite alternate; }
+        @keyframes signal { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .signal-blink { animation: signal 1s infinite; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15); }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
-    <!-- Header -->
-    <div class="gradient-bg py-16 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="text-6xl mb-4 float">🚗</div>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 자율주행 교통 시스템</h1>
-            <p class="text-xl opacity-90 mb-6">OpenHash 차량 통신 | 실시간 교통 최적화 | 사고율 제로</p>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🚦 실시간 신호 제어</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🛡️ 사고 예방 AI</span>
-                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">⚡ 67% 에너지 절감</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="bg-gray-800 py-3 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-teal-400 hover:text-teal-300">← 포털로 돌아가기</a>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-teal-400">시뮬레이터</button>
-                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-teal-400">기능</button>
-                <button onclick="document.getElementById('agents').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-teal-400">AI 에이전트</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Current Problems -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">현행 교통 시스템의 문제점</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">💀</div>
-                <div class="text-xl font-bold text-red-400 mb-2">연간 3,000명</div>
-                <div class="text-sm text-gray-400">교통사고 사망자</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">🚗</div>
-                <div class="text-xl font-bold text-red-400 mb-2">30시간/월</div>
-                <div class="text-sm text-gray-400">평균 교통 체증 시간</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">⛽</div>
-                <div class="text-xl font-bold text-red-400 mb-2">30%</div>
-                <div class="text-sm text-gray-400">불필요한 연료 낭비</div>
-            </div>
-            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
-                <div class="text-3xl mb-3">🌫️</div>
-                <div class="text-xl font-bold text-red-400 mb-2">25%</div>
-                <div class="text-sm text-gray-400">도시 대기오염 비중</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Simulator -->
-    <div id="simulator" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">🚦 교통 시뮬레이터</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Control Panel -->
-                <div class="bg-gray-900 rounded-xl p-6">
-                    <h3 class="text-xl font-bold mb-6 text-teal-400">시뮬레이션 제어</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">시나리오 선택</label>
-                            <select id="scenario" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-                                <option value="rush">출퇴근 러시아워</option>
-                                <option value="normal">일반 주간 교통</option>
-                                <option value="night">야간 교통</option>
-                                <option value="event">대규모 행사</option>
-                                <option value="emergency">긴급 상황</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">차량 수</label>
-                            <input type="range" id="vehicleCount" min="100" max="10000" value="5000" 
-                                class="w-full accent-teal-500"
-                                oninput="document.getElementById('vehicleLabel').textContent = this.value">
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>100</span>
-                                <span id="vehicleLabel" class="text-teal-400 font-bold">5000</span>
-                                <span>10000</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">자율주행 차량 비율</label>
-                            <input type="range" id="autonomousRatio" min="0" max="100" value="80" 
-                                class="w-full accent-teal-500"
-                                oninput="document.getElementById('autonomousLabel').textContent = this.value + '%'">
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>0%</span>
-                                <span id="autonomousLabel" class="text-teal-400 font-bold">80%</span>
-                                <span>100%</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">AI 신호 제어</label>
-                            <div class="flex gap-4">
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="aiControl" value="on" checked class="accent-teal-500"> 활성화
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="aiControl" value="off" class="accent-teal-500"> 비활성화
-                                </label>
-                            </div>
-                        </div>
-                        <button onclick="runSimulation()"
-                            class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 font-bold py-4 rounded-lg hover:from-teal-500 hover:to-cyan-500 transition">
-                            🚀 시뮬레이션 실행
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Results -->
-                <div class="bg-gray-900 rounded-xl p-6">
-                    <h3 class="text-xl font-bold mb-6 text-green-400">시뮬레이션 결과</h3>
-                    <div id="simResult">
-                        <div class="text-center text-gray-500 py-12">
-                            <div class="text-4xl mb-4">🚦</div>
-                            <p>시나리오를 선택하고<br/>시뮬레이션을 실행하세요</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Traffic Visualization -->
-            <div class="mt-8 bg-gray-900 rounded-xl p-6">
-                <h3 class="text-lg font-bold mb-4 text-center">실시간 교통 시각화</h3>
-                <div class="relative h-32 bg-gray-800 rounded-lg overflow-hidden">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full h-2 bg-gray-700"></div>
-                    </div>
-                    <div id="trafficViz" class="absolute inset-0 flex items-center justify-around opacity-50">
-                        <span class="text-2xl">🚗</span>
-                        <span class="text-2xl">🚙</span>
-                        <span class="text-2xl">🚕</span>
-                        <span class="text-2xl">🚌</span>
-                        <span class="text-2xl">🚗</span>
-                    </div>
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-8 bg-red-500 blink rounded"></div>
-                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-8 bg-green-500 blink rounded"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Features -->
-    <div id="features" class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">🛣️ 핵심 기능</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">🚦</div>
-                <h3 class="text-xl font-bold text-teal-400 mb-3">AI 신호 제어</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 실시간 교통량 분석</li>
-                    <li>• 동적 신호 주기 조절</li>
-                    <li>• 긴급차량 우선 통과</li>
-                    <li>• 보행자 안전 최적화</li>
-                </ul>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">🔗</div>
-                <h3 class="text-xl font-bold text-blue-400 mb-3">V2X 통신</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 차량-차량 (V2V) 통신</li>
-                    <li>• 차량-인프라 (V2I) 연동</li>
-                    <li>• OpenHash 기록 검증</li>
-                    <li>• 0.001ms 지연시간</li>
-                </ul>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6 card-hover">
-                <div class="text-4xl mb-4">🛡️</div>
-                <h3 class="text-xl font-bold text-red-400 mb-3">사고 예방</h3>
-                <ul class="text-sm text-gray-400 space-y-2">
-                    <li>• 충돌 예측 알고리즘</li>
-                    <li>• 자동 긴급 제동</li>
-                    <li>• 사각지대 감지</li>
-                    <li>• 99.97% 사고 예방률</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Agents -->
-    <div id="agents" class="bg-gray-800 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">🤖 6개 AI 에이전트 협업</h2>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">🔍</div>
-                    <h3 class="font-bold text-cyan-400 mb-2">인지 에이전트</h3>
-                    <p class="text-sm text-gray-400">센서 데이터 융합, 객체 인식, 상황 판단</p>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">🗺️</div>
-                    <h3 class="font-bold text-green-400 mb-2">경로 에이전트</h3>
-                    <p class="text-sm text-gray-400">최적 경로 계산, 실시간 재경로 설정</p>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">🚦</div>
-                    <h3 class="font-bold text-yellow-400 mb-2">신호 에이전트</h3>
-                    <p class="text-sm text-gray-400">교차로 제어, 신호 주기 최적화</p>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">⚠️</div>
-                    <h3 class="font-bold text-red-400 mb-2">안전 에이전트</h3>
-                    <p class="text-sm text-gray-400">위험 예측, 긴급 대응, 사고 방지</p>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">⚡</div>
-                    <h3 class="font-bold text-purple-400 mb-2">에너지 에이전트</h3>
-                    <p class="text-sm text-gray-400">연료 효율 최적화, 친환경 운행</p>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 card-hover">
-                    <div class="text-3xl mb-3">📊</div>
-                    <h3 class="font-bold text-blue-400 mb-2">조율 에이전트</h3>
-                    <p class="text-sm text-gray-400">전체 시스템 통합, 에이전트 간 협업</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Benefits -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-gradient-to-br from-teal-900 to-teal-700 rounded-xl p-6 text-center card-hover">
-                <div class="text-4xl font-bold mb-2">99.97%</div>
-                <div class="text-sm text-gray-300">사고 예방률</div>
-            </div>
-            <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
-                <div class="text-4xl font-bold mb-2">67%</div>
-                <div class="text-sm text-gray-300">에너지 절감</div>
-            </div>
-            <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
-                <div class="text-4xl font-bold mb-2">45%</div>
-                <div class="text-sm text-gray-300">통행시간 단축</div>
-            </div>
-            <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
-                <div class="text-4xl font-bold mb-2">60%</div>
-                <div class="text-sm text-gray-300">배출가스 감소</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="bg-gray-900 py-8 border-t border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>AI 자율주행 교통 시스템 © 2025 | OpenHash V2X 통신</p>
-            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
-        </div>
-    </div>
-
-    <script>
-        function runSimulation() {
-            const scenario = document.getElementById('scenario').value;
-            const vehicles = document.getElementById('vehicleCount').value;
-            const autonomous = document.getElementById('autonomousRatio').value;
-            const aiControl = document.querySelector('input[name="aiControl"]:checked').value;
-
-            const resultDiv = document.getElementById('simResult');
-            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">시뮬레이션 진행 중...</p></div>';
-
-            // Animate traffic
-            const viz = document.getElementById('trafficViz');
-            viz.classList.add('drive');
-            viz.style.opacity = '1';
-
-            setTimeout(() => {
-                viz.classList.remove('drive');
-
-                const scenarioNames = {
-                    'rush': '출퇴근 러시아워',
-                    'normal': '일반 주간',
-                    'night': '야간',
-                    'event': '대규모 행사',
-                    'emergency': '긴급 상황'
-                };
-
-                // Calculate results based on inputs
-                const baseAccident = aiControl === 'on' ? 0.03 : 2.5;
-                const accidentRate = (baseAccident * (100 - autonomous) / 100).toFixed(2);
-                const trafficTime = aiControl === 'on' ? 
-                    Math.floor(15 + (100 - autonomous) * 0.3) : 
-                    Math.floor(35 + (100 - autonomous) * 0.2);
-                const energySaved = aiControl === 'on' ? 
-                    Math.floor(50 + autonomous * 0.17) : 
-                    Math.floor(20 + autonomous * 0.1);
-                const throughput = aiControl === 'on' ?
-                    Math.floor(vehicles * 1.45) :
-                    Math.floor(vehicles * 0.85);
-
-                resultDiv.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="p-4 bg-teal-900/30 border border-teal-500/30 rounded-lg">
-                            <div class="text-sm text-gray-400">시나리오</div>
-                            <div class="font-bold">${scenarioNames[scenario]}</div>
-                            <div class="text-xs text-gray-500 mt-1">차량 ${parseInt(vehicles).toLocaleString()}대 / 자율주행 ${autonomous}%</div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">사고율</div>
-                                <div class="text-xl font-bold ${parseFloat(accidentRate) < 1 ? 'text-green-400' : 'text-yellow-400'}">${accidentRate}%</div>
-                            </div>
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">평균 통행시간</div>
-                                <div class="text-xl font-bold text-blue-400">${trafficTime}분</div>
-                            </div>
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">에너지 절감</div>
-                                <div class="text-xl font-bold text-green-400">${energySaved}%</div>
-                            </div>
-                            <div class="p-3 bg-gray-800 rounded-lg text-center">
-                                <div class="text-xs text-gray-400">처리량/시간</div>
-                                <div class="text-xl font-bold text-purple-400">${throughput.toLocaleString()}</div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-gray-800 rounded-lg">
-                            <div class="text-sm text-gray-400 mb-2">AI 신호 제어 상태</div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full ${aiControl === 'on' ? 'bg-green-500' : 'bg-red-500'}"></span>
-                                <span class="${aiControl === 'on' ? 'text-green-400' : 'text-red-400'}">${aiControl === 'on' ? '활성화' : '비활성화'}</span>
-                            </div>
-                        </div>
-
-                        <div class="text-center text-xs text-gray-500">
-                            시뮬레이션 시간: 0.089ms | OpenHash 기록 완료
-                        </div>
-                    </div>
-                `;
-            }, 2500);
-        }
-    </script>
-<script src="/shared/banner.js"></script>
+    <div id="root"></div>
+    
+    <!-- Components -->
+    <script type="text/babel" src="js/components/OpenHashModal.js"></script>
+    <script type="text/babel" src="js/components/SocialAutonomous.js"></script>
+    <script type="text/babel" src="js/components/IndividualAutonomous.js"></script>
+    <script type="text/babel" src="js/components/DataPollutionDetection.js"></script>
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/NationalFleet.js"></script>
+    <script type="text/babel" src="js/components/CentralControl.js"></script>
+    <script type="text/babel" src="js/components/LiveRouting.js"></script>
+    <script type="text/babel" src="js/components/DemandMatching.js"></script>
+    <script type="text/babel" src="js/components/VehicleMonitor.js"></script>
+    <script type="text/babel" src="js/components/RegionalHub.js"></script>
+    <script type="text/babel" src="js/components/CityTerminal.js"></script>
+    <script type="text/babel" src="js/components/PassengerPDV.js"></script>
+    <script type="text/babel" src="js/components/CargoTracking.js"></script>
+    <script type="text/babel" src="js/components/SafetyAlert.js"></script>
+    <script type="text/babel" src="js/components/AIConsultant.js"></script>
+    <script type="text/babel" src="js/components/OpenHashInfo.js"></script>
+    <script type="text/babel" src="js/components/FloatingAssistant.js"></script>
+    <script type="text/babel" src="js/components/FloatingFeaturePanel.js"></script>
+    
+    <!-- Main App -->
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
