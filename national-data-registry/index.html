@@ -9,14 +9,37 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        .gradient-ndr { background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3b7ab8 100%); }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
-        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
+        * {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .gradient-gov24 { 
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        }
+        .bg-gov24-light { background-color: #E8F0FF; }
+        .bg-gov24-primary { background-color: #0046FF; }
+        .text-gov24-primary { color: #0046FF; }
+        .border-gov24 { border-color: #0046FF; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        }
+        @keyframes pulse-gov24 { 
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
+            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        }
+        .pulse-gov24 { animation: pulse-gov24 2s ease-in-out infinite; }
+        .section-white { background-color: white; }
+        .section-gray { background-color: #f8f9fa; }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
     <div id="root"></div>
     <script type="text/babel" src="js/components/Header.js"></script>
     <script type="text/babel" src="js/components/LayerVisualization.js"></script>

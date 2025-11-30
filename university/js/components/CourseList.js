@@ -115,7 +115,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                         placeholder="강좌명 또는 AI 교수 검색..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-10 focus:outline-none focus:border-yellow-500"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 pl-10 focus:outline-none focus:border-yellow-500"
                     />
                     <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
                 </div>
@@ -125,7 +125,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                         className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
                             selectedField === 'all' 
                                 ? 'bg-yellow-500 text-gray-900' 
-                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                         }`}
                     >
                         전체
@@ -137,7 +137,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                             className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-2 ${
                                 selectedField === key 
                                     ? 'bg-yellow-500 text-gray-900' 
-                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                             }`}
                         >
                             <span>{field.icon}</span>
@@ -149,22 +149,22 @@ const CourseList = ({ studentId, onNavigate }) => {
 
             {/* 통계 */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
                     <p className="text-2xl font-bold text-yellow-400">{courses.length}</p>
                     <p className="text-sm text-gray-400">전체 강좌</p>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
                     <p className="text-2xl font-bold text-blue-400">{Object.keys(fields).length}</p>
                     <p className="text-sm text-gray-400">학문 분야</p>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
                     <p className="text-2xl font-bold text-green-400">
                         {(courses.reduce((sum, c) => sum + c.total_students, 0) / 1000).toFixed(0)}K
                     </p>
                     <p className="text-sm text-gray-400">총 수강생</p>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
-                    <p className="text-2xl font-bold text-purple-400">{enrolledCourses.length}</p>
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <p className="text-2xl font-bold text-blue-600">{enrolledCourses.length}</p>
                     <p className="text-sm text-gray-400">내 수강 강좌</p>
                 </div>
             </div>
@@ -176,12 +176,12 @@ const CourseList = ({ studentId, onNavigate }) => {
                     const isEnrolling = enrollingCourse === course.id;
                     
                     return (
-                        <div key={course.id} className="bg-gray-800 rounded-xl overflow-hidden card-hover">
+                        <div key={course.id} className="bg-gray-50 rounded-xl overflow-hidden card-hover">
                             {/* 헤더 */}
-                            <div className="p-4 border-b border-gray-700" style={{ borderLeftColor: fields[course.field]?.color, borderLeftWidth: '4px' }}>
+                            <div className="p-4 border-b border-gray-200" style={{ borderLeftColor: fields[course.field]?.color, borderLeftWidth: '4px' }}>
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center text-2xl">
+                                        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl">
                                             {course.icon}
                                         </div>
                                         <div>
@@ -189,7 +189,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                                             <p className="text-sm text-gray-400">{course.professor}</p>
                                         </div>
                                     </div>
-                                    <span className="badge bg-gray-700 text-gray-300">{course.credits}학점</span>
+                                    <span className="badge bg-gray-100 text-gray-600">{course.credits}학점</span>
                                 </div>
                             </div>
                             
@@ -200,7 +200,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                                 <div className="space-y-2 text-sm">
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-500">분야</span>
-                                        <span className="text-gray-300">{course.field_name}</span>
+                                        <span className="text-gray-600">{course.field_name}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-500">난이도</span>
@@ -208,7 +208,7 @@ const CourseList = ({ studentId, onNavigate }) => {
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-500">수강생</span>
-                                        <span className="text-gray-300">{course.total_students.toLocaleString()}명</span>
+                                        <span className="text-gray-600">{course.total_students.toLocaleString()}명</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-500">평균 성적</span>
@@ -218,11 +218,11 @@ const CourseList = ({ studentId, onNavigate }) => {
                             </div>
                             
                             {/* 버튼 */}
-                            <div className="p-4 border-t border-gray-700">
+                            <div className="p-4 border-t border-gray-200">
                                 {isEnrolled ? (
                                     <button
                                         onClick={() => onNavigate('my-learning')}
-                                        className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-2.5 font-medium transition-colors"
+                                        className="w-full bg-green-600 hover:bg-green-700 text-gray-900 rounded-lg py-2.5 font-medium transition-colors"
                                     >
                                         <i className="fas fa-check mr-2"></i>수강 중 - 학습하기
                                     </button>

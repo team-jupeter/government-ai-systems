@@ -88,11 +88,11 @@ const AIChat = ({ studentId }) => {
             {/* AI 채팅 패널 - 사이드바(280px) 오른쪽에 위치 */}
             {isOpen && (
                 <div 
-                    className="fixed bottom-0 bg-gray-800 rounded-t-2xl shadow-2xl border border-gray-700 border-b-0 z-50 flex flex-col"
+                    className="fixed bottom-0 bg-gray-50 rounded-t-2xl shadow-2xl border border-gray-200 border-b-0 z-50 flex flex-col"
                     style={{ left: '296px', width: '400px', height: '500px' }}
                 >
                     {/* 헤더 */}
-                    <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
+                    <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
                         <div className="flex items-center space-x-3">
                             {currentProfessor ? (
                                 <>
@@ -113,7 +113,7 @@ const AIChat = ({ studentId }) => {
                             {currentProfessor && (
                                 <button 
                                     onClick={() => { setCurrentProfessor(null); setMessages([]); }}
-                                    className="text-gray-400 hover:text-white p-1"
+                                    className="text-gray-400 hover:text-gray-900 p-1"
                                     title="교수 변경"
                                 >
                                     <i className="fas fa-exchange-alt"></i>
@@ -121,7 +121,7 @@ const AIChat = ({ studentId }) => {
                             )}
                             <button 
                                 onClick={() => setIsOpen(false)}
-                                className="text-gray-400 hover:text-white p-1"
+                                className="text-gray-400 hover:text-gray-900 p-1"
                             >
                                 <i className="fas fa-chevron-down"></i>
                             </button>
@@ -137,7 +137,7 @@ const AIChat = ({ studentId }) => {
                                     <button
                                         key={prof.id}
                                         onClick={() => selectProfessor(prof)}
-                                        className="w-full flex items-center space-x-3 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                                        className="w-full flex items-center space-x-3 p-3 bg-gray-100 hover:bg-gray-600 rounded-lg transition-colors"
                                     >
                                         <span className="text-2xl">{prof.icon}</span>
                                         <div className="text-left">
@@ -156,7 +156,7 @@ const AIChat = ({ studentId }) => {
                                                 {currentProfessor.icon}
                                             </div>
                                         )}
-                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-700'}`}>
+                                        <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-100'}`}>
                                             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                                         </div>
                                     </div>
@@ -166,7 +166,7 @@ const AIChat = ({ studentId }) => {
                                         <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center text-sm mr-2">
                                             {currentProfessor.icon}
                                         </div>
-                                        <div className="bg-gray-700 rounded-2xl px-4 py-3">
+                                        <div className="bg-gray-100 rounded-2xl px-4 py-3">
                                             <div className="flex space-x-1">
                                                 <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                                 <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -182,13 +182,13 @@ const AIChat = ({ studentId }) => {
 
                     {/* 빠른 질문 */}
                     {currentProfessor && messages.length <= 2 && (
-                        <div className="px-4 py-2 border-t border-gray-700 flex-shrink-0">
+                        <div className="px-4 py-2 border-t border-gray-200 flex-shrink-0">
                             <div className="flex flex-wrap gap-2">
                                 {quickQuestions.map((q, i) => (
                                     <button
                                         key={i}
                                         onClick={() => { setInputText(q); }}
-                                        className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full"
+                                        className="text-xs bg-gray-100 hover:bg-gray-600 px-3 py-1 rounded-full"
                                     >
                                         {q}
                                     </button>
@@ -199,7 +199,7 @@ const AIChat = ({ studentId }) => {
 
                     {/* 입력 영역 */}
                     {currentProfessor && (
-                        <div className="p-4 border-t border-gray-700 flex-shrink-0">
+                        <div className="p-4 border-t border-gray-200 flex-shrink-0">
                             <div className="flex space-x-2">
                                 <input
                                     type="text"
@@ -207,7 +207,7 @@ const AIChat = ({ studentId }) => {
                                     onChange={(e) => setInputText(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="질문을 입력하세요..."
-                                    className="flex-1 bg-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                 />
                                 <button
                                     onClick={sendMessage}

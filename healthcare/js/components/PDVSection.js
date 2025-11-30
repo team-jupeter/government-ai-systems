@@ -61,110 +61,110 @@ const PDVSection = () => {
         React.createElement('div', { className: 'max-w-6xl mx-auto' },
             React.createElement('div', { className: 'text-center mb-12' },
                 React.createElement('h2', { className: 'text-3xl font-bold mb-4' }, '🔐 프라이빗 데이터 금고 (PDV)'),
-                React.createElement('p', { className: 'text-gray-400 max-w-2xl mx-auto' },
+                React.createElement('p', { className: 'text-gray-600 max-w-2xl mx-auto' },
                     '개인 건강 정보를 본인 단말기에만 암호화 저장하고, 해시값만 오픈해시 네트워크에 기록하여 완전한 데이터 주권을 보장합니다.'
                 )
             ),
 
             // PDV 핵심 특징
             React.createElement('div', { className: 'grid md:grid-cols-3 gap-6 mb-12' },
-                React.createElement('div', { className: 'bg-purple-900/30 border border-purple-500/30 rounded-xl p-6 card-hover' },
+                React.createElement('div', { className: 'bg-indigo-50 border border-blue-300/30 rounded-xl p-6 card-hover' },
                     React.createElement('div', { className: 'text-4xl mb-4' }, '🔒'),
-                    React.createElement('h3', { className: 'text-xl font-bold text-purple-400 mb-2' }, 'AES-256 암호화'),
-                    React.createElement('p', { className: 'text-gray-400 text-sm' },
+                    React.createElement('h3', { className: 'text-xl font-bold text-blue-600 mb-2' }, 'AES-256 암호화'),
+                    React.createElement('p', { className: 'text-gray-600 text-sm' },
                         '원본 데이터는 군사급 암호화로 보호되어 본인 단말기에만 저장됩니다.'
                     )
                 ),
-                React.createElement('div', { className: 'bg-purple-900/30 border border-purple-500/30 rounded-xl p-6 card-hover' },
+                React.createElement('div', { className: 'bg-indigo-50 border border-blue-300/30 rounded-xl p-6 card-hover' },
                     React.createElement('div', { className: 'text-4xl mb-4' }, '🔗'),
-                    React.createElement('h3', { className: 'text-xl font-bold text-purple-400 mb-2' }, '해시 전용 저장'),
-                    React.createElement('p', { className: 'text-gray-400 text-sm' },
+                    React.createElement('h3', { className: 'text-xl font-bold text-blue-600 mb-2' }, '해시 전용 저장'),
+                    React.createElement('p', { className: 'text-gray-600 text-sm' },
                         '클라우드에는 32바이트 해시값만 저장되어 원본 데이터 유출이 불가능합니다.'
                     )
                 ),
-                React.createElement('div', { className: 'bg-purple-900/30 border border-purple-500/30 rounded-xl p-6 card-hover' },
+                React.createElement('div', { className: 'bg-indigo-50 border border-blue-300/30 rounded-xl p-6 card-hover' },
                     React.createElement('div', { className: 'text-4xl mb-4' }, '✅'),
-                    React.createElement('h3', { className: 'text-xl font-bold text-purple-400 mb-2' }, '교차 검증'),
-                    React.createElement('p', { className: 'text-gray-400 text-sm' },
+                    React.createElement('h3', { className: 'text-xl font-bold text-blue-600 mb-2' }, '교차 검증'),
+                    React.createElement('p', { className: 'text-gray-600 text-sm' },
                         '환자와 병원의 기록을 자동으로 대조하여 허위 기록을 즉시 탐지합니다.'
                     )
                 )
             ),
 
             // 확장 재무제표 (6하 원칙)
-            React.createElement('div', { className: 'bg-gray-800 rounded-xl p-6 mb-8' },
+            React.createElement('div', { className: 'bg-gray-50 rounded-xl p-6 mb-8' },
                 React.createElement('h3', { className: 'text-xl font-bold text-center mb-6' }, '📊 확장 재무제표 형식 (6하 원칙)'),
                 React.createElement('div', { className: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4' },
                     sixW.map((item, i) =>
                         React.createElement('div', {
                             key: i,
-                            className: 'bg-gray-900 rounded-lg p-4 text-center'
+                            className: 'bg-white rounded-lg p-4 text-center'
                         },
                             React.createElement('div', { className: 'text-3xl mb-2' }, item.icon),
-                            React.createElement('div', { className: 'text-sm font-bold text-purple-400' }, item.label),
-                            React.createElement('div', { className: 'text-xs text-gray-400 mt-1' }, item.example)
+                            React.createElement('div', { className: 'text-sm font-bold text-blue-600' }, item.label),
+                            React.createElement('div', { className: 'text-xs text-gray-600 mt-1' }, item.example)
                         )
                     )
                 )
             ),
 
             // 데이터 흐름 시각화
-            React.createElement('div', { className: 'bg-gray-800 rounded-xl p-6 mb-8' },
+            React.createElement('div', { className: 'bg-gray-50 rounded-xl p-6 mb-8' },
                 React.createElement('h3', { className: 'text-xl font-bold text-center mb-6' }, '🔄 PDV 데이터 흐름'),
                 React.createElement('div', { className: 'flex flex-col md:flex-row items-center justify-center gap-4' },
-                    React.createElement('div', { className: 'bg-purple-900/50 rounded-lg p-4 text-center' },
+                    React.createElement('div', { className: 'bg-blue-50/50 rounded-lg p-4 text-center' },
                         React.createElement('div', { className: 'text-3xl mb-2' }, '📱'),
                         React.createElement('div', { className: 'text-sm font-bold' }, '사용자 단말기'),
-                        React.createElement('div', { className: 'text-xs text-gray-400' }, '원본 데이터 저장')
+                        React.createElement('div', { className: 'text-xs text-gray-600' }, '원본 데이터 저장')
                     ),
-                    React.createElement('div', { className: 'text-2xl text-teal-400' }, '→'),
-                    React.createElement('div', { className: 'bg-teal-900/50 rounded-lg p-4 text-center' },
+                    React.createElement('div', { className: 'text-2xl text-blue-600' }, '→'),
+                    React.createElement('div', { className: 'bg-blue-50/50 rounded-lg p-4 text-center' },
                         React.createElement('div', { className: 'text-3xl mb-2' }, '🔐'),
                         React.createElement('div', { className: 'text-sm font-bold' }, 'SHA-256 해싱'),
-                        React.createElement('div', { className: 'text-xs text-gray-400' }, '32바이트 해시 추출')
+                        React.createElement('div', { className: 'text-xs text-gray-600' }, '32바이트 해시 추출')
                     ),
-                    React.createElement('div', { className: 'text-2xl text-teal-400' }, '→'),
+                    React.createElement('div', { className: 'text-2xl text-blue-600' }, '→'),
                     React.createElement('div', { className: 'bg-blue-900/50 rounded-lg p-4 text-center' },
                         React.createElement('div', { className: 'text-3xl mb-2' }, '🌐'),
                         React.createElement('div', { className: 'text-sm font-bold' }, '오픈해시 네트워크'),
-                        React.createElement('div', { className: 'text-xs text-gray-400' }, '4계층 분산 저장')
+                        React.createElement('div', { className: 'text-xs text-gray-600' }, '4계층 분산 저장')
                     )
                 )
             ),
 
             // 교차 검증 데모
-            React.createElement('div', { className: 'bg-gray-800 rounded-xl p-6' },
+            React.createElement('div', { className: 'bg-gray-50 rounded-xl p-6' },
                 React.createElement('div', { className: 'flex justify-between items-center mb-4' },
                     React.createElement('h3', { className: 'text-xl font-bold' }, '🔍 교차 검증 시뮬레이션'),
                     React.createElement('button', {
                         onClick: runCrossVerify,
                         disabled: isVerifying,
-                        className: `px-4 py-2 rounded-lg font-semibold transition-all ${isVerifying ? 'bg-gray-600 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500'}`
+                        className: `px-4 py-2 rounded-lg font-semibold transition-all ${isVerifying ? 'bg-gray-100 cursor-not-allowed' : 'bg-blue-50 hover:bg-blue-50'}`
                     }, isVerifying ? '검증 중...' : '교차 검증 실행')
                 ),
                 
                 isVerifying && React.createElement('div', { className: 'text-center py-8' },
                     React.createElement('div', { className: 'text-4xl mb-4 animate-pulse' }, '🔍'),
-                    React.createElement('p', { className: 'text-purple-400' }, '환자-병원 기록 대조 중...')
+                    React.createElement('p', { className: 'text-blue-600' }, '환자-병원 기록 대조 중...')
                 ),
                 
                 verifyResult && !isVerifying && React.createElement('div', { className: 'space-y-4' },
                     React.createElement('div', { className: 'grid md:grid-cols-2 gap-4' },
-                        React.createElement('div', { className: 'bg-gray-900 rounded-lg p-4' },
-                            React.createElement('div', { className: 'text-sm text-gray-400 mb-1' }, '환자 측 해시'),
-                            React.createElement('div', { className: 'font-mono text-purple-400 text-xs break-all' }, verifyResult.patient_hash)
+                        React.createElement('div', { className: 'bg-white rounded-lg p-4' },
+                            React.createElement('div', { className: 'text-sm text-gray-600 mb-1' }, '환자 측 해시'),
+                            React.createElement('div', { className: 'font-mono text-blue-600 text-xs break-all' }, verifyResult.patient_hash)
                         ),
-                        React.createElement('div', { className: 'bg-gray-900 rounded-lg p-4' },
-                            React.createElement('div', { className: 'text-sm text-gray-400 mb-1' }, '병원 측 해시'),
-                            React.createElement('div', { className: 'font-mono text-purple-400 text-xs break-all' }, verifyResult.hospital_hash)
+                        React.createElement('div', { className: 'bg-white rounded-lg p-4' },
+                            React.createElement('div', { className: 'text-sm text-gray-600 mb-1' }, '병원 측 해시'),
+                            React.createElement('div', { className: 'font-mono text-blue-600 text-xs break-all' }, verifyResult.hospital_hash)
                         )
                     ),
                     React.createElement('div', {
-                        className: `rounded-lg p-4 text-center ${verifyResult.is_match ? 'bg-green-900/50 border border-green-500/50' : 'bg-red-900/50 border border-red-500/50'}`
+                        className: `rounded-lg p-4 text-center ${verifyResult.is_match ? 'bg-blue-50/50 border border-blue-300/50' : 'bg-blue-50/50 border border-blue-300/50'}`
                     },
                         React.createElement('div', { className: 'text-2xl mb-2' }, verifyResult.is_match ? '✅' : '⚠️'),
-                        React.createElement('div', { className: `text-xl font-bold ${verifyResult.is_match ? 'text-green-400' : 'text-red-400'}` }, verifyResult.status),
-                        React.createElement('div', { className: 'text-sm text-gray-300 mt-1' }, verifyResult.message)
+                        React.createElement('div', { className: `text-xl font-bold ${verifyResult.is_match ? 'text-blue-600' : 'text-blue-600'}` }, verifyResult.status),
+                        React.createElement('div', { className: 'text-sm text-gray-700 mt-1' }, verifyResult.message)
                     )
                 )
             )

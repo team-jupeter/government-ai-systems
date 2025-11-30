@@ -62,7 +62,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
     return (
         <div className="space-y-6">
             {/* 헤더 */}
-            <div className="bg-gray-800 rounded-xl p-6">
+            <div className="bg-gray-50 rounded-xl p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                         <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center text-3xl">
@@ -75,7 +75,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                     </div>
                     <button
                         onClick={onBack}
-                        className="text-gray-400 hover:text-white"
+                        className="text-gray-400 hover:text-gray-900"
                     >
                         <i className="fas fa-times text-xl"></i>
                     </button>
@@ -83,15 +83,15 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
             </div>
 
             {/* 탭 */}
-            <div className="flex space-x-2 border-b border-gray-700 pb-2">
+            <div className="flex space-x-2 border-b border-gray-200 pb-2">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-4 py-2 rounded-t-lg transition-colors ${
                             activeTab === tab.id
-                                ? 'bg-gray-800 text-yellow-400 border-b-2 border-yellow-400'
-                                : 'text-gray-400 hover:text-white'
+                                ? 'bg-gray-50 text-yellow-400 border-b-2 border-yellow-400'
+                                : 'text-gray-400 hover:text-gray-900'
                         }`}
                     >
                         <i className={`fas ${tab.icon} mr-2`}></i>
@@ -101,7 +101,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
             </div>
 
             {/* 탭 콘텐츠 */}
-            <div className="bg-gray-800 rounded-xl p-6 min-h-[400px]">
+            <div className="bg-gray-50 rounded-xl p-6 min-h-[400px]">
                 {activeTab === 'lecture' && (
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                 <button
                                     onClick={() => setCurrentWeek(Math.max(1, currentWeek - 1))}
                                     disabled={currentWeek === 1}
-                                    className="p-2 bg-gray-700 rounded-lg disabled:opacity-50"
+                                    className="p-2 bg-gray-100 rounded-lg disabled:opacity-50"
                                 >
                                     <i className="fas fa-chevron-left"></i>
                                 </button>
@@ -120,7 +120,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                 <button
                                     onClick={() => setCurrentWeek(Math.min(courseInfo?.curriculum?.length || 14, currentWeek + 1))}
                                     disabled={currentWeek === courseInfo?.curriculum?.length}
-                                    className="p-2 bg-gray-700 rounded-lg disabled:opacity-50"
+                                    className="p-2 bg-gray-100 rounded-lg disabled:opacity-50"
                                 >
                                     <i className="fas fa-chevron-right"></i>
                                 </button>
@@ -128,7 +128,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                         </div>
                         
                         {/* 강의 영상 영역 (플레이스홀더) */}
-                        <div className="bg-gray-900 rounded-xl aspect-video flex items-center justify-center">
+                        <div className="bg-white rounded-xl aspect-video flex items-center justify-center">
                             <div className="text-center">
                                 <i className="fas fa-play-circle text-6xl text-yellow-400 mb-4"></i>
                                 <p className="text-xl font-semibold">AI 강의 시작</p>
@@ -140,10 +140,10 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                             <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 py-3 rounded-lg font-medium">
                                 <i className="fas fa-play mr-2"></i>강의 시작
                             </button>
-                            <button className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg">
+                            <button className="bg-gray-100 hover:bg-gray-600 px-6 py-3 rounded-lg">
                                 <i className="fas fa-bookmark"></i>
                             </button>
-                            <button className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg">
+                            <button className="bg-gray-100 hover:bg-gray-600 px-6 py-3 rounded-lg">
                                 <i className="fas fa-download"></i>
                             </button>
                         </div>
@@ -168,7 +168,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                 className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${
                                     currentWeek === week.week
                                         ? 'bg-yellow-500 bg-opacity-20 border border-yellow-500'
-                                        : 'bg-gray-700 hover:bg-gray-600'
+                                        : 'bg-gray-100 hover:bg-gray-600'
                                 }`}
                                 onClick={() => {
                                     setCurrentWeek(week.week);
@@ -184,7 +184,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                                 : 'bg-gray-600'
                                     }`}>
                                         {index < currentWeek - 1 ? (
-                                            <i className="fas fa-check text-white"></i>
+                                            <i className="fas fa-check text-gray-900"></i>
                                         ) : (
                                             <span className="font-bold">{week.week}</span>
                                         )}
@@ -202,7 +202,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
 
                 {activeTab === 'materials' && (
                     <div className="space-y-4">
-                        <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                        <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                                 <i className="fas fa-file-pdf text-red-400 text-2xl"></i>
                                 <div>
@@ -214,7 +214,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                 <i className="fas fa-download"></i>
                             </button>
                         </div>
-                        <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                        <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                                 <i className="fas fa-file-code text-blue-400 text-2xl"></i>
                                 <div>
@@ -226,7 +226,7 @@ const AIProfessor = ({ courseId, studentId, onBack }) => {
                                 <i className="fas fa-download"></i>
                             </button>
                         </div>
-                        <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                        <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                                 <i className="fas fa-book text-green-400 text-2xl"></i>
                                 <div>

@@ -110,7 +110,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
         return (
             <div className="space-y-6">
                 {/* 시험 헤더 */}
-                <div className="bg-gray-800 rounded-xl p-4 flex items-center justify-between sticky top-0 z-10">
+                <div className="bg-gray-50 rounded-xl p-4 flex items-center justify-between sticky top-0 z-10">
                     <div>
                         <h2 className="font-semibold">{activeExam.course_name} - {activeExam.title}</h2>
                         <p className="text-sm text-gray-400">문제 {currentQuestion + 1} / {sampleQuestions.length}</p>
@@ -122,7 +122,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                 </div>
 
                 {/* 문제 */}
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-xl mb-6">Q{currentQuestion + 1}. {question.question}</h3>
                     <div className="space-y-3">
                         {question.options.map((option, index) => (
@@ -132,10 +132,10 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                                 className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
                                     answers[question.id] === index
                                         ? 'border-yellow-500 bg-yellow-500 bg-opacity-20'
-                                        : 'border-gray-700 hover:border-gray-600'
+                                        : 'border-gray-200 hover:border-gray-300'
                                 }`}
                             >
-                                <span className="inline-block w-8 h-8 rounded-full bg-gray-700 text-center leading-8 mr-3">
+                                <span className="inline-block w-8 h-8 rounded-full bg-gray-100 text-center leading-8 mr-3">
                                     {String.fromCharCode(65 + index)}
                                 </span>
                                 {option}
@@ -149,7 +149,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                     <button
                         onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
                         disabled={currentQuestion === 0}
-                        className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg disabled:opacity-50"
+                        className="bg-gray-100 hover:bg-gray-600 px-6 py-3 rounded-lg disabled:opacity-50"
                     >
                         <i className="fas fa-chevron-left mr-2"></i>이전
                     </button>
@@ -172,7 +172,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                 </div>
 
                 {/* 문제 번호 표시 */}
-                <div className="bg-gray-800 rounded-xl p-4">
+                <div className="bg-gray-50 rounded-xl p-4">
                     <p className="text-sm text-gray-400 mb-3">문제 목록</p>
                     <div className="flex flex-wrap gap-2">
                         {sampleQuestions.map((_, index) => (
@@ -184,7 +184,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                                         ? 'bg-yellow-500 text-gray-900'
                                         : answers[sampleQuestions[index].id] !== undefined
                                             ? 'bg-green-600'
-                                            : 'bg-gray-700'
+                                            : 'bg-gray-100'
                                 }`}
                             >
                                 {index + 1}
@@ -212,7 +212,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {exams.map(exam => (
-                        <div key={exam.id} className="bg-gray-800 rounded-xl p-5 card-hover">
+                        <div key={exam.id} className="bg-gray-50 rounded-xl p-5 card-hover">
                             <div className="flex items-start justify-between mb-3">
                                 <div>
                                     <span className={`badge ${
@@ -250,9 +250,9 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                     <i className="fas fa-history text-blue-400 mr-2"></i>
                     시험 기록
                 </h2>
-                <div className="bg-gray-800 rounded-xl overflow-hidden">
+                <div className="bg-gray-50 rounded-xl overflow-hidden">
                     <table className="w-full">
-                        <thead className="bg-gray-700">
+                        <thead className="bg-gray-100">
                             <tr>
                                 <th className="text-left p-4">과목</th>
                                 <th className="text-left p-4">시험</th>
@@ -263,7 +263,7 @@ const ExamCenter = ({ studentId, onNavigate }) => {
                         </thead>
                         <tbody>
                             {examHistory.map(record => (
-                                <tr key={record.id} className="border-t border-gray-700">
+                                <tr key={record.id} className="border-t border-gray-200">
                                     <td className="p-4">{record.course_name}</td>
                                     <td className="p-4">{record.title}</td>
                                     <td className="p-4 text-center">

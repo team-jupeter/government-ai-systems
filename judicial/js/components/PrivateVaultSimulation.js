@@ -137,7 +137,7 @@ const PrivateVaultSimulation = () => {
                     <h2 className="text-3xl font-bold mb-4">
                         <i className="fas fa-database mr-3 text-amber-400"></i>증거 데이터 인출 시뮬레이션
                     </h2>
-                    <p className="text-gray-400">원고·피고 프라이빗 금고 및 국가데이터처에서 소송 증거를 자동 수집합니다</p>
+                    <p className="text-gray-500">원고·피고 프라이빗 금고 및 국가데이터처에서 소송 증거를 자동 수집합니다</p>
                 </div>
                 
                 {/* 두 개의 버튼 */}
@@ -148,7 +148,7 @@ const PrivateVaultSimulation = () => {
                         className={`p-6 rounded-xl border-2 transition-all ${
                             activeSimulation === 'vault' && isRunning
                                 ? 'border-amber-500 bg-amber-900/30'
-                                : 'border-amber-500/50 bg-gray-800 hover:bg-amber-900/20 hover:border-amber-400'
+                                : 'border-amber-500/50 bg-gray-50 hover:bg-amber-900/20 hover:border-amber-400'
                         } ${isRunning ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                         <div className="flex items-center justify-center gap-4">
@@ -157,7 +157,7 @@ const PrivateVaultSimulation = () => {
                             </div>
                             <div className="text-left">
                                 <h3 className="text-xl font-bold text-amber-400">프라이빗 데이터 금고</h3>
-                                <p className="text-sm text-gray-400">원고·피고 개인 금고에서 증거 인출</p>
+                                <p className="text-sm text-gray-500">원고·피고 개인 금고에서 증거 인출</p>
                             </div>
                         </div>
                     </button>
@@ -168,7 +168,7 @@ const PrivateVaultSimulation = () => {
                         className={`p-6 rounded-xl border-2 transition-all ${
                             activeSimulation === 'ndr' && isRunning
                                 ? 'border-cyan-500 bg-cyan-900/30'
-                                : 'border-cyan-500/50 bg-gray-800 hover:bg-cyan-900/20 hover:border-cyan-400'
+                                : 'border-cyan-500/50 bg-gray-50 hover:bg-cyan-900/20 hover:border-cyan-400'
                         } ${isRunning ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                         <div className="flex items-center justify-center gap-4">
@@ -177,7 +177,7 @@ const PrivateVaultSimulation = () => {
                             </div>
                             <div className="text-left">
                                 <h3 className="text-xl font-bold text-cyan-400">국가데이터처 연계</h3>
-                                <p className="text-sm text-gray-400">공공·민간 503만+ 노드에서 데이터 인출</p>
+                                <p className="text-sm text-gray-500">공공·민간 503만+ 노드에서 데이터 인출</p>
                             </div>
                         </div>
                     </button>
@@ -185,7 +185,7 @@ const PrivateVaultSimulation = () => {
                 
                 {/* 시뮬레이션 영역 */}
                 {activeSimulation && (
-                    <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
+                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                         {/* 프라이빗 금고 시뮬레이션 */}
                         {activeSimulation === 'vault' && (
                             <div className="p-6">
@@ -198,19 +198,19 @@ const PrivateVaultSimulation = () => {
                                     {vaultPhases.map((p, i) => (
                                         <div key={i} className="flex items-center">
                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                                                i < phase ? 'bg-green-600 text-white' :
-                                                i === phase && isRunning ? 'bg-amber-600 text-white animate-pulse' :
-                                                'bg-gray-700 text-gray-400'
+                                                i < phase ? 'bg-green-600 text-gray-900' :
+                                                i === phase && isRunning ? 'bg-amber-600 text-gray-900 animate-pulse' :
+                                                'bg-gray-100 text-gray-500'
                                             }`}>
                                                 {i < phase ? '✓' : i + 1}
                                             </div>
                                             {i < vaultPhases.length - 1 && (
-                                                <div className={`w-12 h-1 mx-1 ${i < phase ? 'bg-green-600' : 'bg-gray-700'}`}></div>
+                                                <div className={`w-12 h-1 mx-1 ${i < phase ? 'bg-green-600' : 'bg-gray-100'}`}></div>
                                             )}
                                         </div>
                                     ))}
                                 </div>
-                                <div className="text-center text-sm text-gray-400 mb-6">
+                                <div className="text-center text-sm text-gray-500 mb-6">
                                     {isRunning ? vaultPhases[phase]?.name : (phase >= vaultPhases.length ? '✅ 완료' : '대기 중')}
                                 </div>
                                 
@@ -239,7 +239,7 @@ const PrivateVaultSimulation = () => {
                                                 <div key={i} className={`flex items-center gap-2 p-2 rounded transition-all ${
                                                     extractedData.find(e => e.hash === d.hash) 
                                                         ? 'bg-blue-600/30 border border-blue-500/50' 
-                                                        : 'bg-gray-800/50'
+                                                        : 'bg-gray-50/50'
                                                 }`}>
                                                     <i className={`fas fa-${d.type === '계약서' ? 'file-contract' : d.type === '이메일' ? 'envelope' : d.type === '문자메시지' ? 'comment' : d.type === '금융거래' ? 'credit-card' : 'image'} text-blue-400`}></i>
                                                     <span className="text-sm flex-1">{d.desc}</span>
@@ -274,7 +274,7 @@ const PrivateVaultSimulation = () => {
                                                 <div key={i} className={`flex items-center gap-2 p-2 rounded transition-all ${
                                                     extractedData.find(e => e.hash === d.hash) 
                                                         ? 'bg-red-600/30 border border-red-500/50' 
-                                                        : 'bg-gray-800/50'
+                                                        : 'bg-gray-50/50'
                                                 }`}>
                                                     <i className={`fas fa-${d.type === '수리내역' ? 'tools' : d.type === '사진' ? 'image' : 'comment'} text-red-400`}></i>
                                                     <span className="text-sm flex-1">{d.desc}</span>
@@ -321,25 +321,25 @@ const PrivateVaultSimulation = () => {
                                     {ndrPhases.map((p, i) => (
                                         <div key={i} className="flex items-center">
                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                                                i < phase ? 'bg-green-600 text-white' :
-                                                i === phase && isRunning ? 'bg-cyan-600 text-white animate-pulse' :
-                                                'bg-gray-700 text-gray-400'
+                                                i < phase ? 'bg-green-600 text-gray-900' :
+                                                i === phase && isRunning ? 'bg-cyan-600 text-gray-900 animate-pulse' :
+                                                'bg-gray-100 text-gray-500'
                                             }`}>
                                                 {i < phase ? '✓' : i + 1}
                                             </div>
                                             {i < ndrPhases.length - 1 && (
-                                                <div className={`w-12 h-1 mx-1 ${i < phase ? 'bg-green-600' : 'bg-gray-700'}`}></div>
+                                                <div className={`w-12 h-1 mx-1 ${i < phase ? 'bg-green-600' : 'bg-gray-100'}`}></div>
                                             )}
                                         </div>
                                     ))}
                                 </div>
-                                <div className="text-center text-sm text-gray-400 mb-6">
+                                <div className="text-center text-sm text-gray-500 mb-6">
                                     {isRunning ? ndrPhases[phase]?.name : (phase >= ndrPhases.length ? '✅ 완료' : '대기 중')}
                                 </div>
                                 
                                 {/* 5계층 구조 시각화 */}
-                                <div className="bg-gray-800 rounded-xl p-4 mb-6">
-                                    <h4 className="text-sm font-bold text-gray-400 mb-4">오픈해시 5계층 구조</h4>
+                                <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                                    <h4 className="text-sm font-bold text-gray-500 mb-4">오픈해시 5계층 구조</h4>
                                     <div className="space-y-3">
                                         {[
                                             { layer: 'Layer 0', name: '국가데이터처', nodes: '3 노드', color: 'yellow', active: phase >= 1 },
@@ -349,7 +349,7 @@ const PrivateVaultSimulation = () => {
                                             { layer: 'Layer 4', name: 'Archive', nodes: '영구보존', color: 'gray', active: phase >= 5 }
                                         ].map((l, i) => (
                                             <div key={i} className={`flex items-center gap-4 p-3 rounded-lg transition-all ${
-                                                l.active && isRunning ? `bg-${l.color}-900/30 border border-${l.color}-500/50` : 'bg-gray-900'
+                                                l.active && isRunning ? `bg-${l.color}-900/30 border border-${l.color}-500/50` : 'bg-white'
                                             }`}>
                                                 <div className={`w-10 h-10 rounded-full bg-${l.color}-600/30 flex items-center justify-center`}>
                                                     <span className={`text-${l.color}-400 font-bold text-sm`}>{l.layer.slice(-1)}</span>
@@ -372,7 +372,7 @@ const PrivateVaultSimulation = () => {
                                         <div key={i} className={`p-3 rounded-lg text-center transition-all ${
                                             phase >= 2 + Math.floor(i / 3) && isRunning 
                                                 ? 'bg-cyan-900/30 border border-cyan-500/50 scale-105' 
-                                                : 'bg-gray-800'
+                                                : 'bg-gray-50'
                                         }`}>
                                             <div className="text-2xl mb-1">{s.icon}</div>
                                             <div className="text-xs truncate">{s.agency}</div>
@@ -388,7 +388,7 @@ const PrivateVaultSimulation = () => {
                                         </h4>
                                         <div className="space-y-2">
                                             {extractedData.map((d, i) => (
-                                                <div key={i} className="flex items-center gap-4 p-3 bg-gray-800 rounded-lg">
+                                                <div key={i} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                                                     <div className="w-10 h-10 bg-cyan-600/30 rounded-full flex items-center justify-center">
                                                         <i className="fas fa-file-alt text-cyan-400"></i>
                                                     </div>
@@ -398,7 +398,7 @@ const PrivateVaultSimulation = () => {
                                                     </div>
                                                     <div className="text-right">
                                                         <div className="text-sm text-green-400">관련도 {d.relevance}%</div>
-                                                        <div className="w-20 h-2 bg-gray-700 rounded-full mt-1">
+                                                        <div className="w-20 h-2 bg-gray-100 rounded-full mt-1">
                                                             <div className="h-full bg-green-500 rounded-full" style={{width: `${d.relevance}%`}}></div>
                                                         </div>
                                                     </div>
@@ -411,7 +411,7 @@ const PrivateVaultSimulation = () => {
                         )}
                         
                         {/* 하단 정보 */}
-                        <div className="bg-gray-800 px-6 py-4 border-t border-gray-700">
+                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                             <div className="flex flex-wrap justify-between items-center gap-4 text-sm">
                                 <div className="flex items-center gap-4">
                                     <span className="text-gray-500">
@@ -437,7 +437,7 @@ const PrivateVaultSimulation = () => {
                         <h4 className="font-bold text-amber-400 mb-3">
                             <i className="fas fa-vault mr-2"></i>프라이빗 데이터 금고란?
                         </h4>
-                        <ul className="text-sm space-y-2 text-gray-300">
+                        <ul className="text-sm space-y-2 text-gray-600">
                             <li>• 개인 단말기에 AES-256-GCM으로 암호화 저장</li>
                             <li>• 클라우드에는 SHA-256 해시값(32bytes)만 기록</li>
                             <li>• 원고·피고 각자의 일상/업무 기록에서 증거 추출</li>
@@ -448,7 +448,7 @@ const PrivateVaultSimulation = () => {
                         <h4 className="font-bold text-cyan-400 mb-3">
                             <i className="fas fa-landmark mr-2"></i>국가데이터처 연계란?
                         </h4>
-                        <ul className="text-sm space-y-2 text-gray-300">
+                        <ul className="text-sm space-y-2 text-gray-600">
                             <li>• 공공 18개 부처 + 226개 지자체 데이터 통합</li>
                             <li>• 민간: 병원 3,500개, 학교 24,000개, 시장 1,500개</li>
                             <li>• 총 503만+ 노드에서 소송 관련 데이터 인출</li>

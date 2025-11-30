@@ -241,7 +241,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
 
             {/* 도움말 패널 */}
             {isOpen && (
-                <div className="fixed bottom-24 right-6 w-96 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden z-50">
+                <div className="fixed bottom-24 right-6 w-96 bg-gray-50 rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50">
                     {/* 헤더 */}
                     <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-4">
                         <h3 className="font-bold text-gray-900">도움말 센터</h3>
@@ -249,13 +249,13 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                     </div>
 
                     {/* 탭 */}
-                    <div className="flex border-b border-gray-700">
+                    <div className="flex border-b border-gray-200">
                         <button
                             onClick={() => setActiveTab('ai')}
                             className={`flex-1 py-3 text-sm font-medium transition-colors ${
                                 activeTab === 'ai' 
-                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-700' 
-                                    : 'text-gray-400 hover:text-white'
+                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-100' 
+                                    : 'text-gray-400 hover:text-gray-900'
                             }`}
                         >
                             <i className="fas fa-robot mr-2"></i>AI 상담
@@ -264,8 +264,8 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                             onClick={() => setActiveTab('guide')}
                             className={`flex-1 py-3 text-sm font-medium transition-colors ${
                                 activeTab === 'guide' 
-                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-700' 
-                                    : 'text-gray-400 hover:text-white'
+                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-100' 
+                                    : 'text-gray-400 hover:text-gray-900'
                             }`}
                         >
                             <i className="fas fa-book mr-2"></i>가이드
@@ -274,8 +274,8 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                             onClick={() => setActiveTab('shortcuts')}
                             className={`flex-1 py-3 text-sm font-medium transition-colors ${
                                 activeTab === 'shortcuts' 
-                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-700' 
-                                    : 'text-gray-400 hover:text-white'
+                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-100' 
+                                    : 'text-gray-400 hover:text-gray-900'
                             }`}
                         >
                             <i className="fas fa-keyboard mr-2"></i>단축키
@@ -284,8 +284,8 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                             onClick={() => setActiveTab('contact')}
                             className={`flex-1 py-3 text-sm font-medium transition-colors ${
                                 activeTab === 'contact' 
-                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-700' 
-                                    : 'text-gray-400 hover:text-white'
+                                    ? 'text-yellow-400 border-b-2 border-yellow-400 bg-gray-100' 
+                                    : 'text-gray-400 hover:text-gray-900'
                             }`}
                         >
                             <i className="fas fa-headset mr-2"></i>문의
@@ -307,8 +307,8 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                             )}
                                             <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${
                                                 message.type === 'user' 
-                                                    ? 'bg-yellow-600 text-white' 
-                                                    : 'bg-gray-700 text-gray-100'
+                                                    ? 'bg-yellow-600 text-gray-900' 
+                                                    : 'bg-gray-100 text-gray-900'
                                             }`}>
                                                 <p className="whitespace-pre-wrap">{message.content}</p>
                                             </div>
@@ -319,7 +319,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                             <div className="w-7 h-7 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center text-xs mr-2">
                                                 🎓
                                             </div>
-                                            <div className="bg-gray-700 rounded-2xl px-4 py-3">
+                                            <div className="bg-gray-100 rounded-2xl px-4 py-3">
                                                 <div className="flex space-x-1">
                                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -333,7 +333,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
 
                                 {/* 빠른 질문 */}
                                 {chatMessages.length <= 2 && (
-                                    <div className="px-3 py-2 border-t border-gray-700">
+                                    <div className="px-3 py-2 border-t border-gray-200">
                                         <p className="text-xs text-gray-500 mb-2">자주 묻는 질문</p>
                                         <div className="flex flex-wrap gap-1">
                                             {quickQuestions.map((q, i) => (
@@ -343,7 +343,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                                         setInputText(q);
                                                         setTimeout(() => sendMessage(), 100);
                                                     }}
-                                                    className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded-full text-gray-300"
+                                                    className="text-xs bg-gray-100 hover:bg-gray-600 px-2 py-1 rounded-full text-gray-600"
                                                 >
                                                     {q}
                                                 </button>
@@ -353,7 +353,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                 )}
 
                                 {/* 입력 영역 */}
-                                <div className="p-3 border-t border-gray-700">
+                                <div className="p-3 border-t border-gray-200">
                                     <div className="flex space-x-2">
                                         <input
                                             type="text"
@@ -361,7 +361,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                             onChange={(e) => setInputText(e.target.value)}
                                             onKeyPress={handleKeyPress}
                                             placeholder="궁금한 점을 물어보세요..."
-                                            className="flex-1 bg-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                         />
                                         <button
                                             onClick={sendMessage}
@@ -378,7 +378,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                         {activeTab === 'guide' && (
                             <div className="p-3 space-y-2 overflow-y-auto">
                                 {guides.map((guide, index) => (
-                                    <details key={index} className="bg-gray-700 rounded-lg">
+                                    <details key={index} className="bg-gray-100 rounded-lg">
                                         <summary className="p-3 cursor-pointer flex items-center space-x-3 hover:bg-gray-600 rounded-lg">
                                             <i className={`fas ${guide.icon} text-yellow-400`}></i>
                                             <span className="text-sm font-medium">{guide.title}</span>
@@ -394,7 +394,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                         {activeTab === 'shortcuts' && (
                             <div className="p-4 space-y-3 overflow-y-auto">
                                 {shortcuts.map((shortcut, index) => (
-                                    <div key={index} className="flex items-center justify-between bg-gray-700 rounded-lg p-3">
+                                    <div key={index} className="flex items-center justify-between bg-gray-100 rounded-lg p-3">
                                         <kbd className="bg-gray-600 px-2 py-1 rounded text-xs font-mono">{shortcut.keys}</kbd>
                                         <span className="text-sm text-gray-400">{shortcut.desc}</span>
                                     </div>
@@ -404,7 +404,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
 
                         {activeTab === 'contact' && (
                             <div className="p-4 space-y-4 overflow-y-auto">
-                                <div className="bg-gray-700 rounded-lg p-4">
+                                <div className="bg-gray-100 rounded-lg p-4">
                                     <div className="flex items-center space-x-3 mb-2">
                                         <i className="fas fa-robot text-yellow-400"></i>
                                         <span className="font-medium">AI 상담</span>
@@ -418,7 +418,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                     </button>
                                 </div>
                                 
-                                <div className="bg-gray-700 rounded-lg p-4">
+                                <div className="bg-gray-100 rounded-lg p-4">
                                     <div className="flex items-center space-x-3 mb-2">
                                         <i className="fas fa-envelope text-blue-400"></i>
                                         <span className="font-medium">이메일</span>
@@ -426,7 +426,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                                     <p className="text-sm text-gray-400">support@ai-university.kr</p>
                                 </div>
                                 
-                                <div className="bg-gray-700 rounded-lg p-4">
+                                <div className="bg-gray-100 rounded-lg p-4">
                                     <div className="flex items-center space-x-3 mb-2">
                                         <i className="fas fa-phone text-green-400"></i>
                                         <span className="font-medium">전화</span>
@@ -439,7 +439,7 @@ AI가 학습 이력을 분석하여 최적의 직업을 추천합니다:
                     </div>
 
                     {/* 푸터 */}
-                    <div className="p-3 border-t border-gray-700 flex items-center justify-between">
+                    <div className="p-3 border-t border-gray-200 flex items-center justify-between">
                         <div className="flex items-center space-x-2 text-xs text-gray-500">
                             <i className="fas fa-shield-alt text-green-400"></i>
                             <span>OpenHash 인증 시스템</span>

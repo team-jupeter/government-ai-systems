@@ -1,60 +1,51 @@
-const Header = ({ onShowModal }) => {
+const Header = () => {
     const stats = [
-        { icon: '⚡', value: '0.015ms', label: '처리 속도' },
-        { icon: '🎯', value: '99.4%', label: 'AI 정확도' },
-        { icon: '🌱', value: '88.6%', label: '전력 절감' },
-        { icon: '🔗', value: '100K TPS', label: '처리량' }
+        { icon: '💰', value: '424만', sub: 'TPS 처리량', color: 'text-blue-600' },
+        { icon: '⚡', value: '0.3초', sub: '거래 완결', color: 'text-cyan-600' },
+        { icon: '🔋', value: '98.5%', sub: '에너지 절감', color: 'text-green-600' },
+        { icon: '🛡️', value: '100%', sub: '양자내성', color: 'text-amber-600' }
     ];
 
-    return React.createElement('div', null,
-        React.createElement('header', { className: 'gradient-currency text-white py-16 px-4 relative overflow-hidden' },
-            React.createElement('div', { className: 'absolute inset-0 opacity-10' },
-                React.createElement('div', { className: 'absolute top-10 left-10 w-32 h-32 border border-yellow-500 rounded-full' }),
-                React.createElement('div', { className: 'absolute bottom-10 right-20 w-24 h-24 border border-yellow-500 rounded-full' })
-            ),
-            React.createElement('div', { className: 'max-w-6xl mx-auto text-center relative z-10' },
-                React.createElement('div', { className: 'mb-6' },
-                    React.createElement('div', { className: 'inline-block p-6 bg-yellow-500/20 rounded-full pulse-gold' },
-                        React.createElement('i', { className: 'fas fa-coins text-6xl text-yellow-400' })
-                    )
-                ),
-                React.createElement('div', { className: 'inline-block px-4 py-1 bg-yellow-500/30 rounded-full text-sm mb-4' },
-                    '🔗 OpenHash + FPGA + AI 통합 시스템'
-                ),
-                React.createElement('h1', { className: 'text-4xl md:text-5xl font-bold mb-4' },
-                    'FPGA 및 AI 기반 통합 디지털 화폐'
-                ),
-                React.createElement('p', { className: 'text-lg opacity-90 mb-2' },
-                    'Ultra-High Speed Integrated Digital Currency System'
-                ),
-                React.createElement('p', { className: 'text-md opacity-80 mb-8 max-w-3xl mx-auto' },
-                    '0.015ms 초고속 처리 | 99.4% AI 검증 | 실시간 재무제표 | 자동 세무처리 | 크로스체인'
-                ),
-                React.createElement('div', { className: 'grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto' },
-                    stats.map((stat, i) =>
-                        React.createElement('div', { 
-                            key: i, 
-                            className: 'bg-white/10 rounded-xl p-4 card-hover cursor-pointer'
-                        },
-                            React.createElement('div', { className: 'text-2xl mb-1' }, stat.icon),
-                            React.createElement('div', { className: 'text-2xl font-bold text-yellow-400' }, stat.value),
-                            React.createElement('div', { className: 'text-sm opacity-80' }, stat.label)
-                        )
-                    )
-                )
-            )
-        ),
-        React.createElement('div', { className: 'bg-gray-800 py-3 sticky top-0 z-40 border-b border-gray-700' },
-            React.createElement('div', { className: 'max-w-6xl mx-auto px-4 flex justify-between items-center' },
-                React.createElement('a', { href: '/', className: 'text-yellow-400 hover:text-yellow-300 flex items-center gap-2' },
-                    React.createElement('i', { className: 'fas fa-arrow-left' }),
-                    '포털로 돌아가기'
-                ),
-                React.createElement('div', { className: 'flex items-center gap-2' },
-                    React.createElement('span', { className: 'w-2 h-2 bg-green-500 rounded-full animate-pulse' }),
-                    React.createElement('span', { className: 'text-green-400 text-sm' }, 'System Online')
-                )
-            )
-        )
+    return (
+        <div>
+            <a href="http://100.30.14.224/openhash.html" target="_blank" className="block bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 py-3 px-4 text-center hover:opacity-90 transition-opacity">
+                <span className="text-white font-semibold">📘 오픈해시 설명서 보기 →</span>
+            </a>
+            <header className="gradient-currency py-16 px-4">
+                <div className="max-w-6xl mx-auto text-center">
+                    <div className="mb-6">
+                        <div className="inline-block p-6 bg-white/20 rounded-full pulse-gov24">
+                            <i className="fas fa-coins text-6xl text-white"></i>
+                        </div>
+                    </div>
+                    <div className="inline-block px-4 py-1 bg-white/25 rounded-full text-sm mb-4 text-white font-medium">
+                        💎 FPGA + AI + 양자내성암호 + OpenHash
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4 text-white">통합 디지털 화폐 시스템</h1>
+                    <p className="text-lg text-white/95 mb-2 font-medium">CBDC·가상자산·전자화폐를 하나의 플랫폼에서</p>
+                    <p className="text-md text-white/90 mb-8">한국은행·금융위원회 협력 | 실시간 크로스체인 거래</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                        {stats.map((s, i) => (
+                            <div key={i} className="bg-white rounded-xl p-4 card-hover transition-all shadow-md">
+                                <div className="text-3xl mb-2">{s.icon}</div>
+                                <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
+                                <div className="text-sm text-gray-600 font-medium">{s.sub}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </header>
+            <div className="bg-white py-3 sticky top-0 z-40 border-b border-gray-200 shadow-sm">
+                <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
+                    <a href="/" className="text-blue-600 hover:text-blue-700 font-medium">
+                        <i className="fas fa-arrow-left mr-2"></i>포털
+                    </a>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span className="text-green-600 text-sm font-medium">통합 시스템 Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };

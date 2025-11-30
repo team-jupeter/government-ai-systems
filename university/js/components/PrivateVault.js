@@ -75,7 +75,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                     </div>
                     <div>
                         <h3 className="font-semibold text-lg">금고 상태: 안전</h3>
-                        <p className="text-gray-300 text-sm">모든 데이터는 암호화되어 있으며, 본인만 접근 가능합니다.</p>
+                        <p className="text-gray-600 text-sm">모든 데이터는 암호화되어 있으며, 본인만 접근 가능합니다.</p>
                         <p className="text-xs text-gray-400 mt-2 font-mono">
                             Hash: {records.pdv_hash?.substring(0, 32)}...
                         </p>
@@ -84,7 +84,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
             </div>
 
             {/* 탭 */}
-            <div className="flex space-x-2 border-b border-gray-700">
+            <div className="flex space-x-2 border-b border-gray-200">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
@@ -92,7 +92,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                         className={`px-4 py-3 font-medium transition-colors ${
                             activeTab === tab.id 
                                 ? 'text-yellow-400 border-b-2 border-yellow-400' 
-                                : 'text-gray-400 hover:text-white'
+                                : 'text-gray-400 hover:text-gray-900'
                         }`}
                     >
                         <i className={`fas ${tab.icon} mr-2`}></i>
@@ -102,33 +102,33 @@ const PrivateVault = ({ studentId, onNavigate }) => {
             </div>
 
             {/* 탭 콘텐츠 */}
-            <div className="bg-gray-800 rounded-xl p-6">
+            <div className="bg-gray-50 rounded-xl p-6">
                 {activeTab === 'overview' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="bg-gray-700 rounded-lg p-4 text-center">
+                            <div className="bg-gray-100 rounded-lg p-4 text-center">
                                 <i className="fas fa-book text-blue-400 text-2xl mb-2"></i>
                                 <p className="text-2xl font-bold">{records.enrollments?.length || 0}</p>
                                 <p className="text-sm text-gray-400">수강 과목</p>
                             </div>
-                            <div className="bg-gray-700 rounded-lg p-4 text-center">
+                            <div className="bg-gray-100 rounded-lg p-4 text-center">
                                 <i className="fas fa-clipboard-check text-green-400 text-2xl mb-2"></i>
                                 <p className="text-2xl font-bold">{records.grades?.length || 0}</p>
                                 <p className="text-sm text-gray-400">시험 기록</p>
                             </div>
-                            <div className="bg-gray-700 rounded-lg p-4 text-center">
+                            <div className="bg-gray-100 rounded-lg p-4 text-center">
                                 <i className="fas fa-clock text-yellow-400 text-2xl mb-2"></i>
                                 <p className="text-2xl font-bold">{records.total_learning_hours}</p>
                                 <p className="text-sm text-gray-400">학습 시간</p>
                             </div>
-                            <div className="bg-gray-700 rounded-lg p-4 text-center">
-                                <i className="fas fa-file-alt text-purple-400 text-2xl mb-2"></i>
+                            <div className="bg-gray-100 rounded-lg p-4 text-center">
+                                <i className="fas fa-file-alt text-blue-600 text-2xl mb-2"></i>
                                 <p className="text-2xl font-bold">{records.thesis?.length || 0}</p>
                                 <p className="text-sm text-gray-400">논문</p>
                             </div>
                         </div>
 
-                        <div className="bg-gray-700 rounded-lg p-4">
+                        <div className="bg-gray-100 rounded-lg p-4">
                             <h4 className="font-medium mb-3">
                                 <i className="fas fa-info-circle text-blue-400 mr-2"></i>
                                 개인정보 금고란?
@@ -147,7 +147,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                     <div className="space-y-4">
                         <h3 className="font-semibold">수강 기록 ({records.enrollments?.length || 0}개)</h3>
                         {records.enrollments?.map((course, index) => (
-                            <div key={index} className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                            <div key={index} className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
                                 <div>
                                     <p className="font-medium">{course.course_name}</p>
                                     <p className="text-sm text-gray-400">등록일: {course.enrolled_at}</p>
@@ -164,7 +164,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                     <div className="space-y-4">
                         <h3 className="font-semibold">성적 기록 ({records.grades?.length || 0}개)</h3>
                         {records.grades?.map((grade, index) => (
-                            <div key={index} className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                            <div key={index} className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
                                 <div>
                                     <p className="font-medium">{grade.course_name}</p>
                                     <p className="text-sm text-gray-400">
@@ -188,7 +188,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <button
                                 onClick={() => generateCertificate('성적증명서')}
-                                className="bg-gray-700 hover:bg-gray-600 rounded-lg p-6 text-left"
+                                className="bg-gray-100 hover:bg-gray-600 rounded-lg p-6 text-left"
                             >
                                 <i className="fas fa-file-alt text-blue-400 text-3xl mb-3"></i>
                                 <h4 className="font-medium">성적증명서</h4>
@@ -196,7 +196,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                             </button>
                             <button
                                 onClick={() => generateCertificate('수강증명서')}
-                                className="bg-gray-700 hover:bg-gray-600 rounded-lg p-6 text-left"
+                                className="bg-gray-100 hover:bg-gray-600 rounded-lg p-6 text-left"
                             >
                                 <i className="fas fa-graduation-cap text-green-400 text-3xl mb-3"></i>
                                 <h4 className="font-medium">수강증명서</h4>
@@ -204,7 +204,7 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                             </button>
                             <button
                                 onClick={() => generateCertificate('학습시간증명서')}
-                                className="bg-gray-700 hover:bg-gray-600 rounded-lg p-6 text-left"
+                                className="bg-gray-100 hover:bg-gray-600 rounded-lg p-6 text-left"
                             >
                                 <i className="fas fa-clock text-yellow-400 text-3xl mb-3"></i>
                                 <h4 className="font-medium">학습시간증명서</h4>
@@ -212,9 +212,9 @@ const PrivateVault = ({ studentId, onNavigate }) => {
                             </button>
                             <button
                                 onClick={() => generateCertificate('역량인증서')}
-                                className="bg-gray-700 hover:bg-gray-600 rounded-lg p-6 text-left"
+                                className="bg-gray-100 hover:bg-gray-600 rounded-lg p-6 text-left"
                             >
-                                <i className="fas fa-award text-purple-400 text-3xl mb-3"></i>
+                                <i className="fas fa-award text-blue-600 text-3xl mb-3"></i>
                                 <h4 className="font-medium">역량인증서</h4>
                                 <p className="text-sm text-gray-400">습득 역량 인증</p>
                             </button>

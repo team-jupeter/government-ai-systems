@@ -111,7 +111,7 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                 <p className="text-gray-400 mt-1">AI와 함께 단계별로 졸업 논문을 작성하세요</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6">
+            <div className="bg-gray-50 rounded-xl p-6">
                 <div className="flex items-center justify-between overflow-x-auto pb-2">
                     {steps.map((step, index) => (
                         <div key={step.id} className="flex items-center">
@@ -124,14 +124,14 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                             >
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
                                     currentStep === step.id ? 'bg-yellow-500 bg-opacity-20 border-2 border-yellow-500' :
-                                    currentStep > step.id ? 'bg-green-500 bg-opacity-20' : 'bg-gray-700'
+                                    currentStep > step.id ? 'bg-green-500 bg-opacity-20' : 'bg-gray-100'
                                 }`}>
                                     {currentStep > step.id ? <i className="fas fa-check"></i> : <i className={`fas ${step.icon}`}></i>}
                                 </div>
                                 <span className="text-xs font-medium">{step.name}</span>
                             </button>
                             {index < steps.length - 1 && (
-                                <div className={`w-12 h-0.5 mx-2 ${currentStep > step.id ? 'bg-green-500' : 'bg-gray-700'}`}></div>
+                                <div className={`w-12 h-0.5 mx-2 ${currentStep > step.id ? 'bg-green-500' : 'bg-gray-100'}`}></div>
                             )}
                         </div>
                     ))}
@@ -148,14 +148,14 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                 </div>
             </div>
 
-            <div className="bg-gray-800 rounded-xl overflow-hidden">
+            <div className="bg-gray-50 rounded-xl overflow-hidden">
                 <div className="h-96 overflow-y-auto p-4 space-y-4">
                     {chatMessages.map(message => (
                         <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                             {message.type === 'ai' && (
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center text-sm mr-2 flex-shrink-0">🎓</div>
                             )}
-                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-700'}`}>
+                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-100'}`}>
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                             </div>
                         </div>
@@ -163,7 +163,7 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                     {isLoading && (
                         <div className="flex justify-start">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center text-sm mr-2">🎓</div>
-                            <div className="bg-gray-700 rounded-2xl px-4 py-3">
+                            <div className="bg-gray-100 rounded-2xl px-4 py-3">
                                 <div className="flex space-x-2">
                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -175,7 +175,7 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                     <div ref={chatEndRef}></div>
                 </div>
 
-                <div className="p-4 border-t border-gray-700">
+                <div className="p-4 border-t border-gray-200">
                     <div className="flex space-x-2">
                         <textarea
                             value={inputText}
@@ -183,7 +183,7 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                             onKeyPress={handleKeyPress}
                             placeholder="메시지를 입력하세요... (Shift+Enter로 줄바꿈)"
                             rows={2}
-                            className="flex-1 bg-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
+                            className="flex-1 bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
                         />
                         <button
                             onClick={sendMessage}
@@ -200,7 +200,7 @@ const ThesisAssistant = ({ studentId, onNavigate }) => {
                 <button
                     onClick={() => handleStepChange(Math.max(1, currentStep - 1))}
                     disabled={currentStep === 1}
-                    className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg disabled:opacity-50"
+                    className="bg-gray-100 hover:bg-gray-600 px-6 py-3 rounded-lg disabled:opacity-50"
                 >
                     <i className="fas fa-chevron-left mr-2"></i>이전 단계
                 </button>

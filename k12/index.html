@@ -10,22 +10,52 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        .gradient-edu { background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #3182ce 100%); }
-        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        .float { animation: float 3s ease-in-out infinite; }
+        * {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .gradient-edu { 
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        }
+        .card-hover { 
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        }
+        @keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-10px); } 
+        }
+        .float { 
+            animation: float 3s ease-in-out infinite; 
+        }
+        @keyframes pulse-gov24 { 
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
+            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        }
+        .pulse-gov24 { 
+            animation: pulse-gov24 2s ease-in-out infinite; 
+        }
+        .section-white { background-color: white; }
+        .section-gray { background-color: #f8f9fa; }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
     <div id="root"></div>
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/FutureIndustry.js"></script>
-    <script type="text/babel" src="js/components/AITeachers.js"></script>
-    <script type="text/babel" src="js/components/StudentAnalysis.js"></script>
-    <script type="text/babel" src="js/components/BalanceMechanism.js"></script>
-    <script type="text/babel" src="js/components/CareerRecommend.js"></script>
-    <script type="text/babel" src="js/components/EducationExplainer.js"></script>
-    <script type="text/babel" src="js/app.js"></script>
+    <script type="text/babel" src="js/components/Header.js?v=7"></script>
+    <script type="text/babel" src="js/components/FutureIndustry.js?v=7"></script>
+    <script type="text/babel" src="js/components/AITeachers.js?v=7"></script>
+    <script type="text/babel" src="js/components/StudentAnalysis.js?v=7"></script>
+    <script type="text/babel" src="js/components/BalanceMechanism.js?v=7"></script>
+    <script type="text/babel" src="js/components/CareerRecommend.js?v=7"></script>
+    <script type="text/babel" src="js/components/EducationExplainer.js?v=7"></script>
+    <script type="text/babel" src="js/app.js?v=7"></script>
 </body>
 </html>

@@ -3,38 +3,682 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오픈해시(OpenHash) - 차세대 분산 신뢰 시스템</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/styles.css">
+    <title>오픈해시 기술 | 국가 자동화 플랫폼</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        
+        :root {
+            --gov-blue: #2563eb;
+            --gov-navy: #1e3a5f;
+            --gov-light: #e8f4fd;
+            --accent-cyan: #0891b2;
+        }
+        
+        /* 상단 네비게이션 */
+        .top-nav {
+            background: var(--gov-navy);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        .top-nav .logo .icon {
+            font-size: 24px;
+        }
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .top-nav a:hover { opacity: 1; text-decoration: underline; }
+        
+        /* 히어로 섹션 */
+        .hero {
+            background: linear-gradient(135deg, var(--gov-navy) 0%, var(--gov-blue) 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat .number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        .hero-stat .label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* 섹션 공통 */
+        .section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8f9fa;
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--gov-blue);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-header i {
+            font-size: 20px;
+            color: var(--gov-blue);
+        }
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gov-navy);
+        }
+        .section-body {
+            padding: 24px;
+        }
+        
+        /* 특징 그리드 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        .feature-card:hover {
+            border-color: var(--gov-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .feature-card .icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gov-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--gov-navy);
+        }
+        .feature-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 비교 테이블 */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 14px;
+        }
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--gov-navy);
+        }
+        .comparison-table tr:hover {
+            background: #fafafa;
+        }
+        .comparison-table .highlight {
+            color: var(--gov-blue);
+            font-weight: 600;
+        }
+        .comparison-table .win {
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        /* 아키텍처 다이어그램 */
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .arch-layer {
+            background: #f8f9fa;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 16px 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.2s;
+        }
+        .arch-layer:hover {
+            border-color: var(--gov-blue);
+            background: var(--gov-light);
+        }
+        .arch-layer .layer-num {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .arch-layer .layer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gov-navy);
+        }
+        .arch-layer .layer-desc {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .arch-connector {
+            width: 2px;
+            height: 20px;
+            background: #ccc;
+        }
+        
+        /* AI 상담 섹션 */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .chat-message {
+            margin-bottom: 12px;
+            max-width: 80%;
+        }
+        .chat-message.user {
+            margin-left: auto;
+            text-align: right;
+        }
+        .chat-message .bubble {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .chat-message.user .bubble {
+            background: var(--gov-blue);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.assistant .bubble {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: var(--gov-blue);
+        }
+        .chat-send {
+            padding: 12px 24px;
+            background: var(--gov-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .chat-send:hover {
+            background: var(--gov-navy);
+        }
+        
+        /* 에너지 계산기 */
+        .calculator {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        .calc-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .calc-row label {
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 150px;
+        }
+        .calc-row input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .calc-result {
+            background: var(--gov-light);
+            border: 2px solid var(--gov-blue);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .calc-result .number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--gov-blue);
+        }
+        .calc-result .label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 푸터 */
+        .footer {
+            background: var(--gov-navy);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .footer p {
+            font-size: 13px;
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+        
+        /* 탭 네비게이션 */
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid #e5e5e5;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover {
+            color: var(--gov-blue);
+        }
+        .tab-btn.active {
+            color: var(--gov-blue);
+            border-bottom-color: var(--gov-blue);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
-    <div id="root"></div>
-    
-    <!-- Components -->
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/Tab1HashTransmission.js"></script>
-    <script type="text/babel" src="js/components/Tab2ChainFusion.js"></script>
-    <script type="text/babel" src="js/components/Tab3FraudDetection.js"></script>
-    <script type="text/babel" src="js/components/Tab4Scalability.js"></script>
-    <script type="text/babel" src="js/components/Tab5Performance.js"></script>
-    <script type="text/babel" src="js/components/ComparisonSection.js"></script>
-    <script type="text/babel" src="js/components/SimulatorSection.js"></script>
-    <script type="text/babel" src="js/components/EnergyCalculator.js"></script>
-    <script type="text/babel" src="js/components/ChatSection.js"></script>
-    
-    <!-- Main App -->
-    <script type="text/babel" src="js/app.js?v=1764047020"></script>
-<script src="/shared/banner.js"></script>
+<body>
+    <!-- 상단 네비게이션 -->
+    <nav class="top-nav">
+        <div class="logo">
+            <span class="icon">⛓️</span>
+            <span>오픈해시 기술 시스템</span>
+        </div>
+        <div>
+            <a href="/">메인</a>
+            <a href="/portal/government.html" target="_blank">중앙행정기관</a>
+            <a href="/portal/systems.html" target="_blank">AI 시스템</a>
+        </div>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <h1>⛓️ 오픈해시 (OpenHash)</h1>
+        <p>블록체인을 대체하는 차세대 분산 신뢰 기술<br>에너지 효율 98.5% 향상, 424만 TPS 처리량</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="number">424만</div>
+                <div class="label">TPS 처리량</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">98.5%</div>
+                <div class="label">에너지 절감</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">503만+</div>
+                <div class="label">노드 규모</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">5계층</div>
+                <div class="label">아키텍처</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-container">
+        <!-- 핵심 기술 -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-microchip"></i>
+                <h2>핵심 기술</h2>
+            </div>
+            <div class="section-body">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="icon">🔗</div>
+                        <h3>해시 전파 (Hash Transmission)</h3>
+                        <p>SHA3-256 기반 확률적 계층 선택 알고리즘으로 데이터 무결성을 보장하며 효율적인 전파 수행</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔀</div>
+                        <h3>체인 융합 (Chain Fusion)</h3>
+                        <p>Merkle Tree 기반 동기화로 다중 체인 간 상호운용성 확보 및 데이터 일관성 유지</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🛡️</div>
+                        <h3>부정 탐지 (Fraud Detection)</h3>
+                        <p>LPBFT/PBFT 합의 알고리즘과 BLS 서명으로 비잔틴 장애 허용 및 실시간 부정 탐지</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📈</div>
+                        <h3>확장성 (Scalability)</h3>
+                        <p>5계층 아키텍처로 수평적 확장 지원, 503만 이상 노드에서 안정적 운영</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔐</div>
+                        <h3>양자내성암호</h3>
+                        <p>CRYSTALS-Dilithium 기반 포스트퀀텀 암호화로 미래 양자컴퓨터 위협 대비</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">⚡</div>
+                        <h3>고성능 처리</h3>
+                        <p>기존 블록체인 대비 98.5% 에너지 절감, 초당 424만 트랜잭션 처리</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5계층 아키텍처 -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-layer-group"></i>
+                <h2>5계층 아키텍처</h2>
+            </div>
+            <div class="section-body">
+                <div class="architecture">
+                    <div class="arch-layer">
+                        <div class="layer-num">Layer 0</div>
+                        <div class="layer-name">신뢰 앵커 계층 (Trust Anchor)</div>
+                        <div class="layer-desc">50개 노드 | 최종 검증 및 합의</div>
+                    </div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-layer">
+                        <div class="layer-num">Layer 1</div>
+                        <div class="layer-name">글로벌 검증 계층 (Global Validation)</div>
+                        <div class="layer-desc">500개 노드 | 국제 표준 검증</div>
+                    </div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-layer">
+                        <div class="layer-num">Layer 2</div>
+                        <div class="layer-name">국가 검증 계층 (National Validation)</div>
+                        <div class="layer-desc">5,000개 노드 | 국가별 법적 준수</div>
+                    </div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-layer">
+                        <div class="layer-num">Layer 3</div>
+                        <div class="layer-name">지역 처리 계층 (Regional Processing)</div>
+                        <div class="layer-desc">50,000개 노드 | 지역 트랜잭션 처리</div>
+                    </div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-layer">
+                        <div class="layer-num">Layer 4</div>
+                        <div class="layer-name">엣지 계층 (Edge)</div>
+                        <div class="layer-desc">500만+ 노드 | 최종 사용자 인터페이스</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 블록체인 비교 -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-chart-bar"></i>
+                <h2>블록체인 대비 성능 비교</h2>
+            </div>
+            <div class="section-body">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>Bitcoin</th>
+                            <th>Ethereum</th>
+                            <th>Solana</th>
+                            <th class="highlight">OpenHash</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TPS (초당 트랜잭션)</td>
+                            <td>7</td>
+                            <td>30</td>
+                            <td>65,000</td>
+                            <td class="win">4,240,000</td>
+                        </tr>
+                        <tr>
+                            <td>에너지 소비 (Tx당)</td>
+                            <td>707 kWh</td>
+                            <td>62.56 kWh</td>
+                            <td>0.00051 kWh</td>
+                            <td class="win">0.000008 kWh</td>
+                        </tr>
+                        <tr>
+                            <td>합의 알고리즘</td>
+                            <td>PoW</td>
+                            <td>PoS</td>
+                            <td>PoH+PoS</td>
+                            <td class="win">LPBFT/PBFT</td>
+                        </tr>
+                        <tr>
+                            <td>확인 시간</td>
+                            <td>60분</td>
+                            <td>6분</td>
+                            <td>0.4초</td>
+                            <td class="win">0.05초</td>
+                        </tr>
+                        <tr>
+                            <td>양자내성</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                            <td class="win">✅ CRYSTALS</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- AI 상담 -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-robot"></i>
+                <h2>AI 기술 상담</h2>
+            </div>
+            <div class="section-body">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message assistant">
+                            <div class="bubble">안녕하세요! 오픈해시 기술에 대해 궁금한 점을 물어보세요. 아키텍처, 성능, 보안 등 다양한 질문에 답변드립니다.</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="오픈해시에 대해 질문하세요..." onkeypress="if(event.key==='Enter')sendMessage()">
+                        <button class="chat-send" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i> 전송
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 에너지 계산기 -->
+        <section class="section">
+            <div class="section-header">
+                <i class="fas fa-leaf"></i>
+                <h2>에너지 절감 계산기</h2>
+            </div>
+            <div class="section-body">
+                <div class="calculator">
+                    <div class="calc-row">
+                        <label>일일 트랜잭션 수:</label>
+                        <input type="number" id="txCount" value="1000000" onchange="calculateEnergy()">
+                    </div>
+                    <div class="calc-row">
+                        <label>비교 대상:</label>
+                        <select id="compareTarget" onchange="calculateEnergy()" style="flex:1; padding:10px 14px; border:1px solid #ddd; border-radius:6px;">
+                            <option value="707">Bitcoin (707 kWh/tx)</option>
+                            <option value="62.56">Ethereum (62.56 kWh/tx)</option>
+                            <option value="0.00051">Solana (0.00051 kWh/tx)</option>
+                        </select>
+                    </div>
+                    <div class="calc-result">
+                        <div class="number" id="savingResult">697,992,000 kWh</div>
+                        <div class="label">일일 에너지 절감량 (OpenHash 사용 시)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>⛓️ 오픈해시 (OpenHash) - 차세대 분산 신뢰 기술</p>
+        <p>© 2025 국가 자동화 플랫폼 | 블록체인 대비 98.5% 에너지 절감</p>
+    </footer>
+
+    <script>
+        // 에너지 계산기
+        function calculateEnergy() {
+            const txCount = parseInt(document.getElementById('txCount').value) || 0;
+            const compareValue = parseFloat(document.getElementById('compareTarget').value);
+            const openHashEnergy = 0.000008; // kWh per tx
+            
+            const savings = (compareValue - openHashEnergy) * txCount;
+            document.getElementById('savingResult').textContent = savings.toLocaleString() + ' kWh';
+        }
+        
+        // AI 채팅
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            
+            // 사용자 메시지 추가
+            messagesDiv.innerHTML += `
+                <div class="chat-message user">
+                    <div class="bubble">${message}</div>
+                </div>
+            `;
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // AI 응답 (로딩)
+            const loadingId = 'loading-' + Date.now();
+            messagesDiv.innerHTML += `
+                <div class="chat-message assistant" id="${loadingId}">
+                    <div class="bubble">답변 생성 중...</div>
+                </div>
+            `;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            try {
+                const response = await fetch('/api/openhash-system/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                
+                document.getElementById(loadingId).querySelector('.bubble').textContent = 
+                    data.response || '죄송합니다. 응답을 생성하지 못했습니다.';
+            } catch (error) {
+                document.getElementById(loadingId).querySelector('.bubble').textContent = 
+                    '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        // 초기 계산
+        calculateEnergy();
+    </script>
 </body>
 </html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 입법 지원 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%); }
+        .card-hover { transition: all 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="text-6xl mb-4 float">🏛️</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">AI 입법 지원 시스템</h1>
+            <p class="text-xl opacity-90 mb-6">법률 충돌 검사 | 규제 영향 분석 | 국민 의견 수렴</p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">📚 현행 법률 4,500+</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">🔍 실시간 충돌 검사</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full text-sm">📊 영향 분석</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="bg-gray-800 py-3 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="text-orange-400 hover:text-orange-300">← 포털로 돌아가기</a>
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-orange-400">기능</button>
+                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-orange-400">시뮬레이터</button>
+                <button onclick="document.getElementById('process').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-orange-400">프로세스</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Problems -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">현행 입법 과정의 한계</h2>
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">⚔️</div>
+                <div class="text-xl font-bold text-red-400 mb-2">법률 충돌</div>
+                <div class="text-sm text-gray-400">기존 법률과의 충돌 미검토</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">📉</div>
+                <div class="text-xl font-bold text-red-400 mb-2">영향 예측 부재</div>
+                <div class="text-sm text-gray-400">사회·경제적 영향 분석 미흡</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">🗣️</div>
+                <div class="text-xl font-bold text-red-400 mb-2">의견 수렴 한계</div>
+                <div class="text-sm text-gray-400">국민 참여 기회 제한적</div>
+            </div>
+            <div class="bg-red-900/30 border border-red-500/30 rounded-xl p-6 text-center">
+                <div class="text-3xl mb-3">⏳</div>
+                <div class="text-xl font-bold text-red-400 mb-2">장기 소요</div>
+                <div class="text-sm text-gray-400">평균 18개월 입법 기간</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div id="features" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🏛️ 핵심 기능</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">⚖️</div>
+                    <h3 class="text-xl font-bold text-orange-400 mb-3">법률 충돌 검사</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• 4,500+ 현행 법률 DB</li>
+                        <li>• 실시간 조문 충돌 분석</li>
+                        <li>• 헌법 적합성 검토</li>
+                        <li>• 국제법 조화 검토</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-xl font-bold text-blue-400 mb-3">규제 영향 분석</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• 경제적 영향 시뮬레이션</li>
+                        <li>• 이해관계자 영향 분석</li>
+                        <li>• 행정 비용 예측</li>
+                        <li>• 사회적 편익 계산</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 card-hover">
+                    <div class="text-4xl mb-4">🗳️</div>
+                    <h3 class="text-xl font-bold text-green-400 mb-3">국민 의견 수렴</h3>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li>• AI 의견 분류/분석</li>
+                        <li>• 실시간 여론 동향</li>
+                        <li>• 전문가 의견 매칭</li>
+                        <li>• 투명한 의사결정</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulator -->
+    <div id="simulator" class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">📜 법안 분석 시뮬레이터</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-6 text-orange-400">법안 정보 입력</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">법안 분야</label>
+                        <select id="billCategory" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3">
+                            <option value="economy">경제/산업</option>
+                            <option value="welfare">복지/노동</option>
+                            <option value="environment">환경/에너지</option>
+                            <option value="tech">과학/기술</option>
+                            <option value="education">교육/문화</option>
+                            <option value="security">안보/국방</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">법안명</label>
+                        <input type="text" id="billName" placeholder="예: AI 산업 진흥법"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">주요 내용</label>
+                        <textarea id="billContent" rows="4" placeholder="법안의 주요 내용을 입력하세요..."
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">예상 영향 집단</label>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
+                                <input type="checkbox" id="business" class="accent-orange-500" checked> 기업
+                            </label>
+                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
+                                <input type="checkbox" id="citizen" class="accent-orange-500" checked> 일반 국민
+                            </label>
+                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
+                                <input type="checkbox" id="govt" class="accent-orange-500"> 정부 기관
+                            </label>
+                            <label class="flex items-center gap-2 bg-gray-900 p-3 rounded-lg cursor-pointer">
+                                <input type="checkbox" id="ngo" class="accent-orange-500"> 시민단체
+                            </label>
+                        </div>
+                    </div>
+                    <button onclick="analyzeBill()"
+                        class="w-full bg-gradient-to-r from-orange-600 to-red-600 font-bold py-4 rounded-lg hover:from-orange-500 hover:to-red-500 transition">
+                        🔍 AI 법안 분석 실행
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-6 text-green-400">AI 분석 결과</h3>
+                <div id="billResult">
+                    <div class="text-center text-gray-500 py-12">
+                        <div class="text-4xl mb-4">🏛️</div>
+                        <p>법안 정보를 입력하고<br/>AI 분석을 실행하세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Flow -->
+    <div id="process" class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📋 AI 입법 지원 프로세스</h2>
+            <div class="grid md:grid-cols-5 gap-4">
+                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
+                    <div class="text-2xl mb-2">📝</div>
+                    <div class="text-sm font-bold text-orange-400">1. 법안 초안</div>
+                    <div class="text-xs text-gray-500 mt-1">AI 작성 지원</div>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
+                    <div class="text-2xl mb-2">⚖️</div>
+                    <div class="text-sm font-bold text-orange-400">2. 충돌 검사</div>
+                    <div class="text-xs text-gray-500 mt-1">0.05ms 분석</div>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
+                    <div class="text-2xl mb-2">📊</div>
+                    <div class="text-sm font-bold text-orange-400">3. 영향 분석</div>
+                    <div class="text-xs text-gray-500 mt-1">경제/사회</div>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
+                    <div class="text-2xl mb-2">🗳️</div>
+                    <div class="text-sm font-bold text-orange-400">4. 의견 수렴</div>
+                    <div class="text-xs text-gray-500 mt-1">국민 참여</div>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-4 text-center card-hover">
+                    <div class="text-2xl mb-2">✅</div>
+                    <div class="text-sm font-bold text-orange-400">5. 최종 심의</div>
+                    <div class="text-xs text-gray-500 mt-1">국회 의결</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Laws -->
+    <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">📚 법률 데이터베이스</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-800 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold text-orange-400 mb-2">4,500+</div>
+                <div class="text-gray-400">현행 법률</div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold text-blue-400 mb-2">25,000+</div>
+                <div class="text-gray-400">시행령/규칙</div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 text-center">
+                <div class="text-4xl font-bold text-green-400 mb-2">500,000+</div>
+                <div class="text-gray-400">판례 연동</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits -->
+    <div class="bg-gray-800 py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📊 도입 효과</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-orange-900 to-orange-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">70%</div>
+                    <div class="text-sm text-gray-300">입법 기간 단축</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">95%</div>
+                    <div class="text-sm text-gray-300">충돌 사전 방지</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">3배</div>
+                    <div class="text-sm text-gray-300">국민 참여 증가</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl p-6 text-center card-hover">
+                    <div class="text-4xl font-bold mb-2">100%</div>
+                    <div class="text-sm text-gray-300">투명성 확보</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>AI 입법 지원 시스템 © 2025 | OpenHash 기반 투명한 입법</p>
+            <p class="mt-2">특허 출원 중 | 대한민국 AI 국가 시스템 통합 포털</p>
+        </div>
+    </div>
+
+    <script>
+        function analyzeBill() {
+            const category = document.getElementById('billCategory').value;
+            const billName = document.getElementById('billName').value || 'AI 산업 진흥법';
+            const billContent = document.getElementById('billContent').value || 'AI 산업 육성 및 규제 완화';
+
+            const resultDiv = document.getElementById('billResult');
+            resultDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl pulse">⏳</div><p class="mt-4">AI 분석 중...</p></div>';
+
+            setTimeout(() => {
+                const categoryNames = {
+                    'economy': '경제/산업',
+                    'welfare': '복지/노동',
+                    'environment': '환경/에너지',
+                    'tech': '과학/기술',
+                    'education': '교육/문화',
+                    'security': '안보/국방'
+                };
+
+                const conflictCount = Math.floor(Math.random() * 5);
+                const supportRate = Math.floor(Math.random() * 30) + 55;
+                const economicImpact = (Math.random() * 5 + 0.5).toFixed(1);
+
+                const conflictLaws = [
+                    '개인정보보호법 제15조',
+                    '전자상거래법 제21조',
+                    '정보통신망법 제44조',
+                    '소비자기본법 제8조',
+                    '공정거래법 제23조'
+                ].slice(0, conflictCount);
+
+                resultDiv.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-orange-900/30 border border-orange-500/30 rounded-lg">
+                            <div class="text-sm text-gray-400">법안명</div>
+                            <div class="font-bold text-lg">${billName}</div>
+                            <div class="text-xs text-gray-500 mt-1">${categoryNames[category]} 분야</div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-400">법률 충돌 검사</span>
+                                <span class="text-xs ${conflictCount === 0 ? 'text-green-400' : 'text-yellow-400'}">${conflictCount}건 발견</span>
+                            </div>
+                            ${conflictCount > 0 ? `
+                                <ul class="space-y-1 text-sm">
+                                    ${conflictLaws.map(law => `<li class="text-yellow-400">⚠️ ${law}</li>`).join('')}
+                                </ul>
+                            ` : '<div class="text-green-400 text-sm">✅ 충돌 없음</div>'}
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-900 rounded-lg text-center">
+                                <div class="text-sm text-gray-400">예상 지지율</div>
+                                <div class="text-2xl font-bold ${supportRate >= 60 ? 'text-green-400' : 'text-yellow-400'}">${supportRate}%</div>
+                            </div>
+                            <div class="p-4 bg-gray-900 rounded-lg text-center">
+                                <div class="text-sm text-gray-400">경제적 영향</div>
+                                <div class="text-2xl font-bold text-blue-400">+${economicImpact}조</div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-gray-900 rounded-lg">
+                            <div class="text-sm text-gray-400 mb-2">영향 받는 법률</div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-800 px-2 py-1 rounded text-xs">산업발전법</span>
+                                <span class="bg-gray-800 px-2 py-1 rounded text-xs">중소기업법</span>
+                                <span class="bg-gray-800 px-2 py-1 rounded text-xs">조세특례법</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">분석 소요 시간</span>
+                                <span class="text-blue-400 font-bold">0.052ms</span>
+                            </div>
+                            <div class="flex justify-between text-sm mt-1">
+                                <span class="text-gray-400">검토 법률 수</span>
+                                <span class="text-green-400">4,523건</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 1800);
+        }
+    </script>
+<script src="/shared/banner.js"></script>
+</body>
+</html>

@@ -127,12 +127,12 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                         <h1 className="text-2xl font-bold">AI 진로 상담</h1>
                         <p className="text-gray-400 mt-1">진로와 취업에 대해 무엇이든 물어보세요</p>
                     </div>
-                    <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white">
+                    <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-gray-900">
                         <i className="fas fa-arrow-left mr-2"></i>돌아가기
                     </button>
                 </div>
 
-                <div className="bg-gray-800 rounded-xl overflow-hidden">
+                <div className="bg-gray-50 rounded-xl overflow-hidden">
                     <div className="h-96 overflow-y-auto p-4 space-y-4">
                         {chatMessages.map(message => (
                             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -141,7 +141,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                                         🎯
                                     </div>
                                 )}
-                                <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-700'}`}>
+                                <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-100'}`}>
                                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                                 </div>
                             </div>
@@ -149,7 +149,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                         {isLoading && (
                             <div className="flex justify-start">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center text-sm mr-2">🎯</div>
-                                <div className="bg-gray-700 rounded-2xl px-4 py-3">
+                                <div className="bg-gray-100 rounded-2xl px-4 py-3">
                                     <div className="flex space-x-2">
                                         <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                         <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -160,7 +160,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                         )}
                         <div ref={chatEndRef}></div>
                     </div>
-                    <div className="p-4 border-t border-gray-700">
+                    <div className="p-4 border-t border-gray-200">
                         <div className="flex space-x-2">
                             <input
                                 type="text"
@@ -168,7 +168,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                                 onChange={(e) => setInputText(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="진로/취업에 대해 질문하세요..."
-                                className="flex-1 bg-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                className="flex-1 bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             />
                             <button onClick={sendMessage} disabled={!inputText.trim() || isLoading} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 rounded-lg disabled:opacity-50">
                                 <i className="fas fa-paper-plane"></i>
@@ -193,8 +193,8 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-800 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold mb-4"><i className="fas fa-brain text-purple-400 mr-2"></i>적성 분석</h3>
+                <div className="bg-gray-50 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold mb-4"><i className="fas fa-brain text-blue-600 mr-2"></i>적성 분석</h3>
                     <div className="h-64">
                         {chartsAvailable ? (
                             <ResponsiveContainer width="100%" height="100%">
@@ -208,7 +208,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                         ) : (
                             <div className="grid grid-cols-2 gap-2">
                                 {aptitude.profile.map((item, i) => (
-                                    <div key={i} className="bg-gray-700 p-3 rounded">
+                                    <div key={i} className="bg-gray-100 p-3 rounded">
                                         <div className="flex justify-between text-sm mb-1">
                                             <span>{item.subject}</span>
                                             <span className="text-yellow-400">{item.score}</span>
@@ -223,7 +223,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                     </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold mb-4"><i className="fas fa-star text-yellow-400 mr-2"></i>강점 분석</h3>
                     <div className="space-y-4">
                         <div>
@@ -238,7 +238,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                             <p className="text-sm text-gray-400 mb-2">학습 스타일</p>
                             <span className="badge bg-blue-500 bg-opacity-20 text-blue-400 px-3 py-1">{aptitude.learning_style}</span>
                         </div>
-                        <div className="mt-4 p-4 bg-gray-700 rounded-lg">
+                        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
                             <p className="text-sm"><i className="fas fa-info-circle text-yellow-400 mr-2"></i>더 자세한 분석이 필요하면 <button onClick={startChat} className="text-yellow-400 hover:underline">AI 상담</button>을 이용하세요!</p>
                         </div>
                     </div>
@@ -249,10 +249,10 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                 <h2 className="text-lg font-semibold mb-4"><i className="fas fa-briefcase text-yellow-400 mr-2"></i>추천 직업 ({recommendations.length}개)</h2>
                 <div className="space-y-4">
                     {recommendations.map((career, index) => (
-                        <div key={career.id} className="bg-gray-800 rounded-xl p-6 card-hover">
+                        <div key={career.id} className="bg-gray-50 rounded-xl p-6 card-hover">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <div className="flex items-start space-x-4">
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${index === 0 ? 'bg-yellow-500 bg-opacity-20' : index === 1 ? 'bg-gray-600' : 'bg-gray-700'}`}>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${index === 0 ? 'bg-yellow-500 bg-opacity-20' : index === 1 ? 'bg-gray-600' : 'bg-gray-100'}`}>
                                         {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '💼'}
                                     </div>
                                     <div>
@@ -274,7 +274,7 @@ const CareerRecommend = ({ studentId, onNavigate }) => {
                                 </div>
                             </div>
                             {career.missing_skills.length > 0 && (
-                                <div className="mt-4 pt-4 border-t border-gray-700">
+                                <div className="mt-4 pt-4 border-t border-gray-200">
                                     <p className="text-sm text-gray-400 mb-2"><i className="fas fa-exclamation-triangle text-yellow-400 mr-1"></i>보완 필요 역량:</p>
                                     <div className="flex flex-wrap gap-2">
                                         {career.missing_skills.map((skill, i) => (

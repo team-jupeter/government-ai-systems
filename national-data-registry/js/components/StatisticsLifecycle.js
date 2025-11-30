@@ -1,58 +1,68 @@
 const StatisticsLifecycle = () => {
-    const [activeStage, setActiveStage] = React.useState(-1);
-    const [isRunning, setIsRunning] = React.useState(false);
-    
     const stages = [
-        { num: 1, name: '조사 계획', layer: 0, icon: '📋', desc: 'Layer 0에서 조사 계획 수립' },
-        { num: 2, name: '응답 수집', layer: 1, icon: '📱', desc: 'Edge Storage에 원본 저장' },
-        { num: 3, name: '집계', layer: '2→3', icon: '📊', desc: '광역시도 집계 → PBFT 합의' },
-        { num: 4, name: '검증', layer: 0, icon: '✅', desc: '통계 품질 검증' },
-        { num: 5, name: '승인', layer: 0, icon: '🏛️', desc: '처장 최종 승인' }
+        { icon: '📝', title: '수집', desc: '503만+ 정부·민간 데이터 소스', color: 'blue' },
+        { icon: '🔍', title: '검증', desc: 'OpenHash 무결성 확인', color: 'cyan' },
+        { icon: '🤖', title: 'AI 분석', desc: '멀티에이전트 자동 분석', color: 'purple' },
+        { icon: '📊', title: '통계생성', desc: '실시간 통계 산출', color: 'green' },
+        { icon: '🌐', title: '공개', desc: '오픈API로 제공', color: 'amber' }
     ];
-    
-    const runLifecycle = () => {
-        setIsRunning(true); setActiveStage(0);
-        let stage = 0;
-        const interval = setInterval(() => {
-            if (stage < stages.length) { setActiveStage(stage); stage++; }
-            else { setIsRunning(false); clearInterval(interval); }
-        }, 2000);
-    };
-    
+
     return (
-        <section className="py-16 px-4 bg-gray-800">
+        <div className="section-white py-16 px-4">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold mb-4"><i className="fas fa-chart-line mr-3 text-green-400"></i>통계 생명주기 블록체인</h2>
-                    <p className="text-gray-400">기존 8개월 → 7일 (99.1% 단축) | 모든 단계 불변 기록</p>
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                        <i className="fas fa-chart-line text-blue-600 mr-3"></i>
+                        통계 생명주기 관리
+                    </h2>
+                    <p className="text-lg text-gray-600">데이터 수집부터 공개까지 완전 자동화</p>
                 </div>
-                <div className="mb-6 text-center">
-                    <button onClick={runLifecycle} disabled={isRunning} className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-bold">
-                        {isRunning ? <span><i className="fas fa-spinner fa-spin mr-2"></i>시뮬레이션 중...</span> : <span><i className="fas fa-play mr-2"></i>인구주택총조사 시뮬레이션</span>}</button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    {stages.map((stage, i) => (
-                        <div key={i} className="text-center">
-                            <div className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-4 transition-all ${i < activeStage ? 'bg-green-600' : i === activeStage ? 'bg-blue-600 animate-pulse' : 'bg-gray-700'}`}>
-                                <span className="text-3xl">{stage.icon}</span></div>
-                            <div className={`bg-gray-900 rounded-xl p-4 border-2 ${i === activeStage ? 'border-blue-500' : i < activeStage ? 'border-green-500/50' : 'border-gray-700'}`}>
-                                <span className="px-2 py-0.5 rounded text-xs bg-blue-600/30 text-blue-400">Layer {stage.layer}</span>
-                                <h3 className="font-bold mt-2">{stage.name}</h3>
-                                <p className="text-xs text-gray-400 mt-1">{stage.desc}</p>
-                                {i < activeStage && <div className="mt-2 text-xs text-green-400"><i className="fas fa-link mr-1"></i>블록 #{i+1}</div>}
+
+                <div className="relative">
+                    {/* 연결선 */}
+                    <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2"></div>
+                    
+                    <div className="grid md:grid-cols-5 gap-6 relative">
+                        {stages.map((stage, i) => (
+                            <div key={i} className="relative">
+                                <div className="bg-white border-2 border-gray-200 rounded-xl p-6 card-hover shadow-md text-center">
+                                    <div className="text-5xl mb-4">{stage.icon}</div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">{stage.title}</h3>
+                                    <p className="text-sm text-gray-600">{stage.desc}</p>
+                                </div>
+                                {i < stages.length - 1 && (
+                                    <div className="hidden md:block absolute top-1/2 -right-3 text-2xl text-gray-400">→</div>
+                                )}
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-                <div className="mt-8 bg-blue-900/20 rounded-xl p-6 border border-blue-500/30">
-                    <h3 className="font-bold text-blue-400 mb-4"><i className="fas fa-shield-alt mr-2"></i>통계 작성 독립성 보장</h3>
-                    <div className="grid md:grid-cols-3 gap-4 text-sm">
-                        <div className="bg-gray-900 p-4 rounded-lg"><div className="text-2xl mb-2">🔐</div><h4 className="font-bold">수정 요청 기록</h4><p className="text-gray-400">모든 수정 요청을 블록체인에 투명하게 기록</p></div>
-                        <div className="bg-gray-900 p-4 rounded-lg"><div className="text-2xl mb-2">👁️</div><h4 className="font-bold">국민 감시</h4><p className="text-gray-400">누구나 통계 작성 과정 조회 가능</p></div>
-                        <div className="bg-gray-900 p-4 rounded-lg"><div className="text-2xl mb-2">⚖️</div><h4 className="font-bold">정치적 압력 차단</h4><p className="text-gray-400">불변 기록으로 독립성 기술적 보장</p></div>
+
+                <div className="mt-12 grid md:grid-cols-2 gap-6">
+                    <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">
+                            <i className="fas fa-clock text-blue-600 mr-2"></i>
+                            실시간 업데이트
+                        </h4>
+                        <ul className="space-y-2 text-gray-700">
+                            <li>• 데이터 변경 시 즉시 통계 반영</li>
+                            <li>• 평균 갱신 시간: 15분 이내</li>
+                            <li>• 24/7 무중단 운영</li>
+                        </ul>
+                    </div>
+                    <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">
+                            <i className="fas fa-shield-alt text-green-600 mr-2"></i>
+                            품질 보장
+                        </h4>
+                        <ul className="space-y-2 text-gray-700">
+                            <li>• AI 기반 이상치 자동 탐지</li>
+                            <li>• OpenHash로 데이터 무결성 검증</li>
+                            <li>• 정확도 99.7% 이상 유지</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };

@@ -81,11 +81,11 @@ const CommunityHub = ({ studentId, onNavigate }) => {
             <div className="bg-gradient-to-r from-purple-900 to-blue-900 rounded-xl p-6">
                 <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 rounded-xl bg-white bg-opacity-20 flex items-center justify-center">
-                        <i className="fas fa-users text-white text-xl"></i>
+                        <i className="fas fa-users text-gray-900 text-xl"></i>
                     </div>
                     <div>
                         <h3 className="font-semibold text-lg">AI 기반 커뮤니티 매칭</h3>
-                        <p className="text-gray-300 text-sm mt-1">
+                        <p className="text-gray-600 text-sm mt-1">
                             AI가 학습 이력, 성적, 적성을 분석하여 가장 적합한 커뮤니티를 추천합니다.
                             기존의 학과나 클래스 대신, 관심사와 역량이 비슷한 동료들과 함께 성장하세요.
                         </p>
@@ -102,7 +102,7 @@ const CommunityHub = ({ studentId, onNavigate }) => {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {communities.filter(c => myCommunities.includes(c.id)).map(community => (
-                            <div key={community.id} className="bg-gray-800 rounded-xl p-5 border border-yellow-500 border-opacity-30">
+                            <div key={community.id} className="bg-gray-50 rounded-xl p-5 border border-yellow-500 border-opacity-30">
                                 <div className="flex items-start justify-between">
                                     <div>
                                         <div className="flex items-center space-x-2">
@@ -112,7 +112,7 @@ const CommunityHub = ({ studentId, onNavigate }) => {
                                         <p className="text-sm text-gray-400 mt-1">{community.description}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-700">
+                                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                                     <div className="flex items-center space-x-4 text-sm text-gray-400">
                                         <span><i className="fas fa-users mr-1"></i>{community.member_count}</span>
                                         <span><i className="fas fa-project-diagram mr-1"></i>{community.active_projects} 프로젝트</span>
@@ -138,7 +138,7 @@ const CommunityHub = ({ studentId, onNavigate }) => {
                         const isJoined = myCommunities.includes(community.id);
                         
                         return (
-                            <div key={community.id} className="bg-gray-800 rounded-xl p-6 card-hover">
+                            <div key={community.id} className="bg-gray-50 rounded-xl p-6 card-hover">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center space-x-3">
@@ -153,7 +153,7 @@ const CommunityHub = ({ studentId, onNavigate }) => {
                                         
                                         <div className="flex flex-wrap gap-2 mt-4">
                                             {community.aptitude_tags.map((tag, i) => (
-                                                <span key={i} className="badge bg-gray-700 text-gray-300 px-2 py-1 text-xs">
+                                                <span key={i} className="badge bg-gray-100 text-gray-600 px-2 py-1 text-xs">
                                                     {tag}
                                                 </span>
                                             ))}
@@ -173,7 +173,7 @@ const CommunityHub = ({ studentId, onNavigate }) => {
                                         </div>
                                         
                                         {isJoined ? (
-                                            <button className="bg-green-600 text-white px-6 py-2.5 rounded-lg font-medium cursor-default">
+                                            <button className="bg-green-600 text-gray-900 px-6 py-2.5 rounded-lg font-medium cursor-default">
                                                 <i className="fas fa-check mr-2"></i>가입됨
                                             </button>
                                         ) : (

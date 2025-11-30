@@ -1,102 +1,140 @@
 const CareerRecommend = () => {
-    const [selectedCareer, setSelectedCareer] = React.useState(null);
-    
-    const careers = [
-        { id: 1, name: 'AI 연구원', icon: '🤖', demand: 98, salary: '8,500만원', growth: '+45%',
-          skills: ['Python', 'TensorFlow', '선형대수', '확률통계'], education: '석사 이상',
-          subjects: ['수학', '코딩', '물리'], aiReplace: '5%', humanValue: '창의적 연구' },
-        { id: 2, name: '데이터 과학자', icon: '📊', demand: 95, salary: '7,800만원', growth: '+38%',
-          skills: ['Python', 'SQL', '머신러닝', '시각화'], education: '학사 이상',
-          subjects: ['수학', '코딩', '통계'], aiReplace: '12%', humanValue: '인사이트 도출' },
-        { id: 3, name: '바이오 엔지니어', icon: '🧬', demand: 88, salary: '7,200만원', growth: '+32%',
-          skills: ['분자생물학', 'CRISPR', '바이오인포매틱스'], education: '석사 이상',
-          subjects: ['생물', '화학', '코딩'], aiReplace: '8%', humanValue: '실험 설계' },
-        { id: 4, name: '사이버보안 전문가', icon: '🔒', demand: 92, salary: '8,000만원', growth: '+40%',
-          skills: ['네트워크', '암호학', '침투테스트'], education: '학사 이상',
-          subjects: ['코딩', '수학', '물리'], aiReplace: '15%', humanValue: '위협 분석' },
-        { id: 5, name: 'UX 디자이너', icon: '🎨', demand: 85, salary: '6,500만원', growth: '+28%',
-          skills: ['Figma', '사용자연구', '프로토타이핑'], education: '학사',
-          subjects: ['미술', '심리', '코딩'], aiReplace: '22%', humanValue: '감성 설계' },
-        { id: 6, name: '로봇공학자', icon: '🦾', demand: 82, salary: '7,500만원', growth: '+35%',
-          skills: ['기계공학', 'ROS', '제어이론'], education: '석사 이상',
-          subjects: ['물리', '수학', '코딩'], aiReplace: '10%', humanValue: '창의적 설계' }
-    ];
-    
+    const example = {
+        student: {
+            name: '김○○ (중학교 2학년)',
+            strengths: ['논리적 사고', '수학', '컴퓨터'],
+            interests: ['게임', '코딩', 'AI'],
+            personality: '분석적·내향적'
+        },
+        recommendations: [
+            {
+                job: 'AI 엔지니어',
+                match: '92%',
+                reason: '수학·코딩 능력 우수, AI 관심 높음',
+                salary: '7,000만원',
+                growth: '+245%'
+            },
+            {
+                job: '게임 개발자',
+                match: '87%',
+                reason: '게임 관심, 프로그래밍 재능',
+                salary: '6,500만원',
+                growth: '+178%'
+            },
+            {
+                job: '데이터 과학자',
+                match: '84%',
+                reason: '수학적 사고, 분석 능력',
+                salary: '7,500만원',
+                growth: '+234%'
+            }
+        ]
+    };
+
     return (
-        <section className="py-12 px-4 bg-gray-800">
+        <div className="section-white py-16 px-4">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold mb-2"><i className="fas fa-rocket mr-3 text-yellow-400"></i>AI 추천 미래 직업</h2>
-                    <p className="text-gray-400">미래 산업 동향 + 개인 적성 + 사회 수요를 종합 분석</p>
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                        <i className="fas fa-compass text-blue-600 mr-3"></i>
+                        AI 진로 추천 시스템
+                    </h2>
+                    <p className="text-lg text-gray-600">적성·흥미·미래 전망을 종합 분석</p>
                 </div>
-                
-                <div className="grid md:grid-cols-3 gap-4">
-                    {careers.map(career => (
-                        <div key={career.id} onClick={() => setSelectedCareer(selectedCareer?.id === career.id ? null : career)}
-                            className={`bg-gray-900 rounded-xl p-5 border-2 cursor-pointer transition-all card-hover ${selectedCareer?.id === career.id ? 'border-yellow-500' : 'border-gray-700 hover:border-gray-600'}`}>
-                            <div className="flex justify-between items-start mb-3">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-3xl">{career.icon}</span>
-                                    <div>
-                                        <h3 className="font-bold">{career.name}</h3>
-                                        <div className="text-sm text-gray-400">{career.education}</div>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-green-400 font-bold">{career.growth}</div>
-                                    <div className="text-xs text-gray-500">성장률</div>
-                                </div>
-                            </div>
-                            
-                            <div className="mb-3">
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="text-gray-400">수요</span>
-                                    <span className="text-cyan-400">{career.demand}%</span>
-                                </div>
-                                <div className="w-full bg-gray-700 rounded-full h-2">
-                                    <div className="bg-cyan-500 h-2 rounded-full" style={{width: `${career.demand}%`}}></div>
+
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-8 border border-blue-200 mb-12">
+                    <h3 className="text-xl font-bold text-gray-900 mb-6">학생 프로필</h3>
+                    <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <div className="text-sm text-gray-600 mb-2">학생 정보</div>
+                                <div className="font-semibold text-gray-900 mb-4">{example.student.name}</div>
+                                <div className="text-sm text-gray-600 mb-2">강점 영역</div>
+                                <div className="flex flex-wrap gap-2">
+                                    {example.student.strengths.map((s, i) => (
+                                        <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                            {s}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                            
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-400">평균 연봉</span>
-                                <span className="text-yellow-400 font-bold">{career.salary}</span>
-                            </div>
-                            
-                            {selectedCareer?.id === career.id && (
-                                <div className="mt-4 pt-4 border-t border-gray-700 space-y-3">
-                                    <div>
-                                        <div className="text-xs text-gray-500 mb-1">필요 역량</div>
-                                        <div className="flex flex-wrap gap-1">
-                                            {career.skills.map((skill, i) => (
-                                                <span key={i} className="text-xs px-2 py-1 bg-blue-900/30 text-blue-400 rounded">{skill}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-xs text-gray-500 mb-1">관련 과목</div>
-                                        <div className="flex flex-wrap gap-1">
-                                            {career.subjects.map((subj, i) => (
-                                                <span key={i} className="text-xs px-2 py-1 bg-green-900/30 text-green-400 rounded">{subj}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div className="bg-gray-800 p-2 rounded">
-                                            <div className="text-xs text-gray-500">AI 대체율</div>
-                                            <div className="text-red-400 font-bold">{career.aiReplace}</div>
-                                        </div>
-                                        <div className="bg-gray-800 p-2 rounded">
-                                            <div className="text-xs text-gray-500">인간 고유 가치</div>
-                                            <div className="text-purple-400 font-bold text-sm">{career.humanValue}</div>
-                                        </div>
-                                    </div>
+                            <div>
+                                <div className="text-sm text-gray-600 mb-2">관심 분야</div>
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                    {example.student.interests.map((i, idx) => (
+                                        <span key={idx} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                            {i}
+                                        </span>
+                                    ))}
                                 </div>
-                            )}
+                                <div className="text-sm text-gray-600 mb-2">성격 유형</div>
+                                <div className="font-semibold text-gray-900">{example.student.personality}</div>
+                            </div>
                         </div>
-                    ))}
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">추천 직업 (TOP 3)</h3>
+                    <div className="space-y-4">
+                        {example.recommendations.map((rec, i) => (
+                            <div key={i} className="bg-white rounded-lg p-6 shadow-md">
+                                <div className="flex items-start justify-between mb-4">
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <h4 className="text-xl font-bold text-gray-900">{rec.job}</h4>
+                                            <span className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-bold">
+                                                매칭도 {rec.match}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-600">{rec.reason}</p>
+                                    </div>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <div className="text-xs text-gray-600 mb-1">예상 연봉</div>
+                                        <div className="font-bold text-green-700">{rec.salary}</div>
+                                    </div>
+                                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                                        <div className="text-xs text-gray-600 mb-1">산업 성장률</div>
+                                        <div className="font-bold text-purple-700">{rec.growth}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                        <i className="fas fa-road text-blue-600 mr-2"></i>
+                        진로 로드맵
+                    </h3>
+                    <div className="flex items-center justify-between">
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">1</div>
+                            <div className="font-semibold text-gray-900">현재</div>
+                            <div className="text-sm text-gray-600">중2</div>
+                        </div>
+                        <div className="text-3xl text-blue-600">→</div>
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-cyan-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">2</div>
+                            <div className="font-semibold text-gray-900">고등학교</div>
+                            <div className="text-sm text-gray-600">정보·수학 특화</div>
+                        </div>
+                        <div className="text-3xl text-blue-600">→</div>
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">3</div>
+                            <div className="font-semibold text-gray-900">대학</div>
+                            <div className="text-sm text-gray-600">컴퓨터공학</div>
+                        </div>
+                        <div className="text-3xl text-blue-600">→</div>
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">4</div>
+                            <div className="font-semibold text-gray-900">취업</div>
+                            <div className="text-sm text-gray-600">AI 엔지니어</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };

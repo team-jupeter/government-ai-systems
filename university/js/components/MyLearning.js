@@ -208,7 +208,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                     <div className="flex items-center space-x-4">
                         <button 
                             onClick={() => setSelectedCourse(null)}
-                            className="text-gray-400 hover:text-white"
+                            className="text-gray-400 hover:text-gray-900"
                         >
                             <i className="fas fa-arrow-left text-xl"></i>
                         </button>
@@ -230,7 +230,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* 왼쪽: 커리큘럼 */}
-                    <div className="bg-gray-800 rounded-xl p-4 lg:col-span-1 max-h-[600px] overflow-y-auto">
+                    <div className="bg-gray-50 rounded-xl p-4 lg:col-span-1 max-h-[600px] overflow-y-auto">
                         <h3 className="font-semibold mb-4 flex items-center">
                             <i className="fas fa-list text-yellow-400 mr-2"></i>
                             커리큘럼 (14주)
@@ -244,8 +244,8 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                         currentWeek === week.week 
                                             ? 'bg-yellow-500 bg-opacity-20 border border-yellow-500' 
                                             : idx < selectedCourse.current_week 
-                                                ? 'bg-green-500 bg-opacity-10 hover:bg-gray-700'
-                                                : 'bg-gray-700 hover:bg-gray-600'
+                                                ? 'bg-green-500 bg-opacity-10 hover:bg-gray-100'
+                                                : 'bg-gray-100 hover:bg-gray-600'
                                     }`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -266,8 +266,8 @@ const MyLearning = ({ studentId, onNavigate }) => {
                         {!showChat ? (
                             <>
                                 {/* 강의 영상 영역 */}
-                                <div className="bg-gray-800 rounded-xl overflow-hidden">
-                                    <div className="aspect-video bg-gray-900 flex items-center justify-center relative">
+                                <div className="bg-gray-50 rounded-xl overflow-hidden">
+                                    <div className="aspect-video bg-white flex items-center justify-center relative">
                                         <div className="text-center">
                                             <i className="fas fa-play-circle text-6xl text-yellow-400 mb-4"></i>
                                             <h3 className="text-xl font-semibold mb-2">{currentWeek}주차: {weekData.title}</h3>
@@ -277,14 +277,14 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                         {/* 재생 컨트롤 바 */}
                                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                             <div className="flex items-center space-x-4">
-                                                <button className="text-white hover:text-yellow-400">
+                                                <button className="text-gray-900 hover:text-yellow-400">
                                                     <i className="fas fa-play text-xl"></i>
                                                 </button>
-                                                <div className="flex-1 h-1 bg-gray-700 rounded-full">
+                                                <div className="flex-1 h-1 bg-gray-100 rounded-full">
                                                     <div className="w-1/3 h-full bg-yellow-500 rounded-full"></div>
                                                 </div>
                                                 <span className="text-sm text-gray-400">15:23 / {weekData.duration}</span>
-                                                <button className="text-white hover:text-yellow-400">
+                                                <button className="text-gray-900 hover:text-yellow-400">
                                                     <i className="fas fa-expand"></i>
                                                 </button>
                                             </div>
@@ -293,9 +293,9 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                 </div>
 
                                 {/* 강의 정보 */}
-                                <div className="bg-gray-800 rounded-xl p-6">
+                                <div className="bg-gray-50 rounded-xl p-6">
                                     <h3 className="font-semibold mb-4">{currentWeek}주차 학습 내용</h3>
-                                    <p className="text-gray-300 mb-4">{weekData.video}</p>
+                                    <p className="text-gray-600 mb-4">{weekData.video}</p>
                                     
                                     {/* 학습 자료 */}
                                     <div className="mt-4">
@@ -304,7 +304,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                             {(weekData.materials || []).map((material, idx) => (
                                                 <button 
                                                     key={idx}
-                                                    className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg text-sm"
+                                                    className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-600 px-3 py-2 rounded-lg text-sm"
                                                 >
                                                     <i className="fas fa-file-pdf text-red-400"></i>
                                                     <span>{material}</span>
@@ -319,7 +319,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                         <button 
                                             onClick={() => setCurrentWeek(Math.max(1, currentWeek - 1))}
                                             disabled={currentWeek === 1}
-                                            className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg disabled:opacity-50"
+                                            className="bg-gray-100 hover:bg-gray-600 px-4 py-2 rounded-lg disabled:opacity-50"
                                         >
                                             <i className="fas fa-chevron-left mr-2"></i>이전 강의
                                         </button>
@@ -341,8 +341,8 @@ const MyLearning = ({ studentId, onNavigate }) => {
                             </>
                         ) : (
                             /* AI 교수 채팅 */
-                            <div className="bg-gray-800 rounded-xl overflow-hidden h-[500px] flex flex-col">
-                                <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+                            <div className="bg-gray-50 rounded-xl overflow-hidden h-[500px] flex flex-col">
+                                <div className="p-4 border-b border-gray-200 flex items-center justify-between">
                                     <div className="flex items-center space-x-3">
                                         <span className="text-2xl">{selectedCourse.icon}</span>
                                         <div>
@@ -350,7 +350,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                             <p className="text-xs text-gray-400">{currentWeek}주차 학습 중</p>
                                         </div>
                                     </div>
-                                    <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white">
+                                    <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-gray-900">
                                         <i className="fas fa-times"></i>
                                     </button>
                                 </div>
@@ -363,7 +363,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                                     {selectedCourse.icon}
                                                 </div>
                                             )}
-                                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-700'}`}>
+                                            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-yellow-600' : 'bg-gray-100'}`}>
                                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                                             </div>
                                         </div>
@@ -373,7 +373,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                             <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-sm mr-2">
                                                 {selectedCourse.icon}
                                             </div>
-                                            <div className="bg-gray-700 rounded-2xl px-4 py-3">
+                                            <div className="bg-gray-100 rounded-2xl px-4 py-3">
                                                 <div className="flex space-x-1">
                                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                                                     <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -385,7 +385,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                     <div ref={chatEndRef}></div>
                                 </div>
 
-                                <div className="p-4 border-t border-gray-700">
+                                <div className="p-4 border-t border-gray-200">
                                     <div className="flex space-x-2">
                                         <input
                                             type="text"
@@ -393,7 +393,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                             onChange={(e) => setInputText(e.target.value)}
                                             onKeyPress={handleKeyPress}
                                             placeholder="질문을 입력하세요..."
-                                            className="flex-1 bg-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            className="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                         />
                                         <button
                                             onClick={sendMessage}
@@ -422,7 +422,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
 
             {/* 학습 요약 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-800 rounded-xl p-4">
+                <div className="bg-gray-50 rounded-xl p-4">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-400 text-sm">수강 강좌</p>
@@ -433,7 +433,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-gray-800 rounded-xl p-4">
+                <div className="bg-gray-50 rounded-xl p-4">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-400 text-sm">평균 진도율</p>
@@ -448,7 +448,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-gray-800 rounded-xl p-4">
+                <div className="bg-gray-50 rounded-xl p-4">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-400 text-sm">이수 예정 학점</p>
@@ -463,7 +463,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
 
             {/* 강좌 목록 */}
             {myCourses.length === 0 ? (
-                <div className="bg-gray-800 rounded-xl p-12 text-center">
+                <div className="bg-gray-50 rounded-xl p-12 text-center">
                     <i className="fas fa-book-open text-4xl text-gray-600 mb-4"></i>
                     <h3 className="text-lg font-semibold mb-2">수강 중인 강좌가 없습니다</h3>
                     <p className="text-gray-400 mb-4">강좌 탐색에서 원하는 과목을 수강 신청하세요</p>
@@ -477,10 +477,10 @@ const MyLearning = ({ studentId, onNavigate }) => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {myCourses.map(course => (
-                        <div key={course.course_id} className="bg-gray-800 rounded-xl p-6 card-hover">
+                        <div key={course.course_id} className="bg-gray-50 rounded-xl p-6 card-hover">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-gray-700 rounded-xl flex items-center justify-center text-2xl">
+                                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
                                         {course.icon}
                                     </div>
                                     <div>
@@ -497,7 +497,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                     <span className="text-gray-400">진도율</span>
                                     <span className="text-yellow-400">{course.progress}%</span>
                                 </div>
-                                <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                                     <div 
                                         className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all"
                                         style={{ width: `${course.progress}%` }}
@@ -512,7 +512,7 @@ const MyLearning = ({ studentId, onNavigate }) => {
                                         key={i}
                                         className={`flex-1 h-1.5 rounded-full ${
                                             i < course.current_week ? 'bg-green-500' : 
-                                            i === course.current_week ? 'bg-yellow-500' : 'bg-gray-700'
+                                            i === course.current_week ? 'bg-yellow-500' : 'bg-gray-100'
                                         }`}
                                         title={`${i + 1}주차`}
                                     ></div>

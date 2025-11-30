@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시 기반 권역 의료 통합 시스템 | OpenHash Healthcare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .gradient-health { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #2dd4bf 100%); }
+        .gradient-pdv { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
+        .gradient-ai { background: linear-gradient(135deg, #dc2626 0%, #f87171 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 5px #14b8a6; } 50% { box-shadow: 0 0 20px #14b8a6, 0 0 30px #14b8a6; } }
+        @keyframes hash-flow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        .float { animation: float 3s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 2s infinite; }
+        .hash-flow { background: linear-gradient(90deg, #14b8a6, #a78bfa, #14b8a6); background-size: 200% 100%; animation: hash-flow 3s linear infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #14b8a6; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div id="root"></div>
+    
+    <script type="text/babel" src="js/components/Modal.js?v=1"></script>
+    <script type="text/babel" src="js/components/Header.js?v=1"></script>
+    <script type="text/babel" src="js/components/OpenHashSection.js?v=1"></script>
+    <script type="text/babel" src="js/components/PDVSection.js?v=1"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=1764218176"></script>
+    <script type="text/babel" src="js/components/SimulatorSection.js?v=1"></script>
+    <script type="text/babel" src="js/app.js?v=1"></script>
+<script src="/shared/banner.js"></script>
+</body>
+</html>

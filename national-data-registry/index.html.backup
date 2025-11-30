@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가데이터처 통합 데이터 네트워크</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-ndr { background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3b7ab8 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
+        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/LayerVisualization.js"></script>
+    <script type="text/babel" src="js/components/DataLinkage.js"></script>
+    <script type="text/babel" src="js/components/StatisticsLifecycle.js"></script>
+    <script type="text/babel" src="js/components/DataSovereignty.js"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/components/ExplainerPage.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

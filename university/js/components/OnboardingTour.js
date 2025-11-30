@@ -74,9 +74,9 @@ const OnboardingTour = ({ onComplete }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-700">
+            <div className="bg-gray-50 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-200">
                 {/* 진행 표시 */}
-                <div className="h-1 bg-gray-700">
+                <div className="h-1 bg-gray-100">
                     <div 
                         className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 transition-all duration-300"
                         style={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}
@@ -102,7 +102,7 @@ const OnboardingTour = ({ onComplete }) => {
                     {step.features && (
                         <div className="grid grid-cols-2 gap-2 mb-4">
                             {step.features.map((feature, i) => (
-                                <div key={i} className="flex items-center space-x-2 text-sm text-gray-300">
+                                <div key={i} className="flex items-center space-x-2 text-sm text-gray-600">
                                     <i className="fas fa-check text-green-400"></i>
                                     <span>{feature}</span>
                                 </div>
@@ -135,7 +135,7 @@ const OnboardingTour = ({ onComplete }) => {
                             {currentStep > 0 && (
                                 <button
                                     onClick={handlePrev}
-                                    className="bg-gray-700 hover:bg-gray-600 px-5 py-2 rounded-lg"
+                                    className="bg-gray-100 hover:bg-gray-600 px-5 py-2 rounded-lg"
                                 >
                                     <i className="fas fa-chevron-left mr-2"></i>이전
                                 </button>
@@ -151,7 +151,7 @@ const OnboardingTour = ({ onComplete }) => {
                     </div>
 
                     {/* 다시 보지 않기 */}
-                    <div className="mt-6 pt-4 border-t border-gray-700 text-center">
+                    <div className="mt-6 pt-4 border-t border-gray-200 text-center">
                         <button
                             onClick={handleDontShowAgain}
                             className="text-gray-500 hover:text-gray-400 text-sm flex items-center justify-center mx-auto space-x-2"

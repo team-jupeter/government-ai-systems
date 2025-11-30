@@ -9,26 +9,58 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .gradient-edu { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a78bfa 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        @keyframes pulse-purple { 0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); } 50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.8); } }
-        .pulse-purple { animation: pulse-purple 2s ease-in-out infinite; }
-        .stage-line { position: relative; }
-        .stage-line::after { content: ''; position: absolute; top: 50%; left: 100%; width: 30px; height: 2px; background: linear-gradient(90deg, #7c3aed, transparent); }
+        * {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .gradient-edu { 
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        }
+        .card-hover { 
+            transition: all 0.3s ease; 
+        }
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        }
+        @keyframes pulse-gov24 { 
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
+            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        }
+        .pulse-gov24 { 
+            animation: pulse-gov24 2s ease-in-out infinite; 
+        }
+        .stage-line { 
+            position: relative; 
+        }
+        .stage-line::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 100%; 
+            width: 30px; 
+            height: 2px; 
+            background: linear-gradient(90deg, #0046FF, transparent); 
+        }
+        .bg-gov24-light { background-color: #E8F0FF; }
+        .section-white { background-color: white; }
+        .section-gray { background-color: #f8f9fa; }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
     <div id="root"></div>
     <script src="/shared/banner.js"></script>
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/SevenStageProcess.js"></script>
-    <script type="text/babel" src="js/components/HumanUniqueTask.js"></script>
-    <script type="text/babel" src="js/components/CareerOptimization.js"></script>
-    <script type="text/babel" src="js/components/PrivacyProtection.js"></script>
-    <script type="text/babel" src="js/components/AIConsultation.js"></script>
-    <script type="text/babel" src="js/app.js"></script>
+    <script type="text/babel" src="js/components/Header.js?v=6"></script>
+    <script type="text/babel" src="js/components/SevenStageProcess.js?v=6"></script>
+    <script type="text/babel" src="js/components/HumanUniqueTask.js?v=6"></script>
+    <script type="text/babel" src="js/components/CareerOptimization.js?v=6"></script>
+    <script type="text/babel" src="js/components/PrivacyProtection.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=6"></script>
+    <script type="text/babel" src="js/app.js?v=6"></script>
 </body>
 </html>

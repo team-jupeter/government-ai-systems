@@ -74,19 +74,19 @@ const GradeReport = ({ studentId, onNavigate }) => {
                     <p className="text-3xl font-bold">{analytics.overall_avg}</p>
                     <p className="text-sm mt-1">{analytics.overall_rank}</p>
                 </div>
-                <div className="bg-gray-800 rounded-xl p-5">
+                <div className="bg-gray-50 rounded-xl p-5">
                     <p className="text-gray-400 text-sm">GPA</p>
                     <p className="text-3xl font-bold text-blue-400">{analytics.gpa}</p>
                     <p className="text-sm text-gray-500 mt-1">/ 4.5</p>
                 </div>
-                <div className="bg-gray-800 rounded-xl p-5">
+                <div className="bg-gray-50 rounded-xl p-5">
                     <p className="text-gray-400 text-sm">이수 학점</p>
                     <p className="text-3xl font-bold text-green-400">{analytics.total_credits}</p>
                     <p className="text-sm text-gray-500 mt-1">학점</p>
                 </div>
-                <div className="bg-gray-800 rounded-xl p-5">
+                <div className="bg-gray-50 rounded-xl p-5">
                     <p className="text-gray-400 text-sm">수강 과목</p>
-                    <p className="text-3xl font-bold text-purple-400">{grades.length}</p>
+                    <p className="text-3xl font-bold text-blue-600">{grades.length}</p>
                     <p className="text-sm text-gray-500 mt-1">과목</p>
                 </div>
             </div>
@@ -94,7 +94,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
             {/* 차트 영역 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* 성적 추이 */}
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold mb-4">
                         <i className="fas fa-chart-line text-yellow-400 mr-2"></i>
                         월별 성적 추이
@@ -113,7 +113,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
                         ) : (
                             <div className="space-y-2">
                                 {analytics.trend.map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between bg-gray-700 p-3 rounded">
+                                    <div key={i} className="flex items-center justify-between bg-gray-100 p-3 rounded">
                                         <span>{item.month}</span>
                                         <span className="text-yellow-400 font-bold">{item.score}점</span>
                                     </div>
@@ -124,7 +124,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
                 </div>
 
                 {/* 역량 분석 */}
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold mb-4">
                         <i className="fas fa-bullseye text-blue-400 mr-2"></i>
                         역량 분석
@@ -142,7 +142,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
                         ) : (
                             <div className="grid grid-cols-2 gap-2">
                                 {analytics.competencies.map((item, i) => (
-                                    <div key={i} className="bg-gray-700 p-2 rounded">
+                                    <div key={i} className="bg-gray-100 p-2 rounded">
                                         <div className="flex justify-between text-sm mb-1">
                                             <span>{item.subject}</span>
                                             <span className="text-blue-400">{item.score}</span>
@@ -158,7 +158,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
                 </div>
 
                 {/* 성적 분포 */}
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold mb-4">
                         <i className="fas fa-chart-bar text-green-400 mr-2"></i>
                         전국 성적 분포 (내 위치)
@@ -196,14 +196,14 @@ const GradeReport = ({ studentId, onNavigate }) => {
                 </div>
 
                 {/* 과목별 상세 */}
-                <div className="bg-gray-800 rounded-xl p-6">
+                <div className="bg-gray-50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold mb-4">
-                        <i className="fas fa-list text-purple-400 mr-2"></i>
+                        <i className="fas fa-list text-blue-600 mr-2"></i>
                         과목별 성적
                     </h3>
                     <div className="space-y-4">
                         {grades.map((grade, index) => (
-                            <div key={index} className="bg-gray-700 rounded-lg p-4">
+                            <div key={index} className="bg-gray-100 rounded-lg p-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="font-medium">{grade.course_name}</span>
                                     <span className="text-yellow-400 font-bold">{grade.avg.toFixed(1)}</span>
@@ -225,7 +225,7 @@ const GradeReport = ({ studentId, onNavigate }) => {
             </div>
 
             {/* PDV 저장 안내 */}
-            <div className="bg-gray-800 rounded-xl p-6 border border-yellow-500 border-opacity-30">
+            <div className="bg-gray-50 rounded-xl p-6 border border-yellow-500 border-opacity-30">
                 <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 rounded-xl bg-yellow-500 bg-opacity-20 flex items-center justify-center flex-shrink-0">
                         <i className="fas fa-shield-alt text-yellow-400 text-xl"></i>

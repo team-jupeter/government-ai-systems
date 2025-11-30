@@ -25,15 +25,20 @@
     
     <style>
         * {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%);
         }
         
         .gradient-gold {
-            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 100%);
         }
         
         .card-hover {
@@ -41,115 +46,52 @@
         }
         .card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2);
         }
         
         .sidebar {
             width: 280px;
             min-height: calc(100vh - 64px);
             transition: all 0.3s ease;
+            background-color: white;
+            border-right: 1px solid #e5e7eb;
         }
         
-        .menu-item {
-            transition: all 0.2s ease;
-        }
-        .menu-item:hover {
-            background: rgba(212, 175, 55, 0.1);
-        }
-        .menu-item.active {
-            background: rgba(212, 175, 55, 0.2);
-            border-left: 3px solid #d4af37;
+        @keyframes pulse-gov24 {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); }
         }
         
-        .chat-bubble {
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .pulse-gov24 {
+            animation: pulse-gov24 2s ease-in-out infinite;
         }
         
-        .floating-btn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #d4af37, #f4d03f);
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.6);
-        }
+        .section-white { background-color: white; }
+        .section-gray { background-color: #f8f9fa; }
         
-        .progress-bar {
-            height: 8px;
-            border-radius: 4px;
-            background: #374151;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
-        
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 8px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .difficulty-stars {
-            color: #d4af37;
-        }
-        
-        .tab-active {
-            border-bottom: 2px solid #d4af37;
-            color: #d4af37;
-        }
+        .bg-gov24-light { background-color: #E8F0FF; }
+        .text-gov24-primary { color: #0046FF; }
+        .border-gov24 { border-color: #0046FF; }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body>
     <div id="root"></div>
     
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/Navigation.js"></script>
-    <script type="text/babel" src="js/components/Dashboard.js"></script>
-    <script type="text/babel" src="js/components/CourseList.js"></script>
-    <script type="text/babel" src="js/components/MyLearning.js"></script>
-    <script type="text/babel" src="js/components/AIChat.js"></script>
-    <script type="text/babel" src="js/components/OnboardingTour.js"></script>
-    <script type="text/babel" src="js/components/AIProfessor.js"></script>
-    <script type="text/babel" src="js/components/ExamCenter.js"></script>
-    <script type="text/babel" src="js/components/GradeReport.js"></script>
-    <script type="text/babel" src="js/components/ThesisAssistant.js"></script>
-    <script type="text/babel" src="js/components/CareerRecommend.js"></script>
-    <script type="text/babel" src="js/components/CommunityHub.js"></script>
-    <script type="text/babel" src="js/components/PrivateVault.js"></script>
-    <script type="text/babel" src="js/components/FloatingHelp.js"></script>
-    <script type="text/babel" src="js/app.js"></script>
+    <script type="text/babel" src="js/components/Header.js?v=8"></script>
+    <script type="text/babel" src="js/components/Navigation.js?v=8"></script>
+    <script type="text/babel" src="js/components/Dashboard.js?v=8"></script>
+    <script type="text/babel" src="js/components/MyLearning.js?v=8"></script>
+    <script type="text/babel" src="js/components/CourseList.js?v=8"></script>
+    <script type="text/babel" src="js/components/AIProfessor.js?v=8"></script>
+    <script type="text/babel" src="js/components/ExamCenter.js?v=8"></script>
+    <script type="text/babel" src="js/components/GradeReport.js?v=8"></script>
+    <script type="text/babel" src="js/components/CareerRecommend.js?v=8"></script>
+    <script type="text/babel" src="js/components/ThesisAssistant.js?v=8"></script>
+    <script type="text/babel" src="js/components/CommunityHub.js?v=8"></script>
+    <script type="text/babel" src="js/components/PrivateVault.js?v=8"></script>
+    <script type="text/babel" src="js/components/AIChat.js?v=8"></script>
+    <script type="text/babel" src="js/components/FloatingHelp.js?v=8"></script>
+    <script type="text/babel" src="js/components/OnboardingTour.js?v=8"></script>
+    <script type="text/babel" src="js/app.js?v=8"></script>
 </body>
 </html>
