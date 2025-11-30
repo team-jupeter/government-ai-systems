@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대통령실 AI 자동화 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-presidential { background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%); }
+        .gradient-gold { background: linear-gradient(135deg, #744210 0%, #975a16 50%, #b7791f 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
+        @keyframes pulse-gold { 0%,100%{box-shadow:0 0 15px rgba(183,121,31,0.5)} 50%{box-shadow:0 0 30px rgba(183,121,31,0.8)} }
+        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
+        .pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+        .agent-node { transition: all 0.3s ease; }
+        .agent-node:hover { transform: scale(1.05); }
+        .connection-line { stroke-dasharray: 5,5; animation: dash 1s linear infinite; }
+        @keyframes dash { to { stroke-dashoffset: -10; } }
+        .org-tree { position: relative; }
+        .org-tree::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 20px; background: #4a5568; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/OrganizationChart.js"></script>
+    <script type="text/babel" src="js/components/AgentPanel.js"></script>
+    <script type="text/babel" src="js/components/CollaborationHub.js"></script>
+    <script type="text/babel" src="js/components/OpenHashMonitor.js"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/components/FloatingHelper.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

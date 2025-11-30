@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>외교부 AI 자동화 시스템</title>
+    <title>개인정보보호위원회 AI 자동화 시스템</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,12 +31,12 @@
             const [loading, setLoading] = useState(false);
             
             useEffect(() => {
-                fetch('/api/diplomacy/health')
+                fetch('/api/privacy-protection/health')
                     .then(r => r.json())
                     .then(setHealth)
                     .catch(() => setHealth({ status: 'offline' }));
                     
-                fetch('/api/diplomacy/hash-chain?limit=5')
+                fetch('/api/privacy-protection/hash-chain?limit=5')
                     .then(r => r.json())
                     .then(data => setHashChain(data.chain || []))
                     .catch(() => {});
@@ -50,7 +50,7 @@
                 setChatMessage('');
                 
                 try {
-                    const res = await fetch('/api/diplomacy/ai/chat', {
+                    const res = await fetch('/api/privacy-protection/ai/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ message: msg })
@@ -69,9 +69,9 @@
                     <header className="glass rounded-2xl p-6 mb-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                                <span className="text-5xl">🌐</span>
+                                <span className="text-5xl">🔒</span>
                                 <div>
-                                    <h1 className="text-3xl font-bold">외교부</h1>
+                                    <h1 className="text-3xl font-bold">개인정보보호위원회</h1>
                                     <p className="text-gray-400">AI 자동화 시스템 | OpenHash 기반</p>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                             <h2 className="text-xl font-bold mb-4"><i className="fas fa-robot mr-2 text-cyan-400"></i>AI 업무 상담</h2>
                             <div className="bg-slate-900/50 rounded-xl p-4 h-80 overflow-y-auto mb-4">
                                 {chatHistory.length === 0 ? (
-                                    <p className="text-gray-500 text-center mt-20">외교부 AI 에이전트에게 질문하세요</p>
+                                    <p className="text-gray-500 text-center mt-20">개인정보보호위원회 AI 에이전트에게 질문하세요</p>
                                 ) : (
                                     chatHistory.map((msg, i) => (
                                         <div key={i} className={`mb-3 ${msg.role === 'user' ? 'text-right' : ''}`}>
@@ -143,7 +143,7 @@
                     
                     {/* Footer */}
                     <footer className="mt-6 text-center text-gray-500 text-sm">
-                        <p>외교부 AI 자동화 시스템 | OpenHash 기반 데이터 무결성 보장</p>
+                        <p>개인정보보호위원회 AI 자동화 시스템 | OpenHash 기반 데이터 무결성 보장</p>
                         <p className="mt-1">© 2025 대한민국 정부 AI 통합 플랫폼</p>
                     </footer>
                 </div>
