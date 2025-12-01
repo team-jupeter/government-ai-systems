@@ -18,7 +18,6 @@
             --gov-light: #e8f4fd;
         }
         
-        /* 상단 네비게이션 */
         .top-nav {
             background: var(--gov-navy);
             color: white;
@@ -35,14 +34,12 @@
         }
         .top-nav a:hover { text-decoration: underline; }
         
-        /* 메인 컨테이너 */
         .main-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 30px 20px;
         }
         
-        /* 페이지 제목 */
         .page-title {
             background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%);
             color: white;
@@ -62,7 +59,6 @@
             opacity: 0.95;
         }
         
-        /* 카테고리 섹션 */
         .category-section {
             background: white;
             border-radius: 16px;
@@ -96,14 +92,12 @@
             margin-left: auto;
         }
         
-        /* 시스템 그리드 - 20% 감소 */
         .system-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
             gap: 16px;
         }
         
-        /* 시스템 카드 - 20% 감소 */
         .system-card {
             display: flex;
             flex-direction: column;
@@ -146,7 +140,6 @@
             font-weight: 500;
         }
         
-        /* Coming Soon 스타일 */
         .system-card.coming-soon {
             opacity: 0.6;
             pointer-events: none;
@@ -156,7 +149,6 @@
             color: #f59e0b;
         }
         
-        /* 푸터 */
         .footer {
             background: var(--gov-navy);
             color: white;
@@ -174,7 +166,6 @@
     <script src="/common/floating-chat.js"></script>
 </head>
 <body>
-    <!-- 상단 네비게이션 -->
     <div class="top-nav">
         <div>
             <i class="fas fa-robot"></i> 국가 체제 자동화 시스템
@@ -185,20 +176,18 @@
         </div>
     </div>
 
-    <!-- 메인 컨테이너 -->
     <div class="main-container">
-        <!-- 페이지 제목 -->
         <div class="page-title">
             <h1>OpenHash + AI = 국가 체제 자동화</h1>
             <p>차세대 분산원장 기술과 인공지능의 융합</p>
         </div>
 
-        <!-- 핵심 기술 -->
+        <!-- 핵심 기술 (국가 재무제표 추가) -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-shield-alt"></i>
                 <h2>핵심 기술</h2>
-                <span class="count">3</span>
+                <span class="count">4</span>
             </div>
             <div class="system-grid">
                 <a href="/openhash-system/" target="_blank" class="system-card">
@@ -218,6 +207,12 @@
                     <div class="name">국가 데이터 레지스트리</div>
                     <div class="desc">통합 데이터 관리 체계</div>
                     <span class="badge">Data Infrastructure</span>
+                </a>
+                <a href="/national-financial-statements/" target="_blank" class="system-card">
+                    <div class="icon">📊</div>
+                    <div class="name">국가 재무제표</div>
+                    <div class="desc">실시간 재무제표 자동 생성 및 이상거래 감지</div>
+                    <span class="badge">Financial Transparency</span>
                 </a>
             </div>
         </div>
@@ -251,7 +246,7 @@
             </div>
         </div>
 
-        <!-- 금융 (국세청 제거) -->
+        <!-- 금융 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-coins"></i>
@@ -384,7 +379,7 @@
             </div>
         </div>
 
-        <!-- 고용 (지방자치 제거) -->
+        <!-- 고용 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-briefcase"></i>
@@ -476,10 +471,9 @@
         </div>
     </div>
 
-    <!-- 푸터 -->
     <footer class="footer">
         <p>© 2025 국가 체제 자동화 | OpenHash 기술 실증 프로젝트</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">총 25개 시스템 | 11개 분야</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">총 26개 시스템 | 11개 분야</p>
     </footer>
 </body>
 </html>
