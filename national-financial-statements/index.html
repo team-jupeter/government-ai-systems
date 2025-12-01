@@ -8,50 +8,63 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        :root {
+            --gov-blue: #0046FF;
+            --gov-blue-dark: #0033CC;
+            --gov-blue-light: #E8F0FF;
+            --gov-navy: #1e3a5f;
+            --gov-gray: #6B7280;
+            --gov-bg: #F8F9FA;
+        }
         @keyframes pulse-ring {
             0% { transform: scale(0.8); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.5; }
             100% { transform: scale(0.8); opacity: 1; }
         }
         .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
-        
-        @keyframes hash-flow {
-            0% { transform: translateX(-100%); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%); opacity: 0; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .hash-flow { animation: hash-flow 2s ease-in-out; }
-        
-        .financial-table { border-collapse: collapse; width: 100%; }
-        .financial-table th { background: #1e40af; color: white; padding: 12px; text-align: left; }
-        .financial-table td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
-        .financial-table tr:hover { background: #f3f4f6; }
-        
-        .layer-node {
-            transition: all 0.3s;
+        .slide-in { animation: slideIn 0.5s ease-out; }
+        @keyframes flowHash {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { transform: translateY(40px); opacity: 1; }
+            100% { transform: translateY(100px); opacity: 0; }
         }
-        .layer-node.active {
-            transform: scale(1.2);
-            box-shadow: 0 0 30px rgba(34, 211, 238, 0.8);
-        }
+        .flow-hash { animation: flowHash 1.5s ease-in-out; }
+        .gov-table { border-collapse: collapse; width: 100%; background: white; border: 2px solid var(--gov-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .gov-table th { background: var(--gov-blue); color: white; padding: 14px 16px; text-align: left; font-weight: 600; font-size: 0.95rem; border-right: 1px solid rgba(255,255,255,0.2); }
+        .gov-table th:last-child { border-right: none; }
+        .gov-table td { padding: 12px 16px; border-bottom: 1px solid #E5E7EB; color: #1F2937; }
+        .gov-table tr:hover { background: #F9FAFB; }
+        .gov-table .category-row { background: #F3F4F6; font-weight: 600; color: var(--gov-navy); }
+        .gov-table .subcategory-row td { padding-left: 32px; }
+        .gov-table .total-row { background: var(--gov-blue-light); font-weight: 700; color: var(--gov-navy); border-top: 2px solid var(--gov-blue); }
+        .gov-table .amount { text-align: right; font-family: 'Courier New', monospace; font-weight: 500; }
+        .gov-btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.2s; border: none; cursor: pointer; font-size: 1rem; }
+        .gov-btn-primary { background: var(--gov-blue); color: white; }
+        .gov-btn-primary:hover { background: var(--gov-blue-dark); }
+        .gov-btn-secondary { background: white; color: var(--gov-blue); border: 2px solid var(--gov-blue); }
+        .gov-btn-secondary:hover { background: var(--gov-blue-light); }
     </style>
 </head>
-<body class="bg-slate-900 text-white">
+<body style="background: var(--gov-bg); color: #1F2937;">
     <div id="root"></div>
-    
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
-        // 메인 앱
         const App = () => {
             const [activeMenu, setActiveMenu] = useState('dashboard');
             const [entities, setEntities] = useState({ businesses: [], individuals: [] });
             const [selectedEntity, setSelectedEntity] = useState(null);
             const [transactions, setTransactions] = useState([]);
             const [layersStatus, setLayersStatus] = useState({});
-            const [simulationRunning, setSimulationRunning] = useState(false);
 
             useEffect(() => {
                 loadEntities();
@@ -89,32 +102,35 @@
                 }
             };
 
+            const resetToDashboard = () => {
+                setActiveMenu('dashboard');
+                setSelectedEntity(null);
+            };
+
             return (
                 <div className="min-h-screen">
-                    {/* 헤더 */}
-                    <header className="bg-slate-800 border-b border-cyan-500/30 sticky top-0 z-50">
+                    <header style={{background: 'white', borderBottom: '3px solid var(--gov-blue)'}} className="sticky top-0 z-50 shadow-md">
                         <div className="max-w-7xl mx-auto px-4 py-4">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-                                        <i className="fas fa-chart-line text-2xl"></i>
+                                <div className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition" onClick={resetToDashboard}>
+                                    <div style={{background: 'var(--gov-blue)'}} className="w-14 h-14 rounded-lg flex items-center justify-center shadow-lg">
+                                        <i className="fas fa-chart-line text-white text-2xl"></i>
                                     </div>
                                     <div>
-                                        <h1 className="text-2xl font-bold">국가 재무제표 시스템</h1>
-                                        <p className="text-sm text-gray-400">OpenHash 기반 실시간 재무 투명성</p>
+                                        <h1 style={{color: 'var(--gov-navy)'}} className="text-2xl font-bold">국가 재무제표 시스템</h1>
+                                        <p style={{color: 'var(--gov-gray)'}} className="text-sm">OpenHash 기반 실시간 재무 투명성</p>
                                     </div>
                                 </div>
-                                <a href="/portal/systems.html" className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">
+                                <a href="/portal/systems.html" className="gov-btn gov-btn-secondary">
                                     <i className="fas fa-home mr-2"></i>포털
                                 </a>
                             </div>
                         </div>
                     </header>
 
-                    {/* 네비게이션 */}
-                    <nav className="bg-slate-800/50 border-b border-slate-700">
+                    <nav style={{background: 'white', borderBottom: '1px solid #E5E7EB'}} className="shadow-sm">
                         <div className="max-w-7xl mx-auto px-4">
-                            <div className="flex gap-2 overflow-x-auto py-2">
+                            <div className="flex gap-1 overflow-x-auto py-2">
                                 {[
                                     { id: 'dashboard', icon: 'fa-dashboard', name: '대시보드' },
                                     { id: 'entities', icon: 'fa-building', name: '개인/사업자' },
@@ -125,11 +141,12 @@
                                     <button
                                         key={menu.id}
                                         onClick={() => setActiveMenu(menu.id)}
-                                        className={`px-4 py-2 rounded-lg transition whitespace-nowrap ${
-                                            activeMenu === menu.id 
-                                                ? 'bg-cyan-500 text-white' 
-                                                : 'bg-slate-700 hover:bg-slate-600'
-                                        }`}
+                                        style={{
+                                            background: activeMenu === menu.id ? 'var(--gov-blue)' : 'white',
+                                            color: activeMenu === menu.id ? 'white' : 'var(--gov-navy)',
+                                            border: activeMenu === menu.id ? 'none' : '1px solid #E5E7EB'
+                                        }}
+                                        className="px-5 py-3 rounded-lg transition whitespace-nowrap font-semibold hover:shadow-md"
                                     >
                                         <i className={`fas ${menu.icon} mr-2`}></i>
                                         {menu.name}
@@ -139,1065 +156,176 @@
                         </div>
                     </nav>
 
-                    {/* 메인 콘텐츠 */}
-                    <main className="max-w-7xl mx-auto px-4 py-6">
-                        {activeMenu === 'dashboard' && (
-                            <Dashboard 
-                                entities={entities} 
-                                transactions={transactions}
-                                layersStatus={layersStatus}
-                            />
-                        )}
-                        {activeMenu === 'entities' && (
-                            <EntitiesList 
-                                entities={entities}
-                                onSelectEntity={setSelectedEntity}
-                            />
-                        )}
-                        {activeMenu === 'simulation' && (
-                            <TransactionSimulation 
-                                entities={entities}
-                                onTransactionComplete={() => {
-                                    loadTransactions();
-                                    loadLayersStatus();
-                                }}
-                            />
-                        )}
-                        {activeMenu === 'openhash' && (
-                            <OpenHashVisualization 
-                                layersStatus={layersStatus}
-                                transactions={transactions}
-                            />
-                        )}
-                        {activeMenu === 'analysis' && (
-                            <AIAnalysis transactions={transactions} />
-                        )}
+                    <main className="max-w-7xl mx-auto px-4 py-8">
+                        {activeMenu === 'dashboard' && <Dashboard entities={entities} transactions={transactions} layersStatus={layersStatus} />}
+                        {activeMenu === 'entities' && <EntitiesList entities={entities} onSelectEntity={setSelectedEntity} />}
+                        {activeMenu === 'simulation' && <TransactionSimulation entities={entities} onTransactionComplete={() => {
+                            loadEntities();
+                            loadTransactions();
+                            loadLayersStatus();
+                        }} />}
+                        {activeMenu === 'openhash' && <OpenHashVisualization layersStatus={layersStatus} transactions={transactions} />}
+                        {activeMenu === 'analysis' && <AIAnalysis transactions={transactions} />}
                     </main>
 
-                    {/* 선택된 엔티티 모달 */}
-                    {selectedEntity && (
-                        <EntityDetailModal 
-                            entity={selectedEntity}
-                            onClose={() => setSelectedEntity(null)}
-                        />
-                    )}
+                    {selectedEntity && <EntityDetailModal entity={selectedEntity} onClose={() => setSelectedEntity(null)} />}
                 </div>
             );
         };
 
-        // 대시보드 컴포넌트
         const Dashboard = ({ entities, transactions, layersStatus }) => {
             const totalBusinesses = entities.businesses?.length || 0;
             const totalIndividuals = entities.individuals?.length || 0;
             const totalTransactions = transactions?.length || 0;
-
-            // 계층별 노드 수 계산
             const totalNodes = Object.values(layersStatus).reduce((sum, layer) => sum + layer.length, 0);
 
             return (
-                <div className="space-y-6">
-                    {/* 통계 카드 */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <StatCard 
-                            icon="fa-building" 
-                            label="사업자" 
-                            value={totalBusinesses}
-                            color="blue"
-                        />
-                        <StatCard 
-                            icon="fa-users" 
-                            label="개인" 
-                            value={totalIndividuals}
-                            color="green"
-                        />
-                        <StatCard 
-                            icon="fa-exchange-alt" 
-                            label="총 거래" 
-                            value={totalTransactions}
-                            color="purple"
-                        />
-                        <StatCard 
-                            icon="fa-network-wired" 
-                            label="OpenHash 노드" 
-                            value={totalNodes}
-                            color="cyan"
-                        />
+                <div className="space-y-6 slide-in">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <StatCard icon="fa-building" label="사업자" value={totalBusinesses} color="#0046FF" />
+                        <StatCard icon="fa-users" label="개인" value={totalIndividuals} color="#10B981" />
+                        <StatCard icon="fa-exchange-alt" label="총 거래" value={totalTransactions} color="#8B5CF6" />
+                        <StatCard icon="fa-network-wired" label="OpenHash 노드" value={totalNodes} color="#06B6D4" />
                     </div>
-
-                    {/* OpenHash 특징 */}
-                    <div className="bg-slate-800 rounded-xl p-6 border border-cyan-500/30">
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <i className="fas fa-shield-alt text-cyan-400"></i>
+                    <div style={{background: 'white', border: '2px solid var(--gov-blue)'}} className="rounded-xl p-8 shadow-lg">
+                        <h2 style={{color: 'var(--gov-navy)'}} className="text-2xl font-bold mb-6 flex items-center gap-3">
+                            <i className="fas fa-shield-alt" style={{color: 'var(--gov-blue)'}}></i>
                             OpenHash 기반 재무 투명성
                         </h2>
-                        <div className="grid md:grid-cols-3 gap-4">
-                            <FeatureCard 
-                                icon="fa-link"
-                                title="4계층 분산 검증"
-                                desc="읍면동 → 시군구 → 광역시도 → 국가"
-                            />
-                            <FeatureCard 
-                                icon="fa-ban"
-                                title="허위거래 불가"
-                                desc="모든 재무제표 상호 연동"
-                            />
-                            <FeatureCard 
-                                icon="fa-brain"
-                                title="AI 이상거래 감지"
-                                desc="실시간 패턴 분석 및 대응"
-                            />
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <FeatureCard icon="fa-link" title="4계층 분산 검증" desc="읍면동 → 시군구 → 광역시도 → 국가" />
+                            <FeatureCard icon="fa-ban" title="허위거래 불가" desc="모든 재무제표 상호 연동으로 위변조 차단" />
+                            <FeatureCard icon="fa-brain" title="AI 이상거래 감지" desc="Claude AI 실시간 패턴 분석 및 자동 대응" />
                         </div>
                     </div>
-
-                    {/* 최근 거래 */}
-                    <div className="bg-slate-800 rounded-xl p-6">
-                        <h2 className="text-xl font-bold mb-4">최근 거래</h2>
-                        <div className="space-y-2">
-                            {transactions.slice(-5).reverse().map((tx, idx) => (
-                                <div key={idx} className="bg-slate-700 p-4 rounded-lg flex justify-between items-center">
-                                    <div>
-                                        <div className="font-semibold">{tx.description}</div>
-                                        <div className="text-sm text-gray-400">
-                                            {tx.from} → {tx.to}
+                    <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg">
+                        <h2 style={{color: 'var(--gov-navy)'}} className="text-xl font-bold mb-4">최근 거래 내역</h2>
+                        {transactions.length === 0 ? (
+                            <div className="text-center py-12" style={{color: 'var(--gov-gray)'}}>
+                                <i className="fas fa-inbox text-6xl mb-4 opacity-30"></i>
+                                <div className="text-lg">아직 거래가 없습니다</div>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {transactions.slice(-5).reverse().map((tx, idx) => (
+                                    <div key={idx} style={{background: 'var(--gov-bg)', border: '1px solid #E5E7EB'}} className="p-4 rounded-lg">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="font-semibold text-lg" style={{color: 'var(--gov-navy)'}}>{tx.description}</div>
+                                                <div className="text-sm mt-1" style={{color: 'var(--gov-gray)'}}>{tx.from} → {tx.to}</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xl font-bold" style={{color: 'var(--gov-blue)'}}>{tx.amount?.toLocaleString()}원</div>
+                                                <div className="text-xs mt-1" style={{color: 'var(--gov-gray)'}}>{new Date(tx.timestamp).toLocaleString('ko-KR')}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-lg font-bold text-cyan-400">
-                                            {tx.amount?.toLocaleString()}원
-                                        </div>
-                                        <div className="text-xs text-gray-400">
-                                            {new Date(tx.timestamp).toLocaleString()}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             );
         };
 
-        // 통계 카드
-        const StatCard = ({ icon, label, value, color }) => {
-            const colorClasses = {
-                blue: 'from-blue-500 to-blue-600',
-                green: 'from-green-500 to-green-600',
-                purple: 'from-purple-500 to-purple-600',
-                cyan: 'from-cyan-500 to-cyan-600'
-            };
-
-            return (
-                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-gray-400 text-sm mb-1">{label}</div>
-                            <div className="text-3xl font-bold">{value}</div>
-                        </div>
-                        <div className={`w-16 h-16 bg-gradient-to-br ${colorClasses[color]} rounded-lg flex items-center justify-center`}>
-                            <i className={`fas ${icon} text-2xl`}></i>
-                        </div>
+        const StatCard = ({ icon, label, value, color }) => (
+            <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg hover:shadow-xl transition border border-gray-200">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <div style={{color: 'var(--gov-gray)'}} className="text-sm mb-2 font-medium">{label}</div>
+                        <div style={{color: 'var(--gov-navy)'}} className="text-4xl font-bold">{value}</div>
+                    </div>
+                    <div style={{background: color}} className="w-16 h-16 rounded-xl flex items-center justify-center shadow-md">
+                        <i className={`fas ${icon} text-white text-2xl`}></i>
                     </div>
                 </div>
-            );
-        };
+            </div>
+        );
 
-        // 기능 카드
         const FeatureCard = ({ icon, title, desc }) => (
-            <div className="bg-slate-700/50 p-4 rounded-lg">
-                <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i className={`fas ${icon} text-cyan-400`}></i>
+            <div style={{background: 'var(--gov-blue-light)', border: '1px solid var(--gov-blue)'}} className="p-5 rounded-lg">
+                <div className="flex items-start gap-4">
+                    <div style={{background: 'var(--gov-blue)'}} className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        <i className={`fas ${icon} text-white text-lg`}></i>
                     </div>
                     <div>
-                        <div className="font-semibold mb-1">{title}</div>
-                        <div className="text-sm text-gray-400">{desc}</div>
+                        <div className="font-bold text-lg mb-2" style={{color: 'var(--gov-navy)'}}>{title}</div>
+                        <div className="text-sm leading-relaxed" style={{color: 'var(--gov-gray)'}}>{desc}</div>
                     </div>
                 </div>
             </div>
         );
 
-        // 개인/사업자 목록
         const EntitiesList = ({ entities, onSelectEntity }) => {
             const [filter, setFilter] = useState('all');
-
-            const filteredEntities = filter === 'all' 
-                ? [...(entities.businesses || []), ...(entities.individuals || [])]
-                : filter === 'business' 
-                    ? entities.businesses || []
-                    : entities.individuals || [];
+            const filteredEntities = filter === 'all' ? [...(entities.businesses || []), ...(entities.individuals || [])] : filter === 'business' ? entities.businesses || [] : entities.individuals || [];
 
             return (
-                <div className="space-y-4">
-                    {/* 필터 */}
-                    <div className="flex gap-2">
-                        {[
-                            { id: 'all', name: '전체' },
-                            { id: 'business', name: '사업자' },
-                            { id: 'individual', name: '개인' }
-                        ].map(f => (
-                            <button
-                                key={f.id}
-                                onClick={() => setFilter(f.id)}
-                                className={`px-4 py-2 rounded-lg transition ${
-                                    filter === f.id 
-                                        ? 'bg-cyan-500 text-white' 
-                                        : 'bg-slate-700 hover:bg-slate-600'
-                                }`}
-                            >
-                                {f.name}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* 엔티티 그리드 */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {filteredEntities.map(entity => (
-                            <div
-                                key={entity.id}
-                                onClick={() => onSelectEntity(entity)}
-                                className="bg-slate-800 p-4 rounded-lg border border-slate-700 hover:border-cyan-500 cursor-pointer transition"
-                            >
-                                <div className="flex items-start justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <i className={`fas ${entity.type ? 'fa-building' : 'fa-user'} text-cyan-400`}></i>
-                                        <span className="font-semibold">{entity.name}</span>
-                                    </div>
-                                    <span className="text-xs bg-slate-700 px-2 py-1 rounded">{entity.id}</span>
-                                </div>
-                                <div className="text-sm text-gray-400 mb-3">
-                                    {entity.type || entity.occupation}
-                                </div>
-                                <div className="grid grid-cols-2 gap-2 text-sm">
-                                    <div>
-                                        <div className="text-gray-400">총자산</div>
-                                        <div className="font-semibold text-green-400">
-                                            {(entity.balance_sheet?.assets?.total || 0).toLocaleString()}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-gray-400">순이익</div>
-                                        <div className="font-semibold text-cyan-400">
-                                            {(entity.income_statement?.net_income || 0).toLocaleString()}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
-
-        // 엔티티 상세 모달
-        const EntityDetailModal = ({ entity, onClose }) => {
-            const [activeTab, setActiveTab] = useState('balance_sheet');
-
-            return (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-                    <div className="bg-slate-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
-                        {/* 헤더 */}
-                        <div className="sticky top-0 bg-slate-800 border-b border-slate-700 p-6">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h2 className="text-2xl font-bold">{entity.name}</h2>
-                                    <p className="text-gray-400">{entity.type || entity.occupation} ({entity.id})</p>
-                                </div>
-                                <button 
-                                    onClick={onClose}
-                                    className="w-10 h-10 bg-slate-700 hover:bg-slate-600 rounded-lg transition"
-                                >
-                                    <i className="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* 탭 네비게이션 */}
-                        <div className="flex gap-2 px-6 pt-4 border-b border-slate-700">
+                <div className="space-y-6 slide-in">
+                    <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg">
+                        <div className="flex gap-3">
                             {[
-                                { id: 'balance_sheet', name: '대차대조표' },
-                                { id: 'income_statement', name: '손익계산서' },
-                                { id: 'cash_flow', name: '현금흐름표' }
-                            ].map(tab => (
+                                { id: 'all', name: '전체', icon: 'fa-list' },
+                                { id: 'business', name: '사업자', icon: 'fa-building' },
+                                { id: 'individual', name: '개인', icon: 'fa-user' }
+                            ].map(f => (
                                 <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`px-4 py-2 transition ${
-                                        activeTab === tab.id
-                                            ? 'border-b-2 border-cyan-500 text-cyan-400'
-                                            : 'text-gray-400 hover:text-white'
-                                    }`}
+                                    key={f.id}
+                                    onClick={() => setFilter(f.id)}
+                                    className="gov-btn"
+                                    style={{
+                                        background: filter === f.id ? 'var(--gov-blue)' : 'white',
+                                        color: filter === f.id ? 'white' : 'var(--gov-blue)',
+                                        border: `2px solid var(--gov-blue)`
+                                    }}
                                 >
-                                    {tab.name}
+                                    <i className={`fas ${f.icon} mr-2`}></i>
+                                    {f.name}
                                 </button>
                             ))}
                         </div>
+                    </div>
 
-                        {/* 탭 콘텐츠 */}
-                        <div className="p-6">
-                            {activeTab === 'balance_sheet' && (
-                                <BalanceSheet data={entity.balance_sheet} entityType={entity.type ? 'business' : 'individual'} />
-                            )}
-                            {activeTab === 'income_statement' && (
-                                <IncomeStatement data={entity.income_statement} entityType={entity.type ? 'business' : 'individual'} />
-                            )}
-                            {activeTab === 'cash_flow' && (
-                                <CashFlow data={entity.cash_flow} />
-                            )}
+                    {filteredEntities.length === 0 ? (
+                        <div style={{background: 'white'}} className="rounded-xl p-12 text-center shadow-lg">
+                            <i className="fas fa-inbox text-6xl mb-4 opacity-20" style={{color: 'var(--gov-gray)'}}></i>
+                            <div style={{color: 'var(--gov-gray)'}}>데이터를 불러오는 중...</div>
                         </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // 대차대조표
-        const BalanceSheet = ({ data, entityType }) => {
-            if (entityType === 'business') {
-                return (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-bold">대차대조표 (Balance Sheet)</h3>
-                        <table className="financial-table">
-                            <thead>
-                                <tr>
-                                    <th>자산 (Assets)</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>유동자산</td>
-                                    <td className="text-right">{data.assets?.current?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>고정자산</td>
-                                    <td className="text-right">{data.assets?.fixed?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-gray-100">
-                                    <td>자산 총계</td>
-                                    <td className="text-right">{data.assets?.total?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table className="financial-table mt-4">
-                            <thead>
-                                <tr>
-                                    <th>부채 (Liabilities)</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>유동부채</td>
-                                    <td className="text-right">{data.liabilities?.current?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>장기부채</td>
-                                    <td className="text-right">{data.liabilities?.long_term?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-gray-100">
-                                    <td>부채 총계</td>
-                                    <td className="text-right">{data.liabilities?.total?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table className="financial-table mt-4">
-                            <thead>
-                                <tr>
-                                    <th>자본 (Equity)</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>자본금</td>
-                                    <td className="text-right">{data.equity?.capital?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>이익잉여금</td>
-                                    <td className="text-right">{data.equity?.retained_earnings?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-gray-100">
-                                    <td>자본 총계</td>
-                                    <td className="text-right">{data.equity?.total?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-bold">개인 재무상태표</h3>
-                        <table className="financial-table">
-                            <thead>
-                                <tr>
-                                    <th>항목</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>현금 및 예금</td>
-                                    <td className="text-right">{data.assets?.cash?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>부동산</td>
-                                    <td className="text-right">{data.assets?.property?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-gray-100">
-                                    <td>총 자산</td>
-                                    <td className="text-right">{data.assets?.total?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td className="pt-4">대출</td>
-                                    <td className="text-right pt-4">{data.liabilities?.loans?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-gray-100">
-                                    <td>순자산</td>
-                                    <td className="text-right">{data.equity?.net_worth?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                );
-            }
-        };
-
-        // 손익계산서
-        const IncomeStatement = ({ data, entityType }) => {
-            if (entityType === 'business') {
-                return (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-bold">손익계산서 (Income Statement)</h3>
-                        <table className="financial-table">
-                            <thead>
-                                <tr>
-                                    <th>항목</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>매출액</td>
-                                    <td className="text-right">{data.revenue?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>매출원가</td>
-                                    <td className="text-right">({data.cogs?.toLocaleString()})</td>
-                                </tr>
-                                <tr className="font-bold bg-blue-50">
-                                    <td>매출총이익</td>
-                                    <td className="text-right">{data.gross_profit?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>영업비용</td>
-                                    <td className="text-right">({data.operating_expenses?.toLocaleString()})</td>
-                                </tr>
-                                <tr className="font-bold bg-blue-50">
-                                    <td>영업이익</td>
-                                    <td className="text-right">{data.operating_income?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-green-50">
-                                    <td>순이익</td>
-                                    <td className="text-right text-green-600">{data.net_income?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-bold">개인 손익계산서</h3>
-                        <table className="financial-table">
-                            <thead>
-                                <tr>
-                                    <th>항목</th>
-                                    <th className="text-right">금액</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white text-gray-900">
-                                <tr>
-                                    <td>급여소득</td>
-                                    <td className="text-right">{data.salary?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>기타소득</td>
-                                    <td className="text-right">{data.other_income?.toLocaleString()}</td>
-                                </tr>
-                                <tr className="font-bold bg-blue-50">
-                                    <td>총 소득</td>
-                                    <td className="text-right">{data.total_income?.toLocaleString()}</td>
-                                </tr>
-                                <tr>
-                                    <td>지출</td>
-                                    <td className="text-right">({data.expenses?.toLocaleString()})</td>
-                                </tr>
-                                <tr className="font-bold bg-green-50">
-                                    <td>순소득</td>
-                                    <td className="text-right text-green-600">{data.net_income?.toLocaleString()}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                );
-            }
-        };
-
-        // 현금흐름표
-        const CashFlow = ({ data }) => (
-            <div className="space-y-4">
-                <h3 className="text-lg font-bold">현금흐름표 (Cash Flow Statement)</h3>
-                <table className="financial-table">
-                    <thead>
-                        <tr>
-                            <th>구분</th>
-                            <th className="text-right">금액</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white text-gray-900">
-                        <tr>
-                            <td>영업활동 현금흐름</td>
-                            <td className="text-right">{data.operating?.toLocaleString()}</td>
-                        </tr>
-                        <tr>
-                            <td>투자활동 현금흐름</td>
-                            <td className="text-right">{data.investing?.toLocaleString()}</td>
-                        </tr>
-                        <tr>
-                            <td>재무활동 현금흐름</td>
-                            <td className="text-right">{data.financing?.toLocaleString()}</td>
-                        </tr>
-                        <tr className="font-bold bg-blue-50">
-                            <td>현금 순증감</td>
-                            <td className="text-right">{data.net_change?.toLocaleString()}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        );
-
-        // 렌더링
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
-</body>
-</html>
-    <script type="text/babel">
-        // 거래 시뮬레이션 컴포넌트
-        const TransactionSimulation = ({ entities, onTransactionComplete }) => {
-            const [fromEntity, setFromEntity] = useState('');
-            const [toEntity, setToEntity] = useState('');
-            const [amount, setAmount] = useState(10000000);
-            const [description, setDescription] = useState('상품 구매');
-            const [loading, setLoading] = useState(false);
-            const [result, setResult] = useState(null);
-            const [showAnimation, setShowAnimation] = useState(false);
-
-            const allEntities = [...(entities.businesses || []), ...(entities.individuals || [])];
-
-            const simulateTransaction = async () => {
-                if (!fromEntity || !toEntity) {
-                    alert('송신자와 수신자를 선택해주세요');
-                    return;
-                }
-
-                setLoading(true);
-                setShowAnimation(true);
-                setResult(null);
-
-                try {
-                    const response = await fetch('/api/national-financial-statements/transaction/simulate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            from: fromEntity,
-                            to: toEntity,
-                            amount: parseInt(amount),
-                            description: description
-                        })
-                    });
-
-                    const data = await response.json();
-                    
-                    // 애니메이션을 위한 딜레이
-                    await new Promise(resolve => setTimeout(resolve, 3000));
-                    
-                    setResult(data);
-                    onTransactionComplete();
-                } catch (error) {
-                    console.error('거래 시뮬레이션 실패:', error);
-                    alert('거래 시뮬레이션 중 오류가 발생했습니다');
-                } finally {
-                    setLoading(false);
-                    setShowAnimation(false);
-                }
-            };
-
-            return (
-                <div className="space-y-6">
-                    <div className="bg-slate-800 rounded-xl p-6">
-                        <h2 className="text-xl font-bold mb-4">거래 시뮬레이션</h2>
-                        
-                        <div className="grid md:grid-cols-2 gap-4 mb-4">
-                            {/* 송신자 */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2">송신자</label>
-                                <select
-                                    value={fromEntity}
-                                    onChange={(e) => setFromEntity(e.target.value)}
-                                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2"
-                                >
-                                    <option value="">선택하세요</option>
-                                    {allEntities.map(e => (
-                                        <option key={e.id} value={e.id}>
-                                            {e.name} ({e.id})
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* 수신자 */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2">수신자</label>
-                                <select
-                                    value={toEntity}
-                                    onChange={(e) => setToEntity(e.target.value)}
-                                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2"
-                                >
-                                    <option value="">선택하세요</option>
-                                    {allEntities.map(e => (
-                                        <option key={e.id} value={e.id}>
-                                            {e.name} ({e.id})
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4 mb-4">
-                            {/* 금액 */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2">거래 금액 (원)</label>
-                                <input
-                                    type="number"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2"
-                                    min="0"
-                                    step="1000000"
-                                />
-                            </div>
-
-                            {/* 설명 */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2">거래 설명</label>
-                                <input
-                                    type="text"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2"
-                                    placeholder="예: 상품 구매"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={simulateTransaction}
-                            disabled={loading}
-                            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-lg font-semibold transition"
-                        >
-                            {loading ? (
-                                <span><i className="fas fa-spinner fa-spin mr-2"></i>거래 처리 중...</span>
-                            ) : (
-                                <span><i className="fas fa-play mr-2"></i>거래 시뮬레이션 시작</span>
-                            )}
-                        </button>
-                    </div>
-
-                    {/* 애니메이션 */}
-                    {showAnimation && (
-                        <div className="bg-slate-800 rounded-xl p-6">
-                            <h3 className="text-lg font-bold mb-4">OpenHash 처리 중...</h3>
-                            <div className="flex items-center justify-center space-x-4 py-8">
-                                <div className="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center pulse-ring">
-                                    <i className="fas fa-database text-cyan-400 text-2xl"></i>
-                                </div>
-                                <div className="text-2xl text-cyan-400">→</div>
-                                <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center pulse-ring">
-                                    <i className="fas fa-network-wired text-blue-400 text-2xl"></i>
-                                </div>
-                                <div className="text-2xl text-blue-400">→</div>
-                                <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center pulse-ring">
-                                    <i className="fas fa-shield-alt text-purple-400 text-2xl"></i>
-                                </div>
-                            </div>
-                            <div className="text-center text-gray-400">
-                                4계층 분산 검증 진행 중...
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 결과 */}
-                    {result && result.success && (
-                        <div className="bg-slate-800 rounded-xl p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <i className="fas fa-check-circle text-green-400 text-2xl"></i>
-                                <h3 className="text-xl font-bold">거래 완료</h3>
-                            </div>
-
-                            <div className="space-y-4">
-                                {/* 거래 정보 */}
-                                <div className="bg-slate-700 p-4 rounded-lg">
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div>
-                                            <div className="text-sm text-gray-400">송신자</div>
-                                            <div className="font-semibold">{result.transaction.from}</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm text-gray-400">수신자</div>
-                                            <div className="font-semibold">{result.transaction.to}</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm text-gray-400">금액</div>
-                                            <div className="font-semibold text-cyan-400">
-                                                {result.transaction.amount?.toLocaleString()}원
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm text-gray-400">시간</div>
-                                            <div className="font-semibold">
-                                                {new Date(result.transaction.timestamp).toLocaleString()}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* OpenHash 처리 단계 */}
-                                <div>
-                                    <h4 className="font-semibold mb-2">OpenHash 검증 단계</h4>
-                                    <div className="space-y-2">
-                                        {result.openhash.steps.map((step, idx) => (
-                                            <div key={idx} className="bg-slate-700 p-3 rounded-lg">
-                                                <div className="flex items-start gap-3">
-                                                    <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm">
-                                                        {step.step}
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <div className="font-semibold text-sm">{step.description}</div>
-                                                        {step.layer && (
-                                                            <div className="text-xs text-gray-400 mt-1">
-                                                                계층: {step.layer} | 노드: {step.node}
-                                                            </div>
-                                                        )}
-                                                        {step.final_hash && (
-                                                            <div className="text-xs text-cyan-400 mt-1 font-mono">
-                                                                최종 해시: {step.final_hash.substring(0, 32)}...
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        // OpenHash 시각화 컴포넌트
-        const OpenHashVisualization = ({ layersStatus, transactions }) => {
-            const [selectedLayer, setSelectedLayer] = useState('layer1');
-            const [activeNodes, setActiveNodes] = useState([]);
-
-            // 최근 거래의 OpenHash 경로 시각화
-            const recentTransaction = transactions[transactions.length - 1];
-
-            return (
-                <div className="space-y-6">
-                    {/* 계층 구조 시각화 */}
-                    <div className="bg-slate-800 rounded-xl p-6">
-                        <h2 className="text-xl font-bold mb-6">OpenHash 4계층 구조</h2>
-                        
-                        <div className="space-y-6">
-                            {/* Layer 4 - 국가 */}
-                            <LayerVisualization
-                                layer={layersStatus.layer4}
-                                layerName="Layer 4: 국가"
-                                color="purple"
-                                icon="fa-flag"
-                            />
-
-                            {/* Layer 3 - 광역시도 */}
-                            <LayerVisualization
-                                layer={layersStatus.layer3}
-                                layerName="Layer 3: 광역시도"
-                                color="blue"
-                                icon="fa-city"
-                            />
-
-                            {/* Layer 2 - 시군구 */}
-                            <LayerVisualization
-                                layer={layersStatus.layer2}
-                                layerName="Layer 2: 시군구"
-                                color="cyan"
-                                icon="fa-building"
-                            />
-
-                            {/* Layer 1 - 읍면동 */}
-                            <LayerVisualization
-                                layer={layersStatus.layer1}
-                                layerName="Layer 1: 읍면동"
-                                color="green"
-                                icon="fa-home"
-                            />
-                        </div>
-                    </div>
-
-                    {/* 해시 체인 설명 */}
-                    <div className="bg-slate-800 rounded-xl p-6">
-                        <h3 className="text-lg font-bold mb-4">OpenHash 작동 원리</h3>
-                        <div className="space-y-4">
-                            <ProcessStep
-                                number="1"
-                                title="거래 데이터 해시 생성"
-                                desc="거래 당사자가 거래 정보로부터 초기 해시를 생성합니다."
-                            />
-                            <ProcessStep
-                                number="2"
-                                title="Layer 1 전송 (읍면동)"
-                                desc="확률적으로 선택된 읍면동 노드로 해시를 전송하고, 해당 노드의 해시 체인에 추가합니다."
-                            />
-                            <ProcessStep
-                                number="3"
-                                title="Layer 2 전송 (시군구)"
-                                desc="Layer 1의 응답 해시를 Layer 2로 전송하여 시군구 노드의 해시 체인에 추가합니다."
-                            />
-                            <ProcessStep
-                                number="4"
-                                title="Layer 3 전송 (광역시도)"
-                                desc="Layer 2의 응답 해시를 Layer 3로 전송하여 광역시도 노드의 해시 체인에 추가합니다."
-                            />
-                            <ProcessStep
-                                number="5"
-                                title="Layer 4 전송 (국가)"
-                                desc="Layer 3의 응답 해시를 국가 노드로 전송하여 최종 검증을 수행합니다."
-                            />
-                            <ProcessStep
-                                number="6"
-                                title="최종 해시 생성"
-                                desc="모든 계층의 응답을 결합하여 최종 해시를 생성하고 거래를 완료합니다."
-                            />
-                        </div>
-                    </div>
-
-                    {/* 분산 신뢰 특징 */}
-                    <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl p-6">
-                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                            <i className="fas fa-shield-alt text-cyan-400"></i>
-                            분산 신뢰의 장점
-                        </h3>
-                        <div className="grid md:grid-cols-3 gap-4">
-                            <div className="bg-slate-800/50 p-4 rounded-lg">
-                                <div className="text-cyan-400 font-semibold mb-2">
-                                    <i className="fas fa-lock mr-2"></i>위변조 불가
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                    4계층 분산 검증으로 단일 지점 변조 불가능
-                                </div>
-                            </div>
-                            <div className="bg-slate-800/50 p-4 rounded-lg">
-                                <div className="text-green-400 font-semibold mb-2">
-                                    <i className="fas fa-bolt mr-2"></i>고속 처리
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                    확률적 선택으로 블록체인 대비 100배 이상 빠른 처리
-                                </div>
-                            </div>
-                            <div className="bg-slate-800/50 p-4 rounded-lg">
-                                <div className="text-purple-400 font-semibold mb-2">
-                                    <i className="fas fa-leaf mr-2"></i>에너지 효율
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                    작업증명 없이 98.5% 에너지 절감
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // 계층 시각화
-        const LayerVisualization = ({ layer, layerName, color, icon }) => {
-            const colorClasses = {
-                purple: 'from-purple-500 to-purple-600',
-                blue: 'from-blue-500 to-blue-600',
-                cyan: 'from-cyan-500 to-cyan-600',
-                green: 'from-green-500 to-green-600'
-            };
-
-            if (!layer || layer.length === 0) return null;
-
-            return (
-                <div className="border-l-4 border-cyan-500 pl-4">
-                    <div className="flex items-center gap-2 mb-3">
-                        <i className={`fas ${icon} text-cyan-400`}></i>
-                        <h4 className="font-semibold">{layerName}</h4>
-                        <span className="text-sm text-gray-400">({layer.length}개 노드)</span>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                        {layer.map((node, idx) => (
-                            <div
-                                key={idx}
-                                className={`layer-node bg-gradient-to-br ${colorClasses[color]} p-3 rounded-lg`}
-                            >
-                                <div className="text-xs font-semibold mb-1">{node.name}</div>
-                                <div className="text-xs opacity-80">
-                                    체인: {node.chain_length}개
-                                </div>
-                                <div className="text-xs opacity-60 font-mono mt-1 truncate">
-                                    {node.last_hash}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
-
-        // 프로세스 단계
-        const ProcessStep = ({ number, title, desc }) => (
-            <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 font-bold">
-                    {number}
-                </div>
-                <div className="flex-1">
-                    <div className="font-semibold mb-1">{title}</div>
-                    <div className="text-sm text-gray-400">{desc}</div>
-                </div>
-            </div>
-        );
-
-        // AI 분석 컴포넌트
-        const AIAnalysis = ({ transactions }) => {
-            const [selectedTransaction, setSelectedTransaction] = useState(null);
-            const [analysis, setAnalysis] = useState('');
-            const [loading, setLoading] = useState(false);
-
-            const analyzeTransaction = async (tx) => {
-                setSelectedTransaction(tx);
-                setLoading(true);
-                setAnalysis('');
-
-                try {
-                    const response = await fetch('/api/national-financial-statements/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ transaction: tx })
-                    });
-
-                    const data = await response.json();
-                    if (data.success) {
-                        setAnalysis(data.analysis);
-                    } else {
-                        setAnalysis('분석 중 오류가 발생했습니다: ' + data.error);
-                    }
-                } catch (error) {
-                    setAnalysis('AI 분석 요청 실패: ' + error.message);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            return (
-                <div className="space-y-6">
-                    <div className="bg-slate-800 rounded-xl p-6">
-                        <h2 className="text-xl font-bold mb-4">
-                            <i className="fas fa-brain text-purple-400 mr-2"></i>
-                            AI 거래 분석
-                        </h2>
-                        <p className="text-gray-400 mb-4">
-                            Claude AI가 거래 패턴을 분석하여 이상 거래를 감지합니다.
-                        </p>
-
-                        {/* 거래 목록 */}
-                        <div className="space-y-2">
-                            {transactions.slice(-10).reverse().map((tx, idx) => (
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredEntities.map(entity => (
                                 <div
-                                    key={idx}
-                                    onClick={() => analyzeTransaction(tx)}
-                                    className="bg-slate-700 p-4 rounded-lg cursor-pointer hover:bg-slate-600 transition"
+                                    key={entity.id}
+                                    onClick={() => onSelectEntity(entity)}
+                                    style={{background: 'white', border: '2px solid #E5E7EB'}}
+                                    className="p-6 rounded-xl cursor-pointer hover:shadow-xl transition hover:border-blue-500"
                                 >
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <div className="font-semibold">{tx.description}</div>
-                                            <div className="text-sm text-gray-400">
-                                                {tx.from} → {tx.to}
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div style={{background: 'var(--gov-blue-light)', color: 'var(--gov-blue)'}} className="w-12 h-12 rounded-lg flex items-center justify-center">
+                                                <i className={`fas ${entity.type ? 'fa-building' : 'fa-user'} text-xl`}></i>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-lg" style={{color: 'var(--gov-navy)'}}>{entity.name}</div>
+                                                <span className="text-xs px-3 py-1 rounded-full" style={{background: 'var(--gov-blue-light)', color: 'var(--gov-blue)'}}>{entity.id}</span>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <div className="font-bold text-cyan-400">
-                                                {tx.amount?.toLocaleString()}원
-                                            </div>
-                                            <button className="text-xs bg-purple-500 px-2 py-1 rounded mt-1">
-                                                분석하기
-                                            </button>
+                                    </div>
+                                    <div className="text-sm mb-4" style={{color: 'var(--gov-gray)'}}>{entity.type || entity.occupation}</div>
+                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                                        <div>
+                                            <div className="text-xs mb-1" style={{color: 'var(--gov-gray)'}}>총자산</div>
+                                            <div className="font-bold text-lg text-green-600">{(entity.balance_sheet?.assets?.total || 0).toLocaleString()}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs mb-1" style={{color: 'var(--gov-gray)'}}>순이익</div>
+                                            <div className="font-bold text-lg" style={{color: 'var(--gov-blue)'}}>{(entity.income_statement?.net_income || 0).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
-
-                    {/* 분석 결과 */}
-                    {selectedTransaction && (
-                        <div className="bg-slate-800 rounded-xl p-6">
-                            <h3 className="text-lg font-bold mb-4">분석 결과</h3>
-                            
-                            {loading ? (
-                                <div className="text-center py-8">
-                                    <i className="fas fa-spinner fa-spin text-4xl text-purple-400 mb-4"></i>
-                                    <div className="text-gray-400">Claude AI가 거래를 분석하고 있습니다...</div>
-                                </div>
-                            ) : analysis ? (
-                                <div className="bg-slate-700 p-4 rounded-lg whitespace-pre-wrap">
-                                    {analysis}
-                                </div>
-                            ) : null}
-                        </div>
                     )}
-
-                    {/* AI 분석 기능 설명 */}
-                    <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-xl p-6">
-                        <h3 className="text-lg font-bold mb-4">AI 이상거래 감지 시스템</h3>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <div className="font-semibold text-purple-400 mb-2">
-                                    <i className="fas fa-chart-line mr-2"></i>패턴 분석
-                                </div>
-                                <ul className="text-sm text-gray-400 space-y-1">
-                                    <li>• 평균 거래 금액 대비 이상치 탐지</li>
-                                    <li>• 거래 빈도 및 시간대 패턴 분석</li>
-                                    <li>• 거래 상대방 네트워크 분석</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <div className="font-semibold text-pink-400 mb-2">
-                                    <i className="fas fa-exclamation-triangle mr-2"></i>대응 조치
-                                </div>
-                                <ul className="text-sm text-gray-400 space-y-1">
-                                    <li>• 의심 거래 즉시 플래그 표시</li>
-                                    <li>• 세무조사 대상 자동 선정</li>
-                                    <li>• 금융감독원 실시간 연계</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             );
         };
-    </script>

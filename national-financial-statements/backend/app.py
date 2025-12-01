@@ -4,20 +4,18 @@ import os
 import anthropic
 import hashlib
 import random
-import time
-from datetime import datetime, timedelta
 import json
+from datetime import datetime
+from copy import deepcopy
 
 app = Flask(__name__)
 CORS(app)
 
-# Claude API 클라이언트
 anthropic_client = None
 ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
 if ANTHROPIC_API_KEY:
     anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-# OpenHash 계층 구조
 class OpenHashLayer:
     def __init__(self, name, layer_id):
         self.name = name
@@ -31,7 +29,6 @@ class OpenHashLayer:
         self.hash_chain.append(new_hash)
         return new_hash
 
-# 계층 초기화
 layers = {
     'layer1': [OpenHashLayer(f"읍면동_{i}", f"L1-{i}") for i in range(1, 6)],
     'layer2': [OpenHashLayer(f"시군구_{i}", f"L2-{i}") for i in range(1, 4)],
@@ -39,61 +36,192 @@ layers = {
     'layer4': [OpenHashLayer("대한민국", "L4-1")]
 }
 
-# 가상 사업자 10곳
+# 더 상세한 사업자 재무제표
 businesses = [
-    {"id": "B001", "name": "테크코리아", "type": "IT서비스", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B002", "name": "글로벌무역", "type": "무역", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B003", "name": "제조산업", "type": "제조", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B004", "name": "식품유통", "type": "유통", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B005", "name": "건설개발", "type": "건설", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B006", "name": "금융투자", "type": "금융", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B007", "name": "부동산관리", "type": "부동산", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B008", "name": "의료서비스", "type": "의료", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B009", "name": "교육컨설팅", "type": "교육", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "B010", "name": "물류운송", "type": "물류", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]}
+    {
+        "id": "B001", "name": "테크코리아", "type": "IT서비스",
+        "balance_sheet": {
+            "assets": {
+                "current": {
+                    "cash": 150000000,
+                    "accounts_receivable": 200000000,
+                    "inventory": 100000000,
+                    "prepaid_expenses": 50000000,
+                    "total": 500000000
+                },
+                "fixed": {
+                    "land": 300000000,
+                    "buildings": 400000000,
+                    "equipment": 200000000,
+                    "vehicles": 100000000,
+                    "total": 1000000000
+                },
+                "total": 1500000000
+            },
+            "liabilities": {
+                "current": {
+                    "accounts_payable": 100000000,
+                    "notes_payable": 50000000,
+                    "accrued_expenses": 50000000,
+                    "total": 200000000
+                },
+                "long_term": {
+                    "long_term_debt": 200000000,
+                    "bonds_payable": 100000000,
+                    "total": 300000000
+                },
+                "total": 500000000
+            },
+            "equity": {
+                "capital_stock": 800000000,
+                "retained_earnings": 200000000,
+                "total": 1000000000
+            }
+        },
+        "income_statement": {
+            "revenue": 1000000000,
+            "cogs": 600000000,
+            "gross_profit": 400000000,
+            "operating_expenses": {
+                "salaries": 100000000,
+                "rent": 30000000,
+                "utilities": 20000000,
+                "marketing": 30000000,
+                "depreciation": 20000000,
+                "total": 200000000
+            },
+            "operating_income": 200000000,
+            "interest_expense": 30000000,
+            "income_before_tax": 170000000,
+            "income_tax": 20000000,
+            "net_income": 150000000
+        },
+        "cash_flow": {
+            "operating": 180000000,
+            "investing": -50000000,
+            "financing": -30000000,
+            "net_change": 100000000
+        },
+        "hash_chain": ["GENESIS"]
+    }
 ]
 
-# 가상 개인 10명
-individuals = [
-    {"id": "P001", "name": "김*수", "occupation": "회사원", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P002", "name": "이*영", "occupation": "자영업", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P003", "name": "박*민", "occupation": "프리랜서", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P004", "name": "최*아", "occupation": "교사", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P005", "name": "정*호", "occupation": "의사", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P006", "name": "강*희", "occupation": "변호사", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P007", "name": "윤*준", "occupation": "엔지니어", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P008", "name": "조*서", "occupation": "디자이너", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P009", "name": "장*우", "occupation": "농업인", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]},
-    {"id": "P010", "name": "임*진", "occupation": "공무원", "balance_sheet": {}, "income_statement": {}, "cash_flow": {}, "hash_chain": ["GENESIS"]}
-]
+# 나머지 9개 사업자도 추가 (간략화)
+for i in range(2, 11):
+    businesses.append({
+        "id": f"B{i:03d}",
+        "name": ["글로벌무역", "제조산업", "식품유통", "건설개발", "금융투자", "부동산관리", "의료서비스", "교육컨설팅", "물류운송"][i-2],
+        "type": ["무역", "제조", "유통", "건설", "금융", "부동산", "의료", "교육", "물류"][i-2],
+        "balance_sheet": {
+            "assets": {
+                "current": {"cash": 100000000 + i*10000000, "accounts_receivable": 150000000, "inventory": 80000000, "prepaid_expenses": 20000000, "total": 350000000 + i*10000000},
+                "fixed": {"land": 250000000, "buildings": 350000000, "equipment": 150000000, "vehicles": 50000000, "total": 800000000},
+                "total": 1150000000 + i*10000000
+            },
+            "liabilities": {
+                "current": {"accounts_payable": 80000000, "notes_payable": 40000000, "accrued_expenses": 30000000, "total": 150000000},
+                "long_term": {"long_term_debt": 150000000, "bonds_payable": 50000000, "total": 200000000},
+                "total": 350000000
+            },
+            "equity": {"capital_stock": 600000000 + i*10000000, "retained_earnings": 200000000, "total": 800000000 + i*10000000}
+        },
+        "income_statement": {
+            "revenue": 800000000 + i*50000000,
+            "cogs": 500000000 + i*30000000,
+            "gross_profit": 300000000 + i*20000000,
+            "operating_expenses": {"salaries": 80000000, "rent": 25000000, "utilities": 15000000, "marketing": 25000000, "depreciation": 15000000, "total": 160000000},
+            "operating_income": 140000000 + i*20000000,
+            "interest_expense": 20000000,
+            "income_before_tax": 120000000 + i*20000000,
+            "income_tax": 15000000,
+            "net_income": 105000000 + i*20000000
+        },
+        "cash_flow": {"operating": 120000000, "investing": -40000000, "financing": -20000000, "net_change": 60000000},
+        "hash_chain": ["GENESIS"]
+    })
 
-def initialize_financials():
-    for business in businesses:
-        business["balance_sheet"] = {
-            "assets": {"current": 500000000, "fixed": 1000000000, "total": 1500000000},
-            "liabilities": {"current": 200000000, "long_term": 300000000, "total": 500000000},
-            "equity": {"capital": 800000000, "retained_earnings": 200000000, "total": 1000000000}
-        }
-        business["income_statement"] = {
-            "revenue": 1000000000, "cogs": 600000000, "gross_profit": 400000000,
-            "operating_expenses": 200000000, "operating_income": 200000000, "net_income": 150000000
-        }
-        business["cash_flow"] = {"operating": 180000000, "investing": -50000000, "financing": -30000000, "net_change": 100000000}
-    
-    for individual in individuals:
-        individual["balance_sheet"] = {
-            "assets": {"cash": 50000000, "property": 200000000, "total": 250000000},
-            "liabilities": {"loans": 100000000, "total": 100000000},
-            "equity": {"net_worth": 150000000, "total": 150000000}
-        }
-        individual["income_statement"] = {
-            "salary": 60000000, "other_income": 5000000, "total_income": 65000000,
-            "expenses": 40000000, "net_income": 25000000
-        }
-        individual["cash_flow"] = {"income": 65000000, "expenses": -40000000, "net_change": 25000000}
+# 개인 재무제표
+individuals = []
+for i in range(1, 11):
+    individuals.append({
+        "id": f"P{i:03d}",
+        "name": ["김*수", "이*영", "박*민", "최*아", "정*호", "강*희", "윤*준", "조*서", "장*우", "임*진"][i-1],
+        "occupation": ["회사원", "자영업", "프리랜서", "교사", "의사", "변호사", "엔지니어", "디자이너", "농업인", "공무원"][i-1],
+        "balance_sheet": {
+            "assets": {
+                "current": {"cash": 30000000 + i*5000000, "savings": 20000000, "total": 50000000 + i*5000000},
+                "fixed": {"real_estate": 150000000, "vehicles": 30000000, "investments": 20000000, "total": 200000000},
+                "total": 250000000 + i*5000000
+            },
+            "liabilities": {
+                "mortgage": 80000000,
+                "car_loan": 15000000,
+                "credit_card": 5000000,
+                "total": 100000000
+            },
+            "equity": {"net_worth": 150000000 + i*5000000, "total": 150000000 + i*5000000}
+        },
+        "income_statement": {
+            "salary": 50000000 + i*5000000,
+            "business_income": 5000000 if i % 2 == 0 else 0,
+            "investment_income": 3000000,
+            "other_income": 2000000,
+            "total_income": 60000000 + i*5000000,
+            "expenses": {
+                "housing": 15000000,
+                "food": 8000000,
+                "transportation": 5000000,
+                "utilities": 3000000,
+                "insurance": 4000000,
+                "education": 3000000,
+                "entertainment": 2000000,
+                "total": 40000000
+            },
+            "net_income": 20000000 + i*5000000
+        },
+        "cash_flow": {"income": 60000000 + i*5000000, "expenses": -40000000, "net_change": 20000000 + i*5000000},
+        "hash_chain": ["GENESIS"]
+    })
 
-initialize_financials()
 transaction_history = []
+
+def find_entity(entity_id):
+    """엔티티 찾기"""
+    for b in businesses:
+        if b['id'] == entity_id:
+            return b
+    for i in individuals:
+        if i['id'] == entity_id:
+            return i
+    return None
+
+def update_financials_after_transaction(from_entity, to_entity, amount):
+    """거래 후 재무제표 업데이트"""
+    # 송신자 - 현금 감소, 지출 증가
+    if from_entity['id'].startswith('B'):
+        from_entity['balance_sheet']['assets']['current']['cash'] -= amount
+        from_entity['balance_sheet']['assets']['current']['total'] -= amount
+        from_entity['balance_sheet']['assets']['total'] -= amount
+        from_entity['income_statement']['operating_expenses']['total'] += amount
+    else:
+        from_entity['balance_sheet']['assets']['current']['cash'] -= amount
+        from_entity['balance_sheet']['assets']['current']['total'] -= amount
+        from_entity['balance_sheet']['assets']['total'] -= amount
+        from_entity['income_statement']['expenses']['total'] += amount
+        from_entity['cash_flow']['expenses'] -= amount
+    
+    # 수신자 - 현금 증가, 수입 증가
+    if to_entity['id'].startswith('B'):
+        to_entity['balance_sheet']['assets']['current']['cash'] += amount
+        to_entity['balance_sheet']['assets']['current']['total'] += amount
+        to_entity['balance_sheet']['assets']['total'] += amount
+        to_entity['income_statement']['revenue'] += amount
+    else:
+        to_entity['balance_sheet']['assets']['current']['cash'] += amount
+        to_entity['balance_sheet']['assets']['current']['total'] += amount
+        to_entity['balance_sheet']['assets']['total'] += amount
+        to_entity['income_statement']['total_income'] += amount
+        to_entity['cash_flow']['income'] += amount
 
 def process_openhash_transaction(transaction_data):
     steps = []
@@ -107,20 +235,18 @@ def process_openhash_transaction(transaction_data):
         selected_node = random.choice(layer_list)
         layer_response_hash = selected_node.add_hash(current_hash)
         steps.append({
-            "step": len(steps) + 1,
-            "description": f"{selected_node.name}에 송신 및 해시 체인 갱신",
+            "step": len(steps) + 1, "description": f"{selected_node.name}에 송신 및 해시 체인 갱신",
             "layer": layer_name, "node": selected_node.name,
-            "sent_hash": current_hash, "response_hash": layer_response_hash,
+            "sent_hash": current_hash[:16] + "...", "response_hash": layer_response_hash[:16] + "...",
             "chain_length": len(selected_node.hash_chain)
         })
         current_hash = layer_response_hash
     
     final_hash = hashlib.sha256(f"{initial_hash}{current_hash}".encode()).hexdigest()
-    steps.append({"step": len(steps) + 1, "description": "최종 해시 생성 및 당사자 해시 체인에 추가", "final_hash": final_hash})
-    
+    steps.append({"step": len(steps) + 1, "description": "최종 해시 생성 및 당사자 해시 체인에 추가", "final_hash": final_hash[:32] + "..."})
     return {"initial_hash": initial_hash, "final_hash": final_hash, "steps": steps}
 
-@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({"status": "healthy", "service": "national-financial-statements", 
                     "claude_api": "connected" if anthropic_client else "not configured"})
@@ -131,25 +257,48 @@ def get_entities():
 
 @app.route('/api/entity/<entity_id>', methods=['GET'])
 def get_entity(entity_id):
-    for b in businesses:
-        if b['id'] == entity_id:
-            return jsonify(b)
-    for i in individuals:
-        if i['id'] == entity_id:
-            return jsonify(i)
+    entity = find_entity(entity_id)
+    if entity:
+        return jsonify(entity)
     return jsonify({"error": "Entity not found"}), 404
 
 @app.route('/api/transaction/simulate', methods=['POST'])
 def simulate_transaction():
     data = request.json or {}
+    from_id = data.get('from')
+    to_id = data.get('to')
+    amount = int(data.get('amount', 0))
+    
+    from_entity = find_entity(from_id)
+    to_entity = find_entity(to_id)
+    
+    if not from_entity or not to_entity:
+        return jsonify({"success": False, "error": "Invalid entity"}), 400
+    
+    # 거래 전 상태 저장
+    from_before = deepcopy(from_entity)
+    to_before = deepcopy(to_entity)
+    
     transaction = {
         "timestamp": datetime.now().isoformat(),
-        "from": data.get('from'), "to": data.get('to'),
-        "amount": data.get('amount', 0), "description": data.get('description', '거래')
+        "from": from_id, "to": to_id,
+        "amount": amount, "description": data.get('description', '거래')
     }
+    
+    # OpenHash 처리
     openhash_result = process_openhash_transaction(transaction)
+    
+    # 재무제표 업데이트
+    update_financials_after_transaction(from_entity, to_entity, amount)
+    
     transaction['openhash'] = openhash_result
+    transaction['from_before'] = from_before
+    transaction['to_before'] = to_before
+    transaction['from_after'] = deepcopy(from_entity)
+    transaction['to_after'] = deepcopy(to_entity)
+    
     transaction_history.append(transaction)
+    
     return jsonify({"success": True, "transaction": transaction, "openhash": openhash_result})
 
 @app.route('/api/analyze', methods=['POST'])
@@ -165,7 +314,7 @@ def analyze_transaction():
 거래 정보:
 - 보내는 사람: {transaction.get('from')}
 - 받는 사람: {transaction.get('to')}
-- 금액: {transaction.get('amount')}원
+- 금액: {transaction.get('amount'):,}원
 - 설명: {transaction.get('description')}
 
 다음 관점에서 분석하세요:
