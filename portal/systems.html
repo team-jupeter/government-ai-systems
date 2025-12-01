@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사회 체제 자동화 | 국가 자동화 플랫폼</title>
+    <title>국가 체제 자동화 | 국가 자동화 플랫폼</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -96,18 +96,18 @@
             margin-left: auto;
         }
         
-        /* 시스템 그리드 */
+        /* 시스템 그리드 - 20% 감소 */
         .system-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+            gap: 16px;
         }
         
-        /* 시스템 카드 */
+        /* 시스템 카드 - 20% 감소 */
         .system-card {
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
+            padding: 1.2rem;
             background: #f8f9fa;
             border: 2px solid #e5e7eb;
             border-radius: 12px;
@@ -121,29 +121,39 @@
             border-color: var(--gov-blue);
         }
         .system-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
         }
         .system-card .name {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--gov-navy);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
         .system-card .desc {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #6b7280;
             line-height: 1.4;
         }
         .system-card .badge {
             display: inline-block;
-            margin-top: 1rem;
-            padding: 4px 12px;
+            margin-top: 0.8rem;
+            padding: 4px 10px;
             background: #dbeafe;
             color: #1e40af;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
+        }
+        
+        /* Coming Soon 스타일 */
+        .system-card.coming-soon {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .badge.coming-soon {
+            background: rgba(255,200,0,0.2);
+            color: #f59e0b;
         }
         
         /* 푸터 */
@@ -160,12 +170,14 @@
             .page-title h1 { font-size: 1.5rem; }
         }
     </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
 </head>
 <body>
     <!-- 상단 네비게이션 -->
     <div class="top-nav">
         <div>
-            <i class="fas fa-robot"></i> 사회 체제 자동화 시스템
+            <i class="fas fa-robot"></i> 국가 체제 자동화 시스템
         </div>
         <div>
             <a href="/portal/">메인</a>
@@ -177,7 +189,7 @@
     <div class="main-container">
         <!-- 페이지 제목 -->
         <div class="page-title">
-            <h1>🤖 OpenHash + AI = 사회 체제 자동화</h1>
+            <h1>OpenHash + AI = 국가 체제 자동화</h1>
             <p>차세대 분산원장 기술과 인공지능의 융합</p>
         </div>
 
@@ -210,24 +222,83 @@
             </div>
         </div>
 
-        <!-- 금융 -->
+        <!-- 정부 -->
         <div class="category-section">
             <div class="category-header">
-                <i class="fas fa-coins"></i>
-                <h2>금융</h2>
-                <span class="count">1</span>
+                <i class="fas fa-landmark"></i>
+                <h2>정부</h2>
+                <span class="count">3</span>
             </div>
             <div class="system-grid">
-                <a href="/currency/" target="_blank" class="system-card">
-                    <div class="icon">💰</div>
-                    <div class="name">디지털 화폐 시스템</div>
-                    <div class="desc">OpenHash 기반 중앙은행 디지털화폐</div>
-                    <span class="badge">CBDC</span>
+                <a href="http://100.30.14.224/legislation/" target="_blank" class="system-card">
+                    <div class="icon">🏛️</div>
+                    <div class="name">입법부</div>
+                    <div class="desc">AI 기반 법률 입안 및 심사</div>
+                    <span class="badge">Legislative</span>
+                </a>
+                <a href="http://100.30.14.224/judicial/" target="_blank" class="system-card">
+                    <div class="icon">⚖️</div>
+                    <div class="name">사법부</div>
+                    <div class="desc">AI 예방적 사법 시스템</div>
+                    <span class="badge">Judicial</span>
+                </a>
+                <a href="http://100.30.14.224/portal/government.html" target="_blank" class="system-card">
+                    <div class="icon">🏢</div>
+                    <div class="name">행정부</div>
+                    <div class="desc">정부 행정 통합 자동화</div>
+                    <span class="badge">Executive</span>
                 </a>
             </div>
         </div>
 
-        <!-- 시장 (새 카테고리) -->
+        <!-- 금융 (국세청 제거) -->
+        <div class="category-section">
+            <div class="category-header">
+                <i class="fas fa-coins"></i>
+                <h2>금융</h2>
+                <span class="count">6</span>
+            </div>
+            <div class="system-grid">
+                <a href="/currency/" target="_blank" class="system-card">
+                    <div class="icon">💰</div>
+                    <div class="name">디지털 화폐</div>
+                    <div class="desc">OpenHash 기반 중앙은행 디지털화폐</div>
+                    <span class="badge">CBDC</span>
+                </a>
+                <div class="system-card coming-soon">
+                    <div class="icon">🏦</div>
+                    <div class="name">은행</div>
+                    <div class="desc">AI 기반 뱅킹 자동화</div>
+                    <span class="badge coming-soon">Coming Soon</span>
+                </div>
+                <div class="system-card coming-soon">
+                    <div class="icon">🛡️</div>
+                    <div class="name">보험</div>
+                    <div class="desc">스마트 보험 계약 시스템</div>
+                    <span class="badge coming-soon">Coming Soon</span>
+                </div>
+                <div class="system-card coming-soon">
+                    <div class="icon">📈</div>
+                    <div class="name">증권</div>
+                    <div class="desc">AI 증권 거래 플랫폼</div>
+                    <span class="badge coming-soon">Coming Soon</span>
+                </div>
+                <div class="system-card coming-soon">
+                    <div class="icon">🔄</div>
+                    <div class="name">거래소</div>
+                    <div class="desc">암호화폐 거래소 자동화</div>
+                    <span class="badge coming-soon">Coming Soon</span>
+                </div>
+                <div class="system-card coming-soon">
+                    <div class="icon">👁️</div>
+                    <div class="name">감독기구</div>
+                    <div class="desc">금융 감독 AI 시스템</div>
+                    <span class="badge coming-soon">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 시장 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-chart-line"></i>
@@ -237,8 +308,8 @@
             <div class="system-grid">
                 <a href="/market/" target="_blank" class="system-card">
                     <div class="icon">📊</div>
-                    <div class="name">FPGA 시장 플랫폼</div>
-                    <div class="desc">FPGA 가속 자율 시장</div>
+                    <div class="name">FPGA 시장</div>
+                    <div class="desc">FPGA 가속 자율 거래</div>
                     <span class="badge">AI Market</span>
                 </a>
             </div>
@@ -273,7 +344,7 @@
             </div>
         </div>
 
-        <!-- 지적재산 (새 카테고리) -->
+        <!-- 지적재산 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-lightbulb"></i>
@@ -301,54 +372,36 @@
             <div class="category-header">
                 <i class="fas fa-balance-scale"></i>
                 <h2>법률</h2>
-                <span class="count">3</span>
+                <span class="count">1</span>
             </div>
             <div class="system-grid">
-                <a href="/judicial/" target="_blank" class="system-card">
-                    <div class="icon">⚖️</div>
-                    <div class="name">AI 예방적 사법</div>
-                    <div class="desc">판례 분석 및 증거 관리</div>
-                    <span class="badge">Judicial AI</span>
-                </a>
                 <a href="/lawsuit/" target="_blank" class="system-card">
                     <div class="icon">📑</div>
                     <div class="name">소송 지원 시스템</div>
                     <div class="desc">AI 기반 소송 자동화</div>
                     <span class="badge">Legal Tech</span>
                 </a>
-                <a href="/legislation/" target="_blank" class="system-card">
-                    <div class="icon">🏛️</div>
-                    <div class="name">AI 입법 지원</div>
-                    <div class="desc">법률 충돌 검사 및 영향 분석</div>
-                    <span class="badge">Legislative AI</span>
-                </a>
             </div>
         </div>
 
-        <!-- 행정 -->
+        <!-- 고용 (지방자치 제거) -->
         <div class="category-section">
             <div class="category-header">
-                <i class="fas fa-building"></i>
-                <h2>행정</h2>
-                <span class="count">2</span>
+                <i class="fas fa-briefcase"></i>
+                <h2>고용</h2>
+                <span class="count">1</span>
             </div>
             <div class="system-grid">
-                <a href="/local-admin/" target="_blank" class="system-card">
-                    <div class="icon">🏘️</div>
-                    <div class="name">지방자치 시스템</div>
-                    <div class="desc">지방자치단체 행정 자동화</div>
-                    <span class="badge">Local Government</span>
-                </a>
                 <a href="/personnel-innovation/" target="_blank" class="system-card">
                     <div class="icon">👥</div>
-                    <div class="name">인사혁신 시스템</div>
-                    <div class="desc">AI 기반 인사 관리</div>
-                    <span class="badge">HR Innovation</span>
+                    <div class="name">완전고용 시스템</div>
+                    <div class="desc">AI 기반 인력 매칭 및 관리</div>
+                    <span class="badge">Full Employment</span>
                 </a>
             </div>
         </div>
 
-        <!-- 의료 (복지→의료) -->
+        <!-- 의료 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-heartbeat"></i>
@@ -365,7 +418,7 @@
             </div>
         </div>
 
-        <!-- 의식주 (새 카테고리) -->
+        <!-- 의식주 -->
         <div class="category-section">
             <div class="category-header">
                 <i class="fas fa-utensils"></i>
@@ -405,11 +458,11 @@
             </div>
         </div>
 
-        <!-- 인프라 -->
+        <!-- 교통 물류 -->
         <div class="category-section">
             <div class="category-header">
-                <i class="fas fa-road"></i>
-                <h2>인프라</h2>
+                <i class="fas fa-truck"></i>
+                <h2>교통 물류</h2>
                 <span class="count">1</span>
             </div>
             <div class="system-grid">
@@ -425,8 +478,8 @@
 
     <!-- 푸터 -->
     <footer class="footer">
-        <p>© 2025 사회 체제 자동화 | OpenHash 기술 실증 프로젝트</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">총 18개 시스템 | 7개 분야</p>
+        <p>© 2025 국가 체제 자동화 | OpenHash 기술 실증 프로젝트</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">총 25개 시스템 | 11개 분야</p>
     </footer>
 </body>
 </html>
