@@ -3,37 +3,627 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대통령실 AI 자동화 시스템</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>대통령실 AI 자동화 시스템 | 국가 자동화</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .gradient-presidential { background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%); }
-        .gradient-gold { background: linear-gradient(135deg, #744210 0%, #975a16 50%, #b7791f 100%); }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
-        @keyframes pulse-gold { 0%,100%{box-shadow:0 0 15px rgba(183,121,31,0.5)} 50%{box-shadow:0 0 30px rgba(183,121,31,0.8)} }
-        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
-        .pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
-        .agent-node { transition: all 0.3s ease; }
-        .agent-node:hover { transform: scale(1.05); }
-        .connection-line { stroke-dasharray: 5,5; animation: dash 1s linear infinite; }
-        @keyframes dash { to { stroke-dashoffset: -10; } }
-        .org-tree { position: relative; }
-        .org-tree::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 20px; background: #4a5568; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background: #f8f9fa; color: #212529; }
+        
+        /* 상단 바 */
+        .top-bar {
+            background: #1e3a5f;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .top-bar a:hover { text-decoration: underline; }
+        
+        /* 헤더 */
+        .header { position: relative;
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .header p { font-size: 1.1rem; opacity: 0.95; }
+        
+        /* 네비게이션 탭 */
+        .nav-tabs {
+            background: white;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+        .nav-tab {
+            padding: 1.25rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #6b7280;
+        }
+        .nav-tab:hover { color: #0046FF; border-bottom-color: #0046FF; }
+        .nav-tab.active { color: #0046FF; border-bottom-color: #0046FF; }
+        
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        /* 탭 컨텐츠 */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* 조직도 */
+        .org-chart {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .org-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 0.5rem;
+        }
+        .org-subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 3rem;
+        }
+        
+        .org-level {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .org-box {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            min-width: 180px;
+            display: block;
+            color: #212529;
+            text-decoration: none;
+        }
+        .org-box:hover {
+            border-color: #0046FF;
+            box-shadow: 0 8px 20px rgba(0,70,255,0.15);
+            transform: translateY(-3px);
+        }
+        .org-box.president {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-color: #0046FF;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1e40af;
+            cursor: default;
+        }
+        .org-box.president:hover {
+            transform: none;
+        }
+        
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        /* 에이전트 카드 */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .agent-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .agent-card:hover {
+            border-color: #0046FF;
+            box-shadow: 0 8px 20px rgba(0,70,255,0.15);
+            transform: translateY(-5px);
+        }
+        .agent-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        .agent-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 0.5rem;
+        }
+        .agent-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .agent-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* 통계 카드 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0046FF;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        /* Floating Button */
+        .floating-button:hover {
+
+        /* Floating Menu */
+        .floating-menu-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .floating-menu-content p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .ai-chat {
+            margin-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+        }
+        .chat-header {
+            font-weight: 600;
+            color: #0046FF;
+            margin-bottom: 1rem;
+        }
+        .chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        .chat-message {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        .chat-message.user {
+            background: #dbeafe;
+            text-align: right;
+        }
+        .chat-message.assistant {
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+        .chat-input-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .chat-input-box input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .chat-input-box input:focus {
+            outline: none;
+            border-color: #0046FF;
+        }
+        .chat-input-box button {
+            background: linear-gradient(135deg, #0046FF, #0066CC);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .chat-input-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,70,255,0.3);
+        }
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 70, 255, 0.4);
+        }
+        
+        /* 푸터 */
+        .footer {
+            background: #1e3a5f;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .org-grid { grid-template-columns: 1fr; }
+            .agent-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
     </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
 </head>
-<body class="bg-gray-900 text-white">
-    <div id="root"></div>
-    <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/OrganizationChart.js"></script>
-    <script type="text/babel" src="js/components/AgentPanel.js"></script>
-    <script type="text/babel" src="js/components/CollaborationHub.js"></script>
-    <script type="text/babel" src="js/components/OpenHashMonitor.js"></script>
-    <script type="text/babel" src="js/components/AIConsultation.js"></script>
-    <script type="text/babel" src="js/components/FloatingHelper.js"></script>
-    <script type="text/babel" src="js/app.js"></script>
+<body>
+    <!-- 상단 바 -->
+    <nav class="top-bar">
+        <div>OpenHash 기술 실증을 위한 대통령실 자동화 시범 프로젝트</div>
+        <div>
+            <a href="/portal/">포털</a>
+            <a href="/portal/government.html">행정부</a>
+            <a href="/openhash.html" target="_blank">OpenHash 기술</a>
+        </div>
+    </nav>
+
+    <!-- 헤더 -->
+    <header class="header">
+        <div style="position: absolute; top: 1rem; right: 2rem;">
+            <a href="/openhash.html" target="_blank" style="background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">📘 OpenHash 기술 설명</a>
+        </div>
+        <div class="header-badge">
+            <i class="fas fa-shield-alt"></i> OpenHash 기반 시스템
+        </div>
+        <h1>🏛️ 대통령실 AI 자동화 시스템</h1>
+        <p>Presidential Office AI Automation System</p>
+    </header>
+
+    <!-- 네비게이션 탭 -->
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('organization')">
+            <i class="fas fa-sitemap"></i> 수석비서관실
+        </div>
+        <div class="nav-tab" onclick="switchTab('agents')">
+            <i class="fas fa-robot"></i> AI 에이전트
+        </div>
+        <div class="nav-tab" onclick="switchTab('collaboration')">
+            <i class="fas fa-link"></i> 연동 정부부처
+        </div>
+        <div class="nav-tab" onclick="switchTab('stats')">
+            <i class="fas fa-chart-line"></i> 시스템 상태
+        </div>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <main class="main-container">
+        <!-- 탭 1: 조직도 -->
+        <div id="organization" class="tab-content active">
+            <div class="org-chart">
+                <h2 class="org-title">🏛️ 대통령실 AI 에이전트 조직도</h2>
+                <p class="org-subtitle">각 비서관실 클릭 시 상세 정보 확인</p>
+                
+                <!-- 대통령 -->
+                <div class="org-level">
+                    <div class="org-box president">
+                        <i class="fas fa-landmark"></i><br>
+                        대통령
+                    </div>
+                </div>
+                
+                <!-- 3실장 -->
+                <div class="org-grid" style="max-width: 800px; margin: 0 auto;">
+                    <a href="divisions/chief-of-staff.html" target="_blank" class="org-box">
+                        <i class="fas fa-user-tie"></i><br>
+                        비서실장<br>
+                        <small style="color: #6b7280;">5 AI Agents</small>
+                    </a>
+                    <a href="divisions/policy-chief.html" target="_blank" class="org-box">
+                        <i class="fas fa-briefcase"></i><br>
+                        정책실장<br>
+                        <small style="color: #6b7280;">1 AI Agent</small>
+                    </a>
+                    <a href="divisions/national-security.html" target="_blank" class="org-box">
+                        <i class="fas fa-shield"></i><br>
+                        국가안보실장<br>
+                        <small style="color: #6b7280;">6 AI Agents</small>
+                    </a>
+                </div>
+                
+                <!-- 비서관실 -->
+                <h3 style="margin-top: 3rem; margin-bottom: 1.5rem; color: #212529; text-align: center;">
+                    주요 수석비서관실 (총 12개)
+                </h3>
+                <div class="org-grid">
+                    <a href="divisions/ai-marketing.html" target="_blank" class="org-box">AI마케기획수석<br><small>4 Agents</small></a>
+                    <a href="divisions/civil-affairs.html" target="_blank" class="org-box">민정수석<br><small>1 Agent</small></a>
+                    <a href="divisions/economic-growth.html" target="_blank" class="org-box">경제성장수석<br><small>6 Agents</small></a>
+                    <a href="divisions/listening-integration.html" target="_blank" class="org-box">경청통합수석<br><small>1 Agent</small></a>
+                    <a href="divisions/personnel.html" target="_blank" class="org-box">인사수석<br><small>2 Agents</small></a>
+                    <a href="divisions/political-affairs.html" target="_blank" class="org-box">정무수석<br><small>1 Agent</small></a>
+                    <a href="divisions/public-relations.html" target="_blank" class="org-box">홍보통합수석<br><small>3 Agents</small></a>
+                    <a href="divisions/social.html" target="_blank" class="org-box">사회수석<br><small>5 Agents</small></a>
+                    <a href="divisions/state-planning.html" target="_blank" class="org-box">국정기획수석<br><small>2 Agents</small></a>
+                    <a href="divisions/civil-society.html" target="_blank" class="org-box">시민사회수석<br><small>2 Agents</small></a>
+                    <a href="divisions/digital-innovation.html" target="_blank" class="org-box">디지털혁신수석<br><small>3 Agents</small></a>
+                    <a href="divisions/climate-science.html" target="_blank" class="org-box">기후환경과학수석<br><small>2 Agents</small></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 탭 2: AI 에이전트 -->
+        <div id="agents" class="tab-content">
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: #212529;">
+                🤖 대통령실 AI 에이전트 (총 33개)
+            </h2>
+            
+            <div class="agent-grid">
+                <div class="agent-card">
+                    <div class="agent-icon">📊</div>
+                    <div class="agent-title">정책 분석 에이전트</div>
+                    <div class="agent-desc">각종 정책 데이터를 분석하고 트렌드를 예측합니다.</div>
+                    <span class="agent-badge">정책실</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">🔐</div>
+                    <div class="agent-title">보안 모니터링 에이전트</div>
+                    <div class="agent-desc">국가 안보 상황을 24시간 실시간 모니터링합니다.</div>
+                    <span class="agent-badge">안보실</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">📰</div>
+                    <div class="agent-title">언론 모니터링 에이전트</div>
+                    <div class="agent-desc">국내외 주요 언론 보도를 실시간 분석합니다.</div>
+                    <span class="agent-badge">홍보수석</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">💼</div>
+                    <div class="agent-title">경제 지표 분석 에이전트</div>
+                    <div class="agent-desc">주요 경제 지표를 실시간 분석하고 보고합니다.</div>
+                    <span class="agent-badge">경제수석</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">👥</div>
+                    <div class="agent-title">국민 여론 분석 에이전트</div>
+                    <div class="agent-desc">SNS와 여론조사를 통해 국민 의견을 수집합니다.</div>
+                    <span class="agent-badge">사회수석</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">🌍</div>
+                    <div class="agent-title">외교 정보 분석 에이전트</div>
+                    <div class="agent-desc">국제 정세와 외교 동향을 실시간 모니터링합니다.</div>
+                    <span class="agent-badge">안보실</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">⚖️</div>
+                    <div class="agent-title">법률 검토 에이전트</div>
+                    <div class="agent-desc">정책의 법적 타당성을 자동으로 검토합니다.</div>
+                    <span class="agent-badge">민정수석</span>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-icon">💻</div>
+                    <div class="agent-title">디지털 혁신 에이전트</div>
+                    <div class="agent-desc">정부 디지털 전환을 기획하고 추진합니다.</div>
+                    <span class="agent-badge">디지털수석</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 탭 3: 연동 정부부처 -->
+        <div id="collaboration" class="tab-content">
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: #212529;">
+                🔗 연동 정부부처 (OpenHash 기반)
+            </h2>
+            
+            <div class="org-grid">
+                <div class="org-box">
+                    <i class="fas fa-building"></i><br>
+                    기획재정부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-school"></i><br>
+                    교육부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-shield-alt"></i><br>
+                    국방부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-balance-scale"></i><br>
+                    법무부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-globe"></i><br>
+                    외교부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-briefcase"></i><br>
+                    고용노동부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-heartbeat"></i><br>
+                    보건복지부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+                <div class="org-box">
+                    <i class="fas fa-road"></i><br>
+                    국토교통부<br>
+                    <small style="color: #10b981;">● 연동중</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- 탭 4: 시스템 상태 -->
+        <div id="stats" class="tab-content">
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: #212529;">
+                📊 시스템 운영 현황
+            </h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🤖</div>
+                    <div class="stat-value">33</div>
+                    <div class="stat-label">AI 에이전트</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏛️</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">수석비서관실</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔗</div>
+                    <div class="stat-value">57</div>
+                    <div class="stat-label">연동 기관</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value">50,000</div>
+                    <div class="stat-label">TPS 처리량</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔐</div>
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">보안 수준</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💾</div>
+                    <div class="stat-value">1.2TB</div>
+                    <div class="stat-label">데이터 저장량</div>
+                </div>
+            </div>
+            
+            <div style="background: white; border-radius: 20px; padding: 3rem; margin-top: 2rem; border: 2px solid #e5e7eb;">
+                <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; color: #212529;">
+                    🔐 OpenHash 분산원장 현황
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                    <div>
+                        <div style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">에너지 절감률</div>
+                        <div style="font-size: 1.75rem; font-weight: 700; color: #0046FF;">98.5%</div>
+                    </div>
+                    <div>
+                        <div style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">응답 속도</div>
+                        <div style="font-size: 1.75rem; font-weight: 700; color: #0046FF;">0.003초</div>
+                    </div>
+                    <div>
+                        <div style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">데이터 무결성</div>
+                        <div style="font-size: 1.75rem; font-weight: 700; color: #0046FF;">100%</div>
+                    </div>
+                    <div>
+                        <div style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">보안 등급</div>
+                        <div style="font-size: 1.75rem; font-weight: 700; color: #0046FF;">10⁻¹⁷⁵ᴹ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>© 2025 대통령실 AI 자동화 시스템 | OpenHash 기술 실증 프로젝트</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+            Presidential Office Automation | 33 AI Agents | 12 Divisions
+        </p>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll(".tab-content").forEach(tab => {
+                tab.classList.remove("active");
+            });
+            document.querySelectorAll(".nav-tab").forEach(tab => {
+                tab.classList.remove("active");
+            });
+            document.getElementById(tabName).classList.add("active");
+            event.target.closest(".nav-tab").classList.add("active");
+        }
+
+
+    </script>
 </body>
 </html>

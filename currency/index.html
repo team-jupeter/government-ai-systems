@@ -3,77 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPGA 및 AI 기반 통합 디지털 화폐 시스템 | OpenHash</title>
+    <title>FPGA 및 AI 기반 통합 디지털 화폐 시스템 | 대한민국 정부</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- PropTypes (Recharts 의존성) -->
+    <script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    
+    <!-- Recharts (PropTypes 이후에 로드) -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#1D6FA5',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        @keyframes slideDown {
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        body {
-            background-color: #f8f9fa;
-            color: #212529;
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
         }
-        .gradient-currency { 
-            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .gradient-card { 
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); 
+        .animate-slideDown {
+            animation: slideDown 0.5s ease-out;
         }
-        .card-hover { 
-            transition: all 0.3s ease; 
-        }
-        .card-hover:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
-        }
-        @keyframes pulse-gold { 
-            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); } 
-            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); } 
-        }
-        .pulse-gold { 
-            animation: pulse-gold 2s ease-in-out infinite; 
-        }
-        @keyframes pulse-gov24 { 
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
-            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
-        }
-        .pulse-gov24 { 
-            animation: pulse-gov24 2s ease-in-out infinite; 
-        }
-        .hash-display { 
-            font-family: 'Courier New', monospace; 
-            font-size: 0.7rem; 
-            word-break: break-all; 
-            color: #4b5563;
-        }
-        .stat-bar { 
-            transition: width 0.8s ease-out; 
-        }
-        .bg-gov24-light { background-color: #E8F0FF; }
-        .bg-gov24-primary { background-color: #0046FF; }
-        .text-gov24-primary { color: #0046FF; }
-        .border-gov24 { border-color: #0046FF; }
-        .section-white { background-color: white; }
-        .section-gray { background-color: #f8f9fa; }
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #FFFFFF; }
     </style>
 </head>
-<body>
+<body class="bg-white text-gray-900">
     <div id="root"></div>
-    <script src="/shared/banner.js"></script>
-    <script type="text/babel" src="js/components/Modal.js?v=4"></script>
-    <script type="text/babel" src="js/components/Header.js?v=4"></script>
-    <script type="text/babel" src="js/components/FPGASection.js?v=4"></script>
-    <script type="text/babel" src="js/components/AIVerification.js?v=4"></script>
-    <script type="text/babel" src="js/components/FinancialStatement.js?v=4"></script>
-    <script type="text/babel" src="js/components/TaxAutomation.js?v=4"></script>
-    <script type="text/babel" src="js/components/CrossChain.js?v=4"></script>
-    <script type="text/babel" src="js/components/IntegratedFinance.js?v=4"></script>
-    <script type="text/babel" src="js/components/AIConsultation.js?v=4"></script>
-    <script type="text/babel" src="js/app.js?v=4"></script>
+    
+    <!-- 공통 컴포넌트 -->
+    <script type="text/babel" src="js/common/StatCard.js?v=6"></script>
+    <script type="text/babel" src="js/common/TechCard.js?v=6"></script>
+    <script type="text/babel" src="js/common/PerformanceChart.js?v=6"></script>
+    
+    <!-- 메인 컴포넌트 -->
+    <script type="text/babel" src="js/components/Header.js?v=6"></script>
+    <script type="text/babel" src="js/components/Footer.js?v=6"></script>
+    <script type="text/babel" src="js/components/Overview.js?v=6"></script>
+    <script type="text/babel" src="js/components/FPGAHardware.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIVerification.js?v=6"></script>
+    <script type="text/babel" src="js/components/FinancialStatement.js?v=6"></script>
+    <script type="text/babel" src="js/components/TaxAutomation.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIVerification.js?v=6"></script>
+    <script type="text/babel" src="js/components/IntegratedFinance.js?v=6"></script>
+    <script type="text/babel" src="js/components/RegulationCompliance.js?v=6"></script>
+    <script type="text/babel" src="js/components/PerformanceComparison.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=6"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js?v=6"></script>
 </body>
 </html>
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-slideDown {
+            animation: slideDown 0.5s ease-out;
+        }
+</style>

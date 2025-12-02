@@ -6,6 +6,7 @@
     <title>중앙행정기관 조직도 | 대한민국 정부 AI 포털</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
         body { background: #fff; color: #333; }
@@ -125,7 +126,7 @@
             border: 1px solid #ddd;
             padding: 12px 20px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 15px;
             min-width: 100px;
         }
         
@@ -135,7 +136,7 @@
             border: 1px solid #ddd;
             padding: 15px 12px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 14px;
             writing-mode: vertical-rl;
             text-orientation: upright;
             letter-spacing: -1px;
@@ -149,7 +150,7 @@
             border: 1px solid #ddd;
             padding: 10px 16px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 14px;
         }
         
         /* 그룹 컨테이너 */
@@ -182,7 +183,7 @@
             background: #fff;
         }
         .advisory-title {
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 500;
             margin-bottom: 12px;
             text-align: center;
@@ -225,7 +226,7 @@
             align-items: center;
         }
         .sub-group-title {
-            font-size: 12px;
+            font-size: 15px;
             color: #666;
             margin-bottom: 8px;
         }
@@ -305,8 +306,8 @@
         .top-nav a {
             color: white;
             text-decoration: none;
-            margin-left: 20px;
-            font-size: 12px;
+            margin-left: 20px; font-weight: 500;
+            font-size: 15px;
         }
         .top-nav a:hover { text-decoration: underline; }
         
@@ -321,11 +322,13 @@
         .status-online { background: #22c55e; }
         .status-planned { background: #9ca3af; }
     </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
 </head>
 <body>
     <!-- 상단 네비게이션 -->
     <nav class="top-nav">
-        <div>OpenHash 기술 실증을 위한 행정부 자동화 시범 프로젝트</div>
+        <div style="font-size: 14px;">OpenHash 기술 실증을 위한 행정부 자동화 시범 프로젝트</div>
         <div>
             <a href="/portal/">포털</a>
             <a href="/portal/systems.html" target="_blank">체제 자동화</a>
@@ -497,7 +500,7 @@
                 </div>
                 <div class="chat-input-box">
                     <input type="text" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                    <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                    <button onclick="sendChatMessage()" style="min-width: 56px; padding: 0.875rem 1.5rem;"><i class="fas fa-paper-plane" style="font-size: 1.2rem;"></i></button>
                 </div>
             </div>
         </div>
@@ -515,8 +518,8 @@
             background: linear-gradient(135deg, #0046FF, #0066CC);
             color: white;
             border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+            font-size: 2.2rem; font-weight: bold; line-height: 1;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 70, 255, 0.3);
             transition: all 0.3s;
             z-index: 1000;
@@ -565,7 +568,7 @@
             height: 32px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 2.2rem; font-weight: bold; line-height: 1;
             line-height: 1;
         }
         .floating-menu-body {
@@ -614,7 +617,7 @@
             font-size: 0.9rem;
         }
         .chat-input-box button {
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1.25rem;
             background: linear-gradient(135deg, #0046FF, #0066CC);
             color: white;
             border: none;

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시 자율 증권 시스템 | OpenHash 기반 차세대 금융</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Recharts 의존성 -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sec-blue': '#003D82',
+                        'sec-blue-light': '#0052A3',
+                        'sec-green': '#00A651',
+                        'sec-red': '#DC3545',
+                        'sec-gold': '#D4AF37',
+                        'sec-gray': '#6C757D',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes slideDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+                max-height: 2000px;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-slideDown { 
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        .animate-fadeIn { 
+            animation: fadeIn 0.5s ease-out;
+        }
+        * { 
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+        body { 
+            background-color: #F8F9FA; 
+        }
+        .tab-active {
+            background: linear-gradient(135deg, #003D82 0%, #0052A3 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 61, 130, 0.3);
+        }
+        .tab-inactive {
+            background: white;
+            color: #003D82;
+            border: 2px solid #E5E7EB;
+        }
+        .tab-inactive:hover {
+            background: #F3F4F6;
+            border-color: #003D82;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Recharts 로딩 확인 스크립트 -->
+    <script>
+        // Recharts가 로드될 때까지 대기
+        function waitForRecharts(callback) {
+            if (window.Recharts) {
+                callback();
+            } else {
+                setTimeout(() => waitForRecharts(callback), 100);
+            }
+        }
+    </script>
+
+    <!-- Common Components -->
+    <script type="text/babel" src="/securities/js/common/StatCard.js"></script>
+    <script type="text/babel" src="/securities/js/common/FeatureCard.js"></script>
+    <script type="text/babel" src="/securities/js/common/ComparisonChart.js"></script>
+
+    <!-- Layout Components -->
+    <script type="text/babel" src="/securities/js/components/Header.js"></script>
+    <script type="text/babel" src="/securities/js/components/Footer.js"></script>
+
+    <!-- Tab Components -->
+    <script type="text/babel" src="/securities/js/components/Overview.js"></script>
+    <script type="text/babel" src="/securities/js/components/CustomerService.js"></script>
+    <script type="text/babel" src="/securities/js/components/SmartTrading.js"></script>
+    <script type="text/babel" src="/securities/js/components/InvestmentAnalysis.js"></script>
+    <script type="text/babel" src="/securities/js/components/PortfolioMgmt.js"></script>
+    <script type="text/babel" src="/securities/js/components/RiskManagement.js"></script>
+    <script type="text/babel" src="/securities/js/components/Compliance.js"></script>
+    <script type="text/babel" src="/securities/js/components/BackOffice.js"></script>
+    <script type="text/babel" src="/securities/js/components/IBSupport.js"></script>
+    <script type="text/babel" src="/securities/js/components/PerformanceDashboard.js"></script>
+
+    <!-- Main App -->
+    <script type="text/babel" src="/securities/js/app.js"></script>
+</body>
+</html>

@@ -3,95 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>감사원 AI 시스템</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>감사원 AI 자동화 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
     <style>
-        .gradient-audit { background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 50%, #3d5a7f 100%); }
-        .pulse-blue { animation: pulse-blue 2s ease-in-out infinite; }
-        @keyframes pulse-blue { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.5)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.8)} }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        
+        .top-banner { 
+            background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); 
+            color: white; 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: relative;
+        }
+        .top-banner h1 { font-size: 1.5rem; }
+        .top-banner .openhash-link {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .top-banner .openhash-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+            color: white; 
+            padding: 4rem 2rem; 
+            text-align: center; 
+        }
+        .header h2 { font-size: 3rem; margin-bottom: 1rem; }
+        .header p { font-size: 1.2rem; opacity: 0.9; }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .tab {
+            padding: 1.25rem 2.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .tab:hover { background: #f8f9fa; }
+        .tab.active { border-bottom-color: #0046FF; color: #0046FF; }
+        
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .org-chart {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .org-level { margin: 2rem 0; }
+        .org-level h3 { 
+            color: #0046FF; 
+            margin-bottom: 1rem; 
+            font-size: 1.3rem; 
+            padding-bottom: 0.5rem; 
+            border-bottom: 2px solid #e9ecef; 
+        }
+        .org-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .org-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border-left: 4px solid #0046FF;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .org-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,70,255,0.15);
+        }
+        .org-item h4 { color: #0046FF; margin-bottom: 0.5rem; }
+        .org-item p { font-size: 0.9rem; color: #666; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid #0046FF;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0046FF;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .connection-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        .connection-section h3 {
+            color: #0046FF;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .connection-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 3px solid #0046FF;
+        }
+        
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
-    <div id="root"></div>
-    <script type="text/babel">
-const API_BASE = '/api/board-of-audit';
-const App = () => {
-    const [stats, setStats] = React.useState(null);
-    const [agents, setAgents] = React.useState([]);
-    const [selectedAgent, setSelectedAgent] = React.useState(null);
-    const [query, setQuery] = React.useState('');
-    const [response, setResponse] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
-    const [showDataRegistry, setShowDataRegistry] = React.useState(false);
-    const [floatingExpanded, setFloatingExpanded] = React.useState(false);
-    const [floatingMinimized, setFloatingMinimized] = React.useState(false);
-    const [chatQuery, setChatQuery] = React.useState('');
-    const [chatHistory, setChatHistory] = React.useState([]);
-
-    React.useEffect(() => {
-        fetch(`${API_BASE}/stats`).then(r => r.json()).then(d => d.success && setStats(d.stats)).catch(() => setStats({total_ai_agents: 8, connected_agencies: 3, system_status: "operational"}));
-        fetch(`${API_BASE}/agents`).then(r => r.json()).then(d => d.success && setAgents(d.agents)).catch(() => {});
-    }, []);
-
-    const handleQuery = async () => {
-        if (!selectedAgent || !query.trim()) return;
-        setLoading(true);
-        try {
-            const res = await fetch(`${API_BASE}/agent/query`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({agent_id: selectedAgent.id, query})});
-            setResponse(await res.json());
-        } catch(e) { setResponse({success: false, error: e.message}); }
-        setLoading(false);
-    };
-
-    const handleChat = async () => {
-        if (!chatQuery.trim()) return;
-        setChatHistory(prev => [...prev, {role: 'user', content: chatQuery}]);
-        const q = chatQuery; setChatQuery('');
-        try {
-            const res = await fetch(`${API_BASE}/ai-consultation`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({query: q})});
-            const data = await res.json();
-            setChatHistory(prev => [...prev, {role: 'assistant', content: data.success ? data.response : '오류'}]);
-        } catch(e) { setChatHistory(prev => [...prev, {role: 'assistant', content: '연결 오류'}]); }
-    };
-
-    return (
-        <div className="min-h-screen bg-gray-900">
-            <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900 py-2 px-4 text-center">
-                <a href="http://100.30.14.224/openhash.html" target="_blank" className="text-purple-200 hover:text-white text-sm"><i className="fas fa-book-open mr-2"></i>OpenHash 설명서 <i className="fas fa-external-link-alt text-xs ml-1"></i></a>
-            </div>
-            <header className="gradient-audit py-8 px-4 border-b-4 border-blue-500 relative">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center pulse-blue"><i className="fas fa-balance-scale text-3xl"></i></div>
-                            <div><h1 className="text-3xl font-bold">감사원 AI 시스템</h1><p className="text-gray-400 text-sm">Board of Audit and Inspection AI</p></div>
+<body>
+    <div class="top-banner">
+        <h1>🏛️ 감사원 Board of Audit and Inspection</h1>
+        <a href="https://openhash.ai" class="openhash-link" target="_blank">
+            🔗 Powered by OpenHash
+        </a>
+    </div>
+    
+    <header class="header">
+        <h2>감사원 AI 자동화 시스템</h2>
+        <p>OpenHash 블록체인 기반 회계검사 및 직무감찰 시스템</p>
+    </header>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('organization')">조직도</div>
+        <div class="tab" onclick="showTab('agents')">AI 에이전트</div>
+        <div class="tab" onclick="showTab('connections')">연동 기관</div>
+        <div class="tab" onclick="showTab('system')">시스템 상태</div>
+    </div>
+    
+    <main class="container">
+        <!-- 조직도 탭 -->
+        <div id="organization" class="tab-content active">
+            <div class="org-chart">
+                <div class="org-level">
+                    <h3>🔝 감사위원회의</h3>
+                    <div class="org-items">
+                        <div class="org-item">
+                            <h4>감사원장</h4>
+                            <p>부총리급 | 최재해</p>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <button onClick={() => setShowDataRegistry(!showDataRegistry)} className="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg"><i className="fas fa-database mr-2"></i>국가데이터처</button>
+                        <div class="org-item">
+                            <h4>감사위원</h4>
+                            <p>차관급 | 6명</p>
                         </div>
                     </div>
-                    {stats && (
-                        <div className="grid grid-cols-3 gap-4 mt-6">
-                            <div className="bg-white/10 rounded-lg p-4 text-center"><p className="text-3xl font-bold text-blue-400">{stats.total_ai_agents}</p><p className="text-gray-400 text-sm">AI 에이전트</p></div>
-                            <div className="bg-white/10 rounded-lg p-4 text-center"><p className="text-3xl font-bold text-blue-400">{stats.connected_agencies}</p><p className="text-gray-400 text-sm">연동 기관</p></div>
-                            <div className="bg-white/10 rounded-lg p-4 text-center"><p className="text-xl font-bold text-green-400"><i className="fas fa-check-circle mr-2"></i>정상</p><p className="text-gray-400 text-sm">시스템 상태</p></div>
-                        </div>
-                    )}
                 </div>
-                {showDataRegistry && (<div className="absolute top-full right-4 mt-2 w-96 bg-gray-800 border border-emerald-500 rounded-xl shadow-2xl z-50 p-4"><h3 className="font-bold text-emerald-400 mb-3"><i className="fas fa-database mr-2"></i>국가데이터처</h3><p className="text-gray-300 text-sm mb-3">감사 데이터는 국가데이터처에서 무결성 검증됩니다.</p><a href="/national-data-registry/" className="block bg-emerald-600 text-center py-2 rounded-lg">바로가기</a></div>)}
-            </header>
-            <section className="py-8 px-4"><div className="max-w-7xl mx-auto"><h2 className="text-2xl font-bold mb-6"><i className="fas fa-users-cog mr-3 text-blue-500"></i>AI 에이전트</h2><div className="grid grid-cols-4 gap-4">{agents.map(agent => (<div key={agent.id} onClick={() => setSelectedAgent(agent)} className={`bg-gray-800 p-4 rounded-lg cursor-pointer hover:bg-gray-700 border-2 ${selectedAgent?.id === agent.id ? 'border-blue-500' : 'border-transparent'}`}><p className="font-semibold text-blue-300">{agent.name}</p><p className="text-gray-500 text-xs mt-1">{agent.role}</p></div>))}</div></div></section>
-            {selectedAgent && (<section className="py-8 px-4 bg-gray-800/50"><div className="max-w-4xl mx-auto"><h3 className="text-xl font-bold mb-4 text-blue-400">{selectedAgent.name} 질의</h3><textarea value={query} onChange={e => setQuery(e.target.value)} className="w-full bg-gray-700 border border-gray-600 rounded-lg p-4 mb-4" rows={4} placeholder="질문..."/><button onClick={handleQuery} disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-bold disabled:opacity-50">{loading ? '처리 중...' : '전송'}</button>{response && <div className={`mt-4 p-4 rounded-lg ${response.success ? 'bg-gray-700' : 'bg-red-900/50'}`}>{response.success ? <p className="whitespace-pre-wrap">{response.response}</p> : <p className="text-red-400">{response.error}</p>}</div>}</div></section>)}
-            {floatingMinimized ? (<button onClick={() => setFloatingMinimized(false)} className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center z-50"><i className="fas fa-balance-scale text-xl"></i></button>) : floatingExpanded ? (<div className="fixed bottom-6 right-6 w-96 bg-gray-800 border border-blue-500 rounded-xl shadow-2xl z-50"><div className="bg-blue-600 px-4 py-3 rounded-t-xl flex justify-between"><span className="font-bold"><i className="fas fa-balance-scale mr-2"></i>감사원 AI</span><div><button onClick={() => setFloatingMinimized(true)} className="mr-2"><i className="fas fa-minus"></i></button><button onClick={() => setFloatingExpanded(false)}><i className="fas fa-times"></i></button></div></div><div className="p-4 max-h-48 overflow-y-auto"><p className="text-sm text-gray-400 mb-3">회계감사, 직무감찰 AI 시스템</p>{chatHistory.slice(-3).map((m,i) => <div key={i} className={`text-xs p-2 rounded mb-2 ${m.role==='user'?'bg-blue-600 ml-8':'bg-gray-700 mr-8'}`}>{m.content.substring(0,100)}</div>)}</div><div className="p-3 border-t border-gray-700"><p className="text-blue-400 text-sm mb-2"><i className="fas fa-comments mr-2"></i>무엇이든 물어보세요</p><div className="flex space-x-2"><input value={chatQuery} onChange={e => setChatQuery(e.target.value)} onKeyDown={e => e.key==='Enter' && handleChat()} className="flex-1 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm" placeholder="질문..."/><button onClick={handleChat} className="bg-blue-600 px-4 rounded"><i className="fas fa-paper-plane"></i></button></div></div></div>) : (<button onClick={() => setFloatingExpanded(true)} className="fixed bottom-6 right-6 w-16 h-16 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center z-50 pulse-blue"><i className="fas fa-balance-scale text-xl"></i></button>)}
-            <footer className="bg-gray-800 py-6 px-4 text-center text-gray-500 text-sm">감사원 AI | OpenHash | Claude AI</footer>
+                
+                <div class="org-level">
+                    <h3>📋 원장 직속</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/secretariat.html'">
+                            <h4>감사원장비서실</h4>
+                            <p>원장 보좌 및 일정 관리</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/training-institute.html'">
+                            <h4>감사교육원</h4>
+                            <p>감사 전문인력 교육</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/research-institute.html'">
+                            <h4>감사연구원</h4>
+                            <p>감사 이론 및 기법 연구</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>💼 사무총장 직속</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/inspector-general.html'">
+                            <h4>감찰관</h4>
+                            <p>내부 감찰 및 비위 조사</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/spokesperson.html'">
+                            <h4>대변인</h4>
+                            <p>언론 브리핑 및 홍보</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>🏢 제1사무차장 산하 (4개국)</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/fiscal-economy.html'">
+                            <h4>재정경제감사국</h4>
+                            <p>재정부·국세청·관세청</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/industry-finance.html'">
+                            <h4>산업금융감사국</h4>
+                            <p>산업부·금융위·농식품부</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/land-environment.html'">
+                            <h4>국토환경감사국</h4>
+                            <p>국토부·환경부·해수부</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/public-institutions.html'">
+                            <h4>공공기관감사국</h4>
+                            <p>공기업·준정부기관</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>🏛️ 제2사무차장 산하 (4개국)</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/social-welfare.html'">
+                            <h4>사회복지감사국</h4>
+                            <p>복지부·고용부·여가부</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/administration-safety.html'">
+                            <h4>행정안전감사국</h4>
+                            <p>행안부·인사처·법제처</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/foreign-defense.html'">
+                            <h4>외교국방감사국</h4>
+                            <p>외교부·국방부·보훈부</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/future-strategy.html'">
+                            <h4>미래전략감사국</h4>
+                            <p>과기부·교육부·문체부</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>🔍 공직감찰본부 (4개국)</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/special-investigation.html'">
+                            <h4>특별조사국</h4>
+                            <p>중대 공직비리 특별조사</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/local-audit1.html'">
+                            <h4>지방행정감사1국</h4>
+                            <p>서울·경기·강원 감사</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/local-audit2.html'">
+                            <h4>지방행정감사2국</h4>
+                            <p>충청·호남·영남 감사</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/digital-audit.html'">
+                            <h4>디지털감사국</h4>
+                            <p>전산시스템 감사</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>👥 국민감사본부 (4개국)</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/public-proposal1.html'">
+                            <h4>국민제안감사1국</h4>
+                            <p>국민감사청구 처리</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/public-proposal2.html'">
+                            <h4>국민제안감사2국</h4>
+                            <p>부패신고 처리</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/public-audit-support.html'">
+                            <h4>공공감사지원국</h4>
+                            <p>자체감사기구 지원</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/review-management.html'">
+                            <h4>심사관리관</h4>
+                            <p>심사청구 처리</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="org-level">
+                    <h3>⚙️ 기획조정실 (2개국)</h3>
+                    <div class="org-items">
+                        <div class="org-item" onclick="location.href='divisions/deliberation-office.html'">
+                            <h4>심의실</h4>
+                            <p>감사 결과 심의</p>
+                        </div>
+                        <div class="org-item" onclick="location.href='divisions/digital-support.html'">
+                            <h4>디지털감사지원관</h4>
+                            <p>AI·빅데이터 감사 지원</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    );
-};
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        
+        <!-- AI 에이전트 탭 -->
+        <div id="agents" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">120</div>
+                    <div class="stat-label">총 AI 에이전트</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">부서 수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1,847</div>
+                    <div class="stat-label">금일 처리 건수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">99.6%</div>
+                    <div class="stat-label">평균 정확도</div>
+                </div>
+            </div>
+            
+            <div class="connection-section">
+                <h3>📊 부서별 AI 에이전트 현황</h3>
+                <div class="connection-grid">
+                    <div class="connection-item"><strong>재정경제감사국</strong><br>8개 에이전트</div>
+                    <div class="connection-item"><strong>산업금융감사국</strong><br>9개 에이전트</div>
+                    <div class="connection-item"><strong>국토환경감사국</strong><br>7개 에이전트</div>
+                    <div class="connection-item"><strong>공공기관감사국</strong><br>10개 에이전트</div>
+                    <div class="connection-item"><strong>사회복지감사국</strong><br>6개 에이전트</div>
+                    <div class="connection-item"><strong>행정안전감사국</strong><br>5개 에이전트</div>
+                    <div class="connection-item"><strong>외교국방감사국</strong><br>6개 에이전트</div>
+                    <div class="connection-item"><strong>미래전략감사국</strong><br>7개 에이전트</div>
+                    <div class="connection-item"><strong>특별조사국</strong><br>8개 에이전트</div>
+                    <div class="connection-item"><strong>지방행정감사1국</strong><br>5개 에이전트</div>
+                    <div class="connection-item"><strong>지방행정감사2국</strong><br>5개 에이전트</div>
+                    <div class="connection-item"><strong>디지털감사국</strong><br>9개 에이전트</div>
+                    <div class="connection-item"><strong>국민제안감사1국</strong><br>6개 에이전트</div>
+                    <div class="connection-item"><strong>국민제안감사2국</strong><br>6개 에이전트</div>
+                    <div class="connection-item"><strong>공공감사지원국</strong><br>5개 에이전트</div>
+                    <div class="connection-item"><strong>심사관리관</strong><br>4개 에이전트</div>
+                    <div class="connection-item"><strong>심의실</strong><br>6개 에이전트</div>
+                    <div class="connection-item"><strong>디지털감사지원관</strong><br>8개 에이전트</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 연동 기관 탭 -->
+        <div id="connections" class="tab-content">
+            <div class="connection-section">
+                <h3>🔗 국가데이터처 연동 현황</h3>
+                <p style="margin-bottom: 2rem; color: #666;">감사원은 국가데이터처를 통해 전 정부기관과 실시간 데이터 연동</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">243</div>
+                        <div class="stat-label">연동 기관 수</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">8,547</div>
+                        <div class="stat-label">일일 데이터 통신</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">OpenHash 검증률</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: #28a745;">정상</div>
+                        <div class="stat-label">연동 상태</div>
+                    </div>
+                </div>
+                
+                <div class="connection-grid" style="margin-top: 2rem;">
+                    <div class="connection-item">중앙행정기관 (47개)</div>
+                    <div class="connection-item">광역자치단체 (17개)</div>
+                    <div class="connection-item">기초자치단체 (226개)</div>
+                    <div class="connection-item">공기업 (36개)</div>
+                    <div class="connection-item">준정부기관 (93개)</div>
+                    <div class="connection-item">기타공공기관 (354개)</div>
+                    <div class="connection-item">교육청 (17개)</div>
+                    <div class="connection-item">국립대학 (35개)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 시스템 상태 탭 -->
+        <div id="system" class="tab-content">
+            <div class="connection-section">
+                <h3>⚡ OpenHash 블록체인 시스템 현황</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">5.2M</div>
+                        <div class="stat-label">총 감사 기록</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">847K</div>
+                        <div class="stat-label">회계검사 기록</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">124K</div>
+                        <div class="stat-label">직무감찰 기록</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">99.98%</div>
+                        <div class="stat-label">블록체인 가용성</div>
+                    </div>
+                </div>
+                
+                <div class="connection-section" style="margin-top: 2rem;">
+                    <h3>🔐 보안 및 무결성</h3>
+                    <div class="connection-grid">
+                        <div class="connection-item">✅ SHA-256 암호화</div>
+                        <div class="connection-item">✅ 분산 원장 관리</div>
+                        <div class="connection-item">✅ 변조 방지 보장</div>
+                        <div class="connection-item">✅ 실시간 검증</div>
+                        <div class="connection-item">✅ 98.5% 에너지 절감</div>
+                        <div class="connection-item">✅ 감사증적 영구보존</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>© 2025 감사원 Board of Audit and Inspection | OpenHash 기반 시스템</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">국가의 세입·세출 결산검사 및 공무원 직무감찰</p>
+    </footer>
+    
+    <script>
+        function showTab(tabName) {
+            // 모든 탭 콘텐츠 숨기기
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 모든 탭 버튼 비활성화
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 선택된 탭 콘텐츠 표시
+            document.getElementById(tabName).classList.add('active');
+            
+            // 선택된 탭 버튼 활성화
+            event.target.classList.add('active');
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가안보실 | 대통령실</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background: #f8f9fa; color: #212529; }
+        
+        .top-bar { background: #1e3a5f; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 20px; font-size: 14px; font-weight: 500; }
+        .top-bar a:hover { text-decoration: underline; }
+        
+        .header { position: relative; background: linear-gradient(135deg, #0046FF, #0066CC); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1rem; opacity: 0.95; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        
+        .section { background: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; border: 2px solid #e5e7eb; }
+        .section h2 { font-size: 1.5rem; font-weight: 700; color: #212529; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #0046FF; }
+        .section p { color: #6b7280; line-height: 1.8; margin-bottom: 1rem; }
+        .section ul { color: #6b7280; margin: 1rem 0 1rem 2rem; }
+        .section ul li { margin: 0.5rem 0; }
+        
+        .alert-box { background: #fee2e2; border-left: 4px solid #ef4444; padding: 1rem; border-radius: 8px; margin-top: 1.5rem; }
+        .alert-box p { color: #991b1b; font-weight: 500; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .stat-box { background: linear-gradient(135deg, #dbeafe, #bfdbfe); padding: 1.5rem; border-radius: 12px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem; }
+        
+        .data-flow { background: #f9fafb; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; margin-top: 1.5rem; }
+        .data-flow h3 { font-size: 1.1rem; color: #0046FF; margin-bottom: 1rem; }
+        
+        .footer { background: #1e3a5f; color: white; text-align: center; padding: 2rem; margin-top: 4rem; }
+        .floating-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0046FF, #0066CC);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 70, 255, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .floating-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 70, 255, 0.4);
+        }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>대통령실 국가안보실</div>
+        <div>
+            <a href="/presidential-office/">대통령실 메인</a>
+            <a href="/portal/">포털</a>
+        </div>
+    </nav>
+
+    <header class="header">
+        <div style="position: absolute; top: 1rem; right: 2rem;">
+            <a href="/openhash.html" target="_blank" style="background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">📘 OpenHash 기술</a>
+        </div>
+        <h1>🛡️ 국가안보실</h1>
+        <p>National Security Office</p>
+    </header>
+
+    <main class="container">
+        <div class="section">
+            <h2>국가안보실 소개</h2>
+            <p>
+                국가안보실은 대한민국의 안보 정책을 총괄하고 위기 상황에 대응하는 대통령 직속 조직입니다.
+                국가 안보 전략 수립, 외교·국방 정책 조율, 사이버 안보, 위기 관리 등을 담당합니다.
+            </p>
+            <div class="alert-box">
+                <p>🔒 본 페이지는 공개용 정보만 포함하고 있습니다. 실제 안보 관련 정보는 보안 시스템에서 별도 관리됩니다.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>국가 안보 전략:</strong> 국가 안보 기본 전략 수립 및 조정</li>
+                <li><strong>외교 안보 조율:</strong> 외교부, 국방부 등 관련 부처 정책 조율</li>
+                <li><strong>국방 정책:</strong> 국방 정책 및 방위력 개선 방안 검토</li>
+                <li><strong>사이버 안보:</strong> 국가 사이버 안보 정책 수립 및 대응</li>
+                <li><strong>위기 관리:</strong> 국가 위기 상황 24시간 모니터링 및 대응</li>
+                <li><strong>정보 분석:</strong> 국내외 안보 정보 통합 분석</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>AI 에이전트 (6개)</h2>
+            <ul>
+                <li><strong>안보 위협 감지 에이전트:</strong> 국내외 안보 위협 실시간 모니터링 및 조기 경보</li>
+                <li><strong>국제 정세 분석 에이전트:</strong> 주요국 정세 변화 추적 및 영향 분석</li>
+                <li><strong>사이버 보안 에이전트:</strong> 국가 주요 시설 사이버 공격 탐지 및 대응</li>
+                <li><strong>군사 정보 통합 에이전트:</strong> 국방부, 정보기관 데이터 통합 분석</li>
+                <li><strong>위기 시뮬레이션 에이전트:</strong> 다양한 위기 시나리오 시뮬레이션 및 대응 방안 수립</li>
+                <li><strong>외교 안보 조율 에이전트:</strong> 외교·국방 정책 간 조율 및 최적화</li>
+            </ul>
+        </div>
+
+        <div class="section">
+
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">위기관리 가동</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">15,847</div>
+                    <div class="stat-label">일일 안보 데이터</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">AI 에이전트 가동</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">최고</div>
+                    <div class="stat-label">보안 등급</div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        document.getElementById('currentDept').textContent = document.querySelector('h1').innerText;
+        
+</body>
+</html>

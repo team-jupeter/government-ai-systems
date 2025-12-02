@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>색상 코드 + OCR 하이브리드 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        :root {
+            --gov-blue: #0046FF;
+            --gov-navy: #1e3a5f;
+            --gov-gray: #6B7280;
+            --gov-bg: #F8F9FA;
+        }
+        body { background: var(--gov-bg); color: #1F2937; }
+        
+        header {
+            background: white;
+            border-bottom: 3px solid var(--gov-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+        
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 50%, #FFE66D 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,70,255,0.3);
+        }
+        
+        .logo-text h1 { font-size: 1.75rem; font-weight: 700; color: var(--gov-navy); }
+        .logo-text p { font-size: 0.875rem; color: var(--gov-gray); }
+        
+        .header-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary { background: var(--gov-blue); color: white; }
+        .btn-primary:hover { background: #0033CC; }
+        .btn-secondary { background: white; color: var(--gov-blue); border: 2px solid var(--gov-blue); }
+        .btn-secondary:hover { background: #E8F0FF; }
+        
+        .container { max-width: 1800px; margin: 0 auto; padding: 2rem; }
+        
+        .concept-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .concept-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .concept-section p { font-size: 1.125rem; line-height: 1.8; }
+        
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 1.5rem;
+            background: white;
+            border: 3px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn:hover { border-color: var(--gov-blue); }
+        .mode-btn.active { border-color: var(--gov-blue); background: #E8F0FF; }
+        
+        .mode-btn h3 { color: var(--gov-navy); margin-bottom: 0.5rem; }
+        .mode-btn p { color: var(--gov-gray); font-size: 0.875rem; }
+        
+        .editor-section {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .editor-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gov-navy);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gov-blue);
+            border-radius: 8px;
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--gov-bg);
+            border-radius: 8px;
+        }
+        
+        .color-box {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .color-box:hover { transform: scale(1.2); box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 10; }
+        .color-box.selected { border-color: #FFD700; box-shadow: 0 0 8px rgba(255,215,0,0.8); }
+        .color-box.base-color { border: 3px solid #FFD700; box-shadow: 0 0 12px rgba(255,215,0,1); }
+        
+        .colored-text-display {
+            min-height: 200px;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #E5E7EB;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .colored-char {
+            display: inline-block;
+            font-size: 3.5rem;
+            font-weight: 900;
+            padding: 0.5rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .colored-char:hover { transform: scale(1.15); text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .colored-char.base { border: 3px solid #FFD700; border-radius: 8px; background: #FFF9E6; box-shadow: 0 0 12px rgba(255,215,0,0.5); }
+        
+        .ipv6-display {
+            background: #1e293b;
+            color: #10b981;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.125rem;
+            word-break: break-all;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .address-breakdown {
+            background: var(--gov-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--gov-blue);
+        }
+        
+        .breakdown-label {
+            font-weight: 600;
+            color: var(--gov-navy);
+            min-width: 120px;
+        }
+        
+        .breakdown-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gov-blue);
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-table table { width: 100%; border-collapse: collapse; }
+        .comparison-table th { background: var(--gov-blue); color: white; padding: 1rem; text-align: left; }
+        .comparison-table td { padding: 1rem; border-bottom: 1px solid #E5E7EB; }
+        .comparison-table tr:hover { background: #F9FAFB; }
+        
+        .info-box {
+            background: #E8F0FF;
+            border-left: 4px solid var(--gov-blue);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .highlight { background: #FEF3C7; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; }
+        
+        @media (max-width: 1200px) {
+            .editor-section { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo" onclick="location.href='/portal/systems.html'">
+                <div class="logo-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>색상 코드 + OCR 하이브리드 시스템</h1>
+                    <p>이중 인코딩으로 정보 밀도 극대화</p>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <a href="/color-code/analysis.html" class="btn btn-secondary">
+                    <i class="fas fa-chart-bar"></i>
+                    비교 분석
+                </a>
+                <a href="/portal/systems.html" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    포털
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 개념 설명 -->
+        <div class="concept-section">
+            <h2><i class="fas fa-brain"></i> 색상 코드 + OCR 하이브리드 인코딩</h2>
+            <p>
+                <strong>색상 정보</strong>와 <strong>문자 정보</strong>를 동시에 인코딩하여 
+                IPv6 주소 하나에 훨씬 더 많은 정보를 저장합니다.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px;">
+                    <h3><i class="fas fa-palette"></i> 색상 레이어</h3>
+                    <p>각 글자의 색상 (64색 = 6비트)</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px;">
+                    <h3><i class="fas fa-text"></i> 문자 레이어</h3>
+                    <p>OCR로 인식한 유니코드 (16비트)</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px;">
+                    <h3><i class="fas fa-layer-group"></i> 하이브리드</h3>
+                    <p>색상 + 문자 = 22비트/글자</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모드 선택 -->
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="setMode('color')" id="modeColor">
+                <h3><i class="fas fa-palette"></i> 색상 전용 모드</h3>
+                <p>64색 시스템 (6비트/글자)</p>
+            </div>
+            <div class="mode-btn" onclick="setMode('ocr')" id="modeOCR">
+                <h3><i class="fas fa-eye"></i> OCR 전용 모드</h3>
+                <p>유니코드 텍스트 (16비트/글자)</p>
+            </div>
+            <div class="mode-btn" onclick="setMode('hybrid')" id="modeHybrid">
+                <h3><i class="fas fa-layer-group"></i> 하이브리드 모드</h3>
+                <p>색상 + OCR (22비트/글자)</p>
+            </div>
+        </div>
+
+        <!-- 편집기 -->
+        <div class="editor-section">
+            <!-- 왼쪽: 입력 및 색상 선택 -->
+            <div class="editor-panel">
+                <div class="panel-title">
+                    <i class="fas fa-edit"></i>
+                    <span id="editorTitle">색상 코드 편집기</span>
+                </div>
+                
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                    <i class="fas fa-keyboard"></i> 텍스트 입력 (최대 10글자)
+                </label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input 
+                        type="text" 
+                        id="textInput" 
+                        class="text-input" 
+                        placeholder="예: 새마을, 제주도청, Hello..."
+                        maxlength="10"
+                        style="flex: 1; margin-bottom: 0;"
+                    />
+                    <button 
+                        class="btn btn-primary" 
+                        onclick="autoColorByAI()"
+                        id="aiColorBtn"
+                        style="white-space: nowrap; margin-bottom: 1.5rem;"
+                        title="AI가 텍스트를 분석하여 최적의 색상을 자동 할당합니다"
+                    >
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        AI 자동 색상
+                    </button>
+                </div>
+                
+                <div class="info-box" id="modeInfo">
+                    <strong>💡 색상 전용 모드:</strong><br>
+                    각 글자에 64색 중 하나를 할당하여 IPv6 주소 생성
+                </div>
+                
+                <div id="colorPaletteSection">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                        <i class="fas fa-palette"></i> 64색 팔레트
+                    </label>
+                    <div class="color-palette" id="colorPalette"></div>
+                </div>
+                
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                    <i class="fas fa-paint-roller"></i> 미리보기
+                </label>
+                <div class="colored-text-display" id="coloredText">
+                    <div style="color: var(--gov-gray); padding: 3rem;">
+                        위에서 텍스트를 입력하세요
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽: IPv6 결과 -->
+            <div class="editor-panel">
+                <div class="panel-title">
+                    <i class="fas fa-network-wired"></i>
+                    IPv6 주소 및 분석
+                </div>
+                
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                    <i class="fas fa-code"></i> 생성된 IPv6 주소
+                </label>
+                <div class="ipv6-display" id="ipv6Output">
+                    <div style="text-align: center; opacity: 0.5;">
+                        텍스트를 입력하면<br>IPv6 주소가 생성됩니다
+                    </div>
+                </div>
+                
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                    <i class="fas fa-info-circle"></i> 인코딩 상세
+                </label>
+                <div class="address-breakdown" id="addressBreakdown">
+                    <div style="text-align: center; color: var(--gov-gray);">
+                        인코딩 상세가 여기에 표시됩니다
+                    </div>
+                </div>
+                
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gov-navy);">
+                    <i class="fas fa-chart-line"></i> 정보 밀도 비교
+                </label>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>모드</th>
+                                <th>비트/글자</th>
+                                <th>주소 수 (4글자)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonBody">
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: var(--gov-gray);">텍스트 입력 후 비교</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; justify-content: center; font-size: 1.125rem;" onclick="copyIPv6()">
+                    <i class="fas fa-copy"></i>
+                    IPv6 주소 복사
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 64색 팔레트
+        const colors = [];
+        for (let i = 0; i < 64; i++) {
+            const r = ((i >> 4) & 0x3) * 85;
+            const g = ((i >> 2) & 0x3) * 85;
+            const b = (i & 0x3) * 85;
+            const hex = '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
+            colors.push({ hex: hex.toUpperCase(), index: i, isBase: i === 32 });
+        }
+
+        const BASE_COLOR_INDEX = 32;
+        let currentMode = 'color'; // 'color', 'ocr', 'hybrid'
+        let textChars = [];
+        let selectedCharIndex = null;
+
+        // 모드 전환
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // UI 업데이트
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+            
+            // 팔레트 표시/숨김
+            const paletteSection = document.getElementById('colorPaletteSection');
+            if (mode === 'ocr') {
+                paletteSection.style.display = 'none';
+            } else {
+                paletteSection.style.display = 'block';
+            }
+            
+            // 정보 박스 업데이트
+            const infoBox = document.getElementById('modeInfo');
+            if (mode === 'color') {
+                infoBox.innerHTML = '<strong>💡 색상 전용 모드:</strong><br>각 글자에 64색 중 하나를 할당하여 IPv6 주소 생성 (6비트/글자)';
+            } else if (mode === 'ocr') {
+                infoBox.innerHTML = '<strong>💡 OCR 전용 모드:</strong><br>글자의 유니코드만 사용하여 IPv6 주소 생성 (16비트/글자)';
+            } else {
+                infoBox.innerHTML = '<strong>💡 하이브리드 모드:</strong><br>색상(6비트) + 유니코드(16비트) = 22비트/글자로 최대 정보 밀도';
+            }
+            
+            // 에디터 제목 업데이트
+            document.getElementById('editorTitle').textContent = 
+                mode === 'color' ? '색상 코드 편집기' : 
+                mode === 'ocr' ? 'OCR 시뮬레이션' : 
+                '하이브리드 인코딩';
+            
+            generateIPv6();
+        }
+
+        // 팔레트 초기화
+        function initColorPalette() {
+            const palette = document.getElementById('colorPalette');
+            colors.forEach((color, index) => {
+                const box = document.createElement('div');
+                box.className = 'color-box';
+                if (color.isBase) box.classList.add('base-color');
+                box.style.background = color.hex;
+                box.onclick = () => applyColor(index);
+                palette.appendChild(box);
+            });
+        }
+
+        // 텍스트 입력
+        document.getElementById('textInput').addEventListener('input', (e) => {
+            const text = e.target.value;
+            textChars = text.split('').map((char, index) => ({
+                char: char,
+                colorIndex: index === 0 ? BASE_COLOR_INDEX : null,
+                unicode: char.charCodeAt(0),
+                isBase: index === 0
+            }));
+            renderColoredText();
+            generateIPv6();
+        });
+
+        // 렌더링
+        function renderColoredText() {
+            const container = document.getElementById('coloredText');
+            if (textChars.length === 0) {
+                container.innerHTML = '<div style="color: var(--gov-gray); padding: 3rem;">위에서 텍스트를 입력하세요</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            textChars.forEach((charObj, index) => {
+                const span = document.createElement('span');
+                span.className = `colored-char ${charObj.isBase ? 'base' : ''}`;
+                span.textContent = charObj.char;
+                
+                if (currentMode === 'color' || currentMode === 'hybrid') {
+                    if (charObj.colorIndex !== null) {
+                        span.style.color = colors[charObj.colorIndex].hex;
+                    } else {
+                        span.style.color = '#CCCCCC';
+                    }
+                } else {
+                    span.style.color = '#333333'; // OCR 모드는 색상 없음
+                }
+                
+                if (selectedCharIndex === index) {
+                    span.style.border = '3px solid #FFD700';
+                    span.style.borderRadius = '8px';
+                    span.style.background = '#FFF9E6';
+                }
+                
+                span.onclick = () => selectChar(index);
+                container.appendChild(span);
+            });
+        }
+
+        function selectChar(index) {
+            if (index === 0 && currentMode !== 'ocr') {
+                alert('첫 번째 글자는 기준 색상으로 고정됩니다.');
+                return;
+            }
+            selectedCharIndex = index;
+            renderColoredText();
+        }
+
+        function applyColor(colorIndex) {
+            if (currentMode === 'ocr') {
+                alert('OCR 모드에서는 색상을 적용할 수 없습니다.');
+                return;
+            }
+            if (selectedCharIndex === null || selectedCharIndex === 0) {
+                alert('색상을 적용할 글자를 먼저 선택해주세요.');
+                return;
+            }
+            
+            textChars[selectedCharIndex].colorIndex = colorIndex;
+            renderColoredText();
+            generateIPv6();
+        }
+
+        // IPv6 생성
+        function generateIPv6() {
+            if (textChars.length === 0) {
+                document.getElementById('ipv6Output').innerHTML = '<div style="text-align: center; opacity: 0.5;">텍스트를 입력하면<br>IPv6 주소가 생성됩니다</div>';
+                document.getElementById('addressBreakdown').innerHTML = '<div style="text-align: center; color: var(--gov-gray);">인코딩 상세가 여기에 표시됩니다</div>';
+                updateComparison();
+                return;
+            }
+
+            const textValue = textChars.map(c => c.char).join('');
+            let encoded = '';
+            let encodingDetails = [];
+
+            if (currentMode === 'color') {
+                // 색상만 인코딩 (6비트)
+                textChars.forEach(charObj => {
+                    const colorCode = (charObj.colorIndex !== null ? charObj.colorIndex : 0).toString(16).padStart(2, '0');
+                    encoded += colorCode;
+                    encodingDetails.push({
+                        char: charObj.char,
+                        color: colorCode,
+                        unicode: null
+                    });
+                });
+            } else if (currentMode === 'ocr') {
+                // 유니코드만 인코딩 (16비트)
+                textChars.forEach(charObj => {
+                    const unicodeHex = charObj.unicode.toString(16).padStart(4, '0');
+                    encoded += unicodeHex;
+                    encodingDetails.push({
+                        char: charObj.char,
+                        color: null,
+                        unicode: unicodeHex
+                    });
+                });
+            } else {
+                // 하이브리드: 색상(6비트) + 유니코드(16비트) = 22비트
+                textChars.forEach(charObj => {
+                    const colorCode = (charObj.colorIndex !== null ? charObj.colorIndex : 0).toString(16).padStart(2, '0');
+                    const unicodeHex = charObj.unicode.toString(16).padStart(4, '0');
+                    encoded += colorCode + unicodeHex;
+                    encodingDetails.push({
+                        char: charObj.char,
+                        color: colorCode,
+                        unicode: unicodeHex
+                    });
+                });
+            }
+
+            // IPv6 주소 구성
+            const prefix = currentMode === 'hybrid' ? '2001:cc64:kr00:hyb' : 
+                          currentMode === 'ocr' ? '2001:cc64:kr00:ocr' : 
+                          '2001:cc64:kr00:col';
+            
+            const ipv6Compressed = `${prefix}::${encoded}`;
+            
+            document.getElementById('ipv6Output').innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #10b981;">${currentMode.toUpperCase()} 모드 IPv6:</strong>
+                </div>
+                <div style="font-size: 1.5rem; line-height: 1.6; margin-bottom: 1rem;">
+                    ${ipv6Compressed}
+                </div>
+                <div style="font-size: 0.875rem; color: #6ee7b7;">
+                    인코딩 길이: ${encoded.length}자리 (${encoded.length * 4}비트)
+                </div>
+            `;
+
+            // 인코딩 상세
+            let breakdownHTML = '';
+            encodingDetails.forEach((detail, idx) => {
+                if (currentMode === 'color') {
+                    breakdownHTML += `
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">${detail.char}</div>
+                            <div class="breakdown-value">색상: ${detail.color} (6비트)</div>
+                        </div>
+                    `;
+                } else if (currentMode === 'ocr') {
+                    breakdownHTML += `
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">${detail.char}</div>
+                            <div class="breakdown-value">유니코드: ${detail.unicode} (U+${detail.unicode.toUpperCase()}, 16비트)</div>
+                        </div>
+                    `;
+                } else {
+                    breakdownHTML += `
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">${detail.char}</div>
+                            <div class="breakdown-value">색상: ${detail.color} + 유니코드: ${detail.unicode} (22비트)</div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('addressBreakdown').innerHTML = breakdownHTML;
+            updateComparison();
+        }
+
+        // 비교표 업데이트
+        function updateComparison() {
+            const charCount = textChars.length;
+            if (charCount === 0) {
+                document.getElementById('comparisonBody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--gov-gray);">텍스트 입력 후 비교</td></tr>';
+                return;
+            }
+
+            const colorOnly = Math.pow(64, charCount);
+            const ocrOnly = Math.pow(65536, charCount); // 16비트 = 65536가지
+            const hybrid = Math.pow(4194304, charCount); // 22비트 = 4,194,304가지
+
+            document.getElementById('comparisonBody').innerHTML = `
+                <tr style="background: ${currentMode === 'color' ? '#E8F0FF' : 'white'}">
+                    <td><strong>색상 전용</strong></td>
+                    <td>6비트</td>
+                    <td>${colorOnly.toLocaleString()}</td>
+                </tr>
+                <tr style="background: ${currentMode === 'ocr' ? '#E8F0FF' : 'white'}">
+                    <td><strong>OCR 전용</strong></td>
+                    <td>16비트</td>
+                    <td>${ocrOnly.toLocaleString()}</td>
+                </tr>
+                <tr style="background: ${currentMode === 'hybrid' ? '#E8F0FF' : 'white'}">
+                    <td><strong>하이브리드</strong></td>
+                    <td>22비트</td>
+                    <td><span class="highlight">${hybrid.toLocaleString()}</span></td>
+                </tr>
+            `;
+        }
+
+
+        // AI 자동 색상 할당
+        async function autoColorByAI() {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text) {
+                alert('먼저 텍스트를 입력해주세요.');
+                return;
+            }
+            
+            if (currentMode === 'ocr') {
+                alert('OCR 모드에서는 색상 할당이 필요하지 않습니다.');
+                return;
+            }
+            
+            const aiBtn = document.getElementById('aiColorBtn');
+            const originalHTML = aiBtn.innerHTML;
+            aiBtn.disabled = true;
+            aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI 분석 중...';
+            
+            try {
+                const response = await fetch('/api/color-code/auto-color', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        mode: currentMode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // AI가 할당한 색상 적용
+                    textChars.forEach((charObj, index) => {
+                        if (index < data.colors.length) {
+                            charObj.colorIndex = data.colors[index];
+                        }
+                    });
+                    
+                    renderColoredText();
+                    generateIPv6();
+                    
+                    // 성공 메시지
+                    alert('✨ AI가 색상을 자동 할당했습니다!\n\n' + data.reasoning);
+                } else {
+                    alert('❌ AI 색상 할당 실패: ' + data.error);
+                }
+            } catch (error) {
+                console.error('AI 색상 할당 오류:', error);
+                alert('❌ 오류가 발생했습니다: ' + error.message);
+            } finally {
+                aiBtn.disabled = false;
+                aiBtn.innerHTML = originalHTML;
+            }
+        }
+
+        // 복사
+        function copyIPv6() {
+            if (textChars.length === 0) {
+                alert('먼저 텍스트를 입력하고 인코딩하세요.');
+                return;
+            }
+
+            const ipv6Text = document.getElementById('ipv6Output').textContent.match(/2001:cc64:[a-z0-9:]+/i);
+            if (ipv6Text) {
+                navigator.clipboard.writeText(ipv6Text[0]).then(() => {
+                    alert('✅ IPv6 주소가 복사되었습니다!\n\n' + ipv6Text[0]);
+                });
+            }
+        }
+
+        // 초기화
+        initColorPalette();
+        
+        // 예시 자동 입력
+        setTimeout(() => {
+            document.getElementById('textInput').value = '새마을';
+            document.getElementById('textInput').dispatchEvent(new Event('input'));
+        }, 1000);
+    </script>
+</body>
+</html>

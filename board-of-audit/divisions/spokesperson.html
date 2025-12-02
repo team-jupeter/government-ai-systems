@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대변인 | 감사원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>감사원 대변인</div>
+        <div><a href="/board-of-audit/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>📢 대변인</h1>
+        <p>Spokesperson (사무총장 직속)</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>대변인 소개</h2>
+            <p>대변인은 감사원의 공식 입장을 대외적으로 발표하고 언론 대응을 총괄하는 부서입니다. 
+            주요 감사 결과 브리핑, 보도자료 배포, 언론 취재 지원, 
+            감사원 홍보 활동 등을 담당합니다. 감사원의 활동이 국민에게 정확하게 전달되고, 
+            투명하게 공개되도록 소통 창구 역할을 수행합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>언론 브리핑:</strong> 주요 감사 결과 발표</li>
+                <li><strong>보도자료 배포:</strong> 감사원 주요 활동 보도자료 작성</li>
+                <li><strong>기자회견 운영:</strong> 원장 및 고위직 기자회견 주관</li>
+                <li><strong>언론 모니터링:</strong> 감사원 관련 언론 보도 추적</li>
+                <li><strong>홍보 기획:</strong> 감사원 대국민 홍보 활동</li>
+                <li><strong>SNS 운영:</strong> 감사원 공식 SNS 계정 관리</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (5개)</h2>
+            <ul>
+                <li><strong>보도자료 작성 AI:</strong> 감사 결과 보도자료 자동 생성</li>
+                <li><strong>브리핑 준비 AI:</strong> 예상 질문 및 답변 준비</li>
+                <li><strong>언론 모니터링 AI:</strong> 실시간 언론 보도 추적</li>
+                <li><strong>여론 분석 AI:</strong> 감사 결과에 대한 여론 반응 분석</li>
+                <li><strong>SNS 콘텐츠 AI:</strong> 소셜미디어 콘텐츠 자동 생성</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>감사원 각 국: 주요 감사 결과</li>
+                    <li>언론사: 보도 내용</li>
+                    <li>SNS 플랫폼: 여론 반응</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>보도자료</li>
+                    <li>브리핑 자료</li>
+                    <li>언론 대응 자료</li>
+                    <li>여론 분석 보고서</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">5</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">38</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.5%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 감사원 대변인 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

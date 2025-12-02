@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대통령 비서실 AI 자동화 시스템 | 국가 자동화</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 공통 컴포넌트 (필수!) -->
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+
+        .top-bar {
+            background: #0046FF; color: white; padding: 0.75rem 2rem;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;
+        }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; transition: opacity 0.2s; }
+        .top-bar a:hover { opacity: 0.8; }
+
+        .header {
+            background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%);
+            color: white; padding: 3rem 2rem; text-align: center; position: relative;
+        }
+        .header-badge {
+            display: inline-block; background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1rem;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+
+        .nav-tabs {
+            background: white; display: flex; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-tab {
+            padding: 1rem 2rem; cursor: pointer; border-bottom: 3px solid transparent;
+            transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-tab:hover { background: #f8f9fa; }
+        .nav-tab.active { border-bottom-color: #0046FF; color: #0046FF; font-weight: 600; }
+
+        .main-container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .org-chart { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .org-title { font-size: 1.8rem; margin-bottom: 0.5rem; color: #0046FF; }
+        .org-subtitle { color: #666; margin-bottom: 2rem; }
+        .org-section { margin-bottom: 3rem; }
+        .org-section-title {
+            font-size: 1.3rem; color: #0046FF; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #0046FF;
+        }
+        .org-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem; margin-top: 1rem;
+        }
+        .org-box {
+            background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%);
+            color: white; padding: 1.5rem; border-radius: 8px; text-align: center;
+            text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+        }
+        .org-box:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,70,255,0.3); }
+        .org-box small { display: block; margin-top: 0.5rem; opacity: 0.8; }
+
+        .section {
+            background: white; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;
+        }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem; margin-top: 1rem;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF;
+        }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+
+        .item-list { list-style: none; }
+        .item-list li {
+            padding: 1rem; border-bottom: 1px solid #e9ecef;
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .item-list li:last-child { border-bottom: none; }
+        .item-list i { color: #0046FF; width: 20px; }
+
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>OpenHash 기술 실증을 위한 대통령 비서실 자동화 시범 프로젝트</div>
+        <div>
+            <a href="/portal/">포털</a>
+            <a href="/portal/government.html">행정부</a>
+            <a href="/openhash.html" target="_blank">OpenHash 기술</a>
+        </div>
+    </nav>
+
+    <header class="header" style="position: relative;">
+        <div style="position: absolute; top: 1rem; right: 2rem;">
+            <a href="/openhash.html" target="_blank" 
+               style="background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">
+                📘 OpenHash 기술 설명
+            </a>
+        </div>
+        
+        <div class="header-badge">
+            <i class="fas fa-shield-alt"></i> OpenHash 기반 시스템
+        </div>
+        <h1>🏛️ 대통령 비서실 AI 자동화 시스템</h1>
+        <p>Presidential Secretariat AI Automation System</p>
+    </header>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('organization')">
+            <i class="fas fa-sitemap"></i> 조직도
+        </div>
+        <div class="nav-tab" onclick="switchTab('agents')">
+            <i class="fas fa-robot"></i> AI 에이전트
+        </div>
+        <div class="nav-tab" onclick="switchTab('collaboration')">
+            <i class="fas fa-link"></i> 연동 기관
+        </div>
+        <div class="nav-tab" onclick="switchTab('stats')">
+            <i class="fas fa-chart-line"></i> 시스템 상태
+        </div>
+    </div>
+
+    <main class="main-container">
+        <div id="organization" class="tab-content active">
+            <div class="org-chart">
+                <h2 class="org-title">🏛️ 대통령 비서실 AI 에이전트 조직도</h2>
+                <p class="org-subtitle">각 부서 클릭 시 상세 정보 확인 (2025년 조직개편 기준)</p>
+                
+                <div class="org-section">
+                    <h3 class="org-section-title">📌 비서실장 직속</h3>
+                    <div class="org-grid">
+                        <a href="divisions/situation-room.html" target="_blank" class="org-box">
+                            국정상황실<br><small>8 Agents</small>
+                        </a>
+                        <a href="divisions/general-affairs.html" target="_blank" class="org-box">
+                            총무비서관실<br><small>6 Agents</small>
+                        </a>
+                        <a href="divisions/protocol.html" target="_blank" class="org-box">
+                            의전비서관실<br><small>7 Agents</small>
+                        </a>
+                        <a href="divisions/speech.html" target="_blank" class="org-box">
+                            연설비서관실<br><small>5 Agents</small>
+                        </a>
+                        <a href="divisions/records.html" target="_blank" class="org-box">
+                            국정기록비서관실<br><small>6 Agents</small>
+                        </a>
+                        <a href="divisions/digital-comms.html" target="_blank" class="org-box">
+                            디지털소통비서관실<br><small>8 Agents</small>
+                        </a>
+                        <a href="divisions/management.html" target="_blank" class="org-box">
+                            관리비서관실<br><small>5 Agents</small>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="org-section">
+                    <h3 class="org-section-title">⭐ 수석비서관실 (8개)</h3>
+                    <div class="org-grid">
+                        <a href="divisions/political-affairs.html" target="_blank" class="org-box">
+                            정무수석비서관실<br><small>12 Agents</small>
+                        </a>
+                        <a href="divisions/public-communication.html" target="_blank" class="org-box">
+                            홍보소통수석비서관실<br><small>15 Agents</small>
+                        </a>
+                        <a href="divisions/listening-integration.html" target="_blank" class="org-box">
+                            경청통합수석비서관실<br><small>10 Agents</small>
+                        </a>
+                        <a href="divisions/civil-affairs.html" target="_blank" class="org-box">
+                            민정수석비서관실<br><small>14 Agents</small>
+                        </a>
+                        <a href="divisions/personnel.html" target="_blank" class="org-box">
+                            인사수석비서관실<br><small>11 Agents</small>
+                        </a>
+                        <a href="divisions/economic-growth.html" target="_blank" class="org-box">
+                            경제성장수석비서관실<br><small>16 Agents</small>
+                        </a>
+                        <a href="divisions/ai-future.html" target="_blank" class="org-box">
+                            AI미래기획수석비서관실<br><small>13 Agents</small>
+                        </a>
+                        <a href="divisions/foreign-security.html" target="_blank" class="org-box">
+                            외교안보특별보좌관<br><small>12 Agents</small>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="org-section">
+                    <h3 class="org-section-title">📊 정책실장 산하</h3>
+                    <div class="org-grid">
+                        <a href="divisions/fiscal-planning.html" target="_blank" class="org-box">
+                            재정기획보좌관실<br><small>9 Agents</small>
+                        </a>
+                        <a href="divisions/policy-coordination.html" target="_blank" class="org-box">
+                            국정과제·정책조정비서관실<br><small>10 Agents</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="agents" class="tab-content">
+            <div class="section">
+                <h2><i class="fas fa-robot"></i> 전체 AI 에이전트 현황</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">157</div>
+                        <div class="stat-label">총 AI 에이전트</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">17</div>
+                        <div class="stat-label">부서 수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">24/7</div>
+                        <div class="stat-label">운영 시간</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">99.8%</div>
+                        <div class="stat-label">가동률</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-cogs"></i> 주요 AI 에이전트 기능</h2>
+                <ul class="item-list">
+                    <li>
+                        <i class="fas fa-brain"></i>
+                        <div>
+                            <strong>정책 분석 AI</strong><br>
+                            <span style="color: #666;">국정과제 분석, 정책 효과 예측, 대안 제시</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <strong>여론 모니터링 AI</strong><br>
+                            <span style="color: #666;">실시간 여론 분석, 이슈 탐지, 대응 전략 수립</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-file-alt"></i>
+                        <div>
+                            <strong>문서 자동화 AI</strong><br>
+                            <span style="color: #666;">보고서 작성, 연설문 초안, 브리핑 자료 생성</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>인사 관리 AI</strong><br>
+                            <span style="color: #666;">인사 추천, 감찰 지원, 윤리 검증</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-globe"></i>
+                        <div>
+                            <strong>외교 정보 AI</strong><br>
+                            <span style="color: #666;">국제 정세 분석, 외교 전략 지원</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="collaboration" class="tab-content">
+            <div class="section">
+                <h2><i class="fas fa-link"></i> 국가데이터처 연동 현황</h2>
+                <p style="margin-bottom: 1rem; color: #666;">
+                    OpenHash 기반으로 정부 각 부처 및 기관과 실시간 데이터 연동
+                </p>
+
+                <h3 style="color: #0046FF; margin-top: 2rem; margin-bottom: 1rem;">📥 입력 데이터</h3>
+                <ul class="item-list">
+                    <li><i class="fas fa-building"></i> 행정안전부: 지방자치단체 현황, 재난안전 정보</li>
+                    <li><i class="fas fa-gavel"></i> 법무부: 법률 검토 의견, 법제 동향</li>
+                    <li><i class="fas fa-won-sign"></i> 기획재정부: 재정 현황, 경제 지표</li>
+                    <li><i class="fas fa-graduation-cap"></i> 교육부: 교육 정책 현황</li>
+                    <li><i class="fas fa-heartbeat"></i> 보건복지부: 복지 정책, 보건 통계</li>
+                    <li><i class="fas fa-industry"></i> 산업통상자원부: 산업 동향, 통상 현황</li>
+                    <li><i class="fas fa-shield-alt"></i> 국방부: 안보 상황, 국방 정책</li>
+                    <li><i class="fas fa-landmark"></i> 국회: 법안 심의 현황, 정치권 동향</li>
+                </ul>
+
+                <h3 style="color: #0046FF; margin-top: 2rem; margin-bottom: 1rem;">📤 출력 데이터</h3>
+                <ul class="item-list">
+                    <li><i class="fas fa-file-alt"></i> 국정 운영 방향 및 지침</li>
+                    <li><i class="fas fa-tasks"></i> 부처별 업무 지시 사항</li>
+                    <li><i class="fas fa-chart-pie"></i> 정책 성과 평가 결과</li>
+                    <li><i class="fas fa-users"></i> 인사 발령 및 임명 정보</li>
+                    <li><i class="fas fa-bullhorn"></i> 대국민 소통 메시지</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-exchange-alt"></i> Agent-to-Agent 통신</h2>
+                <p style="color: #666;">
+                    대통령 비서실의 AI 에이전트는 다른 정부 기관 AI 에이전트와 직접 통신하여 
+                    신속한 정책 조율 및 업무 협력을 수행합니다.
+                </p>
+                <div class="stats-grid" style="margin-top: 1rem;">
+                    <div class="stat-box">
+                        <div class="stat-value">43</div>
+                        <div class="stat-label">연동 기관 수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">2,847</div>
+                        <div class="stat-label">일일 통신 건수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">0.3초</div>
+                        <div class="stat-label">평균 응답 시간</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">암호화 통신</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="stats" class="tab-content">
+            <div class="section">
+                <h2><i class="fas fa-chart-line"></i> 실시간 시스템 현황</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #28a745;">정상</div>
+                        <div class="stat-label">시스템 상태</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">157</div>
+                        <div class="stat-label">활성 에이전트</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">1,243</div>
+                        <div class="stat-label">금일 처리 건수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">99.8%</div>
+                        <div class="stat-label">정확도</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-database"></i> OpenHash 블록체인 현황</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">47,892</div>
+                        <div class="stat-label">총 블록 수</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">1,283,476</div>
+                        <div class="stat-label">총 트랜잭션</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">2.1 kW</div>
+                        <div class="stat-label">시간당 전력 소비</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #28a745;">98.5%</div>
+                        <div class="stat-label">에너지 절감율</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-clock"></i> 업무 처리 현황 (최근 24시간)</h2>
+                <ul class="item-list">
+                    <li>
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <div>
+                            <strong>정책 분석 보고서</strong><br>
+                            <span style="color: #666;">47건 완료</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <div>
+                            <strong>여론 모니터링</strong><br>
+                            <span style="color: #666;">156건 분석</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <div>
+                            <strong>부처 협력 업무</strong><br>
+                            <span style="color: #666;">92건 조율</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <div>
+                            <strong>문서 자동 생성</strong><br>
+                            <span style="color: #666;">234건 완료</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 대통령 비서실 AI 자동화 시스템 | OpenHash 기술 실증 프로젝트</p>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.nav-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연설비서관실 | 대통령 비서실</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>대통령 비서실 연설비서관실</div>
+        <div><a href="/presidential-secretariat/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>📝 연설비서관실</h1>
+        <p>Speech Writing Office</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>연설비서관실 소개</h2>
+            <p>연설비서관실은 대통령의 각종 연설문과 담화문을 작성하는 부서입니다. 
+            신년사, 국회 시정연설, 정상회담 발언, 국민 담화 등 대통령의 모든 공식 발언을 
+            준비하며, 국정 철학과 정책 방향이 정확하고 설득력 있게 전달되도록 합니다. 
+            역사적 맥락과 시대정신을 담아 품격 있는 문장으로 국민과 소통합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>연설문 작성:</strong> 대통령 연설문 및 담화문 작성</li>
+                <li><strong>메시지 기획:</strong> 주요 발언의 핵심 메시지 기획</li>
+                <li><strong>수사 연구:</strong> 효과적인 수사법 및 표현 연구</li>
+                <li><strong>팩트 체크:</strong> 연설 내용의 사실 관계 검증</li>
+                <li><strong>과거 연설 관리:</strong> 대통령 연설 아카이브 구축</li>
+                <li><strong>외국어 감수:</strong> 영문 연설문 번역 및 감수</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (5개)</h2>
+            <ul>
+                <li><strong>연설문 초안 AI:</strong> 주제에 맞는 연설문 초안 자동 생성</li>
+                <li><strong>수사법 AI:</strong> 효과적인 수사 기법 제안</li>
+                <li><strong>팩트 체크 AI:</strong> 통계·사실 관계 자동 검증</li>
+                <li><strong>과거 연설 검색 AI:</strong> 유사 주제 과거 연설 검색</li>
+                <li><strong>번역 AI:</strong> 한-영 연설문 번역 및 감수</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>각 부처: 정책 추진 현황</li>
+                    <li>통계청: 주요 통계 자료</li>
+                    <li>국사편찬위원회: 역사적 사실</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>완성된 연설문</li>
+                    <li>연설문 아카이브</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">5</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">12</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.6%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 대통령 비서실 연설비서관실 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

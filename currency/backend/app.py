@@ -5,61 +5,18 @@ import os
 import logging
 
 app = Flask(__name__)
-
-@app.route('/health', methods=['GET'])
-def health():
-    return jsonify({'status': 'ok'}), 200
 CORS(app)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Claude API 클라이언트
 ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
 
-CURRENCY_INFO = {
-    "system_name": "민간 경쟁형 디지털 화폐 시스템",
-    "description": "세계 최초 완전 자율 금융 생태계",
-    "total_currencies": 15,
-    "total_transactions_daily": 2850000
-}
-
-DIGITAL_CURRENCIES = [
-    {"id": "KDC", "name": "한국디지털원", "issuer": "한국은행", "market_share": 35.2},
-    {"id": "SDC", "name": "삼성페이코인", "issuer": "삼성금융", "market_share": 18.7},
-    {"id": "KKC", "name": "카카오코인", "issuer": "카카오뱅크", "market_share": 15.3}
-]
-
-SCENARIOS = [
-    {
-        "icon": "💰",
-        "title": "실시간 환율 경쟁",
-        "problem": "중앙은행 단일 통화로 인한 경쟁 부재",
-        "solution": "15개 민간 디지털 화폐가 실시간 경쟁",
-        "savings": "연간 12.3조 원 절감"
-    }
-]
-
-AGENTS = [
-    {"id": "currency_advisor", "name": "💰 디지털 화폐 상담 Agent"},
-    {"id": "exchange_optimizer", "name": "📊 환율 최적화 Agent"}
-]
-
-@app.route('/api/currency/info', methods=['GET'])
-def get_info():
-    return jsonify(CURRENCY_INFO)
-
-@app.route('/api/currency/currencies', methods=['GET'])
-def get_currencies():
-    return jsonify({"currencies": DIGITAL_CURRENCIES})
-
-@app.route('/api/currency/scenarios', methods=['GET'])
-def get_scenarios():
-    return jsonify({"scenarios": SCENARIOS})
-
-@app.route('/api/currency/agents', methods=['GET'])
-def get_agents():
-    return jsonify({"agents": AGENTS})
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok', 'service': 'currency'}), 200
 
 @app.route('/api/currency/consultation', methods=['POST', 'OPTIONS'])
 def consultation():
@@ -67,27 +24,58 @@ def consultation():
         return '', 204
     
     if not client:
-        return jsonify({"response": "⚠️ API 키가 설정되지 않았습니다."}), 200
+        return jsonify({
+            "response": "⚠️ API 키가 설정되지 않았습니다. 관리자에게 문의하세요."
+        }), 200
     
     try:
         data = request.json
         message = data.get('message', '')
-        agent_type = data.get('agent_type', 'currency_advisor')
         
-        system_prompt = "당신은 민간 경쟁형 디지털 화폐 시스템 전문 상담사입니다. 디지털 화폐의 개념, 장점, 사용법을 쉽게 설명합니다."
+        if not message:
+            return jsonify({
+                "response": "질문을 입력해주세요."
+            }), 400
+        
+        system_prompt = """당신은 'FPGA 및 AI 기반 초고속·저전력 통합 디지털 화폐 및 자율 금융 서비스 시스템'의 전문 상담 AI입니다.
+
+시스템 핵심 사양:
+- 처리 속도: 0.015ms (기존 대비 3,333배 향상)
+- AI 검증 정확도: 99.4% (BERT + CNN + LSTM 앙상블)
+- 전력 절감: GPU 대비 88.6%
+- FPGA: 400MHz 동작, BN254 타원곡선 페어링
+
+주요 기능:
+1. 실시간 재무제표 자동생성 (99% 정확도, 분식회계 원천 차단)
+2. 세무 완전 자동화 (개인소득세 0.002ms, 법인세 0.003ms)
+3. 크로스체인 연동 (Lock-and-Mint, 60초 이하)
+4. 통합 금융 서비스 (은행+보험+증권)
+5. 글로벌 규제 자동 준수 (50개국 이상)
+
+경제적 효과:
+- 개인: 연 492만원 절감
+- 중소기업: 연 2,580만원 절감
+- 금융기관: 지점당 12.75억원 절감
+
+친절하고 전문적으로 답변하며, 기술적 질문에는 구체적인 수치와 함께 설명하세요."""
         
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=1500,
+            max_tokens=2000,
             system=system_prompt,
             messages=[{"role": "user", "content": message}]
         )
         
-        return jsonify({"response": response.content[0].text})
+        return jsonify({
+            "response": response.content[0].text
+        })
         
     except Exception as e:
-        return jsonify({"response": f"오류: {str(e)}"}), 500
+        logger.error(f"Consultation error: {str(e)}")
+        return jsonify({
+            "response": f"죄송합니다. 오류가 발생했습니다: {str(e)}"
+        }), 500
 
 if __name__ == '__main__':
-    logger.info("🚀 민간 경쟁형 디지털 화폐 백엔드 시작 (포트 5001)")
+    logger.info("🚀 FPGA 및 AI 기반 통합 디지털 화폐 백엔드 시작 (포트 5001)")
     app.run(host='0.0.0.0', port=5001, debug=False)

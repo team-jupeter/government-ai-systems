@@ -1,98 +1,125 @@
-const App = () => {
-    const [showModal, setShowModal] = React.useState(false);
-    const [modalContent, setModalContent] = React.useState({ title: '', content: null });
+const { useState } = React;
 
-    const handleShowModal = (title, content) => {
-        setModalContent({ title, content });
-        setShowModal(true);
+function App() {
+    const [activeTab, setActiveTab] = useState(0);
+    const [showAIModal, setShowAIModal] = useState(false);
+
+    const tabs = [
+        { id: 0, name: '개요', icon: 'fa-home', component: 'overview' },
+        { id: 1, name: '확장 재무제표', icon: 'fa-table', component: 'tab1' },
+        { id: 2, name: '해시 저장', icon: 'fa-shield-alt', component: 'tab2' },
+        { id: 3, name: '교차 검증', icon: 'fa-check-double', component: 'tab3' },
+        { id: 4, name: '활동 증명서', icon: 'fa-certificate', component: 'tab4' },
+        { id: 5, name: '4계층 구조', icon: 'fa-layer-group', component: 'tab5' },
+        { id: 6, name: '접근 제어', icon: 'fa-key', component: 'tab6' },
+        { id: 7, name: '당국 통보', icon: 'fa-landmark', component: 'tab7' },
+        { id: 8, name: '저장 공간', icon: 'fa-hdd', component: 'tab8' },
+        { id: 9, name: 'AWS 실증', icon: 'fa-flask', component: 'tab9' },
+        { id: 10, name: '비교 분석', icon: 'fa-balance-scale', component: 'tab10' }
+    ];
+
+    const renderContent = () => {
+        switch(activeTab) {
+            case 0: return <Overview />;
+            case 1: return <Tab1ExtendedStatement />;
+            case 2: return <Tab2HashStorage />;
+            case 3: return <Tab3CrossVerification />;
+            case 4: return <Tab4ActivityProof />;
+            case 5: return <Tab5FourLayers />;
+            case 6: return <Tab6AccessControl />;
+            case 7: return <Tab7AuthorityNotification />;
+            case 8: return <Tab8StorageCalc />;
+            case 9: return <Tab9AWSExperiment />;
+            case 10: return <Tab10Comparison />;
+            default: return <Overview />;
+        }
     };
 
-    return React.createElement('div', { className: 'min-h-screen bg-gray-900' },
-        // Header
-        React.createElement(Header, { onShowModal: handleShowModal }),
-        
-        // PDV 개요
-        React.createElement(PDVOverview, { onShowModal: handleShowModal }),
-        
-        // 확장 재무제표
-        React.createElement(ExtendedFinancialStatement, { onShowModal: handleShowModal }),
-        
-        // 교차 검증
-        React.createElement(CrossVerification, { onShowModal: handleShowModal }),
-        
-        // 활동 증명
-        React.createElement(ActivityProof, { onShowModal: handleShowModal }),
-        
-        // 계층 시뮬레이터
-        React.createElement(LayerSimulator, { onShowModal: handleShowModal }),
-        
-        // 저장 공간 계산기
-        React.createElement(StorageCalculator, { onShowModal: handleShowModal }),
-        
-        // AI 상담
-        React.createElement(AIConsultation, { onShowModal: handleShowModal }),
-        
-        // Footer
-        React.createElement('footer', { className: 'bg-gray-800 py-12 px-4 border-t border-gray-700' },
-            React.createElement('div', { className: 'max-w-6xl mx-auto' },
-                React.createElement('div', { className: 'grid md:grid-cols-3 gap-8 mb-8' },
-                    // 시스템 정보
-                    React.createElement('div', null,
-                        React.createElement('h4', { className: 'font-bold text-blue-400 mb-4' },
-                            React.createElement('i', { className: 'fas fa-shield-alt mr-2' }),
-                            '프라이빗 데이터 금고'
-                        ),
-                        React.createElement('p', { className: 'text-gray-400 text-sm' },
-                            '오픈해시 기반 개인정보 보호 시스템. 원본 데이터는 단말기에만, 해시값만 클라우드에 저장하여 완전한 개인정보 주권을 실현합니다.'
-                        )
-                    ),
-                    // 핵심 기술
-                    React.createElement('div', null,
-                        React.createElement('h4', { className: 'font-bold text-green-400 mb-4' },
-                            React.createElement('i', { className: 'fas fa-cogs mr-2' }),
-                            '핵심 기술'
-                        ),
-                        React.createElement('ul', { className: 'text-gray-400 text-sm space-y-1' },
-                            React.createElement('li', null, '• AES-256 암호화 (로컬 저장)'),
-                            React.createElement('li', null, '• SHA-256 해시 체인'),
-                            React.createElement('li', null, '• BLS 서명 & Merkle Proof'),
-                            React.createElement('li', null, '• 확률적 4계층 분산')
-                        )
-                    ),
-                    // 성능 지표
-                    React.createElement('div', null,
-                        React.createElement('h4', { className: 'font-bold text-yellow-400 mb-4' },
-                            React.createElement('i', { className: 'fas fa-chart-line mr-2' }),
-                            'AWS 실증 결과'
-                        ),
-                        React.createElement('ul', { className: 'text-gray-400 text-sm space-y-1' },
-                            React.createElement('li', null, '• 처리 속도: 25,907 rec/sec'),
-                            React.createElement('li', null, '• 블록체인 대비 3,701배'),
-                            React.createElement('li', null, '• 에너지 절감: 98.5%'),
-                            React.createElement('li', null, '• 계층 정확도: 98.9%')
-                        )
-                    )
-                ),
-                // 저작권
-                React.createElement('div', { className: 'border-t border-gray-700 pt-8 text-center' },
-                    React.createElement('p', { className: 'text-gray-500 text-sm' },
-                        '© 2025 오픈해시 기반 프라이빗 데이터 금고 시스템. 연구 및 시연 목적.'
-                    ),
-                    React.createElement('p', { className: 'text-gray-600 text-xs mt-2' },
-                        'OpenHash PDV System v1.0 | Port 5025'
-                    )
-                )
-            )
-        ),
-        
-        // Modal
-        React.createElement(Modal, {
-            isOpen: showModal,
-            onClose: () => setShowModal(false),
-            title: modalContent.title
-        }, modalContent.content)
-    );
-};
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Header />
+            
+            {/* 탭 네비게이션 (정부 디자인) */}
+            <nav className="bg-white border-b-2 border-gov-blue sticky top-0 z-40 shadow-sm">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="flex flex-wrap gap-1 py-2">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                                    activeTab === tab.id
+                                        ? 'bg-gov-blue text-white shadow-md'
+                                        : 'bg-gray-50 text-gov-text hover:bg-gray-100 border border-gray-200'
+                                }`}
+                            >
+                                <i className={`fas ${tab.icon} mr-1.5`}></i>
+                                <span className="hidden sm:inline">{tab.name}</span>
+                                <span className="sm:hidden">{tab.id === 0 ? '개요' : tab.id}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </nav>
 
-// 렌더링
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+            {/* 컨텐츠 영역 */}
+            <main className="max-w-7xl mx-auto px-4 py-6">
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                    {/* 페이지 제목 */}
+                    {activeTab > 0 && (
+                        <div className="mb-6 pb-4 border-b-2 border-gov-blue">
+                            <h1 className="text-2xl font-bold text-gov-blue flex items-center">
+                                <i className={`fas ${tabs[activeTab].icon} mr-3`}></i>
+                                {activeTab}. {tabs[activeTab].name}
+                            </h1>
+                        </div>
+                    )}
+                    
+                    {/* 탭 컨텐츠 */}
+                    <div className="tab-content">
+                        {renderContent()}
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+
+            {/* 플로팅 AI 상담 버튼 */}
+            <button
+                onClick={() => setShowAIModal(true)}
+                className="fixed bottom-6 right-6 z-50 bg-gov-blue text-white px-5 py-3 rounded-full font-bold hover:bg-gov-blue-light transition-all shadow-lg"
+            >
+                <i className="fas fa-robot mr-2"></i>
+                <span className="hidden md:inline">AI 상담</span>
+                <span className="md:hidden">AI</span>
+            </button>
+
+            {/* AI 상담 모달 */}
+            {showAIModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                        <div className="bg-gov-blue text-white px-6 py-4 flex justify-between items-center">
+                            <h3 className="text-xl font-bold">
+                                <i className="fas fa-robot mr-2"></i>
+                                AI 상담
+                            </h3>
+                            <button
+                                onClick={() => setShowAIModal(false)}
+                                className="text-white hover:text-gray-200 text-2xl"
+                            >
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div className="p-6 overflow-y-auto" style={{maxHeight: 'calc(90vh - 80px)'}}>
+                            <AIConsultant />
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// 앱 시작
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

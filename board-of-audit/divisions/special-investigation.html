@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>특별조사국 | 감사원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>감사원 특별조사국</div>
+        <div><a href="/board-of-audit/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>🔍 특별조사국</h1>
+        <p>Special Investigation Bureau (공직감찰본부 산하)</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>특별조사국 소개</h2>
+            <p>특별조사국은 중대한 공직 비리와 부패를 집중 조사하는 특별 부서입니다. 
+            공직감찰본부 산하에 있으며, 사회적 파장이 큰 비리 사건이나 
+            조직적·고의적 부정행위에 대해 심층 조사를 수행합니다. 
+            뇌물 수수, 횡령, 배임, 직권남용 등 중대 범죄 혐의가 있는 공무원과 
+            공공기관 임직원에 대한 특별 감찰을 담당합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>중대 비리 조사:</strong> 뇌물·횡령·배임 등 중대 범죄</li>
+                <li><strong>조직적 부패 조사:</strong> 다수 공무원이 연루된 조직 비리</li>
+                <li><strong>특별 감찰:</strong> 대통령 지시 또는 국회 요구 특별 감찰</li>
+                <li><strong>고위 공직자 조사:</strong> 고위 공무원 비위 조사</li>
+                <li><strong>내부 고발 조사:</strong> 공익신고 및 내부 제보 사건</li>
+                <li><strong>수사 협조:</strong> 검찰·경찰과 협력 조사</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (8개)</h2>
+            <ul>
+                <li><strong>비리 탐지 AI:</strong> 재산 변동·금융 거래 이상 패턴 분석</li>
+                <li><strong>네트워크 분석 AI:</strong> 연루자 관계망 분석</li>
+                <li><strong>금융 추적 AI:</strong> 자금 흐름 추적 및 분석</li>
+                <li><strong>증거 분석 AI:</strong> 문서·이메일 증거 자동 분석</li>
+                <li><strong>진술 검증 AI:</strong> 진술 일관성 및 허위 진술 탐지</li>
+                <li><strong>범죄 유형 AI:</strong> 과거 사례 기반 범죄 유형 분류</li>
+                <li><strong>고발 분류 AI:</strong> 내부 고발 사건 우선순위 분류</li>
+                <li><strong>조사 보고서 AI:</strong> 조사 결과 보고서 자동 작성</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>국세청: 공무원 재산 신고, 세무 자료</li>
+                    <li>금융감독원: 금융 거래 내역</li>
+                    <li>법무부: 범죄 경력, 수사 기록</li>
+                    <li>검찰청: 고발·고소 현황</li>
+                    <li>국민권익위원회: 공익신고 접수 내역</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>특별 조사 결과</li>
+                    <li>검찰 고발 의견</li>
+                    <li>징계 요구</li>
+                    <li>제도 개선 건의</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">8</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">47</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.9%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 감사원 특별조사국 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공공감사지원국 | 감사원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>감사원 공공감사지원국</div>
+        <div><a href="/board-of-audit/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>🤝 공공감사지원국</h1>
+        <p>Public Audit Support Bureau</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>공공감사지원국 소개</h2>
+            <p>공공감사지원국은 각급 행정기관 및 공공기관의 자체감사기구를 지원하는 부서입니다. 
+            자체감사의 독립성과 전문성을 강화하고, 감사 기법을 전파하며, 
+            자체감사 결과를 심사하여 공공감사의 품질을 높입니다. 
+            공공감사에 관한 법률에 따라 전체 공공감사 체계를 조율합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>자체감사 지원:</strong> 자체감사기구 운영 지원 및 컨설팅</li>
+                <li><strong>감사 기법 전파:</strong> 선진 감사 기법 교육 및 전파</li>
+                <li><strong>자체감사 심사:</strong> 자체감사 결과 적정성 심사</li>
+                <li><strong>감사 기준 제정:</strong> 공공감사 기준 및 지침 제정</li>
+                <li><strong>감사활동 조정:</strong> 기관 간 감사 중복 방지 조정</li>
+                <li><strong>우수사례 공유:</strong> 우수 감사 사례 발굴 및 확산</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (5개)</h2>
+            <ul>
+                <li><strong>자체감사 평가 AI:</strong> 자체감사 활동 수준 평가</li>
+                <li><strong>중복 방지 AI:</strong> 기관 간 감사 중복 자동 탐지</li>
+                <li><strong>우수사례 AI:</strong> 모범 감사 사례 자동 발굴</li>
+                <li><strong>교육 추천 AI:</strong> 기관별 맞춤형 교육 과정 추천</li>
+                <li><strong>컨설팅 AI:</strong> 자체감사 개선 방안 제시</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>각급 기관: 자체감사 결과 보고</li>
+                    <li>공공기관 (483개): 감사 계획 및 결과</li>
+                    <li>감사교육원: 교육 이수 현황</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>자체감사 심사 결과</li>
+                    <li>감사 기준 및 지침</li>
+                    <li>우수사례 자료집</li>
+                    <li>기관별 개선 권고</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">5</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">78</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.5%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 감사원 공공감사지원국 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

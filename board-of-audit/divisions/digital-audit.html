@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>디지털감사국 | 감사원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>감사원 디지털감사국</div>
+        <div><a href="/board-of-audit/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>💻 디지털감사국</h1>
+        <p>Digital Audit Bureau (공직감찰본부 산하)</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>디지털감사국 소개</h2>
+            <p>디지털감사국은 정부 및 공공기관의 전산 시스템과 디지털 업무 처리를 감사하는 전문 부서입니다. 
+            정보 시스템 구축 사업의 적정성, 개인정보 보호 실태, 사이버 보안 수준, 
+            전자정부 서비스 품질 등을 점검합니다. 디지털 전환 시대에 맞춰 
+            각종 IT 사업의 예산 낭비를 방지하고, 정보 보안 취약점을 개선합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>정보시스템 구축 감사:</strong> IT 사업의 예산 및 성과</li>
+                <li><strong>사이버 보안 감사:</strong> 공공기관 정보보안 수준</li>
+                <li><strong>개인정보 보호 감사:</strong> 개인정보 관리 및 유출 방지</li>
+                <li><strong>전자정부 감사:</strong> 전자정부 서비스 품질 및 효율성</li>
+                <li><strong>데이터 관리 감사:</strong> 공공 데이터 관리 체계</li>
+                <li><strong>SW 사업 감사:</strong> 소프트웨어 개발 사업의 적정성</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (9개)</h2>
+            <ul>
+                <li><strong>IT 사업 분석 AI:</strong> 정보화 사업 예산 및 성과 분석</li>
+                <li><strong>보안 취약점 AI:</strong> 시스템 보안 취약점 자동 탐지</li>
+                <li><strong>개인정보 검증 AI:</strong> 개인정보 처리 적정성 검사</li>
+                <li><strong>중복 투자 AI:</strong> 유사 시스템 중복 구축 탐지</li>
+                <li><strong>성능 평가 AI:</strong> 시스템 성능 및 안정성 평가</li>
+                <li><strong>계약 분석 AI:</strong> SW 개발 계약의 적정성 검토</li>
+                <li><strong>데이터 품질 AI:</strong> 공공 데이터 품질 검증</li>
+                <li><strong>로그 분석 AI:</strong> 시스템 접근 로그 이상 패턴 탐지</li>
+                <li><strong>기술 타당성 AI:</strong> 신기술 도입 타당성 평가</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>과학기술정보통신부: 정보화 사업 현황</li>
+                    <li>행정안전부: 전자정부 서비스 현황</li>
+                    <li>개인정보보호위원회: 개인정보 침해 사례</li>
+                    <li>국가정보원: 사이버 위협 정보</li>
+                    <li>각 기관: 정보시스템 구축 계획</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>IT 사업 감사 결과</li>
+                    <li>보안 취약점 개선 권고</li>
+                    <li>개인정보 보호 개선 사항</li>
+                    <li>시스템 통폐합 권고</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">9</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">186</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.5%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 감사원 디지털감사국 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보험 시스템 - OpenHash Government AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.5.0/dist/Recharts.js"></script>
+    <style>
+        .animate-slideDown { animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .slide-panel.open { max-height: 3000px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel" src="/insurance/js/components/Header.js"></script>
+    <script type="text/babel" src="/insurance/js/components/Footer.js"></script>
+    <script type="text/babel" src="/insurance/js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="/insurance/js/components/Overview.js"></script>
+    <script type="text/babel" src="/insurance/js/components/PDVSystem.js"></script>
+    <script type="text/babel" src="/insurance/js/components/FinancialStatement.js"></script>
+    <script type="text/babel" src="/insurance/js/components/BehavioralPremium.js"></script>
+    <script type="text/babel" src="/insurance/js/components/InsuranceProducts.js"></script>
+    <script type="text/babel" src="/insurance/js/components/Underwriting.js"></script>
+    <script type="text/babel" src="/insurance/js/components/ClaimProcessing.js"></script>
+    <script type="text/babel" src="/insurance/js/components/FraudDetection.js"></script>
+    <script type="text/babel" src="/insurance/js/components/PerformanceDashboard.js"></script>
+    <script type="text/babel" src="/insurance/js/app.js"></script>
+</body>
+</html>

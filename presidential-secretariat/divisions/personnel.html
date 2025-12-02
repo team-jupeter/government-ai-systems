@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사수석비서관실 | 대통령 비서실</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+        .top-bar { background: #0046FF; color: white; padding: 0.75rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .header { background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+        .data-flow { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #0046FF; }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>대통령 비서실 인사수석비서관실</div>
+        <div><a href="/presidential-secretariat/">메인</a><a href="/portal/">포털</a></div>
+    </nav>
+    <header class="header">
+        <h1>👥 인사수석비서관실</h1>
+        <p>Personnel Office</p>
+    </header>
+    <main class="container">
+        <div class="section">
+            <h2>인사수석비서관실 소개</h2>
+            <p>인사수석비서관실은 정부 고위직 인사를 총괄하는 부서입니다. 
+            장관, 차관, 청장 등 주요 정부 직위에 대한 인사 추천, 
+            균형 인사 원칙에 따른 인사 운영, 인사위원회 운영 등을 담당합니다. 
+            공정하고 투명한 인사를 통해 유능한 인재를 적재적소에 배치하고, 
+            정부의 경쟁력을 높이는 데 기여합니다.</p>
+        </div>
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>고위직 인사:</strong> 장관, 차관, 청장 등 주요 직위 인사</li>
+                <li><strong>인사 추천:</strong> 적격자 발굴 및 대통령 추천</li>
+                <li><strong>균형 인사:</strong> 지역, 성별, 세대 균형 인사 운영</li>
+                <li><strong>인사위원회:</strong> 인사의 공정성 확보를 위한 위원회 운영</li>
+                <li><strong>공공기관 인사:</strong> 공공기관 임원 인사 관리</li>
+                <li><strong>인사 검증 지원:</strong> 민정수석과 협력한 인사 검증</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>AI 에이전트 (11개)</h2>
+            <ul>
+                <li><strong>후보자 발굴 AI:</strong> 적격 후보자 데이터베이스 검색</li>
+                <li><strong>경력 분석 AI:</strong> 후보자 경력 및 실적 분석</li>
+                <li><strong>균형 인사 AI:</strong> 지역·성별·세대 균형 분석</li>
+                <li><strong>적합도 평가 AI:</strong> 직무-후보자 적합도 매칭</li>
+                <li><strong>인사 이력 관리 AI:</strong> 과거 인사 데이터 관리</li>
+                <li><strong>여론 분석 AI:</strong> 후보자에 대한 여론 동향</li>
+                <li><strong>검증 지원 AI:</strong> 인사 검증 자료 준비</li>
+                <li><strong>인사위원회 지원 AI:</strong> 위원회 자료 준비</li>
+                <li><strong>공공기관 인사 AI:</strong> 공공기관 임원 후보 관리</li>
+                <li><strong>인사 추천 보고서 AI:</strong> 인사 추천서 자동 작성</li>
+                <li><strong>후속 인사 계획 AI:</strong> 연쇄 인사 계획 수립</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터</h3>
+                <ul>
+                    <li>인사혁신처: 공직자 인사 기록</li>
+                    <li>각 부처: 후보자 추천 의견</li>
+                    <li>공공기관: 임원 현황</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터</h3>
+                <ul>
+                    <li>인사 추천안</li>
+                    <li>균형 인사 현황</li>
+                    <li>인사 발령 정보</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value">11</div><div class="stat-label">AI 에이전트</div></div>
+                <div class="stat-box"><div class="stat-value">42</div><div class="stat-label">금일 처리 건수</div></div>
+                <div class="stat-box"><div class="stat-value">99.8%</div><div class="stat-label">정확도</div></div>
+                <div class="stat-box"><div class="stat-value" style="color: #28a745;">정상</div><div class="stat-label">시스템 상태</div></div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer"><p>© 2025 대통령 비서실 인사수석비서관실 | OpenHash 기반 시스템</p></footer>
+</body>
+</html>

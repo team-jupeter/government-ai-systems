@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>민정수석비서관실 | 대통령 비서실</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 공통 컴포넌트 (필수!) -->
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8f9fa; color: #333; }
+
+        .top-bar {
+            background: #0046FF; color: white; padding: 0.75rem 2rem;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;
+        }
+        .top-bar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+
+        .header {
+            background: linear-gradient(135deg, #0046FF 0%, #0066CC 100%);
+            color: white; padding: 3rem 2rem; text-align: center;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+
+        .section {
+            background: white; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;
+        }
+        .section h2 { color: #0046FF; margin-bottom: 1rem; font-size: 1.5rem; }
+        .section ul { list-style: none; }
+        .section ul li { padding: 0.75rem 0; border-bottom: 1px solid #e9ecef; }
+        .section ul li:last-child { border-bottom: none; }
+
+        .data-flow {
+            background: #f8f9fa; padding: 1.5rem; border-radius: 8px;
+            margin-top: 1rem; border-left: 4px solid #0046FF;
+        }
+        .data-flow h3 { color: #0046FF; margin-bottom: 1rem; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem; margin-top: 1rem;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem; border-radius: 8px; text-align: center; border-left: 4px solid #0046FF;
+        }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #0046FF; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+
+        .footer { background: #333; color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-bar">
+        <div>대통령 비서실 민정수석비서관실</div>
+        <div>
+            <a href="/presidential-secretariat/">메인</a>
+            <a href="/portal/">포털</a>
+        </div>
+    </nav>
+
+    <header class="header">
+        <h1>🔍 민정수석비서관실</h1>
+        <p>Civil Affairs Office</p>
+    </header>
+
+    <main class="container">
+        <div class="section">
+            <h2>민정수석비서관실 소개</h2>
+            <p>
+                민정수석비서관실은 행정부 소속 고위공직자, 공공기관 및 단체의 장과 임원에 대한
+                감찰 업무를 수행하는 핵심 부서입니다. 공직자의 비위 및 부정을 감찰하고,
+                주요 인사에 대한 검증을 담당하며, 공직기강 확립을 통해 깨끗하고 투명한
+                정부를 만드는 데 기여합니다. 검찰, 경찰, 사법부 전반에 대한 대응도 담당합니다.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>주요 업무</h2>
+            <ul>
+                <li><strong>공직자 감찰:</strong> 고위공직자, 공공기관장 등에 대한 비위 조사</li>
+                <li><strong>인사 검증:</strong> 주요 공직 후보자에 대한 신원 조회 및 자격 검증</li>
+                <li><strong>공직기강 확립:</strong> 공직 윤리 기준 수립 및 위반 사례 처리</li>
+                <li><strong>법무·사법 대응:</strong> 검찰, 법원, 사법제도 관련 현안 대응</li>
+                <li><strong>민원 처리:</strong> 공직자 비위 관련 국민 제보 및 민원 처리</li>
+                <li><strong>법률 자문:</strong> 대통령 및 비서실의 법률 자문 지원</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>AI 에이전트 (14개)</h2>
+            <ul>
+                <li><strong>인사 검증 AI:</strong> 후보자 경력, 재산, 병역, 납세 등 종합 검증</li>
+                <li><strong>비위 탐지 AI:</strong> 공직자 비위 의심 사례 자동 탐지</li>
+                <li><strong>재산 변동 분석 AI:</strong> 공직자 재산 변동 추이 분석</li>
+                <li><strong>이해충돌 검증 AI:</strong> 직무 관련 이해충돌 여부 검토</li>
+                <li><strong>법률 검토 AI:</strong> 법률 자문 및 위법성 검토</li>
+                <li><strong>민원 분석 AI:</strong> 국민 제보 및 민원 분류·분석</li>
+                <li><strong>언론 모니터링 AI:</strong> 공직자 관련 언론 보도 모니터링</li>
+                <li><strong>판례 검색 AI:</strong> 유사 사례 및 판례 검색</li>
+                <li><strong>감찰 보고서 작성 AI:</strong> 감찰 결과 보고서 자동 생성</li>
+                <li><strong>윤리 규정 AI:</strong> 공직윤리 규정 해석 및 적용</li>
+                <li><strong>검찰·경찰 협력 AI:</strong> 수사기관 협력 사항 관리</li>
+                <li><strong>사법 동향 분석 AI:</strong> 사법부 주요 판결 및 동향 분석</li>
+                <li><strong>위험 평가 AI:</strong> 후보자 임명 시 위험도 평가</li>
+                <li><strong>공공기관 관리 AI:</strong> 공공기관 임원 현황 및 관리</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔗 국가데이터처 연동</h2>
+            <div class="data-flow">
+                <h3>📥 입력 데이터 (국가데이터처로부터)</h3>
+                <ul>
+                    <li>법무부: 범죄 경력, 수사 기록</li>
+                    <li>국세청: 납세 내역, 세무 조사 결과</li>
+                    <li>병무청: 병역 이행 내역</li>
+                    <li>금융감독원: 금융 거래 이상 징후</li>
+                    <li>법원: 소송 및 판결 기록</li>
+                    <li>인사혁신처: 공직자 인사 기록</li>
+                    <li>국민권익위원회: 공직자 비위 제보</li>
+                </ul>
+            </div>
+            <div class="data-flow">
+                <h3>📤 출력 데이터 (국가데이터처로)</h3>
+                <ul>
+                    <li>인사 검증 결과 보고서</li>
+                    <li>감찰 조사 결과</li>
+                    <li>공직기강 위반 사례 및 조치</li>
+                    <li>법률 자문 의견</li>
+                    <li>민원 처리 결과</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>실시간 운영 현황</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">14</div>
+                    <div class="stat-label">AI 에이전트</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">63</div>
+                    <div class="stat-label">금일 처리 건수</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">정확도</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" style="color: #28a745;">정상</div>
+                    <div class="stat-label">시스템 상태</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 대통령 비서실 민정수석비서관실 | OpenHash 기반 시스템</p>
+    </footer>
+</body>
+</html>

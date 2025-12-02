@@ -1,0 +1,230 @@
+/* Floating Button */
+.gov-floating-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0046FF, #0066CC);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 70, 255, 0.3);
+    transition: all 0.3s;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gov-floating-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 70, 255, 0.4);
+}
+
+/* Floating Menu - 크기 3배 확대 및 크기 조절 가능 */
+.gov-floating-menu {
+    position: fixed;
+    bottom: 100px;
+    right: 2rem;
+    width: 1100px;
+    min-width: 600px;
+    max-width: 90vw;
+    height: 800px;
+    min-height: 400px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    animation: slideUp 0.3s ease;
+    resize: both;
+    overflow: hidden;
+}
+.gov-floating-menu.show { display: flex; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gov-menu-header {
+    background: linear-gradient(135deg, #0046FF, #0066CC);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    flex-shrink: 0;
+}
+.gov-menu-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+.gov-close-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gov-close-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.gov-menu-content {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.gov-page-info {
+    background: #f0f7ff;
+    padding: 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #0046FF;
+    flex-shrink: 0;
+}
+.gov-page-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: #0046FF;
+    font-size: 1.1rem;
+}
+.gov-page-info p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.gov-features {
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+.gov-features p {
+    color: #6b7280;
+    line-height: 1.8;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.gov-ai-chat {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.gov-chat-header {
+    font-weight: 600;
+    color: #0046FF;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.gov-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    min-height: 300px;
+}
+.gov-chat-message {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+.gov-chat-message.user {
+    background: #dbeafe;
+    text-align: right;
+    color: #1e40af;
+}
+.gov-chat-message.assistant {
+    background: white;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+}
+.gov-chat-input-box {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+.gov-chat-input-box input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.gov-chat-input-box input:focus {
+    outline: none;
+    border-color: #0046FF;
+}
+.gov-chat-input-box button {
+    background: linear-gradient(135deg, #0046FF, #0066CC);
+    color: white;
+    border: none;
+    padding: 1rem 1.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 60px;
+    font-size: 1rem;
+}
+.gov-chat-input-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,70,255,0.3);
+}
+.gov-chat-input-box button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 크기 조절 핸들 표시 */
+.gov-floating-menu::after {
+    content: '⋰';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 1.2rem;
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+    .gov-floating-menu {
+        width: 90vw;
+        right: 5vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .gov-floating-menu {
+        width: calc(100vw - 2rem);
+        right: 1rem;
+        left: 1rem;
+        height: 70vh;
+    }
+}

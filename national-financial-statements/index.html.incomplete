@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가 재무제표 시스템 | OpenHash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        :root {
+            --gov-blue: #0046FF;
+            --gov-blue-dark: #0033CC;
+            --gov-blue-light: #E8F0FF;
+            --gov-navy: #1e3a5f;
+            --gov-gray: #6B7280;
+            --gov-bg: #F8F9FA;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(0.8); opacity: 1; }
+        }
+        .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in { animation: slideIn 0.5s ease-out; }
+        @keyframes flowHash {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { transform: translateY(40px); opacity: 1; }
+            100% { transform: translateY(100px); opacity: 0; }
+        }
+        .flow-hash { animation: flowHash 1.5s ease-in-out; }
+        .gov-table { border-collapse: collapse; width: 100%; background: white; border: 2px solid var(--gov-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .gov-table th { background: var(--gov-blue); color: white; padding: 14px 16px; text-align: left; font-weight: 600; font-size: 0.95rem; border-right: 1px solid rgba(255,255,255,0.2); }
+        .gov-table th:last-child { border-right: none; }
+        .gov-table td { padding: 12px 16px; border-bottom: 1px solid #E5E7EB; color: #1F2937; }
+        .gov-table tr:hover { background: #F9FAFB; }
+        .gov-table .category-row { background: #F3F4F6; font-weight: 600; color: var(--gov-navy); }
+        .gov-table .subcategory-row td { padding-left: 32px; }
+        .gov-table .total-row { background: var(--gov-blue-light); font-weight: 700; color: var(--gov-navy); border-top: 2px solid var(--gov-blue); }
+        .gov-table .amount { text-align: right; font-family: 'Courier New', monospace; font-weight: 500; }
+        .gov-btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.2s; border: none; cursor: pointer; font-size: 1rem; }
+        .gov-btn-primary { background: var(--gov-blue); color: white; }
+        .gov-btn-primary:hover { background: var(--gov-blue-dark); }
+        .gov-btn-secondary { background: white; color: var(--gov-blue); border: 2px solid var(--gov-blue); }
+        .gov-btn-secondary:hover { background: var(--gov-blue-light); }
+    </style>
+</head>
+<body style="background: var(--gov-bg); color: #1F2937;">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const App = () => {
+            const [activeMenu, setActiveMenu] = useState('dashboard');
+            const [entities, setEntities] = useState({ businesses: [], individuals: [] });
+            const [selectedEntity, setSelectedEntity] = useState(null);
+            const [transactions, setTransactions] = useState([]);
+            const [layersStatus, setLayersStatus] = useState({});
+
+            useEffect(() => {
+                loadEntities();
+                loadTransactions();
+                loadLayersStatus();
+            }, []);
+
+            const loadEntities = async () => {
+                try {
+                    const response = await fetch('/api/national-financial-statements/entities');
+                    const data = await response.json();
+                    setEntities(data);
+                } catch (error) {
+                    console.error('엔티티 로드 실패:', error);
+                }
+            };
+
+            const loadTransactions = async () => {
+                try {
+                    const response = await fetch('/api/national-financial-statements/transactions/history');
+                    const data = await response.json();
+                    setTransactions(data.transactions || []);
+                } catch (error) {
+                    console.error('거래 내역 로드 실패:', error);
+                }
+            };
+
+            const loadLayersStatus = async () => {
+                try {
+                    const response = await fetch('/api/national-financial-statements/layers/status');
+                    const data = await response.json();
+                    setLayersStatus(data);
+                } catch (error) {
+                    console.error('계층 상태 로드 실패:', error);
+                }
+            };
+
+            const resetToDashboard = () => {
+                setActiveMenu('dashboard');
+                setSelectedEntity(null);
+            };
+
+            return (
+                <div className="min-h-screen">
+                    <header style={{background: 'white', borderBottom: '3px solid var(--gov-blue)'}} className="sticky top-0 z-50 shadow-md">
+                        <div className="max-w-7xl mx-auto px-4 py-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition" onClick={resetToDashboard}>
+                                    <div style={{background: 'var(--gov-blue)'}} className="w-14 h-14 rounded-lg flex items-center justify-center shadow-lg">
+                                        <i className="fas fa-chart-line text-white text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h1 style={{color: 'var(--gov-navy)'}} className="text-2xl font-bold">국가 재무제표 시스템</h1>
+                                        <p style={{color: 'var(--gov-gray)'}} className="text-sm">OpenHash 기반 실시간 재무 투명성</p>
+                                    </div>
+                                </div>
+                                <a href="/portal/systems.html" className="gov-btn gov-btn-secondary">
+                                    <i className="fas fa-home mr-2"></i>포털
+                                </a>
+                            </div>
+                        </div>
+                    </header>
+
+                    <nav style={{background: 'white', borderBottom: '1px solid #E5E7EB'}} className="shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <div className="flex gap-1 overflow-x-auto py-2">
+                                {[
+                                    { id: 'dashboard', icon: 'fa-dashboard', name: '대시보드' },
+                                    { id: 'entities', icon: 'fa-building', name: '개인/사업자' },
+                                    { id: 'simulation', icon: 'fa-play', name: '거래 시뮬레이션' },
+                                    { id: 'openhash', icon: 'fa-link', name: 'OpenHash 시각화' },
+                                    { id: 'analysis', icon: 'fa-brain', name: 'AI 분석' }
+                                ].map(menu => (
+                                    <button
+                                        key={menu.id}
+                                        onClick={() => setActiveMenu(menu.id)}
+                                        style={{
+                                            background: activeMenu === menu.id ? 'var(--gov-blue)' : 'white',
+                                            color: activeMenu === menu.id ? 'white' : 'var(--gov-navy)',
+                                            border: activeMenu === menu.id ? 'none' : '1px solid #E5E7EB'
+                                        }}
+                                        className="px-5 py-3 rounded-lg transition whitespace-nowrap font-semibold hover:shadow-md"
+                                    >
+                                        <i className={`fas ${menu.icon} mr-2`}></i>
+                                        {menu.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto px-4 py-8">
+                        {activeMenu === 'dashboard' && <Dashboard entities={entities} transactions={transactions} layersStatus={layersStatus} />}
+                        {activeMenu === 'entities' && <EntitiesList entities={entities} onSelectEntity={setSelectedEntity} />}
+                        {activeMenu === 'simulation' && <TransactionSimulation entities={entities} onTransactionComplete={() => {
+                            loadEntities();
+                            loadTransactions();
+                            loadLayersStatus();
+                        }} />}
+                        {activeMenu === 'openhash' && <OpenHashVisualization layersStatus={layersStatus} transactions={transactions} />}
+                        {activeMenu === 'analysis' && <AIAnalysis transactions={transactions} />}
+                    </main>
+
+                    {selectedEntity && <EntityDetailModal entity={selectedEntity} onClose={() => setSelectedEntity(null)} />}
+                </div>
+            );
+        };
+
+        const Dashboard = ({ entities, transactions, layersStatus }) => {
+            const totalBusinesses = entities.businesses?.length || 0;
+            const totalIndividuals = entities.individuals?.length || 0;
+            const totalTransactions = transactions?.length || 0;
+            const totalNodes = Object.values(layersStatus).reduce((sum, layer) => sum + layer.length, 0);
+
+            return (
+                <div className="space-y-6 slide-in">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <StatCard icon="fa-building" label="사업자" value={totalBusinesses} color="#0046FF" />
+                        <StatCard icon="fa-users" label="개인" value={totalIndividuals} color="#10B981" />
+                        <StatCard icon="fa-exchange-alt" label="총 거래" value={totalTransactions} color="#8B5CF6" />
+                        <StatCard icon="fa-network-wired" label="OpenHash 노드" value={totalNodes} color="#06B6D4" />
+                    </div>
+                    <div style={{background: 'white', border: '2px solid var(--gov-blue)'}} className="rounded-xl p-8 shadow-lg">
+                        <h2 style={{color: 'var(--gov-navy)'}} className="text-2xl font-bold mb-6 flex items-center gap-3">
+                            <i className="fas fa-shield-alt" style={{color: 'var(--gov-blue)'}}></i>
+                            OpenHash 기반 재무 투명성
+                        </h2>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <FeatureCard icon="fa-link" title="4계층 분산 검증" desc="읍면동 → 시군구 → 광역시도 → 국가" />
+                            <FeatureCard icon="fa-ban" title="허위거래 불가" desc="모든 재무제표 상호 연동으로 위변조 차단" />
+                            <FeatureCard icon="fa-brain" title="AI 이상거래 감지" desc="Claude AI 실시간 패턴 분석 및 자동 대응" />
+                        </div>
+                    </div>
+                    <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg">
+                        <h2 style={{color: 'var(--gov-navy)'}} className="text-xl font-bold mb-4">최근 거래 내역</h2>
+                        {transactions.length === 0 ? (
+                            <div className="text-center py-12" style={{color: 'var(--gov-gray)'}}>
+                                <i className="fas fa-inbox text-6xl mb-4 opacity-30"></i>
+                                <div className="text-lg">아직 거래가 없습니다</div>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {transactions.slice(-5).reverse().map((tx, idx) => (
+                                    <div key={idx} style={{background: 'var(--gov-bg)', border: '1px solid #E5E7EB'}} className="p-4 rounded-lg">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="font-semibold text-lg" style={{color: 'var(--gov-navy)'}}>{tx.description}</div>
+                                                <div className="text-sm mt-1" style={{color: 'var(--gov-gray)'}}>{tx.from} → {tx.to}</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xl font-bold" style={{color: 'var(--gov-blue)'}}>{tx.amount?.toLocaleString()}원</div>
+                                                <div className="text-xs mt-1" style={{color: 'var(--gov-gray)'}}>{new Date(tx.timestamp).toLocaleString('ko-KR')}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const StatCard = ({ icon, label, value, color }) => (
+            <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg hover:shadow-xl transition border border-gray-200">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <div style={{color: 'var(--gov-gray)'}} className="text-sm mb-2 font-medium">{label}</div>
+                        <div style={{color: 'var(--gov-navy)'}} className="text-4xl font-bold">{value}</div>
+                    </div>
+                    <div style={{background: color}} className="w-16 h-16 rounded-xl flex items-center justify-center shadow-md">
+                        <i className={`fas ${icon} text-white text-2xl`}></i>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const FeatureCard = ({ icon, title, desc }) => (
+            <div style={{background: 'var(--gov-blue-light)', border: '1px solid var(--gov-blue)'}} className="p-5 rounded-lg">
+                <div className="flex items-start gap-4">
+                    <div style={{background: 'var(--gov-blue)'}} className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                        <i className={`fas ${icon} text-white text-lg`}></i>
+                    </div>
+                    <div>
+                        <div className="font-bold text-lg mb-2" style={{color: 'var(--gov-navy)'}}>{title}</div>
+                        <div className="text-sm leading-relaxed" style={{color: 'var(--gov-gray)'}}>{desc}</div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const EntitiesList = ({ entities, onSelectEntity }) => {
+            const [filter, setFilter] = useState('all');
+            const filteredEntities = filter === 'all' ? [...(entities.businesses || []), ...(entities.individuals || [])] : filter === 'business' ? entities.businesses || [] : entities.individuals || [];
+
+            return (
+                <div className="space-y-6 slide-in">
+                    <div style={{background: 'white'}} className="rounded-xl p-6 shadow-lg">
+                        <div className="flex gap-3">
+                            {[
+                                { id: 'all', name: '전체', icon: 'fa-list' },
+                                { id: 'business', name: '사업자', icon: 'fa-building' },
+                                { id: 'individual', name: '개인', icon: 'fa-user' }
+                            ].map(f => (
+                                <button
+                                    key={f.id}
+                                    onClick={() => setFilter(f.id)}
+                                    className="gov-btn"
+                                    style={{
+                                        background: filter === f.id ? 'var(--gov-blue)' : 'white',
+                                        color: filter === f.id ? 'white' : 'var(--gov-blue)',
+                                        border: `2px solid var(--gov-blue)`
+                                    }}
+                                >
+                                    <i className={`fas ${f.icon} mr-2`}></i>
+                                    {f.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {filteredEntities.length === 0 ? (
+                        <div style={{background: 'white'}} className="rounded-xl p-12 text-center shadow-lg">
+                            <i className="fas fa-inbox text-6xl mb-4 opacity-20" style={{color: 'var(--gov-gray)'}}></i>
+                            <div style={{color: 'var(--gov-gray)'}}>데이터를 불러오는 중...</div>
+                        </div>
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredEntities.map(entity => (
+                                <div
+                                    key={entity.id}
+                                    onClick={() => onSelectEntity(entity)}
+                                    style={{background: 'white', border: '2px solid #E5E7EB'}}
+                                    className="p-6 rounded-xl cursor-pointer hover:shadow-xl transition hover:border-blue-500"
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div style={{background: 'var(--gov-blue-light)', color: 'var(--gov-blue)'}} className="w-12 h-12 rounded-lg flex items-center justify-center">
+                                                <i className={`fas ${entity.type ? 'fa-building' : 'fa-user'} text-xl`}></i>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-lg" style={{color: 'var(--gov-navy)'}}>{entity.name}</div>
+                                                <span className="text-xs px-3 py-1 rounded-full" style={{background: 'var(--gov-blue-light)', color: 'var(--gov-blue)'}}>{entity.id}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-sm mb-4" style={{color: 'var(--gov-gray)'}}>{entity.type || entity.occupation}</div>
+                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                                        <div>
+                                            <div className="text-xs mb-1" style={{color: 'var(--gov-gray)'}}>총자산</div>
+                                            <div className="font-bold text-lg text-green-600">{(entity.balance_sheet?.assets?.total || 0).toLocaleString()}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs mb-1" style={{color: 'var(--gov-gray)'}}>순이익</div>
+                                            <div className="font-bold text-lg" style={{color: 'var(--gov-blue)'}}>{(entity.income_statement?.net_income || 0).toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
