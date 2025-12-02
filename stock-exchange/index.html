@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시 증권거래소 | FPGA 기반 초고속 거래 시스템</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Recharts 의존성 -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'exchange-blue': '#003D82',
+                        'exchange-blue-light': '#0052A3',
+                        'exchange-green': '#00A651',
+                        'exchange-red': '#DC3545',
+                        'exchange-gold': '#D4AF37',
+                        'exchange-gray': '#6C757D',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes slideDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-slideDown { 
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        .animate-fadeIn { 
+            animation: fadeIn 0.5s ease-out;
+        }
+        * { 
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+        body { 
+            background-color: #F8F9FA; 
+        }
+        .tab-active {
+            background: linear-gradient(135deg, #003D82 0%, #0052A3 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 61, 130, 0.3);
+        }
+        .tab-inactive {
+            background: white;
+            color: #003D82;
+            border: 2px solid #E5E7EB;
+        }
+        .tab-inactive:hover {
+            background: #F3F4F6;
+            border-color: #003D82;
+        }
+        
+        /* 아코디언 애니메이션 */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .accordion-content.open {
+            max-height: 8000px;
+        }
+        
+        /* 카드 호버 효과 */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 61, 130, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Recharts 로딩 확인 -->
+    <script>
+        function waitForRecharts(callback) {
+            if (window.Recharts) {
+                callback();
+            } else {
+                setTimeout(() => waitForRecharts(callback), 100);
+            }
+        }
+    </script>
+
+    <!-- Common Components -->
+    <script type="text/babel" src="/stock-exchange/js/common/StatCard.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/common/FeatureCard.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/common/ComparisonChart.js"></script>
+
+    <!-- Layout Components -->
+    <script type="text/babel" src="/stock-exchange/js/components/Header.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/Footer.js"></script>
+
+    <!-- Tab Components -->
+    <script type="text/babel" src="/stock-exchange/js/components/Overview.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/TradingSystem.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/MarketMaking.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/Settlement.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/Surveillance.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/Listing.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/Disclosure.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/InvestorProtection.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/MarketData.js"></script>
+    <script type="text/babel" src="/stock-exchange/js/components/PerformanceDashboard.js"></script>
+
+    <!-- Main App -->
+    <script type="text/babel" src="/stock-exchange/js/app.js"></script>
+</body>
+</html>
