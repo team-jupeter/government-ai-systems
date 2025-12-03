@@ -1,209 +1,85 @@
 function PortfolioMgmt() {
-    const stats = [
-        {
-            icon: 'fa-wallet',
-            title: '운용 자산',
-            value: '48.5',
-            unit: '조원',
-            trend: 12,
-            description: '전체 고객 자산',
-            color: 'sec-blue'
-        },
-        {
-            icon: 'fa-chart-line',
-            title: '평균 수익률',
-            value: '14.2',
-            unit: '%',
-            trend: 3,
-            description: '연평균 수익률',
-            color: 'sec-green'
-        },
-        {
-            icon: 'fa-users',
-            title: '관리 고객',
-            value: '125,000',
-            unit: '명',
-            trend: 18,
-            description: '랩어카운트 고객',
-            color: 'sec-gold'
-        },
-        {
-            icon: 'fa-sync-alt',
-            title: '리밸런싱',
-            value: '8,500',
-            unit: '건/월',
-            trend: 22,
-            description: '자동 리밸런싱',
-            color: 'sec-blue'
-        }
-    ];
+    const [expandedCard, setExpandedCard] = React.useState(null);
+
 
     const features = [
         {
             icon: 'fa-chart-pie',
             title: '자산 배분 최적화',
-            description: 'AI 기반 최적 포트폴리오 구성',
+            description: 'MPT 기반 포트폴리오 구성',
             details: [
-                'Mean-Variance 최적화 (Markowitz)',
-                'Black-Litterman 모델 적용',
-                '리스크 패리티 전략',
-                '목표 기반 자산 배분 (Goal-Based)',
-                '동적 자산 배분 (Tactical Asset Allocation)',
-                '제약 조건 최적화 (투자 한도, 섹터 제한 등)'
-            ],
-            benefits: [
-                'Sharpe Ratio 1.8 달성',
-                '변동성 30% 감소',
-                '목표 수익률 달성',
-                '리스크 최소화'
-            ],
-            technologies: ['Modern Portfolio Theory', 'Quadratic Programming', 'Monte Carlo', 'Optimization', 'Convex']
+                { subtitle: 'Markowitz 모델', content: '효율적 투자선 상의 최적 포트폴리오 산출' },
+                { subtitle: '위험 허용도', content: '투자자의 리스크 성향에 맞춘 자산 배분' },
+                { subtitle: '분산 투자', content: '주식, 채권, 대체투자 등 자산군 간 분산' }
+            ]
         },
         {
-            icon: 'fa-balance-scale',
+            icon: 'fa-sync',
             title: '자동 리밸런싱',
-            description: '목표 비중 유지 자동 매매',
+            description: '목표 비중 유지 자동화',
             details: [
-                '임계값 기반 리밸런싱 (Threshold Rebalancing)',
-                '주기적 리밸런싱 (월/분기/년)',
-                '세금 최적화 리밸런싱 (Tax-Loss Harvesting)',
-                '거래 비용 최소화 알고리즘',
-                '시장 충격 고려 점진적 실행',
-                '리밸런싱 필요성 자동 감지 및 알림'
-            ],
-            benefits: [
-                '관리 비용 70% 절감',
-                '세금 효율 25% 향상',
-                '일관된 리스크',
-                '완전 자동화'
-            ],
-            technologies: ['Rebalancing Algorithm', 'Tax Optimization', 'Transaction Cost Analysis', 'Drift Monitoring']
+                { subtitle: '주기적 리밸런싱', content: '매월 목표 비중 대비 편차 확인 및 조정' },
+                { subtitle: '임계치 리밸런싱', content: '비중이 5% 이상 벗어나면 즉시 조정' },
+                { subtitle: '세금 고려', content: '양도소득세를 최소화하는 리밸런싱 전략' }
+            ]
         },
         {
-            icon: 'fa-crown',
-            title: '랩어카운트 관리',
-            description: '일임형 종합자산관리 서비스',
+            icon: 'fa-shield-halved',
+            title: '리스크 관리',
+            description: 'VaR, CVaR 기반 리스크 통제',
             details: [
-                '고객별 투자 전략 자동 수립',
-                '투자 성향 기반 맞춤 포트폴리오',
-                '실시간 성과 모니터링 및 리포팅',
-                '세금 및 수수료 최적화',
-                '정기 상담 자동 스케줄링',
-                '규제 준수 자동 검사'
-            ],
-            benefits: [
-                'AUM 45% 증가',
-                '고객 만족도 4.8/5.0',
-                '이탈률 60% 감소',
-                '운용 효율 3배'
-            ],
-            technologies: ['Wrap Account System', 'Client Portal', 'Performance Attribution', 'Compliance Check']
+                { subtitle: 'VaR 모니터링', content: '99% 신뢰수준의 최대 손실액 일일 계산' },
+                { subtitle: 'CVaR 분석', content: 'VaR 초과 시 평균 손실액 계산' },
+                { subtitle: '시나리오 분석', content: '금리 급등, 환율 급변 등 극단 상황 시뮬레이션' }
+            ]
         },
         {
-            icon: 'fa-coins',
-            title: '펀드 운용 지원',
-            description: '뮤추얼펀드 및 ETF 운용 자동화',
+            icon: 'fa-trophy',
+            title: '성과 평가',
+            description: 'Sharpe Ratio 기반 수익성 평가',
             details: [
-                '펀드 운용 전략 자동 실행',
-                '유니버스 관리 및 종목 선정',
-                '포트폴리오 구성 최적화',
-                '매매 체결 및 정산 자동화',
-                '성과 귀속 분석 (Performance Attribution)',
-                '규제 보고서 자동 생성'
-            ],
-            benefits: [
-                '운용 시간 80% 단축',
-                '추적 오차 최소화',
-                '규제 완벽 준수',
-                '투명성 확보'
-            ],
-            technologies: ['Fund Management', 'Universe Management', 'Order Management', 'NAV Calculation']
+                { subtitle: 'Sharpe Ratio', content: '위험 대비 초과 수익률 계산' },
+                { subtitle: '벤치마크 비교', content: 'KOSPI, KOSDAQ 대비 성과 비교' },
+                { subtitle: '기여도 분석', content: '종목별 포트폴리오 수익 기여도 분석' }
+            ]
         },
         {
-            icon: 'fa-layer-group',
-            title: '성과 귀속 분석',
-            description: '수익률 분해 및 기여도 분석',
+            icon: 'fa-money-bill-trend-up',
+            title: '배당 최적화',
+            description: '배당 수익 극대화 전략',
             details: [
-                'Brinson 모델 기반 성과 귀속',
-                '자산 배분 효과 vs 종목 선택 효과',
-                '섹터별/종목별 기여도 분석',
-                '벤치마크 대비 초과 수익 분석',
-                '리스크 조정 성과 측정 (Sharpe, Sortino)',
-                '시각화 리포트 자동 생성'
-            ],
-            benefits: [
-                '운용 전략 개선',
-                '투명한 성과 평가',
-                '고객 신뢰 강화',
-                '데이터 기반 의사결정'
-            ],
-            technologies: ['Brinson Model', 'Performance Attribution', 'Risk-Adjusted Return', 'Benchmark Analysis']
+                { subtitle: '배당 캘린더', content: '배당 지급일 기준 최적 매수·매도 시점 제안' },
+                { subtitle: '배당수익률 분석', content: '연 배당수익률 3% 이상 종목 자동 선별' },
+                { subtitle: '재투자 전략', content: '받은 배당금을 자동으로 재투자' }
+            ]
         },
         {
-            icon: 'fa-bullseye',
-            title: '투자 목표 추적',
-            description: '고객 목표 달성률 실시간 모니터링',
+            icon: 'fa-chart-area',
+            title: '목표 기반 투자',
+            description: '생애 목표별 포트폴리오',
             details: [
-                '목표 수익률 설정 및 추적',
-                '목표 달성 확률 Monte Carlo 시뮬레이션',
-                '중간 목표 달성 진행률 시각화',
-                '목표 미달 시 전략 조정 제안',
-                '라이프 이벤트 연동 (은퇴, 주택 구매 등)',
-                '정기 점검 및 피드백 자동화'
-            ],
-            benefits: [
-                '목표 달성률 85%',
-                '고객 만족도 향상',
-                '장기 투자 유도',
-                '충성도 강화'
-            ],
-            technologies: ['Goal-Based Investing', 'Monte Carlo Simulation', 'Life Cycle Planning', 'Financial Planning']
+                { subtitle: '은퇴 자금', content: '은퇴 시점까지 필요 자금 역산하여 포트폴리오 구성' },
+                { subtitle: '주택 구입', content: '목표 시점과 금액에 맞춘 안전 자산 중심 배분' },
+                { subtitle: '자녀 교육', content: '교육비 지출 시점을 고려한 단계별 전략' }
+            ]
         }
-    ];
-
-    const allocationData = [
-        { name: '국내주식', value: 35 },
-        { name: '해외주식', value: 25 },
-        { name: '채권', value: 20 },
-        { name: '대체투자', value: 15 },
-        { name: '현금', value: 5 }
     ];
 
     return (
         <div className="space-y-8">
-            <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                    포트폴리오 관리 시스템
-                </h2>
-                <p className="text-lg text-gray-600">
-                    AI 기반 최적 자산 배분 및 자동 리밸런싱
-                </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, idx) => (
-                    <StatCard key={idx} {...stat} />
+            <div className="grid grid-cols-1 gap-6">
+                {features.map((feature, index) => (
+                    <FeatureCard
+                        key={index}
+                        {...feature}
+                        expanded={expandedCard === index}
+                        onToggle={() => setExpandedCard(expandedCard === index ? null : index)}
+                    />
                 ))}
-            </div>
-
-            <ComparisonChart 
-                type="pie"
-                data={allocationData}
-                title="표준 자산 배분"
-                description="모델 포트폴리오 자산 배분 비중"
-            />
-
-            <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                    <i className="fas fa-briefcase text-sec-blue"></i>
-                    포트폴리오 관리 핵심 기능
-                </h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {features.map((feature, idx) => (
-                        <FeatureCard key={idx} {...feature} />
-                    ))}
-                </div>
             </div>
         </div>
     );
 }
+
+window.PortfolioMgmt = PortfolioMgmt;

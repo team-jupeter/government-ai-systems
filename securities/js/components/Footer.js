@@ -88,7 +88,7 @@ function Footer() {
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="text-sm text-gray-400">
-                        © 2025 대한민국 정부 AI 자동화 시스템. All rights reserved.
+                        © 2025 오픈해시 자율 증권 시스템. All rights reserved.
                     </div>
                     <div className="flex gap-6 text-sm">
                         <a href="#" className="hover:text-sec-gold transition-colors">개인정보처리방침</a>

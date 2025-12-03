@@ -7,7 +7,7 @@ function Header() {
                     <div className="flex items-center gap-4">
                         <span className="flex items-center gap-2">
                             <i className="fas fa-building"></i>
-                            대한민국 정부 통합 AI 시스템
+                            오픈해시 통합 금융 플랫폼
                         </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -50,3 +50,5 @@ function Header() {
         </header>
     );
 }
+
+window.Header = Header;

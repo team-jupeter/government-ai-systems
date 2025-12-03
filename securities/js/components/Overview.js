@@ -1,210 +1,196 @@
 function Overview() {
-    const stats = [
-        {
-            icon: 'fa-users',
-            title: '자동화 업무',
-            value: '85',
-            unit: '%',
-            trend: 15,
-            description: '전체 증권 업무의 85% 자동화 달성',
-            color: 'sec-blue'
-        },
-        {
-            icon: 'fa-clock',
-            title: '처리 시간 단축',
-            value: '78',
-            unit: '%',
-            trend: 23,
-            description: '평균 업무 처리 시간 78% 감소',
-            color: 'sec-green'
-        },
-        {
-            icon: 'fa-coins',
-            title: '운영 비용 절감',
-            value: '42',
-            unit: '%',
-            trend: 12,
-            description: '연간 운영 비용 42% 절감',
-            color: 'sec-gold'
-        },
-        {
-            icon: 'fa-chart-line',
-            title: '고객 만족도',
-            value: '4.8',
-            unit: '/5.0',
-            trend: 8,
-            description: 'NPS 기반 고객 만족도',
-            color: 'sec-blue'
-        }
-    ];
+    const [expandedCard, setExpandedCard] = React.useState(null);
 
     const features = [
         {
-            icon: 'fa-layer-group',
-            title: '시스템 아키텍처',
-            description: '마이크로서비스 기반 분산 처리 아키텍처',
+            icon: 'fa-database',
+            title: '프라이빗 데이터 금고 (PDV) 기반 시스템',
+            description: '모든 금융 거래는 개인과 사업자의 PDV에 보관',
             details: [
-                '프론트오피스: 고객 상담, 트레이딩, 투자 분석',
-                '미들오피스: 리스크 관리, 컴플라이언스, 성과 평가',
-                '백오피스: 정산, 결제, 보고서 생성, 시스템 관리',
-                'AI Engine: DeepSeek R1 기반 자연어 처리',
-                'Data Lake: 실시간 데이터 처리 및 분석',
-                'OpenHash: 거래 기록의 무결성 보장'
-            ],
-            benefits: [
-                '99.9% 시스템 가동률',
-                '50,000 TPS 처리',
-                '2초 이내 응답',
-                '무중단 서비스'
-            ],
-            technologies: ['Kubernetes', 'Kafka', 'Redis Cluster', 'PostgreSQL', 'React']
+                { 
+                    subtitle: '위변조 불가능한 재무제표', 
+                    content: '오픈해시는 모든 국민과 사업자에게 위변조 불가능하고 허위나 분식이 불가능한 재무제표를 제공합니다. 개인과 단체의 모든 금융 거래는 각자의 프라이빗 데이터 금고에 보관되며, 그 해시를 오픈해시 네트워크에 저장함으로써 데이터의 진실성을 증명합니다.' 
+                },
+                { 
+                    subtitle: '5천만 인구와 1천만 사업자', 
+                    content: '오픈해시의 PDV 시스템은 5천만 인구와 1천만 사업자의 재무제표를 생성 및 갱신합니다. PDV에 저장되는 대표적인 데이터가 재무제표이며, 증권사 시스템은 이 PDV를 기반으로 동작합니다.' 
+                },
+                { 
+                    subtitle: '해시 기반 무결성 보장', 
+                    content: '모든 거래 데이터의 해시를 오픈해시 네트워크에 저장하여, 향후 자신이 보관한 데이터의 진실성을 언제든지 증명할 수 있습니다.' 
+                }
+            ]
         },
         {
-            icon: 'fa-microchip',
-            title: 'DeepSeek R1 AI 엔진',
-            description: '금융 도메인 특화 AI 모델',
+            icon: 'fa-chart-line',
+            title: '재무제표 기반 신용등급 평가',
+            description: '위변조 불가능한 재무제표만으로 정확한 신용등급 산출',
             details: [
-                '금융 용어 및 규제 최적화 학습',
-                '50턴 대화 컨텍스트 유지',
-                '감정 분석 및 적응적 응답',
-                '실시간 시장 데이터 분석',
-                '투자 전략 자동 생성',
-                '리스크 예측 및 알림'
-            ],
-            benefits: [
-                '92% 상담 성공률',
-                '평균 2초 응답',
-                '24/7 무중단',
-                '다국어 지원'
-            ],
-            technologies: ['DeepSeek R1', 'PyTorch', 'Transformers', 'CUDA', 'TensorRT']
+                { 
+                    subtitle: '정확한 신용등급 판단', 
+                    content: '모든 사업자는 위변조 불가능한 재무제표를 보유하며, 따라서 재무제표만으로 해당 사업자의 신용등급을 정확히 판단할 수 있습니다.' 
+                },
+                { 
+                    subtitle: '증권 가격 결정', 
+                    content: '사업자 각각의 신용등급은 그가 발행하는 채권과 주식 가격을 결정합니다. 신용등급에 따라 개인 혹은 단체가 발행한 증권의 가치를 추산합니다.' 
+                },
+                { 
+                    subtitle: 'AI 기반 자동 평가', 
+                    content: '오직 재무제표만을 근거로 개인과 사업자 각각의 신용등급을 자동으로 결정합니다.' 
+                }
+            ]
         },
         {
-            icon: 'fa-link',
-            title: 'OpenHash 분산원장',
-            description: '블록체인 대안 기술로 에너지 효율 98.5% 향상',
+            icon: 'fa-sync',
+            title: '실시간 신용등급 갱신',
+            description: '중요 이벤트 발생 시 즉시 신용등급 조정',
             details: [
-                '거래 기록의 변조 방지 및 투명성 보장',
-                '에너지 소비: Bitcoin 대비 1/67 수준',
-                '처리 속도: 초당 100,000+ 트랜잭션',
-                '양자내성 암호화 적용',
-                '실시간 감사 추적 가능',
-                '규제 보고서 자동 생성'
-            ],
-            benefits: [
-                '98.5% 에너지 절감',
-                '100배 빠른 속도',
-                '제로 다운타임',
-                '완전한 투명성'
-            ],
-            technologies: ['OpenHash', 'ECDSA', 'SHA-3', 'Merkle Tree', 'Byzantine Fault Tolerance']
+                { 
+                    subtitle: '이벤트 기반 갱신', 
+                    content: '신용등급은 중요한 이벤트가 발생하는 매 순간 갱신됩니다. 중요한 이벤트는 해당 사업자의 사적인 이벤트일 수 있고, 해당 사업자의 매출에 영향을 미칠 산업이나 사회 혹은 국가나 글로벌 변동일 수도 있습니다.' 
+                },
+                { 
+                    subtitle: '다층적 영향도 분석', 
+                    content: '개인, 사업자, 사회, 국가 또는 글로벌 단위에서 중요한 이벤트가 발생할 경우, 그에 영향받는 개인과 사업자 등의 신용등급을 실시간으로 조정합니다.' 
+                },
+                { 
+                    subtitle: '증권 시장 가격 조정', 
+                    content: '신용등급 변동에 따라 해당 개인이나 사업자가 발행한 각종 증권의 시장 가격도 실시간으로 조정됩니다.' 
+                }
+            ]
         },
         {
             icon: 'fa-shield-halved',
-            title: '다층 보안 체계',
-            description: '금융 1등급 보안 인증',
+            title: '분식회계 원천 차단',
+            description: '거래 기반 자동 재무제표 생성',
             details: [
-                'OAuth 2.0 / OpenID Connect 인증',
-                'JWT 기반 토큰 관리 및 자동 갱신',
-                'RBAC 역할 기반 접근 제어',
-                'MFA 다중 인증 시스템',
-                'AES-256 저장 암호화',
-                'TLS 1.3 전송 암호화'
-            ],
-            benefits: [
-                '제로 보안 사고',
-                '실시간 위협 탐지',
-                'GDPR 완전 준수',
-                '99.99% 가용성'
-            ],
-            technologies: ['OAuth 2.0', 'JWT', 'AES-256', 'TLS 1.3', 'HSM']
+                { 
+                    subtitle: '거래 즉시 기록', 
+                    content: '모든 매출·비용 거래가 발생하는 순간 PDV에 자동 기록되어 분식회계가 원천적으로 불가능합니다.' 
+                },
+                { 
+                    subtitle: '교차 검증', 
+                    content: '거래 상대방의 재무제표와 자동으로 교차 확인하여 허위 매출이나 가공 거래를 즉시 적발합니다.' 
+                },
+                { 
+                    subtitle: '실시간 재무제표', 
+                    content: '거래가 발생할 때마다 재무제표가 자동으로 갱신되어 항상 최신 상태를 유지합니다.' 
+                }
+            ]
         },
         {
-            icon: 'fa-database',
-            title: '실시간 데이터 처리',
-            description: 'Kafka 기반 스트리밍 아키텍처',
+            icon: 'fa-building',
+            title: '전체 시장 투명성 확보',
+            description: '모든 참여자의 정확한 신용도 파악',
             details: [
-                '초당 1TB 데이터 처리 능력',
-                'Apache Kafka를 통한 이벤트 스트리밍',
-                'Apache Flink 실시간 분석',
-                'Redis Cluster 고속 캐싱',
-                '멀티 리전 데이터 복제',
-                '자동 백업 및 복구'
-            ],
-            benefits: [
-                '1ms 이내 지연',
-                '무손실 처리',
-                '자동 스케일링',
-                '실시간 분석'
-            ],
-            technologies: ['Kafka', 'Flink', 'Redis', 'Cassandra', 'HDFS']
+                { 
+                    subtitle: '완전한 시장 정보', 
+                    content: '모든 사업자와 개인의 신용등급이 정확하게 산출되어 시장 참여자들이 완전한 정보를 바탕으로 투자 결정을 내릴 수 있습니다.' 
+                },
+                { 
+                    subtitle: '정보 비대칭 해소', 
+                    content: '내부자만 알 수 있었던 재무 정보가 정확하게 공개되어 정보 비대칭이 해소됩니다.' 
+                },
+                { 
+                    subtitle: '공정한 가격 발견', 
+                    content: '정확한 신용등급을 바탕으로 증권의 공정한 가격이 시장에서 자동으로 발견됩니다.' 
+                }
+            ]
         },
         {
-            icon: 'fa-chart-pie',
-            title: '통합 대시보드',
-            description: '실시간 KPI 모니터링 및 알림',
+            icon: 'fa-robot',
+            title: 'DeepSeek R1 AI 통합',
+            description: '금융 도메인 특화 AI 분석',
             details: [
-                '거래량, 수익, 비용 실시간 추적',
-                '부서별 성과 지표 비교',
-                'AI 자동화율 및 효율성 측정',
-                '고객 만족도 및 이탈률 분석',
-                '시스템 리소스 사용률 모니터링',
-                '이상 징후 자동 탐지 및 알림'
-            ],
-            benefits: [
-                '의사결정 시간 70% 단축',
-                '예측 정확도 90%',
-                '실시간 알림',
-                '맞춤형 리포트'
-            ],
-            technologies: ['Grafana', 'Prometheus', 'ELK Stack', 'Tableau', 'Power BI']
+                { 
+                    subtitle: '복잡한 패턴 인식', 
+                    content: 'DeepSeek R1 AI가 수백만 개의 재무제표와 이벤트 데이터를 학습하여 복잡한 영향 관계를 파악합니다.' 
+                },
+                { 
+                    subtitle: '예측 모델', 
+                    content: '과거 데이터를 기반으로 이벤트 발생 시 신용등급 변동 방향과 규모를 예측합니다.' 
+                },
+                { 
+                    subtitle: '자동화된 의사결정', 
+                    content: 'AI가 24/7 모든 데이터를 모니터링하고 자동으로 신용등급과 증권 가격을 조정합니다.' 
+                }
+            ]
         }
-    ];
-
-    const performanceData = [
-        { name: '전통 방식', value: 100 },
-        { name: 'AI 자동화', value: 420 }
     ];
 
     return (
         <div className="space-y-8">
-            {/* Page Title */}
-            <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                    오픈해시 자율 증권 시스템 개요
+            {/* 핵심 개념 설명 */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border-2 border-blue-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                    <i className="fas fa-lightbulb text-blue-600"></i>
+                    오픈해시 증권 시스템 핵심 개념
                 </h2>
-                <p className="text-lg text-gray-600">
-                    OpenHash 블록체인 대안 기술과 DeepSeek R1 AI로 구현한 완전 자동화 증권 플랫폼
-                </p>
+                <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-4">
+                    <p>
+                        <strong className="text-blue-900">오픈해시는 모든 국민과 사업자가 위변조 불가능하고, 허위나 분식이 불가능한 재무제표를 제공합니다.</strong> 
+                        개인과 단체의 모든 금융 거래는 그의 프라이빗 데이터 금고(PDV)에 보관되며, 그 해시를 오픈해시 네트워크에 저장함으로써, 
+                        향후 자신이 보관한 데이터의 진실성을 증명하게 됩니다.
+                    </p>
+                    <p>
+                        <strong className="text-blue-900">증권사 시스템은 오픈해시의 PDV를 기반으로 동작합니다.</strong> 
+                        모든 사업자는 위변조 불가능한 재무제표를 보유하며, 따라서 재무제표만으로 해당 사업자의 신용등급을 정확히 판단할 수 있습니다. 
+                        사업자 각각의 신용등급은 그가 발행하는 채권과 주식 가격을 결정하며, 신용등급은 중요한 이벤트가 발생하는 매 순간 갱신됩니다.
+                    </p>
+                    <p>
+                        <strong className="text-blue-900">중요한 이벤트는 다층적입니다.</strong> 
+                        해당 사업자의 사적인 이벤트일 수 있고, 해당 사업자의 매출에 영향을 미칠 산업이나 사회 혹은 국가나 글로벌 변동일 수도 있습니다.
+                    </p>
+                </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, idx) => (
-                    <StatCard key={idx} {...stat} />
-                ))}
-            </div>
-
-            {/* Performance Comparison */}
-            <ComparisonChart 
-                type="bar"
-                data={performanceData}
-                title="처리 성능 비교"
-                description="AI 자동화 시스템 vs 전통 방식 (처리량 기준)"
-            />
-
-            {/* Features Grid */}
-            <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                    <i className="fas fa-cube text-sec-blue"></i>
-                    핵심 구성 요소
+            {/* 시스템 작동 원리 */}
+            <div className="bg-white rounded-xl border-2 border-gray-200 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <i className="fas fa-cogs text-indigo-600"></i>
+                    시스템 작동 원리
                 </h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {features.map((feature, idx) => (
-                        <FeatureCard key={idx} {...feature} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                        <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i className="fas fa-database text-white text-2xl"></i>
+                        </div>
+                        <h4 className="font-bold text-gray-900 mb-2">1. PDV 데이터 수집</h4>
+                        <p className="text-sm text-gray-600">5천만 인구와 1천만 사업자의 재무제표 생성 및 갱신</p>
+                    </div>
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                        <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i className="fas fa-chart-line text-white text-2xl"></i>
+                        </div>
+                        <h4 className="font-bold text-gray-900 mb-2">2. 신용등급 산출</h4>
+                        <p className="text-sm text-gray-600">재무제표만으로 개인과 사업자의 정확한 신용등급 결정</p>
+                    </div>
+                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                        <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i className="fas fa-coins text-white text-2xl"></i>
+                        </div>
+                        <h4 className="font-bold text-gray-900 mb-2">3. 증권 가격 결정</h4>
+                        <p className="text-sm text-gray-600">신용등급에 따라 증권 가치 추산 및 실시간 조정</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* 상세 기능 */}
+            <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">상세 기능</h3>
+                <div className="grid grid-cols-1 gap-6">
+                    {features.map((feature, index) => (
+                        <FeatureCard
+                            key={index}
+                            {...feature}
+                            expanded={expandedCard === index}
+                            onToggle={() => setExpandedCard(expandedCard === index ? null : index)}
+                        />
                     ))}
                 </div>
             </div>
         </div>
     );
 }
+
+window.Overview = Overview;

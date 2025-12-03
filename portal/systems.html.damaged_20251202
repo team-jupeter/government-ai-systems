@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시스템 목록 - 오픈해시 정부 AI 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+        
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .system-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .system-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .system-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .system-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #667eea;
+        }
+        
+        .system-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .system-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-development {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 32px;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            
+            .systems-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏛️ 오픈해시 정부 AI 시스템</h1>
+            <p class="subtitle">대한민국 공공 서비스 혁신을 위한 통합 플랫폼</p>
+        </header>
+        
+        <div class="systems-grid">
+            <!-- 디지털 신분증 -->
+            <a href="/digital-identity/" class="system-card">
+                <div class="system-icon">🪪</div>
+                <h2 class="system-title">디지털 신분증</h2>
+                <p class="system-description">
+                    블록체인 기반 디지털 신분증 시스템. 얼굴 인식, QR 코드, NFC를 통한 안전한 본인 인증을 제공합니다.
+                </p>
+                <span class="system-status status-active">운영 중</span>
+            </a>
+            
+            <!-- 교통 통합 관리 -->
+            <a href="/traffic-management/" class="system-card">
+                <div class="system-icon">🚦</div>
+                <h2 class="system-title">교통 통합 관리</h2>
+                <p class="system-description">
+                    AI 기반 실시간 교통 신호 최적화 및 자율주행 차량 통합 관리 시스템입니다.
+                </p>
+                <span class="system-status status-active">운영 중</span>
+            </a>
+            
+            <!-- 국가 재무제표 (NEW!) -->
+            <a href="/national-financial-statements/" class="system-card">
+                <div class="system-icon">📊</div>
+                <h2 class="system-title">국가 재무제표</h2>
+                <p class="system-description">
+                    5천만 국민과 1천만 사업자의 개인별 재무제표를 프라이빗 데이터 금고에 저장하고, 오픈해시로 위변조를 방지합니다.
+                </p>
+                <span class="system-status status-active">운영 중</span>
+            </a>
+            
+            <!-- 스마트 시티 -->
+            <a href="#" class="system-card" style="opacity: 0.7; cursor: not-allowed;">
+                <div class="system-icon">🌆</div>
+                <h2 class="system-title">스마트 시티</h2>
+                <p class="system-description">
+                    IoT 센서와 AI를 활용한 도시 인프라 관리 및 에너지 최적화 시스템입니다.
+                </p>
+                <span class="system-status status-development">개발 예정</span>
+            </a>
+            
+            <!-- 의료 데이터 허브 -->
+            <a href="#" class="system-card" style="opacity: 0.7; cursor: not-allowed;">
+                <div class="system-icon">🏥</div>
+                <h2 class="system-title">의료 데이터 허브</h2>
+                <p class="system-description">
+                    개인 의료 기록의 안전한 저장 및 병원 간 데이터 공유를 지원하는 플랫폼입니다.
+                </p>
+                <span class="system-status status-development">개발 예정</span>
+            </a>
+            
+            <!-- 교육 플랫폼 -->
+            <a href="#" class="system-card" style="opacity: 0.7; cursor: not-allowed;">
+                <div class="system-icon">🎓</div>
+                <h2 class="system-title">AI 교육 플랫폼</h2>
+                <p class="system-description">
+                    맞춤형 학습 경로 제공 및 학습 성과를 블록체인에 기록하는 시스템입니다.
+                </p>
+                <span class="system-status status-development">개발 예정</span>
+            </a>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="/" class="back-button">← 메인 페이지로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html>
