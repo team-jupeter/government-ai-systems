@@ -1,6 +1,12 @@
 function InvestorProtection() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-shield-halved', title: '보호 투자자', value: '1,247만', unit: '명', color: 'blue' },
+        { icon: 'fa-wallet', title: '보호 자산', value: '847', unit: '조원', color: 'green' },
+        { icon: 'fa-lock', title: '정보 암호화율', value: '100', unit: '%', color: 'purple' },
+        { icon: 'fa-handshake', title: '분쟁 해결률', value: '94.5', unit: '%', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function InvestorProtection() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (

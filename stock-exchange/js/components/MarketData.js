@@ -1,6 +1,12 @@
 function MarketData() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-database', title: '초당 데이터 생성', value: '2.5', unit: 'GB', color: 'blue' },
+        { icon: 'fa-signal', title: '시세 갱신 주기', value: '0.1', unit: '초', color: 'green' },
+        { icon: 'fa-users', title: '데이터 구독자', value: '8,450', unit: '개사', color: 'purple' },
+        { icon: 'fa-clock', title: '지연시간', value: '1', unit: 'ms', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function MarketData() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (

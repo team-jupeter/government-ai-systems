@@ -1,4 +1,10 @@
 function PerformanceDashboard() {
+    const stats = [
+        { icon: 'fa-bolt', title: '평균 체결속도', value: '0.015', unit: 'ms', color: 'blue', trend: { direction: 'down', value: '15%' } },
+        { icon: 'fa-chart-line', title: '일일 거래량', value: '850만', unit: '건', color: 'green', trend: { direction: 'up', value: '23%' } },
+        { icon: 'fa-plug', title: '에너지 효율', value: '88.6', unit: '% 절감', color: 'purple', trend: { direction: 'up', value: '5%' } },
+        { icon: 'fa-check-circle', title: '시스템 가동률', value: '99.99', unit: '%', color: 'yellow' }
+    ];
 
     const performanceData = [
         { name: '한국거래소', tps: 66667, latency: 0.015 },
@@ -11,6 +17,11 @@ function PerformanceDashboard() {
         <div className="space-y-8">
             <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">핵심 성과 지표 (KPI)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {stats.map((stat, index) => (
+                        <StatCard key={index} {...stat} />
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

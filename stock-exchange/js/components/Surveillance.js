@@ -1,6 +1,12 @@
 function Surveillance() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-eye', title: 'AI 탐지 정확도', value: '96.8', unit: '%', color: 'blue' },
+        { icon: 'fa-exclamation-triangle', title: '일일 경보 건수', value: '247', unit: '건', color: 'red' },
+        { icon: 'fa-shield-halved', title: '적발률', value: '89.3', unit: '%', color: 'green' },
+        { icon: 'fa-clock', title: '탐지 속도', value: '실시간', unit: '', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function Surveillance() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (

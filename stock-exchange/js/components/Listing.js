@@ -1,6 +1,12 @@
 function Listing() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-building', title: '상장 기업', value: '2,847', unit: '개사', color: 'blue' },
+        { icon: 'fa-clock', title: '평균 심사기간', value: '15', unit: '일', color: 'green' },
+        { icon: 'fa-check-circle', title: 'AI 심사 정확도', value: '98.5', unit: '%', color: 'purple' },
+        { icon: 'fa-calendar-plus', title: '연간 신규 상장', value: '147', unit: '개사', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function Listing() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (

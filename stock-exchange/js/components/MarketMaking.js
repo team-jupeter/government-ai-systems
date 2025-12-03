@@ -1,6 +1,12 @@
 function MarketMaking() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-water', title: '유동성 공급량', value: '12.5', unit: '조원', color: 'blue' },
+        { icon: 'fa-percent', title: '평균 스프레드', value: '0.05', unit: '%', color: 'green' },
+        { icon: 'fa-users', title: '시장조성자', value: '47', unit: '개사', color: 'purple' },
+        { icon: 'fa-clock', title: '호가 갱신주기', value: '0.1', unit: '초', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function MarketMaking() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (

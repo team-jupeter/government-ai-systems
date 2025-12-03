@@ -1,6 +1,12 @@
 function Disclosure() {
     const [expandedCard, setExpandedCard] = React.useState(null);
 
+    const stats = [
+        { icon: 'fa-file-lines', title: '연간 공시 건수', value: '84,500', unit: '건', color: 'blue' },
+        { icon: 'fa-clock', title: '평균 공시 시간', value: '5', unit: '분', color: 'green' },
+        { icon: 'fa-shield-check', title: '무결성 보장', value: '100', unit: '%', color: 'purple' },
+        { icon: 'fa-language', title: 'NLP 검증률', value: '99.2', unit: '%', color: 'yellow' }
+    ];
 
     const features = [
         {
@@ -67,6 +73,11 @@ function Disclosure() {
 
     return (
         <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {features.map((feature, index) => (
