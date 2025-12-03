@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금융감독 AI 자동화 시스템 - OpenHash 기반 데모</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <style>
+        :root {
+            /* KRDS 색상 체계 */
+            --primary-50: #0066CC;
+            --primary-40: #0052A3;
+            --primary-30: #003D7A;
+            
+            --gray-90: #1A1A1A;
+            --gray-80: #333333;
+            --gray-70: #4D4D4D;
+            --gray-60: #666666;
+            --gray-50: #808080;
+            --gray-40: #999999;
+            --gray-30: #B3B3B3;
+            --gray-20: #CCCCCC;
+            --gray-10: #E6E6E6;
+            --gray-5: #F2F2F2;
+            
+            --success-50: #00A870;
+            --warning-50: #FF9500;
+            --error-50: #E54545;
+            
+            --primary-5: #E6F3FF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #FAFAFA;
+            color: var(--gray-90);
+            line-height: 1.6;
+        }
+        
+        /* 데모 알림 배너 */
+        .demo-banner {
+            background: var(--warning-50);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* 컨테이너 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        /* 헤더 */
+        .header {
+            background: white;
+            padding: 32px 24px;
+            margin-bottom: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-50);
+            margin-bottom: 12px;
+        }
+        
+        .header-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--gray-70);
+        }
+        
+        /* 탭 네비게이션 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .tab-button {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--gray-70);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .tab-button:hover {
+            background: var(--gray-5);
+            color: var(--primary-50);
+        }
+        
+        .tab-button.active {
+            background: var(--primary-50);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* 콘텐츠 영역 */
+        .content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 600px;
+        }
+        
+        /* 섹션 */
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-20);
+        }
+        
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-90);
+        }
+        
+        .section-header i {
+            font-size: 28px;
+            color: var(--primary-50);
+        }
+        
+        /* 그리드 */
+        .grid { display: grid; gap: 24px; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        
+        /* 카드 */
+        .card {
+            background: white;
+            border: 1px solid var(--gray-20);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* 통계 카드 */
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .stat-card.primary { background: var(--primary-5); border-color: var(--primary-50); }
+        .stat-card.success { background: #E6F9F3; border-color: var(--success-50); }
+        .stat-card.warning { background: #FFF5E6; border-color: var(--warning-50); }
+        .stat-card.error { background: #FFF0F0; border-color: var(--error-50); }
+        
+        /* 푸터 */
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin-bottom: 8px;
+        }
+        
+        /* 로딩 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .spinner {
+            border: 4px solid var(--gray-20);
+            border-top: 4px solid var(--primary-50);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 데모 시스템 알림 배너 -->
+    <div class="demo-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>본 사이트는 OpenHash 특허 출원을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</span>
+    </div>
+    
+    <!-- React 앱 마운트 -->
+    <div id="root"></div>
+    
+    <!-- 공통 컴포넌트 로드 -->
+    <script type="text/babel" src="js/common/StatCard.js"></script>
+    <script type="text/babel" src="js/common/ServiceCard.js"></script>
+    
+    <!-- 탭 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/RealtimeSupervision.js"></script>
+    <script type="text/babel" src="js/components/FraudDetection.js"></script>
+    <script type="text/babel" src="js/components/SoundnessInspection.js"></script>
+    <script type="text/babel" src="js/components/RegulatoryCompliance.js"></script>
+    <script type="text/babel" src="js/components/RiskManagement.js"></script>
+    <script type="text/babel" src="js/components/ReportGeneration.js"></script>
+    <script type="text/babel" src="js/components/AIAgents.js"></script>
+    <script type="text/babel" src="js/components/PerformanceDashboard.js"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

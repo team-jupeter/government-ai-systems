@@ -138,14 +138,11 @@ function Overview() {
 
     return React.createElement('div', { className: 'space-y-8' },
         // 헤더
-        React.createElement('div', { className: 'bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white' },
-            React.createElement('h2', { className: 'text-3xl font-bold mb-4' }, 
-                '🏛️ 오픈해시 증권거래소'
+        React.createElement('div', { className: 'bg-white border-b-2 border-gray-200 pb-6 mb-6' },
+            React.createElement('h2', { className: 'text-3xl font-bold mb-3 text-gray-900' }, 
+                '오픈해시 증권거래소'
             ),
-            React.createElement('p', { className: 'text-xl opacity-90 mb-2' },
-                '누구나 증권을 발행하고 거래할 수 있는 완전 개방형 거래소'
-            ),
-            React.createElement('p', { className: 'text-lg opacity-80' },
+            React.createElement('p', { className: 'text-base text-gray-600' },
                 '재무제표 기반 AI 공정가격 산출 • 오픈해시 위변조 방지 • 투명한 가격 공시'
             )
         ),
