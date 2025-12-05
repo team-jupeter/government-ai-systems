@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중앙행정기관 조직도 | 대한민국 정부 AI 포털</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background: #fff; color: #333; }
+        
+        /* 조직도 컨테이너 */
+        .org-chart { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 30px 20px;
+            overflow-x: auto;
+        }
+        
+        /* 다운로드 링크 */
+        .download-link {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .download-link a {
+            color: #1a5cb0;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .download-link a:hover { text-decoration: underline; }
+        
+        /* 계층 행 */
+        .level {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 0;
+        }
+        
+        /* 연결선 컨테이너 */
+        .connector {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            height: 30px;
+        }
+        .connector::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #ccc;
+        }
+        
+        /* 수평 연결선 */
+        .h-line {
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            position: relative;
+        }
+        .h-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            height: 1px;
+            background: #ccc;
+        }
+        .h-line::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #ccc;
+        }
+        
+        /* 기관 박스 공통 */
+        .org-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .org-box:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        /* 대통령 박스 */
+        .president-box {
+            background: #2563eb;
+            color: white;
+            padding: 16px 60px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .president-box:hover { background: #1d4ed8; color: white; }
+        
+        /* 국무총리 박스 */
+        .pm-box {
+            background: #2563eb;
+            color: white;
+            padding: 14px 50px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .pm-box:hover { background: #1d4ed8; color: white; }
+        
+        /* 일반 기관 박스 (가로형) */
+        .agency-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 15px;
+            min-width: 100px;
+        }
+        
+        /* 일반 기관 박스 (세로형) */
+        .agency-box-v {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: -1px;
+            min-height: 80px;
+        }
+        .agency-box-v:hover { background: #e9ecef; }
+        
+        /* 자문회의 박스 */
+        .advisory-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        /* 그룹 컨테이너 */
+        .group-row {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        
+        /* 대통령 직속 영역 */
+        .president-section {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 20px;
+        }
+        .left-branch, .right-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 헌법상대통령자문기구 */
+        .advisory-section {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            background: #fff;
+        }
+        .advisory-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #333;
+        }
+        
+        /* 독립기관 행 */
+        .independent-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        /* 국무조정실/비서실 영역 */
+        .pm-staff {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin: 20px 0;
+        }
+        .pm-staff .agency-box {
+            border-radius: 0;
+            border-right: none;
+        }
+        .pm-staff .agency-box:last-child {
+            border-right: 1px solid #ddd;
+        }
+        .pm-staff .agency-box:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        .pm-staff .agency-box:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* 처/위원회 그룹 */
+        .sub-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sub-group-title {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        /* 부 행 */
+        .ministry-row {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        /* 청 행 */
+        .cheong-row {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        /* 수직 연결선 */
+        .v-connector {
+            width: 1px;
+            height: 25px;
+            background: #ccc;
+            margin: 0 auto;
+        }
+        
+        /* 분기 연결선 */
+        .branch-line {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 25px;
+            position: relative;
+        }
+        .branch-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 12px;
+            background: #ccc;
+        }
+        .branch-line::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            height: 1px;
+            background: #ccc;
+        }
+        
+        /* 특허청 등 청 하위 연결 */
+        .cheong-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cheong-branch .v-line {
+            width: 1px;
+            height: 15px;
+            background: #ccc;
+        }
+
+        /* 네비게이션 */
+        .top-nav {
+            background: #1e3a5f;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px; font-weight: 500;
+            font-size: 15px;
+        }
+        .top-nav a:hover { text-decoration: underline; }
+        
+        /* 상태 뱃지 */
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .status-online { background: #22c55e; }
+        .status-planned { background: #9ca3af; }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body>
+    <!-- 상단 네비게이션 -->
+    <nav class="top-nav">
+        <div style="font-size: 14px;">OpenHash 기술 실증을 위한 행정부 자동화 시범 프로젝트</div>
+        <div>
+            <a href="/portal/">포털</a>
+            <a href="/portal/systems.html" target="_blank">체제 자동화</a>
+        </div>
+    </nav>
+
+    <div class="org-chart">
+        <!-- 다운로드 링크 -->
+        <div class="download-link">
+            <a href="#"><i class="fas fa-download"></i> ⬇ 조직도 다운로드</a>
+        </div>
+
+        <!-- 대통령 -->
+        <div class="level">
+            <a href="/presidential-office/" target="_blank" class="org-box president-box">대통령</a>
+        </div>
+        
+        <div class="v-connector"></div>
+
+        <!-- 대통령 직속 기관 + 자문기구 -->
+        <div class="president-section">
+            <!-- 좌측: 대통령 직속 -->
+            <div class="left-branch">
+                <div class="group-row" style="gap: 15px;">
+                    <a href="/presidential-office/" target="_blank" class="org-box agency-box">대통령비서실</a>
+                    <a href="/national-security/" target="_blank" class="org-box agency-box">국가안보실</a>
+                    <a href="/presidential-security/" target="_blank" class="org-box agency-box">대통령경호처</a>
+                </div>
+            </div>
+
+            <!-- 우측: 자문기구 -->
+            <div class="right-branch">
+                <div class="advisory-section">
+                    <div class="advisory-title">헌법상대통령자문기구</div>
+                    <div class="group-row" style="gap: 10px;">
+                        <span class="org-box advisory-box">국가안전보장회의</span>
+                        <span class="org-box advisory-box">민주평화통일자문회의</span>
+                        <span class="org-box advisory-box">국민경제자문회의</span>
+                        <span class="org-box advisory-box">국가과학기술자문회의</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 독립기관 (감사원, 국가정보원, 방송통신위원회 등) -->
+        <div class="independent-row">
+            <a href="/board-of-audit/" target="_blank" class="org-box agency-box">감사원</a>
+            <a href="/national-intelligence/" target="_blank" class="org-box agency-box">국가정보원</a>
+            <a href="/broadcasting/" target="_blank" class="org-box agency-box">방송미디어통신위원회</a>
+            <a href="/corruption-investigation/" target="_blank" class="org-box agency-box">고위공직자범죄수사처</a>
+            <a href="/human-rights/" target="_blank" class="org-box agency-box">국가인권위원회</a>
+            <a href="/national-education-council/" target="_blank" class="org-box agency-box">국가교육위원회</a>
+        </div>
+
+        <div class="v-connector"></div>
+
+        <!-- 국무총리 -->
+        <div class="level">
+            <a href="/prime-minister/" target="_blank" class="org-box pm-box">국무총리</a>
+        </div>
+
+        <div class="v-connector"></div>
+
+        <!-- 국무조정실 / 국무총리비서실 -->
+        <div class="pm-staff">
+            <a href="/prime-minister-coordination/" target="_blank" class="org-box agency-box">국무조정실</a>
+            <a href="/prime-minister-secretariat/" target="_blank" class="org-box agency-box">국무총리비서실</a>
+        </div>
+
+        <div class="v-connector"></div>
+
+        <!-- 처 및 위원회 (국무총리 소속) -->
+        <div class="group-row" style="gap: 3px; margin: 20px 0;">
+            <a href="/personnel-innovation/" target="_blank" class="org-box agency-box-v">인사혁신처</a>
+            <a href="/legislation/" target="_blank" class="org-box agency-box-v">법제처</a>
+            <a href="/food-drug-safety/" target="_blank" class="org-box agency-box-v">식품의약품안전처</a>
+            <a href="/national-data-registry/" target="_blank" class="org-box agency-box-v">국가데이터처</a>
+            <a href="/intellectual-property/" target="_blank" class="org-box agency-box-v">지식재산처</a>
+            <span style="width: 20px;"></span>
+            <a href="/fair-trade/" target="_blank" class="org-box agency-box-v">공정거래위원회</a>
+            <a href="/anti-corruption/" target="_blank" class="org-box agency-box-v">국민권익위원회</a>
+            <a href="/market/" target="_blank" class="org-box agency-box-v">금융위원회</a>
+            <a href="/privacy-protection/" target="_blank" class="org-box agency-box-v">개인정보보호위원회</a>
+            <a href="/nuclear-safety/" target="_blank" class="org-box agency-box-v">원자력안전위원회</a>
+        </div>
+
+        <div class="v-connector" style="height: 40px;"></div>
+
+        <!-- 19부 (Ministry) -->
+        <div class="ministry-row">
+            <a href="/ministry-finance/" target="_blank" class="org-box agency-box-v">기획재정부</a>
+            <a href="/ministry-science/" target="_blank" class="org-box agency-box-v">과학기술정보통신부</a>
+            <a href="/education/" target="_blank" class="org-box agency-box-v">교육부</a>
+            <a href="/diplomacy/" target="_blank" class="org-box agency-box-v">외교부</a>
+            <a href="/ministry-unification/" target="_blank" class="org-box agency-box-v">통일부</a>
+            <a href="/judicial/" target="_blank" class="org-box agency-box-v">법무부</a>
+            <a href="/ministry-defense/" target="_blank" class="org-box agency-box-v">국방부</a>
+            <a href="/local-admin/" target="_blank" class="org-box agency-box-v">행정안전부</a>
+            <a href="/ministry-veterans/" target="_blank" class="org-box agency-box-v">국가보훈부</a>
+            <a href="/ministry-culture/" target="_blank" class="org-box agency-box-v">문화체육관광부</a>
+            <a href="/ministry-trade/" target="_blank" class="org-box agency-box-v">농림축산식품부</a>
+            <a href="/ministry-trade/" target="_blank" class="org-box agency-box-v">산업통상자원부</a>
+            <a href="/healthcare/" target="_blank" class="org-box agency-box-v">보건복지부</a>
+            <a href="/ministry-environment/" target="_blank" class="org-box agency-box-v">기후환경부</a>
+            <a href="/ministry-labor/" target="_blank" class="org-box agency-box-v">고용노동부</a>
+            <a href="/ministry-gender/" target="_blank" class="org-box agency-box-v">성평등가족부</a>
+            <a href="/traffic/" target="_blank" class="org-box agency-box-v">국토교통부</a>
+            <a href="/ministry-oceans/" target="_blank" class="org-box agency-box-v">해양수산부</a>
+            <a href="/ministry-sme/" target="_blank" class="org-box agency-box-v">중소벤처기업부</a>
+        </div>
+
+        <div class="v-connector" style="height: 40px;"></div>
+
+        <!-- 청 (Administration) -->
+        <div class="cheong-row">
+            <a href="/nts/" target="_blank" class="org-box agency-box-v">국세청</a>
+            <a href="/customs/" target="_blank" class="org-box agency-box-v">관세청</a>
+            <a href="/pps/" target="_blank" class="org-box agency-box-v">조달청</a>
+            <a href="/mma/">우주항공청</a>
+            <a href="/dapa/">재외동포청</a>
+            <a href="/police/">검찰청</a>
+            <a href="/nfa/">병무청</a>
+            <a href="/cha/">방위사업청</a>
+            <a href="/rda/">경찰청</a>
+            <a href="/kfs/">소방청</a>
+            <a href="/kostat/">국가유산청</a>
+            <a href="/kdca/">농촌진흥청</a>
+            <a href="/kma/">산림청</a>
+            <a href="/kipo/">통계청</a>
+            <a href="/macc/">질병관리청</a>
+            <a href="/saemangeum/">기상청</a>
+            <a href="/kcg/">특허청</a>
+            <a href="/sejong-city/" target="_blank" class="org-box agency-box-v">행정중심복합도시건설청</a>
+            <a href="/saemangeum/" target="_blank" class="org-box agency-box-v">새만금개발청</a>
+            <a href="/coast-guard/" target="_blank" class="org-box agency-box-v">해양경찰청</a>
+        </div>
+
+    </div>
+
+    <!-- 범례 -->
+    <div style="max-width: 1400px; margin: 20px auto; padding: 0 20px;">
+        <div style="display: flex; gap: 20px; justify-content: center; font-size: 11px; color: #666;">
+            <span><span class="status-dot status-online"></span> 체제 자동화 운영중</span>
+            <span><span class="status-dot status-planned"></span> 구축 예정</span>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <button class="floating-button" onclick="toggleFloatingMenu()" id="floatingButton">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <!-- Floating Menu -->
+    <div class="floating-menu" id="floatingMenu">
+        <div class="floating-menu-header">
+            <h3>💡 체제 자동화란?</h3>
+            <button class="close-btn" onclick="closeFloatingMenu()">×</button>
+        </div>
+        <div class="floating-menu-body">
+            <p style="font-size: 0.9rem; line-height: 1.6; color: #6b7280; margin-bottom: 1rem;">
+                OpenHash 분산원장 기술과 AI를 결합하여 대한민국 행정부 57개 중앙행정기관의 업무를 자동화하는 실증 프로젝트입니다.
+            </p>
+            <div class="ai-chat-section">
+                <h4 style="font-size: 1rem; color: #0046FF; margin-bottom: 0.75rem;">🤖 무엇이든 물어보세요</h4>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message assistant">
+                        안녕하세요! 행정부 자동화 프로젝트에 대해 궁금한 점을 물어보세요.
+                    </div>
+                </div>
+                <div class="chat-input-box">
+                    <input type="text" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                    <button onclick="sendChatMessage()" style="min-width: 56px; padding: 0.875rem 1.5rem;"><i class="fas fa-paper-plane" style="font-size: 1.2rem;"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Floating Button */
+        .floating-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0046FF, #0066CC);
+            color: white;
+            border: none;
+            font-size: 2.2rem; font-weight: bold; line-height: 1;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 70, 255, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .floating-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 70, 255, 0.4);
+        }
+        
+        /* Floating Menu */
+        .floating-menu {
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 400px;
+            max-width: calc(100vw - 4rem);
+            max-height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+        }
+        .floating-menu.show {
+            display: flex;
+        }
+        .floating-menu-header {
+            background: linear-gradient(135deg, #0046FF, #0066CC);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .floating-menu-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2.2rem; font-weight: bold; line-height: 1;
+            line-height: 1;
+        }
+        .floating-menu-body {
+            padding: 1.25rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        /* AI Chat */
+        .ai-chat-section {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+        }
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+        .chat-message {
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .chat-message.user {
+            background: #dbeafe;
+            color: #1e40af;
+            margin-left: 2rem;
+        }
+        .chat-message.assistant {
+            background: #f3f4f6;
+            color: #374151;
+            margin-right: 2rem;
+        }
+        .chat-input-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .chat-input-box input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .chat-input-box button {
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #0046FF, #0066CC);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .chat-input-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,70,255,0.3);
+        }
+    </style>
+
+    <script>
+        function toggleFloatingMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('show');
+        }
+        
+        function closeFloatingMenu() {
+            document.getElementById('floatingMenu').classList.remove('show');
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML += `<div class="chat-message user">${message}</div>`;
+            input.value = '';
+            
+            messagesDiv.innerHTML += `<div class="chat-message assistant" id="loading">💭 생각 중...</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1024,
+                        messages: [{
+                            role: 'user',
+                            content: `다음은 OpenHash 기반 행정부 자동화 프로젝트에 대한 질문입니다. 이 프로젝트는 OpenHash 분산원장 기술과 AI를 결합하여 대한민국 57개 중앙행정기관의 업무를 자동화하는 기술 실증 프로젝트입니다.\n\n질문: ${message}`
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('loading').remove();
+                
+                const answer = data.content[0].text;
+                messagesDiv.innerHTML += `<div class="chat-message assistant">${answer}</div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').remove();
+                messagesDiv.innerHTML += `<div class="chat-message assistant">죄송합니다. 오류가 발생했습니다.</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

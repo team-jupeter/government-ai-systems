@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금융위원회 AI 자동화 시스템 - OpenHash Government AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { margin: 0; padding: 0; background: #f8f9fa; }
+        
+        .nis-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #dc2626;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .log-card {
+            transition: all 0.3s ease;
+        }
+        .log-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .expandable-card {
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .expandable-card.collapsed {
+            max-height: 0;
+            padding: 0;
+        }
+        .expandable-card.expanded {
+            max-height: 2000px;
+            padding: 1.5rem;
+        }
+        
+        .openhash-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .classified-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel" src="/fsc/js/common/StatCard.js"></script>
+    <script type="text/babel" src="/fsc/js/common/OpenHashBadge.js"></script>
+    <script type="text/babel" src="/fsc/js/common/FilterPanel.js"></script>
+    <script type="text/babel" src="/fsc/js/common/LogCard.js"></script>
+    
+    <script type="text/babel" src="/fsc/js/components/Overview.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/Organization.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/ActivityLogs.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/NDRIntegration.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/OpenHashAudit.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/AIAutomation.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/Statistics.js?v=1764843820"></script>
+    <script type="text/babel" src="/fsc/js/components/AIChat.js?v=1764843820"></script>
+    
+    <script type="text/babel" src="/fsc/js/app.js?v=1764843820"></script>
+</body>
+</html>

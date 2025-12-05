@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대통령비서실 AI 자동화 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { margin: 0; padding: 0; background: #f8f9fa; }
+        .agency-header { background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%); color: white; padding: 2rem 0; }
+        .tab-active { border-bottom: 3px solid #6366f1; color: #6366f1; font-weight: 600; }
+        .expandable-card { overflow: hidden; transition: max-height 0.4s ease; }
+        .expandable-card.collapsed { max-height: 0; padding: 0; }
+        .expandable-card.expanded { max-height: 2000px; padding: 1.5rem; }
+        .openhash-badge { display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel" src="/pso/js/common/StatCard.js"></script>
+    <script type="text/babel" src="/pso/js/common/OpenHashBadge.js"></script>
+    <script type="text/babel" src="/pso/js/common/FilterPanel.js"></script>
+    <script type="text/babel" src="/pso/js/common/LogCard.js"></script>
+    <script type="text/babel" src="/pso/js/components/Overview.js"></script>
+    <script type="text/babel" src="/pso/js/components/Organization.js"></script>
+    <script type="text/babel" src="/pso/js/components/ActivityLogs.js"></script>
+    <script type="text/babel" src="/pso/js/components/NDRIntegration.js"></script>
+    <script type="text/babel" src="/pso/js/components/OpenHashAudit.js"></script>
+    <script type="text/babel" src="/pso/js/components/AIAutomation.js"></script>
+    <script type="text/babel" src="/pso/js/components/Statistics.js"></script>
+    <script type="text/babel" src="/pso/js/components/AIChat.js"></script>
+    <script type="text/babel" src="/pso/js/app.js"></script>
+</body>
+</html>

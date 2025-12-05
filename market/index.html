@@ -3,478 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 시장 유통 최적화 시스템 | OpenHash 기반</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>FPGA 가속 자율 시장 시스템 - OpenHash 기반 데모</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
     <style>
+        :root {
+            /* KRDS 색상 체계 */
+            --primary-50: #0066CC;
+            --primary-40: #0052A3;
+            --primary-30: #003D7A;
+            
+            --gray-90: #1A1A1A;
+            --gray-80: #333333;
+            --gray-70: #4D4D4D;
+            --gray-60: #666666;
+            --gray-50: #808080;
+            --gray-40: #999999;
+            --gray-30: #B3B3B3;
+            --gray-20: #CCCCCC;
+            --gray-10: #E6E6E6;
+            --gray-5: #F2F2F2;
+            
+            --success-50: #00A870;
+            --warning-50: #FF9500;
+            --error-50: #E54545;
+            
+            --primary-5: #E6F3FF;
+        }
+        
         * {
-            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-        }
-        body { 
             margin: 0;
-            background-color: #f8f9fa;
-            color: #212529;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .gradient-bg { 
-            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #FAFAFA;
+            color: var(--gray-90);
+            line-height: 1.6;
         }
-        .card-hover { 
-            transition: all 0.3s; 
+        
+        /* 데모 알림 배너 */
+        .demo-banner {
+            background: var(--warning-50);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
         }
-        .card-hover:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        
+        /* 컨테이너 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
         }
-        @keyframes float { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-10px); } 
+        
+        /* 헤더 */
+        .header {
+            background: white;
+            padding: 32px 24px;
+            margin-bottom: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .float { 
-            animation: float 3s ease-in-out infinite; 
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-50);
+            margin-bottom: 12px;
         }
-        @keyframes pulse { 
-            0%, 100% { opacity: 1; } 
-            50% { opacity: 0.5; } 
+        
+        .header-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--gray-70);
         }
-        .pulse { 
-            animation: pulse 2s infinite; 
+        
+        /* 탭 네비게이션 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        @keyframes pulse-gov24 { 
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
-            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        
+        .tab-button {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--gray-70);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: 'Noto Sans KR', sans-serif;
         }
-        .pulse-gov24 { 
-            animation: pulse-gov24 2s ease-in-out infinite; 
+        
+        .tab-button:hover {
+            background: var(--gray-5);
+            color: var(--primary-50);
+        }
+        
+        .tab-button.active {
+            background: var(--primary-50);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* 콘텐츠 영역 */
+        .content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 600px;
+        }
+        
+        /* 섹션 */
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-20);
+        }
+        
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-90);
+        }
+        
+        .section-header i {
+            font-size: 28px;
+            color: var(--primary-50);
+        }
+        
+        /* 그리드 */
+        .grid { display: grid; gap: 24px; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        
+        /* 카드 */
+        .card {
+            background: white;
+            border: 1px solid var(--gray-20);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* 통계 카드 */
+        .stat-card {
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .stat-card.primary { background: var(--primary-5); border-color: var(--primary-50); }
+        .stat-card.success { background: #E6F9F3; border-color: var(--success-50); }
+        .stat-card.warning { background: #FFF5E6; border-color: var(--warning-50); }
+        .stat-card.error { background: #FFF0F0; border-color: var(--error-50); }
+        
+        /* 푸터 */
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin-bottom: 8px;
+        }
+        
+        /* 로딩 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .spinner {
+            border: 4px solid var(--gray-20);
+            border-top: 4px solid var(--primary-50);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
         }
     </style>
-    <link rel="stylesheet" href="/common/floating-chat.css">
-    <script src="/common/floating-chat.js"></script>
 </head>
-<body class="min-h-screen">
-
+<body>
     <!-- 데모 시스템 알림 배너 -->
-    <div style="background:#FF9500;color:white;padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:14px;font-weight:600;flex-wrap:wrap;z-index:9999;position:relative;">
-        <span style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px;">⚠️</span> 본 사이트는 OpenHash 특허 출원을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</span>
+    <div class="demo-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>본 사이트는 OpenHash 특허 출원을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</span>
     </div>
-    <!-- Header -->
-    <div class="gradient-bg py-16 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="text-6xl mb-4 float">🏪</div>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">AI 시장 유통 최적화 시스템</h1>
-            <p class="text-xl text-white/90 mb-6 font-medium">수급 예측 | 가격 안정화 | 유통 투명성 확보</p>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <span class="bg-white/25 px-4 py-2 rounded-full text-sm text-white font-medium">📊 실시간 수급 분석</span>
-                <span class="bg-white/25 px-4 py-2 rounded-full text-sm text-white font-medium">💰 가격 변동 예측</span>
-                <span class="bg-white/25 px-4 py-2 rounded-full text-sm text-white font-medium">🔗 유통 이력 추적</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="bg-white py-3 sticky top-0 z-50 border-b border-gray-200 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">← 포털로 돌아가기</a>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-600 font-medium text-gray-700">시뮬레이터</button>
-                <button onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-600 font-medium text-gray-700">기능</button>
-                <button onclick="document.getElementById('tracking').scrollIntoView({behavior:'smooth'})" class="text-sm hover:text-blue-600 font-medium text-gray-700">유통추적</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Current Problems -->
-    <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">현행 유통 시스템의 문제점</h2>
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center card-hover">
-                <div class="text-5xl mb-4">📈</div>
-                <h3 class="text-lg font-bold mb-2 text-gray-900">가격 변동성</h3>
-                <p class="text-sm text-gray-600">계절별 수급 불균형으로 가격 급등락 (최대 300%)</p>
-            </div>
-            <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center card-hover">
-                <div class="text-5xl mb-4">🔍</div>
-                <h3 class="text-lg font-bold mb-2 text-gray-900">불투명한 유통</h3>
-                <p class="text-sm text-gray-600">중간 유통 단계별 원산지 추적 불가능</p>
-            </div>
-            <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center card-hover">
-                <div class="text-5xl mb-4">❌</div>
-                <h3 class="text-lg font-bold mb-2 text-gray-900">재고 낭비</h3>
-                <p class="text-sm text-gray-600">수요 예측 실패로 연간 1.2조원 폐기 손실</p>
-            </div>
-            <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center card-hover">
-                <div class="text-5xl mb-4">⏰</div>
-                <h3 class="text-lg font-bold mb-2 text-gray-900">느린 대응</h3>
-                <p class="text-sm text-gray-600">시장 변화 인지까지 평균 2주 소요</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Solutions -->
-    <div class="bg-white py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-4 text-gray-900">AI 기반 통합 솔루션</h2>
-            <p class="text-center text-gray-600 mb-12">OpenHash 분산원장 + 멀티에이전트 AI 시스템</p>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white border border-gray-200 rounded-xl p-8 card-hover shadow-md">
-                    <div class="text-5xl mb-4 text-center">🤖</div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900 text-center">수급 예측 AI</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-600 mt-1">✓</span>
-                            <span class="text-sm">과거 5년 데이터 학습</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-600 mt-1">✓</span>
-                            <span class="text-sm">기상·계절·이벤트 반영</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-600 mt-1">✓</span>
-                            <span class="text-sm">7일 전 가격 변동 예측</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-600 mt-1">✓</span>
-                            <span class="text-sm">예측 정확도 92.3%</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-xl p-8 card-hover shadow-md">
-                    <div class="text-5xl mb-4 text-center">🔗</div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900 text-center">OpenHash 유통추적</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 mt-1">✓</span>
-                            <span class="text-sm">생산지→소비자 전 과정 기록</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 mt-1">✓</span>
-                            <span class="text-sm">위변조 불가능한 이력 관리</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 mt-1">✓</span>
-                            <span class="text-sm">QR 스캔으로 즉시 확인</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 mt-1">✓</span>
-                            <span class="text-sm">블록체인 대비 98.5% 절감</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded-xl p-8 card-hover shadow-md">
-                    <div class="text-5xl mb-4 text-center">💰</div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900 text-center">가격 안정화 시스템</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-600 mt-1">✓</span>
-                            <span class="text-sm">실시간 시장 가격 모니터링</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-600 mt-1">✓</span>
-                            <span class="text-sm">급등락 시 자동 경보</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-600 mt-1">✓</span>
-                            <span class="text-sm">정부 비축물량 최적 배분</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-purple-600 mt-1">✓</span>
-                            <span class="text-sm">변동폭 70% 감소 목표</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Live Simulator -->
-    <div id="simulator" class="bg-gray-50 py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-4 text-gray-900">실시간 시뮬레이터</h2>
-            <p class="text-center text-gray-600 mb-12">AI가 예측하는 다음 주 농산물 가격</p>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Price Chart -->
-                <div class="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-                    <h3 class="text-xl font-bold mb-4 text-gray-900">🥬 배추 가격 예측</h3>
-                    <div class="mb-4">
-                        <div class="flex justify-between text-sm mb-2">
-                            <span class="text-gray-600">현재가</span>
-                            <span class="text-2xl font-bold text-gray-900">3,200원</span>
-                        </div>
-                        <div class="flex justify-between text-sm mb-2">
-                            <span class="text-gray-600">7일 후 예측가</span>
-                            <span class="text-2xl font-bold text-blue-600">2,850원</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">예상 변동률</span>
-                            <span class="text-lg font-bold text-green-600">-10.9% ↓</span>
-                        </div>
-                    </div>
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-gray-700"><strong class="text-blue-700">AI 분석:</strong> 기상청 예보상 강수량 증가로 생산량 20% 증가 예상. 소비는 평년 수준 유지로 가격 하락 전망.</p>
-                    </div>
-                </div>
-
-                <!-- Supply Demand -->
-                <div class="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-                    <h3 class="text-xl font-bold mb-4 text-gray-900">📊 수급 현황</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-700 font-medium">공급량</span>
-                                <span class="text-gray-900 font-semibold">12,500톤</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3">
-                                <div class="bg-blue-600 h-3 rounded-full" style="width: 83%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-700 font-medium">수요량</span>
-                                <span class="text-gray-900 font-semibold">10,200톤</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3">
-                                <div class="bg-green-600 h-3 rounded-full" style="width: 68%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-700 font-medium">재고량</span>
-                                <span class="text-gray-900 font-semibold">2,300톤</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3">
-                                <div class="bg-amber-600 h-3 rounded-full" style="width: 15%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p class="text-sm text-gray-700"><strong class="text-green-700">수급 상태:</strong> 공급 > 수요 (122%) - 가격 하락 압력</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Other Products -->
-            <div class="grid md:grid-cols-4 gap-4 mt-8">
-                <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm card-hover">
-                    <div class="text-3xl mb-2 text-center">🥕</div>
-                    <h4 class="font-bold text-center mb-2 text-gray-900">당근</h4>
-                    <div class="text-center text-sm">
-                        <div class="text-gray-600">현재: 1,500원</div>
-                        <div class="text-red-600 font-bold">예측: +8.5% ↑</div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm card-hover">
-                    <div class="text-3xl mb-2 text-center">🧅</div>
-                    <h4 class="font-bold text-center mb-2 text-gray-900">양파</h4>
-                    <div class="text-center text-sm">
-                        <div class="text-gray-600">현재: 2,800원</div>
-                        <div class="text-green-600 font-bold">예측: -5.2% ↓</div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm card-hover">
-                    <div class="text-3xl mb-2 text-center">🥔</div>
-                    <h4 class="font-bold text-center mb-2 text-gray-900">감자</h4>
-                    <div class="text-center text-sm">
-                        <div class="text-gray-600">현재: 3,500원</div>
-                        <div class="text-blue-600 font-bold">예측: +2.1% →</div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm card-hover">
-                    <div class="text-3xl mb-2 text-center">🍎</div>
-                    <h4 class="font-bold text-center mb-2 text-gray-900">사과</h4>
-                    <div class="text-center text-sm">
-                        <div class="text-gray-600">현재: 4,200원</div>
-                        <div class="text-red-600 font-bold">예측: +12.3% ↑</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Distribution Tracking -->
-    <div id="tracking" class="bg-white py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-4 text-gray-900">OpenHash 유통이력 추적</h2>
-            <p class="text-center text-gray-600 mb-12">QR 스캔 한 번으로 생산지부터 소비자까지</p>
-            
-            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-8 border border-blue-200 mb-8">
-                <div class="flex items-center justify-center gap-8 flex-wrap">
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg mb-3 pulse-gov24">🌱</div>
-                        <div class="font-semibold text-gray-900">생산</div>
-                        <div class="text-sm text-gray-600">충남 논산</div>
-                        <div class="text-xs text-blue-600 mt-1">2024-11-25</div>
-                    </div>
-                    <div class="text-3xl text-blue-600">→</div>
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg mb-3">📦</div>
-                        <div class="font-semibold text-gray-900">수집</div>
-                        <div class="text-sm text-gray-600">논산 농협</div>
-                        <div class="text-xs text-blue-600 mt-1">2024-11-26</div>
-                    </div>
-                    <div class="text-3xl text-blue-600">→</div>
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg mb-3">🚚</div>
-                        <div class="font-semibold text-gray-900">도매</div>
-                        <div class="text-sm text-gray-600">가락시장</div>
-                        <div class="text-xs text-blue-600 mt-1">2024-11-27</div>
-                    </div>
-                    <div class="text-3xl text-blue-600">→</div>
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg mb-3">🏪</div>
-                        <div class="font-semibold text-gray-900">소매</div>
-                        <div class="text-sm text-gray-600">이마트 강남점</div>
-                        <div class="text-xs text-blue-600 mt-1">2024-11-28</div>
-                    </div>
-                    <div class="text-3xl text-blue-600">→</div>
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg mb-3">🛒</div>
-                        <div class="font-semibold text-gray-900">구매</div>
-                        <div class="text-sm text-gray-600">소비자</div>
-                        <div class="text-xs text-blue-600 mt-1">2024-11-30</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <div class="text-4xl mb-3 text-center">🔍</div>
-                    <h3 class="font-bold text-center mb-2 text-gray-900">투명한 이력</h3>
-                    <p class="text-sm text-gray-600 text-center">생산자·유통업체·가격 정보 모두 공개</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <div class="text-4xl mb-3 text-center">🛡️</div>
-                    <h3 class="font-bold text-center mb-2 text-gray-900">위변조 방지</h3>
-                    <p class="text-sm text-gray-600 text-center">OpenHash 암호화로 조작 불가능</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <div class="text-4xl mb-3 text-center">⚡</div>
-                    <h3 class="font-bold text-center mb-2 text-gray-900">실시간 조회</h3>
-                    <p class="text-sm text-gray-600 text-center">QR 스캔 즉시 전체 이력 확인</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Key Features -->
-    <div id="features" class="bg-gray-50 py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">핵심 기능</h2>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-xl p-8 shadow-md border border-gray-200 card-hover">
-                    <h3 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-3">
-                        <span class="text-4xl">🤖</span>
-                        멀티 에이전트 협업
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl">📈</div>
-                            <div>
-                                <div class="font-semibold text-gray-900">시장 분석 에이전트</div>
-                                <div class="text-sm text-gray-600">실시간 가격·수급 데이터 수집 및 분석</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-xl">🔮</div>
-                            <div>
-                                <div class="font-semibold text-gray-900">예측 에이전트</div>
-                                <div class="text-sm text-gray-600">머신러닝 기반 7일 후 가격 예측</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-xl">🚨</div>
-                            <div>
-                                <div class="font-semibold text-gray-900">경보 에이전트</div>
-                                <div class="text-sm text-gray-600">급등락 감지 시 정부·업체 즉시 통보</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-xl">🎯</div>
-                            <div>
-                                <div class="font-semibold text-gray-900">최적화 에이전트</div>
-                                <div class="text-sm text-gray-600">비축물량 배분·유통경로 최적화</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-8 shadow-md border border-gray-200 card-hover">
-                    <h3 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-3">
-                        <span class="text-4xl">🔗</span>
-                        OpenHash 기반 보안
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div class="font-semibold text-gray-900 mb-2">5계층 분산원장</div>
-                            <div class="text-sm text-gray-700">개인·민간·공공·연계·검증 계층 분리</div>
-                        </div>
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <div class="font-semibold text-gray-900 mb-2">양자내성 암호</div>
-                            <div class="text-sm text-gray-700">CRYSTALS-Kyber/Dilithium 적용</div>
-                        </div>
-                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                            <div class="font-semibold text-gray-900 mb-2">98.5% 에너지 절감</div>
-                            <div class="text-sm text-gray-700">블록체인 대비 초저전력 구조</div>
-                        </div>
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                            <div class="font-semibold text-gray-900 mb-2">무결성 보장</div>
-                            <div class="text-sm text-gray-700">모든 거래 이력 위변조 불가</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Expected Results -->
-    <div class="bg-white py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">기대 효과</h2>
-            
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center border border-blue-200">
-                    <div class="text-5xl mb-4">📉</div>
-                    <div class="text-3xl font-bold text-blue-600 mb-2">-70%</div>
-                    <div class="font-semibold text-gray-900 mb-1">가격 변동성 감소</div>
-                    <div class="text-sm text-gray-600">안정적인 농산물 시장</div>
-                </div>
-                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center border border-green-200">
-                    <div class="text-5xl mb-4">💰</div>
-                    <div class="text-3xl font-bold text-green-600 mb-2">1.2조원</div>
-                    <div class="font-semibold text-gray-900 mb-1">폐기 손실 절감</div>
-                    <div class="text-sm text-gray-600">정확한 수급 예측</div>
-                </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center border border-purple-200">
-                    <div class="text-5xl mb-4">⚡</div>
-                    <div class="text-3xl font-bold text-purple-600 mb-2">+92%</div>
-                    <div class="font-semibold text-gray-900 mb-1">예측 정확도</div>
-                    <div class="text-sm text-gray-600">AI 학습 고도화</div>
-                </div>
-                <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 text-center border border-amber-200">
-                    <div class="text-5xl mb-4">🔍</div>
-                    <div class="text-3xl font-bold text-amber-600 mb-2">100%</div>
-                    <div class="font-semibold text-gray-900 mb-1">유통 투명성</div>
-                    <div class="text-sm text-gray-600">전 과정 이력 추적</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="bg-gray-900 text-white py-12 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="text-4xl mb-4">🏪</div>
-            <h3 class="text-2xl font-bold mb-4">AI 시장 유통 최적화 시스템</h3>
-            <p class="text-gray-400 mb-4">농림축산식품부·한국농수산식품유통공사 협력</p>
-            <div class="flex justify-center gap-6 text-sm">
-                <a href="/" class="text-blue-400 hover:text-blue-300">포털</a>
-                <a href="http://100.30.14.224/openhash.html" class="text-blue-400 hover:text-blue-300">OpenHash 설명서</a>
-                <a href="#" class="text-blue-400 hover:text-blue-300">API 문서</a>
-            </div>
-        </div>
-    </div>
+    
+    <!-- React 앱 마운트 -->
+    <div id="root"></div>
+    
+    <!-- 공통 컴포넌트 로드 -->
+    <script type="text/babel" src="js/common/StatCard.js"></script>
+    <script type="text/babel" src="js/common/ServiceCard.js"></script>
+    
+    <!-- 탭 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/FPGAAcceleration.js"></script>
+    <script type="text/babel" src="js/components/AIAgents.js"></script>
+    <script type="text/babel" src="js/components/PrivacyProtection.js"></script>
+    <script type="text/babel" src="js/components/GlobalTrust.js"></script>
+    <script type="text/babel" src="js/components/DemandForecast.js"></script>
+    <script type="text/babel" src="js/components/ValueDistribution.js"></script>
+    <script type="text/babel" src="js/components/SecuritySystem.js"></script>
+    <script type="text/babel" src="js/components/PerformanceDashboard.js"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
