@@ -6,7 +6,12 @@
     <script src="/common/floating-chat.js"></script>
 </head>
 <body>
-<header class="header"><div class="logo"><div class="logo-icon">📜</div><div><h1>법제처 업무자동화</h1><p style="color:#00d4ff;font-size:0.85rem">⛓️ Powered by OpenHash</p></div></div><a href="/" class="back-btn">← 포털로 돌아가기</a></header>
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div><a href="/" class="back-btn">← 포털로 돌아가기</a></header>
 <section class="hero"><div class="hero-icon">📜</div><h2>법제처 업무자동화</h2><p style="color:#888">Legislation Automation - AI 기반 스마트 서비스</p></section>
 <main class="container"><div class="chat-section"><div class="chat-messages" id="chatMessages"><div class="chat-message assistant">안녕하세요! 법제처 업무자동화 AI입니다. 무엇을 도와드릴까요?</div></div><div class="chat-input"><input type="text" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendMessage()"><button onclick="sendMessage()">전송</button></div></div></main>
 <footer class="footer"><p>© 2025 OpenHash Foundation</p></footer>
