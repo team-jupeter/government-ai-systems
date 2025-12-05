@@ -1,15 +1,75 @@
 const OpenHashAudit = () => (
     <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-6">✓ OpenHash 감사 추적</h2>
-        <div className="space-y-4">
-            <div className="bg-green-50 border-l-4 border-green-600 p-4">
-                <p className="font-bold text-green-900">블록체인 무결성: 정상</p>
-                <p className="text-sm text-gray-600 mt-1">전체 2,847건 트랜잭션 검증 완료</p>
+        <h2 className="text-2xl font-bold mb-6">✓ OpenHash 블록체인 감사</h2>
+        
+        <div className="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+            <div className="flex items-center gap-3">
+                <span className="text-3xl">✓</span>
+                <div>
+                    <p className="font-bold text-green-900 text-lg">블록체인 무결성: 정상</p>
+                    <p className="text-sm text-gray-600 mt-1">전체 2,847건 트랜잭션 검증 완료 (위변조 시도 0건)</p>
+                </div>
             </div>
-            <div className="grid md:grid-cols-3 gap-4">
-                <StatCard title="검증된 회의록" value="1,234건" />
-                <StatCard title="의결 기록" value="856건" />
-                <StatCard title="Hash 체인" value="2,847블록" />
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-blue-50 border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">2,847</div>
+                <div className="text-xs text-gray-600 mt-1">검증된 트랜잭션</div>
+            </div>
+            <div className="bg-green-50 border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">6,194</div>
+                <div className="text-xs text-gray-600 mt-1">OpenHash 블록</div>
+            </div>
+            <div className="bg-purple-50 border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">24</div>
+                <div className="text-xs text-gray-600 mt-1">활성 노드</div>
+            </div>
+            <div className="bg-orange-50 border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">0.23초</div>
+                <div className="text-xs text-gray-600 mt-1">평균 검증 시간</div>
+            </div>
+        </div>
+
+        <div className="space-y-4">
+            <div className="border rounded-lg p-4">
+                <h3 className="font-bold mb-3">최근 감사 기록</h3>
+                <div className="space-y-2 text-sm">
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span>의안 통과 (22대 국회 운영규칙)</span>
+                        <span className="text-green-600 font-bold">✓ 검증</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span>예산 승인 (국회사무처 추경)</span>
+                        <span className="text-green-600 font-bold">✓ 검증</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span>인사 동의 (헌법재판관)</span>
+                        <span className="text-green-600 font-bold">✓ 검증</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="border rounded-lg p-4">
+                <h3 className="font-bold mb-3">암호화 기술 스택</h3>
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                    <div className="bg-cyan-50 p-3 rounded">
+                        <div className="font-bold text-cyan-900">양자내성 서명</div>
+                        <div className="text-gray-600 text-xs mt-1">CRYSTALS-Dilithium (NIST PQC)</div>
+                    </div>
+                    <div className="bg-blue-50 p-3 rounded">
+                        <div className="font-bold text-blue-900">해시 함수</div>
+                        <div className="text-gray-600 text-xs mt-1">SHA-3 (Keccak)</div>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded">
+                        <div className="font-bold text-purple-900">대칭키 암호</div>
+                        <div className="text-gray-600 text-xs mt-1">AES-256-GCM</div>
+                    </div>
+                    <div className="bg-green-50 p-3 rounded">
+                        <div className="font-bold text-green-900">머클 트리</div>
+                        <div className="text-gray-600 text-xs mt-1">Binary Merkle Tree</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

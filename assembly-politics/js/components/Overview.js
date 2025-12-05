@@ -2,59 +2,69 @@ const Overview = () => {
     return (
         <div className="space-y-6 animate-slide-in">
             <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">💼 정무위원회 개요</h2>
-                <div className="prose max-w-none">
-                    <p className="text-gray-700 leading-relaxed mb-4">
-                        정무위원회는 <strong className="text-blue-600">국무총리 직속 기관</strong>을 소관하는 상임위원회로,
-                        금융위원회를 소관하여 "금융 상임위"로도 불립니다. 
-                        공정거래, 금융감독, 개인정보보호, 국민권익 등 경제와 국민 생활에 직결된 핵심 분야를 담당합니다.
-                    </p>
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                        <p className="text-sm text-yellow-800">
-                            <strong>💡 핵심 특징:</strong> 금융기업 및 대기업 감독 권한으로 인해 
-                            국회 상임위 선호도 조사에서 4위를 차지할 만큼 인기가 높은 위원회입니다.
-                        </p>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">💼 정무위원회 OpenHash 시스템</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div className="border rounded-lg p-4">
+                        <h3 className="font-bold text-blue-900 mb-3">기본 정보</h3>
+                        <table className="w-full text-sm">
+                            <tbody>
+                                <tr className="border-b"><td className="py-2 font-medium">위원장</td><td>윤한홍 (국민의힘)</td></tr>
+                                <tr className="border-b"><td className="py-2 font-medium">위원 수</td><td>24명 (최대 규모)</td></tr>
+                                <tr className="border-b"><td className="py-2 font-medium">소관</td><td>금융위, 공정위 등 7개</td></tr>
+                                <tr><td className="py-2 font-medium">상세 정보</td><td><a href="https://policy.na.go.kr" target="_blank" className="text-blue-600 hover:underline">공식 홈페이지 →</a></td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-4 mt-6">
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                            <h3 className="font-bold text-blue-900 mb-2">주요 권한</h3>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                                <li>• <strong>금융감독</strong> - 은행, 증권, 보험 감독</li>
-                                <li>• <strong>공정거래</strong> - 독과점 규제, 담합 단속</li>
-                                <li>• <strong>개인정보보호</strong> - 데이터 프라이버시 관리</li>
-                                <li>• <strong>국민권익</strong> - 부패 방지, 민원 처리</li>
-                            </ul>
+                    
+                    <div className="border rounded-lg p-4">
+                        <h3 className="font-bold text-green-900 mb-3">OpenHash 처리 성능</h3>
+                        <table className="w-full text-sm">
+                            <tbody>
+                                <tr className="border-b"><td className="py-2 font-medium">TPS</td><td className="text-green-600 font-bold">493.7 tx/s</td></tr>
+                                <tr className="border-b"><td className="py-2 font-medium">블록 생성</td><td>0.18초</td></tr>
+                                <tr className="border-b"><td className="py-2 font-medium">검증 정확도</td><td>100%</td></tr>
+                                <tr><td className="py-2 font-medium">금융감독 조치</td><td>487건/년</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-blue-600 p-6 rounded-lg">
+                    <h3 className="font-bold text-xl text-blue-900 mb-4">🔗 OpenHash 핵심 기능</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-white p-4 rounded shadow-sm">
+                            <div className="text-2xl mb-2">💰</div>
+                            <h4 className="font-bold mb-2">금융거래 이상징후</h4>
+                            <p className="text-sm text-gray-600">AI 실시간 탐지<br/>빅데이터 분석</p>
                         </div>
-                        <div className="bg-purple-50 p-4 rounded-lg">
-                            <h3 className="font-bold text-purple-900 mb-2">소관 기관 (7개)</h3>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                                <li>• 국무조정실</li>
-                                <li>• 국무총리비서실</li>
-                                <li>• 국가보훈부</li>
-                                <li>• 공정거래위원회</li>
-                                <li>• 금융위원회</li>
-                                <li>• 국민권익위원회</li>
-                                <li>• 개인정보보호위원회</li>
-                            </ul>
+                        <div className="bg-white p-4 rounded shadow-sm">
+                            <div className="text-2xl mb-2">⚖️</div>
+                            <h4 className="font-bold mb-2">담합·카르텔 분석</h4>
+                            <p className="text-sm text-gray-600">AI 자동 검출<br/>234건/년</p>
                         </div>
-                        <div className="bg-green-50 p-4 rounded-lg">
-                            <h3 className="font-bold text-green-900 mb-2">AI 자동화 영역</h3>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                                <li>• 금융거래 이상징후 탐지</li>
-                                <li>• 담합·카르텔 AI 분석</li>
-                                <li>• 개인정보 유출 자동 감지</li>
-                                <li>• 민원 처리 자동화</li>
-                                <li>• OpenHash 기반 투명성</li>
-                            </ul>
+                        <div className="bg-white p-4 rounded shadow-sm">
+                            <div className="text-2xl mb-2">🔒</div>
+                            <h4 className="font-bold mb-2">개인정보 유출 감지</h4>
+                            <p className="text-sm text-gray-600">실시간 모니터링<br/>자동 경고</p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="grid md:grid-cols-4 gap-6">
-                <StatCard title="연간 심사 법안" value="1,234건" icon="📋" />
-                <StatCard title="금융감독 조치" value="487건" icon="💰" />
-                <StatCard title="공정거래 제재" value="234건" icon="⚖️" />
-                <StatCard title="AI 자동화율" value="81%" icon="🤖" />
+
+                <div className="mt-6 grid md:grid-cols-3 gap-4">
+                    <div className="bg-white border-2 border-blue-200 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-blue-600">1,234</div>
+                        <div className="text-sm text-gray-600 mt-1">OpenHash 검증 건수</div>
+                    </div>
+                    <div className="bg-white border-2 border-green-200 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-green-600">94.7%</div>
+                        <div className="text-sm text-gray-600 mt-1">AI 정확도</div>
+                    </div>
+                    <div className="bg-white border-2 border-purple-200 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-purple-600">81%</div>
+                        <div className="text-sm text-gray-600 mt-1">처리 시간 단축</div>
+                    </div>
+                </div>
             </div>
         </div>
     );

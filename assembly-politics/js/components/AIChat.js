@@ -4,7 +4,7 @@ const AIChat = () => (
         <div className="border rounded-lg h-96 flex flex-col">
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                 <div className="bg-blue-100 p-3 rounded-lg mb-3">
-                    <p className="text-sm">안녕하세요! 정무위원회 AI 어시스턴트입니다. 금융감독, 공정거래, 개인정보보호 관련 문의를 도와드립니다.</p>
+                    <p className="text-sm">안녕하세요! 정무위원회 OpenHash 시스템 어시스턴트입니다. 금융감독, 공정거래, 개인정보보호 관련 문의를 도와드립니다.</p>
                 </div>
             </div>
             <div className="border-t p-4">
