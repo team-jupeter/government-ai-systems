@@ -1,18 +1,27 @@
-const App = () => (
-    <div className="min-h-screen bg-gray-900">
-        <Header />
-        <LayerVisualization />
-        <DataLinkage />
-        <StatisticsLifecycle />
-        <DataSovereignty />
-        <AIConsultation />
-        <ExplainerPage />
-        <footer className="bg-gray-800 py-8 px-4 border-t border-gray-700">
-            <div className="max-w-6xl mx-auto text-center">
-                <p className="text-gray-500 text-sm">© 2025 국가데이터처 통합 데이터 네트워크</p>
-                <p className="text-gray-600 text-xs mt-1">OpenHash 5계층 + AI 멀티에이전트 + CRYSTALS-Dilithium</p>
-            </div>
-        </footer>
-    </div>
-);
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+function App() {
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Header />
+            <Overview />
+            <TechnicalTabs />
+            <Footer />
+        </div>
+    );
+}
+
+// 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out;
+    }
+`;
+document.head.appendChild(style);
+
+// React 렌더링
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

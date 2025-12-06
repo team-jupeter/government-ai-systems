@@ -3,46 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>국가데이터처 통합 데이터 네트워크</title>
+    <title>국가데이터처 - Ministry of Data and Statistics</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#0066CC',
+                        'gov-text': '#1a1a1a',
+                        'gov-text-secondary': '#666666',
+                        'gov-border': '#dddddd'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        * {
-            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-        }
         body {
-            background-color: #f8f9fa;
-            color: #212529;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
-        .gradient-gov24 { 
-            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        
+        html {
+            scroll-behavior: smooth;
         }
-        .bg-gov24-light { background-color: #E8F0FF; }
-        .bg-gov24-primary { background-color: #0046FF; }
-        .text-gov24-primary { color: #0046FF; }
-        .border-gov24 { border-color: #0046FF; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #004C9E;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #004C9E;
         }
-        @keyframes pulse-gov24 { 
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
-            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        
+        .subsection-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
         }
-        .pulse-gov24 { animation: pulse-gov24 2s ease-in-out infinite; }
-        .section-white { background-color: white; }
-        .section-gray { background-color: #f8f9fa; }
+        
+        .body-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #333;
+        }
     </style>
-    <link rel="stylesheet" href="/common/floating-chat.css">
-    <script src="/common/floating-chat.js"></script>
 </head>
 <body>
-
     <!-- 데모 배너 -->
     <div style="background:#4B5563;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;">
         <p style="font-size:14px;font-weight:600;margin:0;">⚠️ 본 사이트는 Openhash 기술 실증 및 테스트용이며, 실제 정부 서비스가 아닙니다.</p>
@@ -51,14 +77,19 @@
             <a href="http://100.30.14.224/national-data-registry/" style="color:white;text-decoration:underline;font-size:14px;font-weight:600;">국가 데이터처</a>
         </div>
     </div>
+
     <div id="root"></div>
+
+    <!-- 컴포넌트 로딩 -->
     <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/LayerVisualization.js"></script>
-    <script type="text/babel" src="js/components/DataLinkage.js"></script>
-    <script type="text/babel" src="js/components/StatisticsLifecycle.js"></script>
-    <script type="text/babel" src="js/components/DataSovereignty.js"></script>
-    <script type="text/babel" src="js/components/AIConsultation.js"></script>
-    <script type="text/babel" src="js/components/ExplainerPage.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/Tab1Statistics.js"></script>
+    <script type="text/babel" src="js/components/Tab2Coordination.js"></script>
+    <script type="text/babel" src="js/components/Tab3Services.js"></script>
+    <script type="text/babel" src="js/components/Tab4OpenData.js"></script>
+    <script type="text/babel" src="js/components/Tab5AIAutomation.js"></script>
+    <script type="text/babel" src="js/components/TechnicalTabs.js"></script>
     <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
