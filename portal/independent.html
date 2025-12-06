@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독립 헌법기관 AI 자동화 시스템</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        .warning-bar {
+            background: #4B5563;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .section {
+            margin-bottom: 50px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 25px;
+        }
+        .section-title .icon {
+            font-size: 24px;
+        }
+        .section-title h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #7c3aed;
+        }
+        .section-title .count {
+            color: #666;
+            font-size: 18px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .institution-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .institution-card:hover {
+            border-color: #7c3aed;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+            transform: translateY(-2px);
+        }
+        .institution-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        .institution-card .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .institution-card .description {
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #059669;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .ai-badge::before {
+            content: "✓";
+            font-size: 16px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .back-button:hover {
+            border-color: #7c3aed;
+            color: #7c3aed;
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-bar">
+        ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+    </div>
+
+    <div class="container">
+        <a href="/portal/" class="back-button">← 국가 포털로 돌아가기</a>
+        
+        <div class="header">
+            <h1>독립 헌법기관 AI 자동화 시스템</h1>
+            <p>Independent Constitutional Institutions AI Automation Systems</p>
+        </div>
+
+        <!-- 독립 헌법기관 -->
+        <div class="section">
+            <div class="section-title">
+                <span class="icon">⚖️</span>
+                <h2>독립 헌법기관</h2>
+                <span class="count">(3개)</span>
+            </div>
+            <div class="card-grid">
+                <div class="institution-card" onclick="window.open('/constitutional-court/', '_blank')">
+                    <h3>헌법재판소</h3>
+                    <div class="subtitle">Constitutional Court</div>
+                    <div class="description">위헌법률심사, 탄핵심판, 정당해산 결정</div>
+                    <div class="ai-badge">AI</div>
+                </div>
+                <div class="institution-card" onclick="window.open('/election-commission/', '_blank')">
+                    <h3>중앙선거관리위원회</h3>
+                    <div class="subtitle">National Election Commission</div>
+                    <div class="description">선거·국민투표 관리, 정당·정치자금 관리</div>
+                    <div class="ai-badge">AI</div>
+                </div>
+                <div class="institution-card" onclick="window.open('/board-audit/', '_blank')">
+                    <h3>감사원</h3>
+                    <div class="subtitle">Board of Audit and Inspection</div>
+                    <div class="description">국가 재정 감사, 행정기관 직무 감찰</div>
+                    <div class="ai-badge">AI</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
