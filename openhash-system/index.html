@@ -3,37 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenHash - 국가 자동화 시스템</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>오픈해시(OpenHash) 기술 소개 | 국가 자동화 플랫폼</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.5.0/umd/Recharts.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'gov-blue': '#003876',
-                        'gov-blue-light': '#0066cc',
-                        'gov-gray': '#f5f5f5',
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#1D6FA5',
+                        'gov-blue-lighter': '#5FA8D3',
+                        'gov-gray': '#F8F9FA',
                         'gov-text': '#212529',
-                        'gov-text-secondary': '#6c757d',
-                        'gov-border': '#dee2e6'
+                        'gov-text-secondary': '#495057',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
                     }
                 }
             }
         }
     </script>
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #FFFFFF; }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="bg-white text-gov-text">
 
-    <!-- Components -->
+    <!-- 데모 배너 -->
+    <div style="background:#4B5563;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+        <p style="font-size:14px;font-weight:600;margin:0;">⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</p>
+        <div style="display:flex;gap:20px;">
+            <a href="http://100.30.14.224/openhash-system/" style="color:white;text-decoration:none;font-size:14px;font-weight:600;display:flex;align-items:center;gap:4px;">
+                <span>Openhash</span>
+                <i class="fas fa-question-circle" style="font-size:16px;"></i>
+            </a>
+            <a href="http://100.30.14.224/national-data-registry/" style="color:white;text-decoration:underline;font-size:14px;font-weight:600;">국가 데이터처</a>
+        </div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <!-- 컴포넌트 로드 -->
     <script type="text/babel" src="js/components/Header.js"></script>
-    <script type="text/babel" src="js/components/Hero.js"></script>
     <script type="text/babel" src="js/components/Overview.js"></script>
     <script type="text/babel" src="js/components/Architecture.js"></script>
+    <script type="text/babel" src="js/components/TechnicalTabs.js"></script>
     <script type="text/babel" src="js/components/Tab1ProbabilisticSelection.js"></script>
     <script type="text/babel" src="js/components/Tab2NodeManagement.js"></script>
     <script type="text/babel" src="js/components/Tab3HashChainInterlock.js"></script>
@@ -42,32 +66,10 @@
     <script type="text/babel" src="js/components/Tab6PDV.js"></script>
     <script type="text/babel" src="js/components/Tab7AIMultiAgent.js"></script>
     <script type="text/babel" src="js/components/Tab8OfflineBatch.js"></script>
-    <script type="text/babel" src="js/components/TechnicalTabs.js"></script>
     <script type="text/babel" src="js/components/Comparison.js"></script>
     <script type="text/babel" src="js/components/EnergyCalculator.js"></script>
     <script type="text/babel" src="js/components/AIConsultant.js"></script>
     <script type="text/babel" src="js/components/Footer.js"></script>
-
-    <!-- Main App -->
-    <script type="text/babel">
-        const App = () => {
-            return (
-                <>
-                    <Header />
-                    <Hero />
-                    <Overview />
-                    <Architecture />
-                    <TechnicalTabs />
-                    <Comparison />
-                    <EnergyCalculator />
-                    <AIConsultant />
-                    <Footer />
-                </>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>
