@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자치단체 AI 자동화 시스템 포털</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .org-card {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        .org-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div style="background:#4B5563;color:white;padding:12px;text-align:center;">
+        <p style="font-size:14px;font-weight:600;">⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</p>
+    </div>
+
+    <header class="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-2">🏘️ 자치단체 AI 자동화 시스템</h1>
+            <p class="text-green-100 text-lg">Local Government AI Automation Portal</p>
+            <p class="text-green-200 text-sm mt-2">광역 17개 + 대표 기초 8개 = 총 25개 시스템</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- 광역자치단체 섹션 -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">광역자치단체 (17개)</h2>
+                <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Metropolitan</span>
+            </div>
+
+            <!-- 특별시 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-blue-500 pl-3">특별시 (1개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../seoul-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏢</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">서울특별시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Seoul</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 광역시 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-sky-500 pl-3">광역시 (6개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../busan-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌊</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">부산광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Busan</p>
+                    </a>
+                    <a href="../incheon-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">✈️</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">인천광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Incheon</p>
+                    </a>
+                    <a href="../daegu-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🍎</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">대구광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Daegu</p>
+                    </a>
+                    <a href="../daejeon-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🔬</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">대전광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Daejeon</p>
+                    </a>
+                    <a href="../gwangju-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🎨</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">광주광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Gwangju</p>
+                    </a>
+                    <a href="../ulsan-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏭</span>
+                            <span class="px-2 py-1 bg-sky-100 text-sky-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">울산광역시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Ulsan</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 특별자치시 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-purple-500 pl-3">특별자치시 (1개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../sejong-metro/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏛️</span>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">세종특별자치시</h4>
+                        <p class="text-xs text-gray-500 mt-1">Sejong</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 도 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-green-500 pl-3">도 (6개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../gyeonggi-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏙️</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">경기도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Gyeonggi-do</p>
+                    </a>
+                    <a href="../chungbuk-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏔️</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">충청북도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Chungbuk</p>
+                    </a>
+                    <a href="../chungnam-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌾</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">충청남도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Chungnam</p>
+                    </a>
+                    <a href="../jeonnam-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌿</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">전라남도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Jeonnam</p>
+                    </a>
+                    <a href="../gyeongbuk-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏯</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">경상북도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Gyeongbuk</p>
+                    </a>
+                    <a href="../gyeongnam-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">⚓</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">경상남도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Gyeongnam</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 특별자치도 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-teal-500 pl-3">특별자치도 (3개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../gangwon-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">⛷️</span>
+                            <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">강원특별자치도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Gangwon</p>
+                    </a>
+                    <a href="../jeonbuk-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌸</span>
+                            <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">전북특별자치도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Jeonbuk</p>
+                    </a>
+                    <a href="../jeju-do/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🍊</span>
+                            <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded text-xs font-semibold">AI</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">제주특별자치도</h4>
+                        <p class="text-xs text-gray-500 mt-1">Jeju</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 대표 기초자치단체 섹션 -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">대표 기초/행정 자치단체 (8개)</h2>
+                <span class="ml-4 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold">Basic/Administrative</span>
+            </div>
+
+            <!-- 자치권 있는 대표 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-blue-500 pl-3">자치권 보유 (3개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../suwon-city/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏰</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">자치시</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">수원시</h4>
+                        <p class="text-xs text-gray-500 mt-1">경기도 · Suwon</p>
+                    </a>
+                    <a href="../ganghwa-county/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏝️</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">자치군</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">강화군</h4>
+                        <p class="text-xs text-gray-500 mt-1">인천광역시 · Ganghwa</p>
+                    </a>
+                    <a href="../gangnam-district/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">💼</span>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-semibold">자치구</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">강남구</h4>
+                        <p class="text-xs text-gray-500 mt-1">서울특별시 · Gangnam</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 제주도 행정 단위 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 border-l-4 border-orange-500 pl-3">제주도 행정 단위 (5개)</h3>
+                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="../jeju-city/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌺</span>
+                            <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs font-semibold">행정시</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">제주시</h4>
+                        <p class="text-xs text-gray-500 mt-1">제주특별자치도 · Jeju</p>
+                    </a>
+                    <a href="../seogwipo-city/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏖️</span>
+                            <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs font-semibold">행정시</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">서귀포시</h4>
+                        <p class="text-xs text-gray-500 mt-1">제주특별자치도 · Seogwipo</p>
+                    </a>
+                    <a href="../aewol-eup/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌅</span>
+                            <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs font-semibold">읍</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">애월읍</h4>
+                        <p class="text-xs text-gray-500 mt-1">제주시 · Aewol</p>
+                    </a>
+                    <a href="../hallim-myeon/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌳</span>
+                            <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded text-xs font-semibold">면</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">한림면</h4>
+                        <p class="text-xs text-gray-500 mt-1">제주시 · Hallim</p>
+                    </a>
+                    <a href="../ildo1-dong/" class="org-card bg-white rounded-lg p-4 block">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🏘️</span>
+                            <span class="px-2 py-1 bg-cyan-100 text-cyan-700 rounded text-xs font-semibold">동</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">일도1동</h4>
+                        <p class="text-xs text-gray-500 mt-1">제주시 · Ildo 1-dong</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 돌아가기 -->
+        <div class="text-center">
+            <a href="index.html" class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                ← 국가 포털로 돌아가기
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-400">© 2025 OpenHash 자치단체 AI 자동화 시스템 데모</p>
+            <p class="text-gray-500 text-sm mt-2">광역 17개 + 대표 기초 8개 = 총 25개 시스템</p>
+        </div>
+    </footer>
+</body>
+</html>
