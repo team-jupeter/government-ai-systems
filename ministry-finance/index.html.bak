@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기획재정부 AI 자동화 시스템</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .openhash-badge { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body class="text-white">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        const App = () => {
+            const [health, setHealth] = useState(null);
+            const [hashChain, setHashChain] = useState([]);
+            const [chatMessage, setChatMessage] = useState('');
+            const [chatHistory, setChatHistory] = useState([]);
+            const [loading, setLoading] = useState(false);
+            
+            useEffect(() => {
+                fetch('/api/ministry-finance/health')
+                    .then(r => r.json())
+                    .then(setHealth)
+                    .catch(() => setHealth({ status: 'offline' }));
+                    
+                fetch('/api/ministry-finance/hash-chain?limit=5')
+                    .then(r => r.json())
+                    .then(data => setHashChain(data.chain || []))
+                    .catch(() => {});
+            }, []);
+            
+            const sendMessage = async () => {
+                if (!chatMessage.trim() || loading) return;
+                setLoading(true);
+                setChatHistory(prev => [...prev, { role: 'user', content: chatMessage }]);
+                const msg = chatMessage;
+                setChatMessage('');
+                
+                try {
+                    const res = await fetch('/api/ministry-finance/ai/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: msg })
+                    });
+                    const data = await res.json();
+                    setChatHistory(prev => [...prev, { role: 'assistant', content: data.response || '응답 오류' }]);
+                } catch (e) {
+                    setChatHistory(prev => [...prev, { role: 'assistant', content: '네트워크 오류가 발생했습니다.' }]);
+                }
+                setLoading(false);
+            };
+            
+            return (
+                <div className="min-h-screen p-6">
+                    {/* Header */}
+                    <header className="glass rounded-2xl p-6 mb-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <span className="text-5xl">💰</span>
+                                <div>
+                                    <h1 className="text-3xl font-bold">기획재정부</h1>
+                                    <p className="text-gray-400">AI 자동화 시스템 | OpenHash 기반</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className={`px-3 py-1 rounded-full text-sm ${health?.status === 'ok' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                    {health?.status === 'ok' ? '● 운영중' : '○ 오프라인'}
+                                </span>
+                                <span className="openhash-badge px-3 py-1 rounded-full text-sm text-white">
+                                    <i className="fas fa-link mr-1"></i> OpenHash 검증됨
+                                </span>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* AI 상담 */}
+                        <div className="lg:col-span-2 glass rounded-2xl p-6">
+                            <h2 className="text-xl font-bold mb-4"><i className="fas fa-robot mr-2 text-cyan-400"></i>AI 업무 상담</h2>
+                            <div className="bg-slate-900/50 rounded-xl p-4 h-80 overflow-y-auto mb-4">
+                                {chatHistory.length === 0 ? (
+                                    <p className="text-gray-500 text-center mt-20">기획재정부 AI 에이전트에게 질문하세요</p>
+                                ) : (
+                                    chatHistory.map((msg, i) => (
+                                        <div key={i} className={`mb-3 ${msg.role === 'user' ? 'text-right' : ''}`}>
+                                            <span className={`inline-block px-4 py-2 rounded-xl max-w-[80%] ${msg.role === 'user' ? 'bg-blue-600' : 'bg-slate-700'}`}>
+                                                {msg.content}
+                                            </span>
+                                        </div>
+                                    ))
+                                )}
+                                {loading && <p className="text-cyan-400 animate-pulse">AI 응답 생성 중...</p>}
+                            </div>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={chatMessage}
+                                    onChange={e => setChatMessage(e.target.value)}
+                                    onKeyPress={e => e.key === 'Enter' && sendMessage()}
+                                    placeholder="메시지를 입력하세요..."
+                                    className="flex-1 bg-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                />
+                                <button onClick={sendMessage} disabled={loading} className="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 rounded-xl">
+                                    <i className="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* OpenHash 상태 */}
+                        <div className="glass rounded-2xl p-6">
+                            <h2 className="text-xl font-bold mb-4"><i className="fas fa-link mr-2 text-cyan-400"></i>OpenHash 체인</h2>
+                            <div className="space-y-3">
+                                {hashChain.length === 0 ? (
+                                    <p className="text-gray-500">체인 데이터 로딩 중...</p>
+                                ) : (
+                                    hashChain.map((block, i) => (
+                                        <div key={i} className="bg-slate-800/50 rounded-lg p-3">
+                                            <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                                <span>#{block.index || i}</span>
+                                                <span>{block.timestamp || 'N/A'}</span>
+                                            </div>
+                                            <p className="text-xs font-mono text-cyan-400 truncate">{block.hash || 'N/A'}</p>
+                                            <p className="text-sm mt-1">{block.action || block.data || 'N/A'}</p>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Footer */}
+                    <footer className="mt-6 text-center text-gray-500 text-sm">
+                        <p>기획재정부 AI 자동화 시스템 | OpenHash 기반 데이터 무결성 보장</p>
+                        <p className="mt-1">© 2025 대한민국 정부 AI 통합 플랫폼</p>
+                    </footer>
+                </div>
+            );
+        };
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

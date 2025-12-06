@@ -3,79 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>디지털 화폐 시스템 - OpenHash Platform</title>
-    <link rel="stylesheet" href="/shared/common.css">
-<link rel="stylesheet" href="/shared/inject.css">
-</head>
-<body>
-<a href="/" class="openhash-portal-btn">🏠 포털</a>
-<div class="openhash-badge">⛓️ OpenHash Powered</div>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">💰</div>
-            <div class="logo-text"><h1>디지털 화폐 시스템</h1><p>OpenHash Government AI</p></div>
-        </div>
-        <div class="header-actions">
-            <a href="/" class="btn btn-outline">🏠 포털</a>
-            <button class="btn btn-primary" onclick="document.querySelector('.chat-section').scrollIntoView({behavior:'smooth'})">💬 AI 상담</button>
-        </div>
-    </header>
-    <section class="hero">
-        <div class="hero-badge">⛓️ Powered by OpenHash Technology</div>
-        <h2>디지털 화폐 시스템</h2>
-        <p class="hero-subtitle">민간 경쟁형 디지털 화폐 생태계</p>
-        <div class="stats-banner">
-            <div class="stat-box"><div class="stat-icon">🤖</div><div class="stat-value">5+</div><div class="stat-label">AI 에이전트</div></div>
-            <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-value">4ms</div><div class="stat-label">응답 시간</div></div>
-            <div class="stat-box"><div class="stat-icon">🔒</div><div class="stat-value">100%</div><div class="stat-label">무결성</div></div>
-            <div class="stat-box"><div class="stat-icon">🌐</div><div class="stat-value">24/7</div><div class="stat-label">서비스</div></div>
-        </div>
-    </section>
-    <main class="main-container">
-        <div class="section-title"><h3>🤖 AI 에이전트</h3><p>전문 AI가 업무를 지원합니다</p></div>
-        <div class="agent-list"><span class="agent-tag">🤖 화폐 상담</span><span class="agent-tag">🤖 환율 최적화</span><span class="agent-tag">🤖 거래 분석</span><span class="agent-tag">🤖 정책 자문</span><span class="agent-tag">🤖 시장 동향</span></div>
-        <section class="chat-section">
-            <div class="chat-header"><span style="font-size:2rem">💬</span><h3>AI 상담</h3></div>
-            <div class="chat-messages" id="chatMessages"><div class="chat-message assistant">안녕하세요! <strong>디지털 화폐 시스템</strong> AI입니다. 무엇을 도와드릴까요?</div></div>
-            <div class="chat-input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="btn btn-primary" onclick="sendMessage()">전송</button>
-            </div>
-        </section>
-        <section style="margin-top:50px">
-            <div class="section-title"><h3>✨ 주요 기능</h3></div>
-            <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon">⚡</div><h4>실시간 처리</h4><p>4ms 이내 즉각 응답</p></div>
-                <div class="feature-card"><div class="feature-icon">🔒</div><h4>데이터 보안</h4><p>OpenHash 무결성 보장</p></div>
-                <div class="feature-card"><div class="feature-icon">🤖</div><h4>AI 자동화</h4><p>24시간 업무 지원</p></div>
-                <div class="feature-card"><div class="feature-icon">📊</div><h4>투명 기록</h4><p>불변 기록 및 추적</p></div>
-            </div>
-        </section>
-        <div class="info-box"><h4>ℹ️ OpenHash 기술</h4><p>블록체인 대비 98.5% 에너지 절감, 1000배 빠른 처리 속도, 확률적 계층 선택으로 데이터 무결성 보장</p></div>
-    </main>
-    <footer class="footer">
-        <div class="footer-logo">⛓️</div>
-        <p><strong>디지털 화폐 시스템</strong></p>
-        <p>OpenHash Government AI Platform</p>
-        <div class="footer-links"><a href="/">🏠 포털</a><a href="/api/currency/info">📡 API</a></div>
-        <p style="margin-top:20px;font-size:0.85rem">© 2025 OpenHash Foundation</p>
-    </footer>
+    <title>FPGA 및 AI 기반 통합 디지털 화폐 시스템 | 대한민국 정부</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- PropTypes (Recharts 의존성) -->
+    <script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    
+    <!-- Recharts (PropTypes 이후에 로드) -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
-        async function sendMessage(){
-            const input=document.getElementById('chatInput'),messages=document.getElementById('chatMessages'),text=input.value.trim();
-            if(!text)return;
-            messages.innerHTML+='<div class="chat-message user">'+text+'</div>';
-            input.value='';messages.scrollTop=messages.scrollHeight;
-            const lid='l'+Date.now();
-            messages.innerHTML+='<div class="chat-message assistant" id="'+lid+'">⏳ 응답 중...</div>';
-            messages.scrollTop=messages.scrollHeight;
-            try{
-                const r=await fetch('/api/currency/consultation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,agent_type:'default'})});
-                const d=await r.json();
-                document.getElementById(lid).innerHTML=d.response||'죄송합니다. 응답 오류입니다.';
-            }catch(e){document.getElementById(lid).innerHTML='⚠️ 연결 오류';}
-            messages.scrollTop=messages.scrollHeight;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#1D6FA5',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
         }
     </script>
+    <style>
+        @keyframes slideDown {
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-slideDown {
+            animation: slideDown 0.5s ease-out;
+        }
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #FFFFFF; }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- 공통 컴포넌트 -->
+    <script type="text/babel" src="js/common/StatCard.js?v=6"></script>
+    <script type="text/babel" src="js/common/TechCard.js?v=6"></script>
+    <script type="text/babel" src="js/common/PerformanceChart.js?v=6"></script>
+    
+    <!-- 메인 컴포넌트 -->
+    <script type="text/babel" src="js/components/Header.js?v=6"></script>
+    <script type="text/babel" src="js/components/Footer.js?v=6"></script>
+    <script type="text/babel" src="js/components/Overview.js?v=6"></script>
+    <script type="text/babel" src="js/components/FPGAHardware.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIVerification.js?v=6"></script>
+    <script type="text/babel" src="js/components/FinancialStatement.js?v=6"></script>
+    <script type="text/babel" src="js/components/TaxAutomation.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIVerification.js?v=6"></script>
+    <script type="text/babel" src="js/components/IntegratedFinance.js?v=6"></script>
+    <script type="text/babel" src="js/components/RegulationCompliance.js?v=6"></script>
+    <script type="text/babel" src="js/components/PerformanceComparison.js?v=6"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=6"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js?v=6"></script>
 </body>
 </html>
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-slideDown {
+            animation: slideDown 0.5s ease-out;
+        }
+</style>

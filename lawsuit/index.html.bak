@@ -3,79 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소송 관리 시스템 - OpenHash Platform</title>
-    <link rel="stylesheet" href="/shared/common.css">
-<link rel="stylesheet" href="/shared/inject.css">
-</head>
-<body>
-<a href="/" class="openhash-portal-btn">🏠 포털</a>
-<div class="openhash-badge">⛓️ OpenHash Powered</div>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">📋</div>
-            <div class="logo-text"><h1>소송 관리 시스템</h1><p>OpenHash Government AI</p></div>
-        </div>
-        <div class="header-actions">
-            <a href="/" class="btn btn-outline">🏠 포털</a>
-            <button class="btn btn-primary" onclick="document.querySelector('.chat-section').scrollIntoView({behavior:'smooth'})">💬 AI 상담</button>
-        </div>
-    </header>
-    <section class="hero">
-        <div class="hero-badge">⛓️ Powered by OpenHash Technology</div>
-        <h2>소송 관리 시스템</h2>
-        <p class="hero-subtitle">소송 진행 및 문서 관리 자동화</p>
-        <div class="stats-banner">
-            <div class="stat-box"><div class="stat-icon">🤖</div><div class="stat-value">5+</div><div class="stat-label">AI 에이전트</div></div>
-            <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-value">4ms</div><div class="stat-label">응답 시간</div></div>
-            <div class="stat-box"><div class="stat-icon">🔒</div><div class="stat-value">100%</div><div class="stat-label">무결성</div></div>
-            <div class="stat-box"><div class="stat-icon">🌐</div><div class="stat-value">24/7</div><div class="stat-label">서비스</div></div>
-        </div>
-    </section>
-    <main class="main-container">
-        <div class="section-title"><h3>🤖 AI 에이전트</h3><p>전문 AI가 업무를 지원합니다</p></div>
-        <div class="agent-list"><span class="agent-tag">🤖 소송 현황</span><span class="agent-tag">🤖 기일 관리</span><span class="agent-tag">🤖 문서 작성</span><span class="agent-tag">🤖 증거 정리</span><span class="agent-tag">🤖 판결문 분석</span></div>
-        <section class="chat-section">
-            <div class="chat-header"><span style="font-size:2rem">💬</span><h3>AI 상담</h3></div>
-            <div class="chat-messages" id="chatMessages"><div class="chat-message assistant">안녕하세요! <strong>소송 관리 시스템</strong> AI입니다. 무엇을 도와드릴까요?</div></div>
-            <div class="chat-input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="btn btn-primary" onclick="sendMessage()">전송</button>
-            </div>
-        </section>
-        <section style="margin-top:50px">
-            <div class="section-title"><h3>✨ 주요 기능</h3></div>
-            <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon">⚡</div><h4>실시간 처리</h4><p>4ms 이내 즉각 응답</p></div>
-                <div class="feature-card"><div class="feature-icon">🔒</div><h4>데이터 보안</h4><p>OpenHash 무결성 보장</p></div>
-                <div class="feature-card"><div class="feature-icon">🤖</div><h4>AI 자동화</h4><p>24시간 업무 지원</p></div>
-                <div class="feature-card"><div class="feature-icon">📊</div><h4>투명 기록</h4><p>불변 기록 및 추적</p></div>
-            </div>
-        </section>
-        <div class="info-box"><h4>ℹ️ OpenHash 기술</h4><p>블록체인 대비 98.5% 에너지 절감, 1000배 빠른 처리 속도, 확률적 계층 선택으로 데이터 무결성 보장</p></div>
-    </main>
-    <footer class="footer">
-        <div class="footer-logo">⛓️</div>
-        <p><strong>소송 관리 시스템</strong></p>
-        <p>OpenHash Government AI Platform</p>
-        <div class="footer-links"><a href="/">🏠 포털</a><a href="/api/lawsuit/info">📡 API</a></div>
-        <p style="margin-top:20px;font-size:0.85rem">© 2025 OpenHash Foundation</p>
-    </footer>
-    <script>
-        async function sendMessage(){
-            const input=document.getElementById('chatInput'),messages=document.getElementById('chatMessages'),text=input.value.trim();
-            if(!text)return;
-            messages.innerHTML+='<div class="chat-message user">'+text+'</div>';
-            input.value='';messages.scrollTop=messages.scrollHeight;
-            const lid='l'+Date.now();
-            messages.innerHTML+='<div class="chat-message assistant" id="'+lid+'">⏳ 응답 중...</div>';
-            messages.scrollTop=messages.scrollHeight;
-            try{
-                const r=await fetch('/api/lawsuit/consultation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,agent_type:'default'})});
-                const d=await r.json();
-                document.getElementById(lid).innerHTML=d.response||'죄송합니다. 응답 오류입니다.';
-            }catch(e){document.getElementById(lid).innerHTML='⚠️ 연결 오류';}
-            messages.scrollTop=messages.scrollHeight;
+    <title>AI 전자소송 시스템 | 국가데이터처 통합 오픈해시 기반</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; }
+        
+        /* 전자소송 스타일 색상 */
+        :root {
+            --court-blue: #1a4480;
+            --court-blue-dark: #0d2240;
+            --court-gold: #c9a227;
+            --court-red: #b91c1c;
+            --court-green: #166534;
         }
-    </script>
+        
+        .court-header { background: linear-gradient(135deg, #1a4480 0%, #0d2240 100%); }
+        .court-nav { background: #2d3748; }
+        .court-sidebar { background: #f7fafc; border-right: 1px solid #e2e8f0; }
+        
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+        
+        .btn-court { 
+            background: linear-gradient(135deg, #1a4480 0%, #2563eb 100%); 
+            transition: all 0.3s;
+        }
+        .btn-court:hover { 
+            background: linear-gradient(135deg, #0d2240 0%, #1d4ed8 100%); 
+            transform: translateY(-1px);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+        }
+        
+        /* 플로팅 버튼 */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            animation: pulse-float 2s ease-in-out infinite;
+        }
+        @keyframes pulse-float {
+            0%, 100% { transform: translateY(0); box-shadow: 0 4px 20px rgba(26,68,128,0.4); }
+            50% { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(26,68,128,0.6); }
+        }
+        
+        /* 오픈해시 배너 */
+        .openhash-banner {
+            background: linear-gradient(90deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            border-bottom: 2px solid #c9a227;
+        }
+        
+        /* 탭 스타일 */
+        .tab-active { 
+            border-bottom: 3px solid #c9a227; 
+            color: #c9a227;
+            font-weight: bold;
+        }
+        
+        /* 사이드바 메뉴 */
+        .sidebar-menu-item {
+            padding: 12px 16px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .sidebar-menu-item:hover {
+            background: #edf2f7;
+            border-left-color: #1a4480;
+        }
+        .sidebar-menu-item.active {
+            background: #e2e8f0;
+            border-left-color: #c9a227;
+            font-weight: 600;
+        }
+        
+        /* AI 채팅 스타일 */
+        .ai-message {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid #1a4480;
+        }
+        .user-message {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-left: 4px solid #166534;
+        }
+        
+        /* 모달 오버레이 */
+        .modal-overlay {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* 스크롤바 스타일 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1a4480; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d2240; }
+        
+        /* 상태 배지 */
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-progress { background: #dbeafe; color: #1e40af; }
+        .status-complete { background: #dcfce7; color: #166534; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        
+        /* 로딩 애니메이션 */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-spin { animation: spin 1s linear infinite; }
+        
+        /* AI 타이핑 효과 */
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+        .typing-dot { animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- React 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Navigation.js"></script>
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/SystemExplainer.js"></script>
+    <script type="text/babel" src="js/components/ComplaintDrafting.js"></script>
+    <script type="text/babel" src="js/components/AnswerDrafting.js"></script>
+    <script type="text/babel" src="js/components/BriefDrafting.js"></script>
+    <script type="text/babel" src="js/components/CaseManagement.js"></script>
+    <script type="text/babel" src="js/components/WinRatePrediction.js"></script>
+    <script type="text/babel" src="js/components/PrecedentSearch.js"></script>
+    <script type="text/babel" src="js/components/GlobalComparison.js"></script>
+    <script type="text/babel" src="js/components/TrialSimulation.js"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/components/FeePayment.js"></script>
+    <script type="text/babel" src="js/components/LegislativeFeedback.js"></script>
+    <script type="text/babel" src="js/components/CostCalculator.js"></script>
+    <script type="text/babel" src="js/components/DraftDocuments.js"></script>
+    <script type="text/babel" src="js/components/NotificationService.js"></script>
+    <script type="text/babel" src="js/components/ElectronicService.js"></script>
+    <script type="text/babel" src="js/components/RecordViewer.js"></script>
+    <script type="text/babel" src="js/components/DocumentIssuance.js"></script>
+    <script type="text/babel" src="js/components/PaymentOrder.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>

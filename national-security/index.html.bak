@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가안보실 AI 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-security { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .pulse-red { animation: pulse-red 2s ease-in-out infinite; }
+        @keyframes pulse-red { 0%,100%{box-shadow:0 0 20px rgba(239,68,68,0.5)} 50%{box-shadow:0 0 40px rgba(239,68,68,0.8)} }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    <script type="text/babel">
+const API_BASE = '/api/national-security';
+
+const App = () => {
+    const [stats, setStats] = React.useState(null);
+    const [agents, setAgents] = React.useState([]);
+    const [selectedAgent, setSelectedAgent] = React.useState(null);
+    const [query, setQuery] = React.useState('');
+    const [response, setResponse] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+    const [showDataRegistry, setShowDataRegistry] = React.useState(false);
+    const [floatingExpanded, setFloatingExpanded] = React.useState(false);
+    const [floatingMinimized, setFloatingMinimized] = React.useState(false);
+    const [chatQuery, setChatQuery] = React.useState('');
+    const [chatHistory, setChatHistory] = React.useState([]);
+
+    React.useEffect(() => {
+        fetch(`${API_BASE}/stats`).then(r => r.json()).then(d => d.success && setStats(d.stats));
+        fetch(`${API_BASE}/agents`).then(r => r.json()).then(d => d.success && setAgents(d.agents));
+    }, []);
+
+    const handleQuery = async () => {
+        if (!selectedAgent || !query.trim()) return;
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/agent/query`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({agent_id: selectedAgent.id, query})
+            });
+            setResponse(await res.json());
+        } catch(e) { setResponse({success: false, error: e.message}); }
+        setLoading(false);
+    };
+
+    const handleChat = async () => {
+        if (!chatQuery.trim()) return;
+        setChatHistory(prev => [...prev, {role: 'user', content: chatQuery}]);
+        const q = chatQuery;
+        setChatQuery('');
+        try {
+            const res = await fetch(`${API_BASE}/ai-consultation`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({query: q})
+            });
+            const data = await res.json();
+            setChatHistory(prev => [...prev, {role: 'assistant', content: data.success ? data.response : '오류 발생'}]);
+        } catch(e) { setChatHistory(prev => [...prev, {role: 'assistant', content: '연결 오류'}]); }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-900">
+            {/* 상단 배너 */}
+            <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900 py-2 px-4 text-center">
+                <a href="http://100.30.14.224/openhash.html" target="_blank" className="text-purple-200 hover:text-white text-sm">
+                    <i className="fas fa-book-open mr-2"></i>OpenHash 기술 설명서 보기 <i className="fas fa-external-link-alt text-xs ml-1"></i>
+                </a>
+            </div>
+
+            {/* 헤더 */}
+            <header className="gradient-security py-8 px-4 border-b-4 border-red-600 relative">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center pulse-red">
+                                <i className="fas fa-shield-alt text-3xl"></i>
+                            </div>
+                            <div>
+                                <h1 className="text-3xl font-bold">국가안보실 AI 시스템</h1>
+                                <p className="text-gray-400 text-sm">National Security Office AI System</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <button onClick={() => setShowDataRegistry(!showDataRegistry)} className="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg">
+                                <i className="fas fa-database mr-2"></i>국가데이터처
+                            </button>
+                            <div className="text-right">
+                                <p className="text-red-400 text-sm font-semibold">보안 등급: 최고</p>
+                                <p className="text-gray-400 text-xs">OpenHash 검증</p>
+                            </div>
+                        </div>
+                    </div>
+                    {stats && (
+                        <div className="grid grid-cols-4 gap-4 mt-6">
+                            <div className="bg-white/10 rounded-lg p-4 text-center">
+                                <p className="text-3xl font-bold text-red-400">{stats.total_ai_agents}</p>
+                                <p className="text-gray-400 text-sm">AI 에이전트</p>
+                            </div>
+                            <div className="bg-white/10 rounded-lg p-4 text-center">
+                                <p className="text-3xl font-bold text-red-400">{stats.connected_agencies}</p>
+                                <p className="text-gray-400 text-sm">연동 기관</p>
+                            </div>
+                            <div className="bg-white/10 rounded-lg p-4 text-center">
+                                <p className="text-3xl font-bold text-red-400">24/7</p>
+                                <p className="text-gray-400 text-sm">위기관리센터</p>
+                            </div>
+                            <div className="bg-white/10 rounded-lg p-4 text-center">
+                                <p className="text-xl font-bold text-green-400"><i className="fas fa-check-circle mr-2"></i>정상</p>
+                                <p className="text-gray-400 text-sm">시스템 상태</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                {showDataRegistry && (
+                    <div className="absolute top-full right-4 mt-2 w-96 bg-gray-800 border border-emerald-500 rounded-xl shadow-2xl z-50 p-4">
+                        <h3 className="font-bold text-emerald-400 mb-3"><i className="fas fa-database mr-2"></i>국가데이터처 연계</h3>
+                        <p className="text-gray-300 text-sm mb-3">모든 안보 데이터는 국가데이터처를 통해 암호화되어 저장되며, OpenHash로 무결성이 검증됩니다.</p>
+                        <a href="/national-data-registry/" className="block bg-emerald-600 text-center py-2 rounded-lg hover:bg-emerald-700">바로가기</a>
+                    </div>
+                )}
+            </header>
+
+            {/* 에이전트 목록 */}
+            <section className="py-8 px-4">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-6"><i className="fas fa-users-cog mr-3 text-red-500"></i>AI 에이전트</h2>
+                    <div className="grid grid-cols-5 gap-4">
+                        {agents.map(agent => (
+                            <div key={agent.id} onClick={() => setSelectedAgent(agent)}
+                                className={`bg-gray-800 p-4 rounded-lg cursor-pointer hover:bg-gray-700 border-2 ${selectedAgent?.id === agent.id ? 'border-red-500' : 'border-transparent'}`}>
+                                <p className="font-semibold text-red-300">{agent.name}</p>
+                                <p className="text-gray-500 text-xs mt-1">{agent.role}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 질의 섹션 */}
+            {selectedAgent && (
+                <section className="py-8 px-4 bg-gray-800/50">
+                    <div className="max-w-4xl mx-auto">
+                        <h3 className="text-xl font-bold mb-4 text-red-400">{selectedAgent.name}에게 질의</h3>
+                        <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="질문을 입력하세요..."
+                            className="w-full bg-gray-700 border border-gray-600 rounded-lg p-4 text-white mb-4" rows={4}/>
+                        <button onClick={handleQuery} disabled={loading} className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg font-bold disabled:opacity-50">
+                            {loading ? <><i className="fas fa-spinner fa-spin mr-2"></i>처리 중...</> : <><i className="fas fa-paper-plane mr-2"></i>질의 전송</>}
+                        </button>
+                        {response && (
+                            <div className={`mt-4 p-4 rounded-lg ${response.success ? 'bg-gray-700' : 'bg-red-900/50'}`}>
+                                {response.success ? <p className="text-gray-200 whitespace-pre-wrap">{response.response}</p> : <p className="text-red-400">{response.error}</p>}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
+
+            {/* Floating Button */}
+            {floatingMinimized ? (
+                <button onClick={() => setFloatingMinimized(false)} className="fixed bottom-6 right-6 w-14 h-14 bg-red-600 rounded-full shadow-2xl flex items-center justify-center z-50 pulse-red">
+                    <i className="fas fa-shield-alt text-xl"></i>
+                </button>
+            ) : floatingExpanded ? (
+                <div className="fixed bottom-6 right-6 w-96 bg-gray-800 border border-red-600 rounded-xl shadow-2xl z-50">
+                    <div className="bg-red-600 px-4 py-3 rounded-t-xl flex justify-between items-center">
+                        <span className="font-bold"><i className="fas fa-shield-alt mr-2"></i>국가안보실 AI</span>
+                        <div>
+                            <button onClick={() => setFloatingMinimized(true)} className="mr-2 hover:bg-white/20 rounded p-1"><i className="fas fa-minus"></i></button>
+                            <button onClick={() => setFloatingExpanded(false)} className="hover:bg-white/20 rounded p-1"><i className="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div className="p-4 max-h-64 overflow-y-auto">
+                        <p className="text-sm text-gray-300 mb-3">국가 안보 전략, 위기 관리, 사이버 보안 등 안보 관련 AI 자동화 시스템입니다.</p>
+                        {chatHistory.slice(-4).map((m, i) => (
+                            <div key={i} className={`text-xs p-2 rounded mb-2 ${m.role === 'user' ? 'bg-red-600 ml-8' : 'bg-gray-700 mr-8'}`}>{m.content.substring(0,150)}</div>
+                        ))}
+                    </div>
+                    <div className="p-3 border-t border-gray-700">
+                        <p className="text-blue-400 text-sm mb-2"><i className="fas fa-comments mr-2"></i>무엇이든 물어보세요</p>
+                        <div className="flex space-x-2">
+                            <input value={chatQuery} onChange={e => setChatQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleChat()}
+                                placeholder="질문 입력..." className="flex-1 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm"/>
+                            <button onClick={handleChat} className="bg-red-600 px-4 rounded"><i className="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <button onClick={() => setFloatingExpanded(true)} className="fixed bottom-6 right-6 w-16 h-16 bg-red-600 rounded-full shadow-2xl flex items-center justify-center z-50 pulse-red">
+                    <i className="fas fa-shield-alt text-xl"></i>
+                </button>
+            )}
+
+            <footer className="bg-gray-800 py-6 px-4 text-center text-gray-500 text-sm">
+                국가안보실 AI 시스템 | OpenHash 무결성 검증 | Claude AI 기반
+            </footer>
+        </div>
+    );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHash 기반 국세 행정 자동화 시스템 | K-Governance</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/umd/Recharts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #4B5563 #1F2937; }
+        *::-webkit-scrollbar { width: 6px; height: 6px; }
+        *::-webkit-scrollbar-track { background: #1F2937; }
+        *::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .pulse-green { animation: pulseGreen 2s infinite; }
+        @keyframes pulseGreen { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-flow { animation: flow 3s ease-in-out infinite; }
+        @keyframes flow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+        .glow-cyan { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+        .number-ticker { font-variant-numeric: tabular-nums; }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- React Components -->
+    <script type="text/babel" src="js/components/Header.js?v=1764388088"></script>
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/RealtimeTax.js"></script>
+    <script type="text/babel" src="js/components/FinancialStatements.js?v=1764374086"></script>
+    <script type="text/babel" src="js/components/TransactionLedger.js"></script>
+    <script type="text/babel" src="js/components/TaxLawDB.js"></script>
+    <script type="text/babel" src="js/components/LayerHierarchy.js"></script>
+    <script type="text/babel" src="js/components/AITaxAgent.js"></script>
+    <script type="text/babel" src="js/components/TaxpayerProfile.js"></script>
+    <script type="text/babel" src="js/components/OpenHashVerify.js"></script>
+    <script type="text/babel" src="js/components/NTSFinancials.js"></script>
+    <script type="text/babel" src="js/components/FloatingAssistant.js?v=1764373083"></script>
+    <script type="text/babel" src="js/app.js?v=1764387734"></script>
+</body>
+</html>

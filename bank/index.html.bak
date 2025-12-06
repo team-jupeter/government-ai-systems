@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 자율 은행 시스템 | FPGA 기반 차세대 금융</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- PropTypes -->
+    <script crossorigin src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bank-blue': '#003D82',
+                        'bank-blue-light': '#0052A3',
+                        'bank-green': '#00A651',
+                        'bank-gold': '#D4AF37',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-slideDown { animation: slideDown 0.5s ease-out; }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #F8F9FA; }
+        
+        /* 아코디언 애니메이션 */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .accordion-content.open {
+            max-height: 8000px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- 공통 컴포넌트 -->
+    <script type="text/babel" src="js/common/StatCard.js?v=3"></script>
+    <script type="text/babel" src="js/common/ServiceCard.js?v=3"></script>
+    <script type="text/babel" src="js/common/ComparisonChart.js?v=3"></script>
+    
+    <!-- 메인 컴포넌트 -->
+    <script type="text/babel" src="js/components/Header.js?v=3"></script>
+    <script type="text/babel" src="js/components/Footer.js?v=3"></script>
+    <script type="text/babel" src="js/components/Overview.js?v=3"></script>
+    <script type="text/babel" src="js/components/FinancialStatement.js?v=3"></script>
+    <script type="text/babel" src="js/components/DepositService.js?v=3"></script>
+    <script type="text/babel" src="js/components/LoanService.js?v=3"></script>
+    <script type="text/babel" src="js/components/CreditRating.js?v=3"></script>
+    <script type="text/babel" src="js/components/AssetManagement.js?v=3"></script>
+    <script type="text/babel" src="js/components/PaymentTransfer.js?v=3"></script>
+    <script type="text/babel" src="js/components/FraudDetection.js?v=3"></script>
+    <script type="text/babel" src="js/components/TrustService.js?v=3"></script>
+    <script type="text/babel" src="js/components/PerformanceDashboard.js?v=3"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=3"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js?v=3"></script>
+</body>
+</html>

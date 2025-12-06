@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가 재무제표 시스템</title>
+    
+    <!-- Pretendard GOV 폰트 -->
+    <link rel="stylesheet" as="style" crossorigin 
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Recharts 2.5.0 -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        :root {
+            /* KRDS 색상 체계 */
+            --primary-50: #e8f1ff;
+            --primary-100: #d1e3ff;
+            --primary-200: #a3c7ff;
+            --primary-300: #75abff;
+            --primary-400: #478fff;
+            --primary-500: #1973ff;
+            --primary-600: #145ccc;
+            --primary-700: #0f4599;
+            --primary-800: #0a2e66;
+            --primary-900: #051733;
+            
+            --secondary-500: #6c757d;
+            --secondary-600: #565e64;
+            
+            --gray-0: #ffffff;
+            --gray-10: #fafafa;
+            --gray-20: #f5f5f5;
+            --gray-30: #e0e0e0;
+            --gray-40: #d6d6d6;
+            --gray-50: #bdbdbd;
+            --gray-60: #999999;
+            --gray-70: #757575;
+            --gray-80: #616161;
+            --gray-90: #424242;
+            --gray-100: #212121;
+            
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --success: #28a745;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--gray-90);
+            background-color: var(--gray-10);
+        }
+        
+        /* 헤더 */
+        header {
+            background-color: var(--gray-0);
+            border-bottom: 3px solid var(--primary-500);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+        }
+        
+        .logo-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-90);
+        }
+        
+        .logo-text p {
+            font-size: 13px;
+            color: var(--gray-70);
+        }
+        
+        /* 네비게이션 */
+        nav {
+            background-color: var(--primary-500);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+        }
+        
+        .nav-tab {
+            padding: 16px 24px;
+            color: rgba(255, 255, 255, 0.9);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+            font-family: inherit;
+        }
+        
+        .nav-tab:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--gray-0);
+        }
+        
+        .nav-tab.active {
+            background-color: var(--gray-0);
+            color: var(--primary-500);
+            font-weight: 600;
+        }
+        
+        .nav-tab:focus {
+            outline: 2px solid var(--gray-0);
+            outline-offset: -2px;
+        }
+        
+        /* 메인 컨텐츠 */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            min-height: calc(100vh - 250px);
+        }
+        
+        /* 푸터 */
+        footer {
+            background-color: var(--gray-90);
+            color: var(--gray-40);
+            padding: 40px 24px;
+            margin-top: 80px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .footer-info {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .footer-info strong {
+            color: var(--gray-20);
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .nav-content {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .nav-tab {
+                white-space: nowrap;
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+            
+            main {
+                padding: 24px 16px;
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+        @keyframes dashSending {
+            from {
+                stroke-dashoffset: 1000;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes dashReturning {
+            from {
+                stroke-dashoffset: -1000;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <!-- 헤더 -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <div class="logo-text">
+                    <h1>국가 재무제표 시스템</h1>
+                    <p>National Financial Statements System</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 네비게이션 -->
+    <nav>
+        <div class="nav-content">
+            <button class="nav-tab active" data-tab="overview">개요</button>
+            <button class="nav-tab" data-tab="structure">재무제표 구성</button>
+            <button class="nav-tab" data-tab="mechanism">거래 메커니즘</button>
+            <button class="nav-tab" data-tab="integration">오픈해시 연동</button>
+            <button class="nav-tab" data-tab="consolidated">결합 재무제표</button>
+            <button class="nav-tab" data-tab="ai-verification">AI 검증</button>
+            <button class="nav-tab" data-tab="security">데이터 보안</button>
+        </div>
+    </nav>
+    
+    <!-- 메인 컨텐츠 -->
+    <main>
+        <div id="root"></div>
+    </main>
+    
+    <!-- 푸터 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <strong>국가 재무제표 시스템</strong><br>
+                © 2024 All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 탭 전환
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabId = tab.dataset.tab;
+                window.dispatchEvent(new CustomEvent('tabChange', { detail: tabId }));
+            });
+        });
+    </script>
+    
+    <!-- 앱 로드 -->
+    <script type="module" src="/national-financial-statements/js/app.js"></script>
+</body>
+</html>

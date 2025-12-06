@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통계청 AI 자동화 시스템</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .kostat-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        .expandable-card {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .expandable-card.expanded {
+            max-height: 1000px;
+            padding: 1rem;
+        }
+        .expandable-card.collapsed {
+            max-height: 0;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 특허 출원을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- Common Components -->
+    <script type="text/babel" src="js/common/StatCard.js"></script>
+    <script type="text/babel" src="js/common/OpenHashBadge.js"></script>
+    <script type="text/babel" src="js/common/FilterPanel.js"></script>
+    <script type="text/babel" src="js/common/LogCard.js"></script>
+    
+    <!-- Page Components -->
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/Organization.js"></script>
+    <script type="text/babel" src="js/components/ActivityLogs.js"></script>
+    <script type="text/babel" src="js/components/NDRIntegration.js"></script>
+    <script type="text/babel" src="js/components/OpenHashAudit.js"></script>
+    <script type="text/babel" src="js/components/AIAutomation.js"></script>
+    <script type="text/babel" src="js/components/Statistics.js"></script>
+    <script type="text/babel" src="js/components/AIChat.js"></script>
+    
+    <!-- Main App -->
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

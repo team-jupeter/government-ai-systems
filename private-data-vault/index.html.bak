@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인정보금고 (PDV) - Private Data Vault System</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#0066CC',
+                        'gov-text': '#1a1a1a',
+                        'gov-text-secondary': '#666666',
+                        'gov-border': '#dddddd'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        /* 정부 사이트 스타일 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #004C9E;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #004C9E;
+        }
+        
+        .subsection-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        
+        .body-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* 네비게이션 고정 */
+        .sticky-nav {
+            position: sticky;
+            top: 64px;
+            z-index: 30;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* 플로팅 AI 버튼 */
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            box-shadow: 0 4px 12px rgba(0,76,158,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+
+    <!-- 컴포넌트 로딩 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/Tab1ExtendedStatement.js"></script>
+    <script type="text/babel" src="js/components/Tab2HashStorage.js"></script>
+    <script type="text/babel" src="js/components/Tab3CrossVerification.js"></script>
+    <script type="text/babel" src="js/components/Tab4ActivityProof.js"></script>
+    <script type="text/babel" src="js/components/Tab5FourLayers.js"></script>
+    <script type="text/babel" src="js/components/Tab6AccessControl.js"></script>
+    <script type="text/babel" src="js/components/Tab7AuthorityNotification.js"></script>
+    <script type="text/babel" src="js/components/Tab8StorageCalc.js"></script>
+    <script type="text/babel" src="js/components/Tab9AWSExperiment.js"></script>
+    <script type="text/babel" src="js/components/Tab10Comparison.js"></script>
+    <script type="text/babel" src="js/components/AIConsultant.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

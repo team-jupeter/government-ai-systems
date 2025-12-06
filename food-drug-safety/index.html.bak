@@ -3,79 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>식약처 안전 시스템 - OpenHash Platform</title>
-    <link rel="stylesheet" href="/shared/common.css">
-<link rel="stylesheet" href="/shared/inject.css">
+    <title>식품의약품안전처 AI 업무 자동화 | OpenHash MFDS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .gradient-mfds { background: linear-gradient(135deg, #065f46 0%, #047857 50%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); } }
+        .pulse-green { animation: pulse-green 2s ease-in-out infinite; }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
 </head>
-<body>
-<a href="/" class="openhash-portal-btn">🏠 포털</a>
-<div class="openhash-badge">⛓️ OpenHash Powered</div>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">🛡️</div>
-            <div class="logo-text"><h1>식약처 안전 시스템</h1><p>OpenHash Government AI</p></div>
-        </div>
-        <div class="header-actions">
-            <a href="/" class="btn btn-outline">🏠 포털</a>
-            <button class="btn btn-primary" onclick="document.querySelector('.chat-section').scrollIntoView({behavior:'smooth'})">💬 AI 상담</button>
-        </div>
-    </header>
-    <section class="hero">
-        <div class="hero-badge">⛓️ Powered by OpenHash Technology</div>
-        <h2>식약처 안전 시스템</h2>
-        <p class="hero-subtitle">식품·의약품 안전 관리 자동화</p>
-        <div class="stats-banner">
-            <div class="stat-box"><div class="stat-icon">🤖</div><div class="stat-value">5+</div><div class="stat-label">AI 에이전트</div></div>
-            <div class="stat-box"><div class="stat-icon">⚡</div><div class="stat-value">4ms</div><div class="stat-label">응답 시간</div></div>
-            <div class="stat-box"><div class="stat-icon">🔒</div><div class="stat-value">100%</div><div class="stat-label">무결성</div></div>
-            <div class="stat-box"><div class="stat-icon">🌐</div><div class="stat-value">24/7</div><div class="stat-label">서비스</div></div>
-        </div>
-    </section>
-    <main class="main-container">
-        <div class="section-title"><h3>🤖 AI 에이전트</h3><p>전문 AI가 업무를 지원합니다</p></div>
-        <div class="agent-list"><span class="agent-tag">🤖 안전성 검사</span><span class="agent-tag">🤖 허가 현황</span><span class="agent-tag">🤖 리콜 정보</span><span class="agent-tag">🤖 부작용 신고</span><span class="agent-tag">🤖 규제 안내</span></div>
-        <section class="chat-section">
-            <div class="chat-header"><span style="font-size:2rem">💬</span><h3>AI 상담</h3></div>
-            <div class="chat-messages" id="chatMessages"><div class="chat-message assistant">안녕하세요! <strong>식약처 안전 시스템</strong> AI입니다. 무엇을 도와드릴까요?</div></div>
-            <div class="chat-input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="btn btn-primary" onclick="sendMessage()">전송</button>
-            </div>
-        </section>
-        <section style="margin-top:50px">
-            <div class="section-title"><h3>✨ 주요 기능</h3></div>
-            <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon">⚡</div><h4>실시간 처리</h4><p>4ms 이내 즉각 응답</p></div>
-                <div class="feature-card"><div class="feature-icon">🔒</div><h4>데이터 보안</h4><p>OpenHash 무결성 보장</p></div>
-                <div class="feature-card"><div class="feature-icon">🤖</div><h4>AI 자동화</h4><p>24시간 업무 지원</p></div>
-                <div class="feature-card"><div class="feature-icon">📊</div><h4>투명 기록</h4><p>불변 기록 및 추적</p></div>
-            </div>
-        </section>
-        <div class="info-box"><h4>ℹ️ OpenHash 기술</h4><p>블록체인 대비 98.5% 에너지 절감, 1000배 빠른 처리 속도, 확률적 계층 선택으로 데이터 무결성 보장</p></div>
-    </main>
-    <footer class="footer">
-        <div class="footer-logo">⛓️</div>
-        <p><strong>식약처 안전 시스템</strong></p>
-        <p>OpenHash Government AI Platform</p>
-        <div class="footer-links"><a href="/">🏠 포털</a><a href="/api/food-drug-safety/info">📡 API</a></div>
-        <p style="margin-top:20px;font-size:0.85rem">© 2025 OpenHash Foundation</p>
-    </footer>
-    <script>
-        async function sendMessage(){
-            const input=document.getElementById('chatInput'),messages=document.getElementById('chatMessages'),text=input.value.trim();
-            if(!text)return;
-            messages.innerHTML+='<div class="chat-message user">'+text+'</div>';
-            input.value='';messages.scrollTop=messages.scrollHeight;
-            const lid='l'+Date.now();
-            messages.innerHTML+='<div class="chat-message assistant" id="'+lid+'">⏳ 응답 중...</div>';
-            messages.scrollTop=messages.scrollHeight;
-            try{
-                const r=await fetch('/api/food-drug-safety/consultation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,agent_type:'default'})});
-                const d=await r.json();
-                document.getElementById(lid).innerHTML=d.response||'죄송합니다. 응답 오류입니다.';
-            }catch(e){document.getElementById(lid).innerHTML='⚠️ 연결 오류';}
-            messages.scrollTop=messages.scrollHeight;
-        }
-    </script>
+<body class="bg-gray-900 text-white">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    <script src="/shared/banner.js"></script>
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/TenPriorityTasks.js"></script>
+    <script type="text/babel" src="js/components/AgentSystem.js"></script>
+    <script type="text/babel" src="js/components/DocumentVerification.js"></script>
+    <script type="text/babel" src="js/components/AgentInteraction.js"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
 </body>
 </html>

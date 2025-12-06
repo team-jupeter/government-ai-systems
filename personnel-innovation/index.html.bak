@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사혁신 시스템 | K-Governance</title>
+    
+    <!-- React 18 -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/umd/Recharts.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { margin: 0; padding: 0; background: #0f172a; }
+        
+        /* 사이드바 스크롤바 스타일 */
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #1e293b; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        /* 그라데이션 배경 */
+        .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1a2e 100%); }
+        .gradient-card { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); }
+        
+        /* 카드 호버 효과 */
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        
+        /* 글로우 효과 */
+        .glow-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+        .glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+        
+        /* 애니메이션 */
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        
+        /* 프로그레스 바 */
+        .progress-bar { background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%); }
+        
+        /* 상태 인디케이터 */
+        .status-online { background: #22c55e; box-shadow: 0 0 10px #22c55e; }
+        .status-processing { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+        
+        /* 데이터 그리드 */
+        .data-grid { display: grid; gap: 1rem; }
+        .data-grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .data-grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .data-grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 1024px) {
+            .data-grid-3, .data-grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .data-grid-2, .data-grid-3, .data-grid-4 { grid-template-columns: 1fr; }
+        }
+    @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } } .animate-progress { animation: progress 2.3s ease-in-out infinite; }</style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- React 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Dashboard.js"></script>
+    <script type="text/babel" src="js/components/IndustryAnalysis.js"></script>
+    <script type="text/babel" src="js/components/NationalWorkforce.js"></script>
+    <script type="text/babel" src="js/components/WorkforceOptimization.js"></script>
+    <script type="text/babel" src="js/components/IndividualCorporation.js"></script>
+    <script type="text/babel" src="js/components/PerformanceTracking.js"></script>
+    <script type="text/babel" src="js/components/AttendanceLog.js"></script>
+    <script type="text/babel" src="js/components/OrganizationPerformance.js"></script>
+    <script type="text/babel" src="js/components/IndividualEvaluation.js"></script>
+    <script type="text/babel" src="js/components/JobMatching.js"></script>
+    <script type="text/babel" src="js/components/TaskAllocation.js"></script>
+    <script type="text/babel" src="js/components/CareerRecommendation.js"></script>
+    <script type="text/babel" src="js/components/RegionalWorkforce.js"></script>
+    <script type="text/babel" src="js/components/CityWorkforce.js"></script>
+    <script type="text/babel" src="js/components/MicroEntity.js"></script>
+    <script type="text/babel" src="js/components/PersonalVault.js"></script>
+    <script type="text/babel" src="js/components/OpenHashVerification.js"></script>
+    <script type="text/babel" src="js/components/AIConsultant.js"></script>
+    <script type="text/babel" src="js/components/FloatingAssistant.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

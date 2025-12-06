@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7단계 개인-사회 통합 최적화 AI 교육 시스템 (K-12)</title>
+    
+    <!-- 외부 라이브러리 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Recharts for Charts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <style>
+        :root {
+            /* KRDS 기반 색상 팔레트 - 간결하고 전문적 */
+            --primary: #0066CC;
+            --primary-dark: #004C99;
+            --primary-light: #3385D6;
+            --secondary: #0099CC;
+            
+            --text-primary: #191919;
+            --text-secondary: #555555;
+            --text-tertiary: #767676;
+            
+            --border: #DDDDDD;
+            --border-light: #E8E8E8;
+            
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8F8F8;
+            --bg-tertiary: #F0F0F0;
+            
+            --success: #0E8A16;
+            --warning: #B76E00;
+            --error: #D41C1C;
+            
+            /* KRDS 기본 폰트 크기 */
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 18px;
+            --font-xl: 20px;
+            --font-2xl: 24px;
+            --font-3xl: 28px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: var(--font-base);
+        }
+        
+        /* 데모 배너 - 간결한 스타일 */
+        .demo-banner {
+            background: var(--warning);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            border-bottom: 2px solid #995C00;
+        }
+        
+        .demo-banner i {
+            font-size: var(--font-base);
+        }
+        
+        /* 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+        
+        /* 헤더 - 단순하고 간결하게 */
+        .header {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 32px 24px;
+            margin-bottom: 24px;
+        }
+        
+        .header h1 {
+            font-size: var(--font-3xl);
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+        }
+        
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .header-meta i {
+            color: var(--primary);
+        }
+        
+        /* 탭 네비게이션 - KRDS 스타일 */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--bg-primary);
+            padding: 4px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .tab-button:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .tab-button i {
+            font-size: var(--font-sm);
+        }
+        
+        /* 콘텐츠 */
+        .content {
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            min-height: 500px;
+        }
+        
+        /* 섹션 */
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .section-header i {
+            font-size: var(--font-xl);
+            color: var(--primary);
+        }
+        
+        .section-header h2 {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        /* 그리드 */
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        
+        /* 카드 - 간결한 스타일 */
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+        }
+        
+        /* 통계 카드 - KRDS 스타일 */
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card.primary { border-left-color: var(--primary); }
+        .stat-card.success { border-left-color: var(--success); }
+        .stat-card.warning { border-left-color: var(--warning); }
+        .stat-card.error { border-left-color: var(--error); }
+        
+        /* 푸터 - 간결한 스타일 */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: var(--font-sm);
+        }
+        
+        .footer p {
+            margin: 6px 0;
+            opacity: 0.9;
+        }
+        
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-sm);
+        }
+        
+        th {
+            background: var(--bg-tertiary);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+        
+        td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        /* 버튼 스타일 */
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid var(--primary);
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: var(--font-xl);
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            .content {
+                padding: 16px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 접근성 */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        /* 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <!-- 데모 시스템 알림 배너 -->
+    <div class="demo-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>본 사이트는 OpenHash 특허 출원을 위한 기술 설명 사이트입니다</span>
+    </div>
+    
+    <!-- React 앱 마운트 -->
+    <div id="root"></div>
+    
+    <!-- 공통 컴포넌트 로드 -->
+    <script type="text/babel" src="js/common/StatCard.js"></script>
+    <script type="text/babel" src="js/common/ServiceCard.js"></script>
+    
+    <!-- 탭 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/SevenSteps.js"></script>
+    <script type="text/babel" src="js/components/AIAgents.js"></script>
+    <script type="text/babel" src="js/components/PersonalizedLearning.js"></script>
+    <script type="text/babel" src="js/components/SocialLearning.js"></script>
+    <script type="text/babel" src="js/components/AdaptiveAssessment.js"></script>
+    <script type="text/babel" src="js/components/LearningAnalytics.js"></script>
+    <script type="text/babel" src="js/components/TeacherSupport.js"></script>
+    <script type="text/babel" src="js/components/PerformanceDashboard.js"></script>
+    
+    <!-- 메인 앱 -->
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>

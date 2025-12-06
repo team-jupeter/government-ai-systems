@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 예방적 사법 시스템 | OpenHash 기반</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .gradient-judicial { 
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%); 
+        }
+        .card-hover { 
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(0, 70, 255, 0.2); 
+        }
+        @keyframes pulse-gov24 { 
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 70, 255, 0.3); } 
+            50% { box-shadow: 0 0 40px rgba(0, 70, 255, 0.6); } 
+        }
+        .pulse-gov24 { 
+            animation: pulse-gov24 2s ease-in-out infinite; 
+        }
+        .section-white { background-color: white; }
+        .section-gray { background-color: #f8f9fa; }
+    </style>
+    <link rel="stylesheet" href="/common/floating-chat.css">
+    <script src="/common/floating-chat.js"></script>
+</head>
+<body>
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <script type="text/babel" src="js/components/Header.js?v=10"></script>
+    <script type="text/babel" src="js/components/CaseAnalysis.js?v=10"></script>
+    <script type="text/babel" src="js/components/PrivateVaultSimulation.js?v=10"></script>
+    <script type="text/babel" src="js/components/EvidenceVault.js?v=10"></script>
+    <script type="text/babel" src="js/components/GlobalComparison.js?v=10"></script>
+    <script type="text/babel" src="js/components/SupremeCourt500.js?v=10"></script>
+    <script type="text/babel" src="js/components/AIConsultation.js?v=10"></script>
+    <script type="text/babel" src="js/app.js?v=10"></script>
+</body>
+</html>

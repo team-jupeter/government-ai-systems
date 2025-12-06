@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시(OpenHash) 기술 소개 | 국가 자동화 플랫폼</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.5.0/umd/Recharts.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#004C9E',
+                        'gov-blue-light': '#1D6FA5',
+                        'gov-blue-lighter': '#5FA8D3',
+                        'gov-gray': '#F8F9FA',
+                        'gov-text': '#212529',
+                        'gov-text-secondary': '#495057',
+                        'gov-border': '#DEE2E6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #FFFFFF; }
+    </style>
+</head>
+<body class="bg-white text-gov-text">
+
+    <!-- 데모 배너 -->
+    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
+        <p class="text-sm font-semibold">
+            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
+        </p>
+    </div>
+    <div id="root"></div>
+    
+    <!-- 컴포넌트 로드 -->
+    <script type="text/babel" src="js/components/Header.js"></script>
+    <script type="text/babel" src="js/components/Overview.js"></script>
+    <script type="text/babel" src="js/components/Architecture.js"></script>
+    <script type="text/babel" src="js/components/TechnicalTabs.js"></script>
+    <script type="text/babel" src="js/components/Tab1ProbabilisticSelection.js"></script>
+    <script type="text/babel" src="js/components/Tab2NodeManagement.js"></script>
+    <script type="text/babel" src="js/components/Tab3HashChainInterlock.js"></script>
+    <script type="text/babel" src="js/components/Tab4DataIntegrity.js"></script>
+    <script type="text/babel" src="js/components/Tab5FraudDetection.js"></script>
+    <script type="text/babel" src="js/components/Tab6PDV.js"></script>
+    <script type="text/babel" src="js/components/Comparison.js"></script>
+    <script type="text/babel" src="js/components/EnergyCalculator.js"></script>
+    <script type="text/babel" src="js/components/AIConsultant.js"></script>
+    <script type="text/babel" src="js/components/Footer.js"></script>
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+</html>
