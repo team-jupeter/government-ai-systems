@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오픈해시(OpenHash) 기술 설명서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        * { 
+            font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif; 
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.8; } 
+        }
+        @keyframes gradient { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        .animate-fadeIn { 
+            animation: fadeIn 0.6s ease-out forwards; 
+        }
+        .animate-pulse { 
+            animation: pulse 2s infinite; 
+        }
+        .animate-gradient { 
+            background-size: 200% 200%; 
+            animation: gradient 3s ease infinite; 
+        }
+        .gov24-gradient {
+            background: linear-gradient(135deg, #0046FF 0%, #1E40AF 50%, #0066CC 100%);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [activeSection, setActiveSection] = useState(0);
+            const sections = [
+                { id: 0, title: '개요', emoji: '🔗' },
+                { id: 1, title: '아키텍처', emoji: '🏗️' },
+                { id: 2, title: '확률적 선택', emoji: '🎲' },
+                { id: 3, title: '상호 검증', emoji: '🛡️' },
+                { id: 4, title: 'Merkle Tree', emoji: '🌳' },
+                { id: 5, title: 'LPBFT', emoji: '🤝' },
+                { id: 6, title: '오프라인', emoji: '📡' },
+                { id: 7, title: '성능', emoji: '📊' },
+            ];
+
+            return (
+                <div className="min-h-screen" style={{backgroundColor: '#f8f9fa'}}>
+                    <Header />
+                    <Navigation sections={sections} activeSection={activeSection} setActiveSection={setActiveSection} />
+                    <main className="max-w-7xl mx-auto px-4 py-8">
+                        {activeSection === 0 && <OverviewSection />}
+                        {activeSection === 1 && <ArchitectureSection />}
+                        {activeSection === 2 && <ProbabilisticSection />}
+                        {activeSection === 3 && <VerificationSection />}
+                        {activeSection === 4 && <MerkleSection />}
+                        {activeSection === 5 && <LPBFTSection />}
+                        {activeSection === 6 && <OfflineSection />}
+                        {activeSection === 7 && <PerformanceSection />}
+                    </main>
+                </div>
+            );
+        }
+
+        function Header() {
+            return (
+                <header className="relative overflow-hidden">
+                    <div className="absolute inset-0 gov24-gradient animate-gradient"></div>
+                    <div className="relative z-10 py-12 px-4 text-center">
+                        <h1 className="text-4xl md:text-5xl font-black mb-4" style={{color: 'white'}}>
+                            🔗 오픈해시(OpenHash)
+                        </h1>
+                        <p className="text-xl" style={{color: '#e0f2fe'}}>
+                            확률적 계층 분산 기반 데이터 무결성 검증 시스템
+                        </p>
+                        <div className="mt-6 flex flex-wrap justify-center gap-4">
+                            <span className="px-4 py-2 rounded-full font-medium" style={{backgroundColor: '#d1fae5', border: '2px solid #10b981', color: '#065f46'}}>
+                                에너지 98.5% 절감
+                            </span>
+                            <span className="px-4 py-2 rounded-full font-medium" style={{backgroundColor: '#dbeafe', border: '2px solid #3b82f6', color: '#1e40af'}}>
+                                481 TPS (11노드)
+                            </span>
+                            <span className="px-4 py-2 rounded-full font-medium" style={{backgroundColor: '#e0e7ff', border: '2px solid #8b5cf6', color: '#5b21b6'}}>
+                                응답 4ms
+                            </span>
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        function Navigation({ sections, activeSection, setActiveSection }) {
+            return (
+                <nav className="sticky top-0 z-50 shadow-md" style={{backgroundColor: 'white', borderBottom: '1px solid #e5e7eb'}}>
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex overflow-x-auto py-3 gap-2">
+                            {sections.map((section) => (
+                                <button 
+                                    key={section.id} 
+                                    onClick={() => setActiveSection(section.id)}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all"
+                                    style={{
+                                        backgroundColor: activeSection === section.id ? '#0046FF' : '#f3f4f6',
+                                        color: activeSection === section.id ? 'white' : '#374151',
+                                        fontWeight: '500',
+                                        boxShadow: activeSection === section.id ? '0 4px 6px rgba(0, 70, 255, 0.2)' : 'none'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        if (activeSection !== section.id) {
+                                            e.target.style.backgroundColor = '#e5e7eb';
+                                        }
+                                    }}
+                                    onMouseOut={(e) => {
+                                        if (activeSection !== section.id) {
+                                            e.target.style.backgroundColor = '#f3f4f6';
+                                        }
+                                    }}
+                                >
+                                    <span>{section.emoji}</span>
+                                    <span className="text-sm font-medium">{section.title}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+
+        function MetricCard({ icon, value, label, color, subtext }) {
+            const colors = {
+                green: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                blue: 'linear-gradient(135deg, #0046FF 0%, #0066CC 100%)',
+                purple: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                orange: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+            };
+            return (
+                <div 
+                    className="rounded-2xl p-6 text-center transform hover:scale-105 transition-all shadow-lg"
+                    style={{background: colors[color], color: 'white'}}
+                >
+                    <div className="text-4xl mb-2">{icon}</div>
+                    <div className="text-3xl font-black">{value}</div>
+                    <div className="text-sm opacity-90">{label}</div>
+                    <div className="text-xs opacity-70 mt-1">{subtext}</div>
+                </div>
+            );
+        }
+
+        function OverviewSection() {
+            const [counters, setCounters] = useState({ energy: 0, tps: 0, time: 0 });
+            useEffect(() => {
+                const duration = 2000, steps = 60;
+                let step = 0;
+                const interval = setInterval(() => {
+                    step++;
+                    const progress = step / steps;
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    setCounters({ 
+                        energy: Math.round(98.5 * easeOut * 10) / 10, 
+                        tps: Math.round(481 * easeOut), 
+                        time: Math.round(150000 * easeOut) 
+                    });
+                    if (step >= steps) clearInterval(interval);
+                }, duration / steps);
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <div className="space-y-8 animate-fadeIn">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <MetricCard icon="⚡" value={`${counters.energy}%`} label="에너지 절감" color="green" subtext="121→1.8 TWh" />
+                        <MetricCard icon="🚀" value={counters.tps} label="TPS (11노드)" color="blue" subtext="비트코인 68배" />
+                        <MetricCard icon="⏱️" value={`${counters.time.toLocaleString()}x`} label="응답 속도" color="purple" subtext="10분→4ms" />
+                        <MetricCard icon="💰" value="99%" label="통신비 절감" color="orange" subtext="오프라인 배치" />
+                    </div>
+                    
+                    <div className="rounded-3xl p-8 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <h2 className="text-2xl font-bold mb-6 text-center" style={{color: '#212529'}}>
+                            🔐 무결성(Integrity) vs 진실성(Truthfulness)
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="rounded-2xl p-6" style={{backgroundColor: '#d1fae5', border: '2px solid #10b981'}}>
+                                <h4 className="text-xl font-bold mb-4" style={{color: '#065f46'}}>✅ 보장하는 것</h4>
+                                <ul className="space-y-2" style={{color: '#374151'}}>
+                                    <li>• 기록 이후 무변조 (Hash 등록 시점 이후)</li>
+                                    <li>• 데이터 존재 증명</li>
+                                    <li>• 시간적 선후 관계 증명</li>
+                                </ul>
+                            </div>
+                            <div className="rounded-2xl p-6" style={{backgroundColor: '#fee2e2', border: '2px solid #ef4444'}}>
+                                <h4 className="text-xl font-bold mb-4" style={{color: '#991b1b'}}>❌ 보장하지 않는 것</h4>
+                                <ul className="space-y-2" style={{color: '#374151'}}>
+                                    <li>• 기록 시점 진실성</li>
+                                    <li>• 데이터 생산자 신뢰도</li>
+                                </ul>
+                                <p className="text-sm mt-4" style={{color: '#92400e'}}>💡 공증인처럼 서명 시점만 증명</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <h3 className="text-xl font-bold mb-4" style={{color: '#212529'}}>📋 주요 도면 부호</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                            {[
+                                {c:'50',n:'사용자 단말'},
+                                {c:'100',n:'Layer 1 Edge'},
+                                {c:'110',n:'Layer 2 Regional'},
+                                {c:'120',n:'Layer 3 Core'},
+                                {c:'130',n:'Layer 4 Archive'},
+                                {c:'300',n:'확률적 선택'},
+                                {c:'310',n:'하향식 검증'},
+                                {c:'320',n:'상향식 감시'}
+                            ].map(s=>(
+                                <div key={s.c} className="rounded-lg p-2" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                    <span className="text-xs px-2 py-0.5 rounded mr-2" style={{backgroundColor: '#0046FF', color: 'white'}}>
+                                        {s.c}
+                                    </span>
+                                    {s.n}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ArchitectureSection() {
+            const [activeLayer, setActiveLayer] = useState(null);
+            const layers = [
+                { id: 4, code: '130', name: 'Layer 4 - Cloud Archive', desc: '영구 보존 (7년+)', icon: '☁️', color: 'linear-gradient(135deg, #ec4899 0%, #be123c 100%)' },
+                { id: 3, code: '120', name: 'Layer 3 - Core Engine', desc: 'Representative 노드, PBFT 7-of-10', icon: '🖥️', color: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' },
+                { id: 2, code: '110', name: 'Layer 2 - Regional', desc: '지역 집약, LPBFT', icon: '🗄️', color: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' },
+                { id: 1, code: '100', name: 'Layer 1 - Edge', desc: '최하위 서버, LPBFT', icon: '📡', color: 'linear-gradient(135deg, #0046FF 0%, #0066CC 100%)' },
+                { id: 0, code: '50', name: '사용자 단말', desc: '데이터 생성 및 해시 추출', icon: '📱', color: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
+            ];
+            
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        🏗️ 시스템 아키텍처 (도 1)
+                    </h2>
+                    <div className="space-y-3">
+                        {layers.map((layer, i) => (
+                            <div key={layer.id}>
+                                <div 
+                                    onClick={() => setActiveLayer(activeLayer === layer.id ? null : layer.id)}
+                                    className="p-5 rounded-2xl cursor-pointer transition-all"
+                                    style={{
+                                        background: layer.color,
+                                        color: 'white',
+                                        transform: activeLayer === layer.id ? 'scale(1.02)' : 'scale(1)',
+                                        boxShadow: activeLayer === layer.id ? '0 0 0 4px rgba(255,255,255,0.5)' : 'none'
+                                    }}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-4xl">{layer.icon}</span>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="px-2 py-0.5 rounded font-mono text-sm" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
+                                                    {layer.code}
+                                                </span>
+                                                <h4 className="font-bold text-lg">{layer.name}</h4>
+                                            </div>
+                                            <p className="text-sm" style={{color: 'rgba(255,255,255,0.9)'}}>{layer.desc}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {i < layers.length - 1 && (
+                                    <div className="flex justify-center py-2">
+                                        <span className="text-2xl" style={{color: '#9ca3af'}}>↑</span>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-4">
+                        <div className="rounded-xl p-4 shadow-sm" style={{backgroundColor: '#dbeafe', border: '1px solid #3b82f6'}}>
+                            <div className="text-2xl mb-2">🔒</div>
+                            <h4 className="font-bold" style={{color: '#1e3a8a'}}>원본 데이터 보호</h4>
+                            <p className="text-sm" style={{color: '#1e40af'}}>사용자 단말만 원본 보관</p>
+                        </div>
+                        <div className="rounded-xl p-4 shadow-sm" style={{backgroundColor: '#e0e7ff', border: '1px solid #8b5cf6'}}>
+                            <div className="text-2xl mb-2">📊</div>
+                            <h4 className="font-bold" style={{color: '#5b21b6'}}>계층 수 가변</h4>
+                            <p className="text-sm" style={{color: '#6d28d9'}}>2~N개 자유 설정</p>
+                        </div>
+                        <div className="rounded-xl p-4 shadow-sm" style={{backgroundColor: '#d1fae5', border: '1px solid #10b981'}}>
+                            <div className="text-2xl mb-2">🔗</div>
+                            <h4 className="font-bold" style={{color: '#065f46'}}>Hash Chain 연동</h4>
+                            <p className="text-sm" style={{color: '#047857'}}>상호 연결 위변조 방지</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ProbabilisticSection() {
+            const [step, setStep] = useState(0);
+            const [nValue, setNValue] = useState(null);
+            const [selectedLayer, setSelectedLayer] = useState(null);
+            const [isRunning, setIsRunning] = useState(false);
+
+            const runSimulation = () => {
+                setIsRunning(true); setStep(0); setNValue(null); setSelectedLayer(null);
+                let currentStep = 0;
+                const interval = setInterval(() => {
+                    currentStep++; setStep(currentStep);
+                    if (currentStep === 5) {
+                        const n = Math.floor(Math.random() * 100);
+                        setNValue(n);
+                        setTimeout(() => {
+                            setSelectedLayer(n < 70 ? 1 : n < 90 ? 2 : 3);
+                        }, 400);
+                    }
+                    if (currentStep >= 7) { clearInterval(interval); setIsRunning(false); }
+                }, 600);
+            };
+
+            const steps = [
+                { num: 1, title: '문서 SHA-256 해싱', icon: '📄' },
+                { num: 2, title: '타임스탬프 생성', icon: '⏰' },
+                { num: 3, title: '1차 재해싱', icon: '🔐' },
+                { num: 4, title: '2차 재해싱', icon: '🔒' },
+                { num: 5, title: '범위 변환 (mod 100)', icon: '🔢' },
+                { num: 6, title: '확률 분포 비교', icon: '📊' },
+                { num: 7, title: '계층 선택 완료', icon: '✅' },
+            ];
+
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        🎲 확률적 계층 선택 (300) - 도 2
+                    </h2>
+                    <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                {steps.map((item, i) => (
+                                    <div 
+                                        key={i} 
+                                        className="flex items-center gap-3 p-3 rounded-xl transition-all"
+                                        style={{
+                                            backgroundColor: step >= item.num ? '#dbeafe' : '#f3f4f6',
+                                            border: step >= item.num ? '1px solid #3b82f6' : '1px solid #e5e7eb'
+                                        }}
+                                    >
+                                        <span 
+                                            className="w-10 h-10 rounded-lg flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: step >= item.num ? '#0046FF' : '#9ca3af',
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {step >= item.num ? item.icon : item.num}
+                                        </span>
+                                        <span className="font-medium" style={{color: '#374151'}}>{item.title}</span>
+                                        {step >= item.num && <span className="ml-auto" style={{color: '#10b981'}}>✓</span>}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="space-y-4">
+                                {nValue !== null && (
+                                    <div className="rounded-xl p-6 text-center animate-fadeIn" style={{backgroundColor: '#e0e7ff'}}>
+                                        <div className="text-sm mb-2" style={{color: '#6b7280'}}>N값</div>
+                                        <div className="text-6xl font-black" style={{color: '#eab308'}}>{nValue}</div>
+                                        <div className="grid grid-cols-3 gap-2 mt-4">
+                                            {[
+                                                {l:1, r:'N<70', p:'70%'},
+                                                {l:2, r:'70≤N<90', p:'20%'},
+                                                {l:3, r:'N≥90', p:'10%'}
+                                            ].map(item=>(
+                                                <div 
+                                                    key={item.l} 
+                                                    className="p-3 rounded-lg"
+                                                    style={{
+                                                        backgroundColor: selectedLayer===item.l ? '#d1fae5' : '#f3f4f6',
+                                                        border: selectedLayer===item.l ? '2px solid #10b981' : '1px solid #e5e7eb',
+                                                        color: '#374151'
+                                                    }}
+                                                >
+                                                    <div className="font-bold">L{item.l}</div>
+                                                    <div className="text-xs">{item.r}</div>
+                                                    <div className="font-bold">{item.p}</div>
+                                                    {selectedLayer===item.l && <div style={{color: '#10b981'}}>✓선택</div>}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <button 
+                                    onClick={runSimulation} 
+                                    disabled={isRunning}
+                                    className="w-full py-4 rounded-xl font-bold text-lg transition-colors"
+                                    style={{
+                                        background: isRunning ? '#9ca3af' : 'linear-gradient(135deg, #0046FF 0%, #8b5cf6 100%)',
+                                        color: 'white'
+                                    }}
+                                >
+                                    {isRunning ? '⏳ 진행 중...' : '🚀 시뮬레이션 실행'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl p-4 text-center shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <div className="font-mono text-lg" style={{color: '#374151'}}>
+                            N = SHA256(SHA256(<span style={{color: '#10b981'}}>DocHash</span> || <span style={{color: '#eab308'}}>Time</span>)) <span style={{color: '#8b5cf6'}}>mod 100</span>
+                        </div>
+                        <p className="text-sm mt-2" style={{color: '#6b7280'}}>공격자 예측 확률: 2⁻²⁵⁶ (사실상 불가능)</p>
+                    </div>
+                </div>
+            );
+        }
+
+        function VerificationSection() {
+            const [tab, setTab] = useState('down');
+            
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        🛡️ 계층 간 상호 검증 (도 3)
+                    </h2>
+                    <div className="flex justify-center gap-4">
+                        <button 
+                            onClick={()=>setTab('down')} 
+                            className="px-6 py-3 rounded-xl font-bold"
+                            style={{
+                                backgroundColor: tab==='down' ? '#0046FF' : '#e5e7eb',
+                                color: tab==='down' ? 'white' : '#374151'
+                            }}
+                        >
+                            ⬇️ 하향식 (310)
+                        </button>
+                        <button 
+                            onClick={()=>setTab('up')} 
+                            className="px-6 py-3 rounded-xl font-bold"
+                            style={{
+                                backgroundColor: tab==='up' ? '#8b5cf6' : '#e5e7eb',
+                                color: tab==='up' ? 'white' : '#374151'
+                            }}
+                        >
+                            ⬆️ 상향식 (320)
+                        </button>
+                    </div>
+
+                    {tab==='down' && (
+                        <div className="rounded-2xl p-6 shadow-md animate-fadeIn" style={{backgroundColor: 'white', border: '1px solid #bfdbfe'}}>
+                            <h3 className="font-bold mb-4" style={{color: '#0046FF'}}>하향식 검증 (상위→하위)</h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-3">
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        <strong>BLS 서명 (420)</strong><br/>
+                                        <code className="text-sm" style={{color: '#0046FF'}}>e(σ,g) = e(H(M),pk)</code>
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        <strong>Merkle Proof (440)</strong><br/>
+                                        <span className="text-sm">무작위 트랜잭션 경로 검증</span>
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        <strong>타임스탬프</strong><br/>
+                                        <span className="text-sm">±5분 범위 확인</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#d1fae5', border: '1px solid #10b981', color: '#374151'}}>
+                                        <span className="font-mono text-xs px-2 rounded" style={{backgroundColor: 'rgba(16, 185, 129, 0.2)'}}>600</span> 검증 성공
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#fee2e2', border: '1px solid #ef4444', color: '#374151'}}>
+                                        <span className="font-mono text-xs px-2 rounded" style={{backgroundColor: 'rgba(239, 68, 68, 0.2)'}}>610</span> 검증 실패
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#fed7aa', border: '1px solid #f59e0b', color: '#374151'}}>
+                                        <span className="font-mono text-xs px-2 rounded" style={{backgroundColor: 'rgba(245, 158, 11, 0.2)'}}>620</span> 노드 격리
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#dbeafe', border: '1px solid #3b82f6', color: '#374151'}}>
+                                        <span className="font-mono text-xs px-2 rounded" style={{backgroundColor: 'rgba(59, 130, 246, 0.2)'}}>630</span> 복구 (7일 모니터링)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {tab==='up' && (
+                        <div className="rounded-2xl p-6 shadow-md animate-fadeIn" style={{backgroundColor: 'white', border: '1px solid #c4b5fd'}}>
+                            <h3 className="font-bold mb-4" style={{color: '#8b5cf6'}}>상향식 감시 (하위→상위)</h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-3">
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        📝 데이터 변조 감지
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        🚫 합의 거부 탐지
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        🔌 네트워크 분리 감지
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                                        ⚠️ 비정상 명령 탐지
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#fed7aa', color: '#92400e'}}>
+                                        응답 지연: 평균×3 이상
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#fed7aa', color: '#92400e'}}>
+                                        서명 실패율: 5% 초과
+                                    </div>
+                                    <div className="p-3 rounded-lg" style={{backgroundColor: '#fee2e2', border: '1px solid #ef4444', color: '#991b1b'}}>
+                                        → 즉시 연결 차단 (620)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="rounded-xl p-6 text-center shadow-md" style={{backgroundColor: '#d1fae5', border: '1px solid #10b981'}}>
+                        <h4 className="font-bold mb-4" style={{color: '#065f46'}}>⏱️ 오염 탐지 타임라인</h4>
+                        <div className="flex justify-center gap-8">
+                            {[
+                                {t:'0ms', e:'위변조', c:'#ef4444'},
+                                {t:'1ms', e:'크로스체크', c:'#eab308'},
+                                {t:'3ms', e:'Merkle', c:'#f59e0b'},
+                                {t:'5ms', e:'격리', c:'#10b981'}
+                            ].map((x,i)=>(
+                                <div key={i} className="text-center">
+                                    <div 
+                                        className="w-12 h-12 rounded-full flex items-center justify-center font-bold"
+                                        style={{
+                                            backgroundColor: `${x.c}33`,
+                                            border: `2px solid ${x.c}`,
+                                            color: '#374151'
+                                        }}
+                                    >
+                                        {x.t}
+                                    </div>
+                                    <div className="text-sm mt-2" style={{color: '#374151'}}>{x.e}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="font-bold mt-4" style={{color: '#10b981'}}>5ms 이내 자동 격리!</p>
+                    </div>
+                </div>
+            );
+        }
+
+        function MerkleSection() {
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        🌳 Merkle Tree (330) - 도 4
+                    </h2>
+                    <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <div className="flex flex-col items-center">
+                            <div className="p-4 rounded-xl" style={{background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)', color: 'white'}}>
+                                <div className="text-xs">Root (410)</div>
+                                <div className="font-mono font-bold">x9y0z1...</div>
+                            </div>
+                            <div className="text-2xl py-2" style={{color: '#9ca3af'}}>↑</div>
+                            <div className="flex gap-16">
+                                <div className="p-3 rounded-xl text-center" style={{backgroundColor: '#0046FF', color: 'white'}}>
+                                    <div className="text-xs">Parent1</div>
+                                    <div className="font-mono text-sm">k5l6m7...</div>
+                                </div>
+                                <div className="p-3 rounded-xl text-center" style={{backgroundColor: '#0046FF', color: 'white'}}>
+                                    <div className="text-xs">Parent2</div>
+                                    <div className="font-mono text-sm">m7n8o9...</div>
+                                </div>
+                            </div>
+                            <div className="text-2xl py-2" style={{color: '#9ca3af'}}>↑</div>
+                            <div className="flex gap-4">
+                                {['a1b2 문서1','c3d4 문서2','e5f6 문서3','g7h8 문서4'].map((d,i)=>(
+                                    <div key={i} className="p-2 rounded-lg text-center text-sm" style={{backgroundColor: '#10b981', color: 'white'}}>
+                                        <div className="font-mono">{d.split(' ')[0]}</div>
+                                        <div className="text-xs">{d.split(' ')[1]}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mt-6 p-4 rounded-xl font-mono text-sm" style={{backgroundColor: '#f3f4f6', color: '#374151'}}>
+                            <div>Parent1 = SHA256(a1b2 + c3d4) = k5l6m7</div>
+                            <div>Parent2 = SHA256(e5f6 + g7h8) = m7n8o9</div>
+                            <div>Root = SHA256(k5l6m7 + m7n8o9) = x9y0z1</div>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="rounded-xl p-4 shadow-sm" style={{backgroundColor: '#dbeafe', border: '1px solid #3b82f6'}}>
+                            <h4 className="font-bold" style={{color: '#1e3a8a'}}>Merkle Path (440)</h4>
+                            <p className="text-sm" style={{color: '#1e40af'}}>문서1 검증 시 필요: [c3d4, m7n8o9]</p>
+                            <p className="text-xs" style={{color: '#6b7280'}}>→ 형제 해시만으로 Root 재계산</p>
+                        </div>
+                        <div className="rounded-xl p-4 shadow-sm" style={{backgroundColor: '#d1fae5', border: '1px solid #10b981'}}>
+                            <h4 className="font-bold" style={{color: '#065f46'}}>패킷 구조 (430)</h4>
+                            <p className="text-sm" style={{color: '#047857'}}>해시 32B + 메타 105B = <strong>137 bytes</strong></p>
+                            <p className="text-xs" style={{color: '#6b7280'}}>→ 대역폭 90% 절감</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function LPBFTSection() {
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        🤝 LPBFT 합의 (340) - 도 6
+                    </h2>
+                    <div className="rounded-2xl p-6 text-center shadow-md" style={{backgroundColor: '#fed7aa', border: '1px solid #f59e0b'}}>
+                        <h3 className="font-bold mb-4" style={{color: '#92400e'}}>Byzantine Fault Tolerance 조건</h3>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            <div className="p-4 rounded-xl" style={{backgroundColor: 'white'}}>
+                                <div className="text-3xl font-black" style={{color: '#f59e0b'}}>n ≥ 3f + 1</div>
+                                <div className="text-sm" style={{color: '#374151'}}>전체 ≥ 악의×3+1</div>
+                            </div>
+                            <div className="p-4 rounded-xl" style={{backgroundColor: 'white'}}>
+                                <div className="text-3xl font-black" style={{color: '#0046FF'}}>2f + 1</div>
+                                <div className="text-sm" style={{color: '#374151'}}>합의 필요 응답</div>
+                            </div>
+                        </div>
+                        <p className="mt-4" style={{color: '#374151'}}>
+                            예: 10노드(n=10) → 최대 3개 악의(f=3) → <strong style={{color: '#10b981'}}>7개 응답</strong> 필요
+                        </p>
+                    </div>
+
+                    <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <h4 className="font-bold mb-4" style={{color: '#212529'}}>합의 단계</h4>
+                        <div className="flex justify-around items-center">
+                            {['Pre-prepare','Prepare','Commit','Complete'].map((s,i)=>(
+                                <div key={i} className="text-center">
+                                    <div 
+                                        className="w-16 h-16 rounded-full flex items-center justify-center font-bold"
+                                        style={{
+                                            backgroundColor: i===3 ? '#10b981' : '#0046FF',
+                                            color: 'white'
+                                        }}
+                                    >
+                                        {i+1}
+                                    </div>
+                                    <div className="text-sm mt-2" style={{color: '#374151'}}>{s}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function OfflineSection() {
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        📡 오프라인 배치 (700) - 도 8
+                    </h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: '#fee2e2', border: '1px solid #ef4444'}}>
+                            <h4 className="font-bold mb-4" style={{color: '#991b1b'}}>🔴 오프라인 기간</h4>
+                            <div className="space-y-2">
+                                {['거래1: 송금 $100','거래2: 결제 $50','거래3: 이체 $200'].map((t,i)=>(
+                                    <div key={i} className="p-2 rounded" style={{backgroundColor: 'white', color: '#374151'}}>
+                                        {t} <span className="text-xs" style={{color: '#6b7280'}}>H{i+1}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 p-3 rounded-lg" style={{backgroundColor: 'white'}}>
+                                <div className="text-sm" style={{color: '#6b7280'}}>로컬 해시 체인 (710)</div>
+                                <div className="font-mono text-xs" style={{color: '#374151'}}>H1→H2=SHA256(H1||D2)→H3</div>
+                            </div>
+                        </div>
+
+                        <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: '#d1fae5', border: '1px solid #10b981'}}>
+                            <h4 className="font-bold mb-4" style={{color: '#065f46'}}>🟢 온라인 전환</h4>
+                            <div className="space-y-3">
+                                <div className="p-3 rounded-lg" style={{backgroundColor: 'white', color: '#374151'}}>
+                                    1. Merkle Tree 구성 (330)
+                                </div>
+                                <div className="p-3 rounded-lg" style={{backgroundColor: 'white', color: '#374151'}}>
+                                    2. 배치 Root 생성 (720)
+                                </div>
+                                <div className="p-3 rounded-lg" style={{backgroundColor: 'white', color: '#374151'}}>
+                                    3. BLS 서명 + 일괄 전송
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl p-6 shadow-md" style={{background: 'linear-gradient(135deg, #d1fae5 0%, #dbeafe 100%)', border: '1px solid #10b981'}}>
+                        <h4 className="font-bold text-center mb-4" style={{color: '#065f46'}}>💰 비용 절감</h4>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                            <div className="p-4 rounded-xl" style={{backgroundColor: 'white'}}>
+                                <div className="text-2xl font-black" style={{color: '#ef4444'}}>$10/일</div>
+                                <div className="text-sm" style={{color: '#374151'}}>실시간</div>
+                            </div>
+                            <div className="p-4 rounded-xl" style={{backgroundColor: 'white'}}>
+                                <div className="text-2xl font-black" style={{color: '#10b981'}}>$0.10/주</div>
+                                <div className="text-sm" style={{color: '#374151'}}>배치</div>
+                            </div>
+                            <div className="p-4 rounded-xl" style={{backgroundColor: 'white'}}>
+                                <div className="text-2xl font-black" style={{color: '#eab308'}}>99%</div>
+                                <div className="text-sm" style={{color: '#374151'}}>절감</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function PerformanceSection() {
+            const [animated, setAnimated] = useState(false);
+            useEffect(() => { setTimeout(() => setAnimated(true), 500); }, []);
+            
+            const data = [
+                {n:'비트코인', v:7, c:'#f59e0b'},
+                {n:'이더리움', v:30, c:'#3b82f6'},
+                {n:'오픈해시', v:481, c:'#10b981'}
+            ];
+
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <h2 className="text-2xl font-bold text-center" style={{color: '#212529'}}>
+                        📊 성능 지표
+                    </h2>
+
+                    <div className="rounded-2xl p-6 shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <h3 className="font-bold mb-4" style={{color: '#212529'}}>TPS 비교</h3>
+                        <div className="space-y-4">
+                            {data.map((d,i)=>(
+                                <div key={i} className="flex items-center gap-4">
+                                    <div className="w-24 text-right text-sm" style={{color: '#374151'}}>{d.n}</div>
+                                    <div className="flex-1 h-8 rounded-full overflow-hidden" style={{backgroundColor: '#e5e7eb'}}>
+                                        <div 
+                                            className="h-full rounded-full transition-all duration-1000"
+                                            style={{
+                                                width: animated ? `${(d.v/500)*100}%` : '0%',
+                                                backgroundColor: d.c
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="w-20 font-bold" style={{color: '#374151'}}>{d.v} TPS</div>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-center font-bold mt-4" style={{color: '#10b981'}}>비트코인 대비 68.8배!</p>
+                    </div>
+
+                    <div className="rounded-xl p-6 text-center shadow-md" style={{backgroundColor: '#e0e7ff', border: '1px solid #8b5cf6'}}>
+                        <h4 className="font-bold mb-4" style={{color: '#5b21b6'}}>선형 확장 공식</h4>
+                        <div className="font-mono text-lg p-4 rounded-xl inline-block" style={{backgroundColor: 'white', color: '#374151'}}>
+                            TPS = <span style={{color: '#0046FF'}}>노드수</span> × <span style={{color: '#10b981'}}>80</span> × <span style={{color: '#8b5cf6'}}>0.85</span>
+                        </div>
+                        <div className="mt-4 grid grid-cols-5 gap-2 text-sm">
+                            {[
+                                {n:'11', t:'748'},
+                                {n:'100', t:'6.8K'},
+                                {n:'1K', t:'68K'},
+                                {n:'10K', t:'680K'},
+                                {n:'100K', t:'4.9M'}
+                            ].map((x,i)=>(
+                                <div key={i} className="p-2 rounded-lg" style={{backgroundColor: 'white'}}>
+                                    <div style={{color: '#6b7280'}}>{x.n}</div>
+                                    <div className="font-bold" style={{color: '#10b981'}}>{x.t}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="rounded-2xl p-4 overflow-x-auto shadow-md" style={{backgroundColor: 'white', border: '1px solid #e5e7eb'}}>
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr style={{borderBottom: '2px solid #e5e7eb'}}>
+                                    <th className="p-2 text-left" style={{color: '#374151'}}>항목</th>
+                                    <th className="p-2" style={{color: '#f59e0b'}}>비트코인</th>
+                                    <th className="p-2" style={{color: '#0046FF'}}>오픈해시</th>
+                                    <th className="p-2" style={{color: '#10b981'}}>개선</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[
+                                    ['에너지','121 TWh','1.8 TWh','98.5%'],
+                                    ['응답','10분','4ms','15만배'],
+                                    ['탐지','6확인','5ms','실시간'],
+                                    ['대역폭','전체블록','Root','90%']
+                                ].map((r,i)=>(
+                                    <tr key={i} style={{borderBottom: '1px solid #e5e7eb'}}>
+                                        <td className="p-2" style={{color: '#374151'}}>{r[0]}</td>
+                                        <td className="p-2" style={{color: '#f59e0b', opacity: 0.7}}>{r[1]}</td>
+                                        <td className="p-2" style={{color: '#0046FF'}}>{r[2]}</td>
+                                        <td className="p-2 font-bold" style={{color: '#10b981'}}>{r[3]}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -57,10 +57,15 @@
 <body>
 
     <!-- 데모 배너 -->
-    <div class="bg-gray-800 text-white py-3 text-center shadow-lg border-b-2 border-gray-900">
-        <p class="text-sm font-semibold">
-            ⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)
-        </p>
+        <div style="background:#4B5563;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+        <p style="font-size:14px;font-weight:600;margin:0;">⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</p>
+        <div style="display:flex;gap:20px;">
+            <a href="http://100.30.14.224/openhash-system/" style="color:white;text-decoration:none;font-size:14px;font-weight:600;display:flex;align-items:center;gap:4px;">
+                <span>Openhash</span>
+                <i class="fas fa-question-circle" style="font-size:16px;"></i>
+            </a>
+            <a href="http://100.30.14.224/national-data-registry/" style="color:white;text-decoration:underline;font-size:14px;font-weight:600;">국가 데이터처</a>
+        </div>
     </div>
     <div id="root"></div>
     <script src="/shared/banner.js"></script>
