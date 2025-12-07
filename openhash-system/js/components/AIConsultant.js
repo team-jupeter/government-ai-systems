@@ -23,23 +23,27 @@ const AIConsultant = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/openhash-system/consultation', {
+            const response = await fetch('/openhash-system/api/consultation.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: userMessage })
             });
 
-            if (!response.ok) throw new Error('API 오류');
+            if (!response.ok) {
+                throw new Error('API 오류: ' + response.status);
+            }
 
             const data = await response.json();
+            
             setMessages(prev => [...prev, { 
                 role: 'assistant', 
                 content: data.response || '응답을 받지 못했습니다.' 
             }]);
         } catch (error) {
+            console.error('Error:', error);
             setMessages(prev => [...prev, { 
                 role: 'assistant', 
-                content: '죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' 
+                content: '죄송합니다. 일시적인 오류가 발생했습니다: ' + error.message 
             }]);
         } finally {
             setLoading(false);
@@ -54,64 +58,68 @@ const AIConsultant = () => {
     };
 
     return (
-        <section className="py-16 bg-white">
-            <div className="max-w-7xl mx-auto px-4">
-                <div className="text-center mb-12">
-                    <h3 className="text-3xl font-bold text-gov-text mb-4">AI 기술 상담</h3>
-                    <p className="text-gov-text-secondary">오픈해시 기술에 대해 궁금한 점을 질문하세요</p>
-                </div>
+        <div className="flex flex-col h-full bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
+                <h3 className="text-xl font-bold flex items-center">
+                    <i className="fas fa-robot mr-3"></i>
+                    AI 기술 상담
+                </h3>
+                <p className="text-sm text-blue-100 mt-1">오픈해시 기술에 대해 궁금한 점을 질문하세요</p>
+            </div>
 
-                <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border-2 border-gov-border overflow-hidden">
-                    {/* 메시지 영역 */}
-                    <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gov-gray">
-                        {messages.map((msg, idx) => (
-                            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[75%] rounded-lg p-4 ${
-                                    msg.role === 'user'
-                                        ? 'bg-gov-blue text-white'
-                                        : 'bg-white border border-gov-border text-gov-text'
-                                }`}>
-                                    <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: '500px' }}>
+                {messages.map((msg, idx) => (
+                    <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-3xl rounded-lg p-4 ${
+                            msg.role === 'user' 
+                                ? 'bg-blue-600 text-white' 
+                                : 'bg-gray-100 text-gray-800'
+                        }`}>
+                            {msg.role === 'assistant' && (
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-robot text-blue-600 mr-2"></i>
+                                    <span className="font-bold text-blue-600">AI 상담원</span>
                                 </div>
-                            </div>
-                        ))}
-                        {loading && (
-                            <div className="flex justify-start">
-                                <div className="bg-white border border-gov-border rounded-lg p-4">
-                                    <div className="flex gap-1">
-                                        <div className="w-2 h-2 bg-gov-blue rounded-full animate-bounce"></div>
-                                        <div className="w-2 h-2 bg-gov-blue rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                        <div className="w-2 h-2 bg-gov-blue rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
-
-                    {/* 입력 영역 */}
-                    <div className="p-4 bg-white border-t-2 border-gov-border">
-                        <div className="flex gap-3">
-                            <input
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                placeholder="질문을 입력하세요..."
-                                disabled={loading}
-                                className="flex-1 px-4 py-3 border border-gov-border rounded focus:outline-none focus:ring-2 focus:ring-gov-blue disabled:opacity-50"
-                            />
-                            <button
-                                onClick={sendMessage}
-                                disabled={loading || !input.trim()}
-                                className="px-6 py-3 bg-gov-blue text-white rounded font-bold hover:bg-gov-blue-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                전송
-                            </button>
+                            )}
+                            <div className="whitespace-pre-wrap">{msg.content}</div>
                         </div>
                     </div>
+                ))}
+                {loading && (
+                    <div className="flex justify-start">
+                        <div className="bg-gray-100 rounded-lg p-4">
+                            <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+
+            <div className="border-t p-4">
+                <div className="flex space-x-2">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="질문을 입력하세요..."
+                        disabled={loading}
+                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    />
+                    <button
+                        onClick={sendMessage}
+                        disabled={loading || !input.trim()}
+                        className="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <i className="fas fa-paper-plane mr-2"></i>
+                        전송
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
