@@ -1,27 +1,39 @@
 const HashTransmissionAnimation = () => {
-    const [dots, setDots] = React.useState([]);
     const [isAnimating, setIsAnimating] = React.useState(false);
+    const [dots, setDots] = React.useState([]);
     const [probabilities, setProbabilities] = React.useState({
         layer1: 70,
         layer2: 20,
-        layer3: 9,
-        layer4: 1
+        layer3: 7,
+        layer4: 3
     });
     const [probError, setProbError] = React.useState('');
 
+    const handleProbabilityChange = (layer, value) => {
+        const numValue = parseInt(value) || 0;
+        setProbabilities(prev => ({
+            ...prev,
+            [layer]: Math.max(0, Math.min(100, numValue))
+        }));
+    };
+
+    React.useEffect(() => {
+        const total = Object.values(probabilities).reduce((sum, val) => sum + val, 0);
+        if (total !== 100) {
+            setProbError('확률 합계가 100%가 되어야 합니다 (현재: ' + total + '%)');
+        } else {
+            setProbError('');
+        }
+    }, [probabilities]);
+
     const devices = [
-        { id: 0, y: 10, type: 'phone' },
-        { id: 1, y: 18, type: 'computer' },
-        { id: 2, y: 26, type: 'phone' },
-        { id: 3, y: 34, type: 'computer' },
-        { id: 4, y: 42, type: 'phone' },
-        { id: 5, y: 50, type: 'computer' },
-        { id: 6, y: 58, type: 'phone' },
-        { id: 7, y: 66, type: 'computer' },
-        { id: 8, y: 74, type: 'phone' },
-        { id: 9, y: 82, type: 'computer' }
+        { id: 0, type: 'phone', y: 10 },
+        { id: 1, type: 'desktop', y: 26 },
+        { id: 2, type: 'phone', y: 42 },
+        { id: 3, type: 'desktop', y: 58 },
+        { id: 4, type: 'phone', y: 74 }
     ];
-    
+
     const layers = {
         1: [
             { id: 'L1-0', layer: 1, y: 10 },
@@ -45,48 +57,30 @@ const HashTransmissionAnimation = () => {
         ]
     };
 
-    const handleProbabilityChange = (layer, value) => {
-        const numValue = parseInt(value) || 0;
-        const newProbs = { ...probabilities, [layer]: numValue };
-        setProbabilities(newProbs);
-
-        const sum = Object.values(newProbs).reduce((a, b) => a + b, 0);
-        setProbError(sum !== 100 ? '합계: ' + sum + '% (100%여야 함)' : '');
-    };
-
     React.useEffect(() => {
-        if (!isAnimating) {
-            setDots([]);
-            return;
-        }
-        
-        const sum = Object.values(probabilities).reduce((a, b) => a + b, 0);
-        if (sum !== 100) return;
+        if (!isAnimating) return;
 
         let running = true;
-
-        const selectLayer = () => {
-            const rand = Math.random() * 100;
-            if (rand < probabilities.layer1) return 1;
-            if (rand < probabilities.layer1 + probabilities.layer2) return 2;
-            if (rand < probabilities.layer1 + probabilities.layer2 + probabilities.layer3) return 3;
-            return 4;
-        };
-
+        
         const animate = () => {
             if (!running) return;
-            
-            const device = devices[Math.floor(Math.random() * devices.length)];
-            const layer = selectLayer();
-            const layerNodes = layers[layer];
-            const node = layerNodes[Math.floor(Math.random() * layerNodes.length)];
-            
-            const fromX = 15;
-            const fromY = device.y;
-            const toX = 25 + layer * 20;
-            const toY = node.y;
 
-            // 파란색 전송
+            const deviceIdx = Math.floor(Math.random() * devices.length);
+            const fromX = 15;
+            const fromY = devices[deviceIdx].y;
+            
+            const rand = Math.random() * 100;
+            let targetLayer;
+            if (rand < probabilities.layer1) targetLayer = 1;
+            else if (rand < probabilities.layer1 + probabilities.layer2) targetLayer = 2;
+            else if (rand < probabilities.layer1 + probabilities.layer2 + probabilities.layer3) targetLayer = 3;
+            else targetLayer = 4;
+            
+            const layerNodes = layers[targetLayer];
+            const nodeIdx = Math.floor(Math.random() * layerNodes.length);
+            const toX = 25 + targetLayer * 20;
+            const toY = layerNodes[nodeIdx].y;
+            
             let count = 0;
             const blueInt = setInterval(() => {
                 if (!running) {
@@ -106,7 +100,6 @@ const HashTransmissionAnimation = () => {
                         if (!running) return;
                         setDots([]);
                         
-                        // 빨간색 응답
                         let redCount = 0;
                         const redInt = setInterval(() => {
                             if (!running) {
@@ -226,16 +219,59 @@ const HashTransmissionAnimation = () => {
                     
                     {[1, 2, 3, 4].map(layer =>
                         layers[layer].map(node => (
-                            <g key={node.id} transform={'translate(' + (25 + layer * 20) + ',' + node.y + ')'}>
-                                <polygon points="-0.8,2 0.8,2 1.2,-2 -1.2,-2" fill="#6B7280" stroke="#374151" strokeWidth="0.2" />
-                                <circle cx="0" cy="0" r="0.6" fill="#374151" />
-                                <path d="M -1.5,-0.5 Q -2,-0.5 -2.5,-0.8" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <path d="M -1.8,0 Q -2.5,0 -3.2,-0.3" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <path d="M -1.5,0.5 Q -2,0.5 -2.5,0.8" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <path d="M 1.5,-0.5 Q 2,-0.5 2.5,-0.8" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <path d="M 1.8,0 Q 2.5,0 3.2,-0.3" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <path d="M 1.5,0.5 Q 2,0.5 2.5,0.8" fill="none" stroke="#6B7280" strokeWidth="0.25" />
-                                <text x="0" y="4" textAnchor="middle" fontSize="2.5" fill="#374151" fontWeight="600">L{layer}</text>
+                            <g key={node.id}>
+                                {/* 데스크톱 모니터 아이콘 (SVG 네이티브) */}
+                                <g transform={'translate(' + (25 + layer * 20) + ',' + (node.y - 2) + ')'}>
+                                    {/* 모니터 스크린 */}
+                                    <rect 
+                                        x="-2.5" 
+                                        y="-2" 
+                                        width="5" 
+                                        height="3.5" 
+                                        rx="0.3" 
+                                        fill="#E5E7EB" 
+                                        stroke="#374151" 
+                                        strokeWidth="0.25"
+                                    />
+                                    {/* 스크린 내부 */}
+                                    <rect 
+                                        x="-2.2" 
+                                        y="-1.7" 
+                                        width="4.4" 
+                                        height="2.9" 
+                                        fill="#3B82F6" 
+                                        opacity="0.3"
+                                    />
+                                    {/* 스탠드 */}
+                                    <rect 
+                                        x="-0.3" 
+                                        y="1.5" 
+                                        width="0.6" 
+                                        height="1" 
+                                        fill="#374151"
+                                    />
+                                    {/* 베이스 */}
+                                    <rect 
+                                        x="-1.5" 
+                                        y="2.5" 
+                                        width="3" 
+                                        height="0.4" 
+                                        rx="0.2" 
+                                        fill="#374151"
+                                    />
+                                </g>
+                                
+                                {/* L1, L2, L3, L4 텍스트 */}
+                                <text 
+                                    x={25 + layer * 20} 
+                                    y={node.y + 7} 
+                                    textAnchor="middle" 
+                                    fontSize="2.8" 
+                                    fill="#374151" 
+                                    fontWeight="700"
+                                >
+                                    L{layer}
+                                </text>
                             </g>
                         ))
                     )}
