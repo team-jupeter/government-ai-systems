@@ -1,381 +1,463 @@
 const Tab2NodeManagement = () => {
-    const [nodes, setNodes] = React.useState([
-        { id: 1, name: '서울 강남구 노드', layer: 2, status: 'active', joinTime: '2024-11-15' },
-        { id: 2, name: '제주시 노드', layer: 2, status: 'active', joinTime: '2024-10-20' },
-        { id: 3, name: '부산 해운대구 노드', layer: 2, status: 'active', joinTime: '2024-09-05' }
-    ]);
-    const [selectedAction, setSelectedAction] = React.useState(null);
+    // 노드 진입 State
+    const [currentStep1, setCurrentStep1] = React.useState(0);
+    const [isRunning1, setIsRunning1] = React.useState(false);
+    const [newNodeId, setNewNodeId] = React.useState('Node_5001');
+    const [entryData, setEntryData] = React.useState({
+        request: '',
+        individualSignatures: [],
+        aggregatedSignature: '',
+        verified: false,
+        nodeList: '',
+        broadcast: ''
+    });
 
-    const handleJoinNode = () => {
-        const newNode = {
-            id: nodes.length + 1,
-            name: `신규 노드 ${nodes.length + 1}`,
-            layer: Math.floor(Math.random() * 3) + 1,
-            status: 'joining',
-            joinTime: new Date().toISOString().split('T')[0]
+    // 노드 탈퇴 State
+    const [currentStep2, setCurrentStep2] = React.useState(0);
+    const [isRunning2, setIsRunning2] = React.useState(false);
+    const [exitNodeId, setExitNodeId] = React.useState('Node_4523');
+    const [exitReason, setExitReason] = React.useState('이중 지불 시도 탐지');
+    const [exitData, setExitData] = React.useState({
+        notice: '',
+        individualSignatures: [],
+        aggregatedSignature: '',
+        verified: false,
+        removedNode: '',
+        blacklist: ''
+    });
+
+    const sha256 = (text) => {
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        const hexHash = Math.abs(hash).toString(16).padStart(16, '0');
+        return hexHash.repeat(4);
+    };
+
+    // BLS 서명 시뮬레이션 (48 bytes)
+    const blsSign = (message, nodeId) => {
+        const signature = sha256(message + nodeId).substring(0, 96); // 48 bytes = 96 hex chars
+        return signature;
+    };
+
+    // BLS 서명 집계 시뮬레이션
+    const blsAggregate = (signatures) => {
+        // 실제로는 타원곡선 연산이지만, 시뮬레이션에서는 XOR
+        let result = 0;
+        signatures.forEach(sig => {
+            for (let i = 0; i < sig.length; i += 8) {
+                result ^= parseInt(sig.substring(i, i + 8), 16);
+            }
+        });
+        return result.toString(16).padStart(96, '0');
+    };
+
+    // 노드 진입 시뮬레이션
+    const runNodeEntry = async () => {
+        if (!newNodeId.trim()) {
+            alert('새 노드 ID를 입력하세요.');
+            return;
+        }
+
+        setIsRunning1(true);
+        setCurrentStep1(0);
+        setEntryData({
+            request: '',
+            individualSignatures: [],
+            aggregatedSignature: '',
+            verified: false,
+            nodeList: '',
+            broadcast: ''
+        });
+
+        // 1단계: 진입 요청 생성
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(1);
+        const request = {
+            nodeId: newNodeId,
+            publicKey: sha256(newNodeId + 'pubkey').substring(0, 64),
+            timestamp: Date.now()
         };
-        
-        setNodes([...nodes, newNode]);
-        setSelectedAction('join');
-        
-        setTimeout(() => {
-            setNodes(prev => prev.map(n => 
-                n.id === newNode.id ? { ...n, status: 'active' } : n
-            ));
-            setSelectedAction(null);
-        }, 2000);
+        const requestStr = JSON.stringify(request);
+        setEntryData(prev => ({ ...prev, request: requestStr }));
+
+        // 2단계: 기존 노드들 개별 BLS 서명 (100개)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(2);
+        const signatures = [];
+        for (let i = 1; i <= 100; i++) {
+            signatures.push(blsSign(requestStr, 'Node_' + (4000 + i)));
+        }
+        setEntryData(prev => ({ ...prev, individualSignatures: signatures }));
+
+        // 3단계: 서명 집계
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(3);
+        const aggregated = blsAggregate(signatures);
+        setEntryData(prev => ({ ...prev, aggregatedSignature: aggregated }));
+
+        // 4단계: 집계 서명 검증
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(4);
+        setEntryData(prev => ({ ...prev, verified: true }));
+
+        // 5단계: 노드 목록 갱신
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(5);
+        const nodeList = `Layer 1: 501개 노드 (${newNodeId} 추가됨)`;
+        setEntryData(prev => ({ ...prev, nodeList }));
+
+        // 6단계: 네트워크 브로드캐스트
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep1(6);
+        const broadcast = `48 bytes 집계 서명 + ${newNodeId} 정보`;
+        setEntryData(prev => ({ ...prev, broadcast }));
+
+        setIsRunning1(false);
     };
 
-    const handleLeaveNode = (nodeId) => {
-        setNodes(prev => prev.map(n => 
-            n.id === nodeId ? { ...n, status: 'leaving' } : n
-        ));
-        setSelectedAction('leave');
-        
-        setTimeout(() => {
-            setNodes(prev => prev.filter(n => n.id !== nodeId));
-            setSelectedAction(null);
-        }, 2000);
+    // 노드 탈퇴 시뮬레이션
+    const runNodeExit = async () => {
+        if (!exitNodeId.trim() || !exitReason.trim()) {
+            alert('탈퇴 노드 ID와 사유를 입력하세요.');
+            return;
+        }
+
+        setIsRunning2(true);
+        setCurrentStep2(0);
+        setExitData({
+            notice: '',
+            individualSignatures: [],
+            aggregatedSignature: '',
+            verified: false,
+            removedNode: '',
+            blacklist: ''
+        });
+
+        // 1단계: 탈퇴 공지 생성
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(1);
+        const notice = {
+            nodeId: exitNodeId,
+            reason: exitReason,
+            reportedBy: 'Node_4234, Node_4567, Node_4890',
+            timestamp: Date.now()
+        };
+        const noticeStr = JSON.stringify(notice);
+        setExitData(prev => ({ ...prev, notice: noticeStr }));
+
+        // 2단계: 관련 노드들 BLS 서명 (200개)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(2);
+        const signatures = [];
+        for (let i = 1; i <= 200; i++) {
+            signatures.push(blsSign(noticeStr, 'Witness_' + i));
+        }
+        setExitData(prev => ({ ...prev, individualSignatures: signatures }));
+
+        // 3단계: 서명 집계
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(3);
+        const aggregated = blsAggregate(signatures);
+        setExitData(prev => ({ ...prev, aggregatedSignature: aggregated }));
+
+        // 4단계: 집계 서명 검증
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(4);
+        setExitData(prev => ({ ...prev, verified: true }));
+
+        // 5단계: 노드 목록에서 제거
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(5);
+        const removedNode = `Layer 1: 499개 노드 (${exitNodeId} 제거됨)`;
+        setExitData(prev => ({ ...prev, removedNode }));
+
+        // 6단계: 블랙리스트 기록
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setCurrentStep2(6);
+        const blacklist = `${exitNodeId}: ${exitReason} (48 bytes 집계 서명 포함)`;
+        setExitData(prev => ({ ...prev, blacklist }));
+
+        setIsRunning2(false);
     };
+
+    const getSimValue1 = (stepNum) => {
+        if (currentStep1 < stepNum) return '-';
+        switch(stepNum) {
+            case 1: return entryData.request.substring(0, 50) + '...';
+            case 2: return `100개 서명 생성 (각 48 bytes) = 4,800 bytes`;
+            case 3: return entryData.aggregatedSignature.substring(0, 40) + '... (48 bytes)';
+            case 4: return entryData.verified ? '✓ 검증 성공' : '검증 중...';
+            case 5: return entryData.nodeList;
+            case 6: return entryData.broadcast;
+            default: return '-';
+        }
+    };
+
+    const getSimValue2 = (stepNum) => {
+        if (currentStep2 < stepNum) return '-';
+        switch(stepNum) {
+            case 1: return exitData.notice.substring(0, 50) + '...';
+            case 2: return `200개 서명 생성 (각 48 bytes) = 9,600 bytes`;
+            case 3: return exitData.aggregatedSignature.substring(0, 40) + '... (48 bytes)';
+            case 4: return exitData.verified ? '✓ 검증 성공 (200개 서명 일괄 확인)' : '검증 중...';
+            case 5: return exitData.removedNode;
+            case 6: return exitData.blacklist;
+            default: return '-';
+        }
+    };
+
+    const stepsEntry = [
+        { num: 1, title: '진입 요청 생성', desc: '새 노드의 ID, 공개키, 타임스탬프를 포함한 진입 요청서 작성' },
+        { num: 2, title: '기존 노드들 개별 BLS 서명', desc: '100개 기존 노드가 각각 48 bytes BLS 서명 생성 (총 4,800 bytes)' },
+        { num: 3, title: 'BLS 서명 집계', desc: '100개 개별 서명을 1개의 48 bytes 집계 서명으로 압축 (100배 감소)' },
+        { num: 4, title: '집계 서명 검증', desc: '단 1번의 검증으로 100개 서명 모두 확인 (페어링 연산)' },
+        { num: 5, title: '노드 목록 갱신', desc: '새 노드를 Layer 노드 목록에 추가하고 전체 노드 수 업데이트' },
+        { num: 6, title: '네트워크 브로드캐스트', desc: '48 bytes 집계 서명과 새 노드 정보만 전파 (7KB → 48B)' }
+    ];
+
+    const stepsExit = [
+        { num: 1, title: '탈퇴 공지 생성', desc: '탈퇴 노드 ID, 사유, 보고 노드, 타임스탬프 포함' },
+        { num: 2, title: '관련 노드들 BLS 서명', desc: '200개 증인 노드가 각각 48 bytes BLS 서명 생성 (총 9,600 bytes)' },
+        { num: 3, title: 'BLS 서명 집계', desc: '200개 개별 서명을 1개의 48 bytes 집계 서명으로 압축 (200배 감소)' },
+        { num: 4, title: '집계 서명 검증', desc: '단 1번의 검증으로 200개 서명 모두 확인 (O(1) 복잡도)' },
+        { num: 5, title: '노드 목록에서 제거', desc: '악의적 노드를 Layer 노드 목록에서 완전 제거' },
+        { num: 6, title: '블랙리스트 영구 기록', desc: '48 bytes 집계 서명과 함께 블랙리스트에 영구 저장 (14KB → 48B)' }
+    ];
 
     return (
         <div>
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .fade-in {
+                    animation: fadeIn 0.5s ease-out;
+                }
+            `}</style>
+
             <div className="mb-8">
-                <h4 className="text-2xl font-bold text-gov-text mb-3">동적 노드 진입/탈퇴 관리</h4>
-                <p className="text-gov-text-secondary leading-relaxed mb-4">
-                    노드 관리 모듈은 네트워크의 동적 확장과 축소를 관리합니다. 
-                    새로운 행정구역이 추가되거나 기존 노드가 제거될 때 전체 시스템의 무결성을 유지하면서 
-                    자동으로 재구성됩니다. 국가/기업/개인 단위로 자유롭게 진입/퇴출이 가능하며, 
-                    기존 네트워크의 합의 없이도 즉시 참여할 수 있습니다.
+                <h4 className="text-2xl font-bold text-gov-text mb-3">동적 노드 진입/탈퇴 관리 (BLS 서명 기반)</h4>
+                <p className="text-gov-text-secondary leading-relaxed">
+                    BLS(Boneh-Lynn-Shacham) 서명을 활용하여 수백 개의 노드 승인을 단 48 bytes로 압축합니다. 
+                    서명 집계를 통해 네트워크 트래픽을 100~200배 감소시키고, 검증 시간을 O(1)로 최적화합니다.
                 </p>
             </div>
 
-            {/* AWS 실측 노드 구성 테이블 */}
-            <div className="bg-white rounded-lg shadow-sm border border-gov-border overflow-hidden mb-8">
-                <div className="bg-green-600 text-white px-6 py-4">
-                    <h4 className="text-lg font-bold flex items-center">
-                        <i className="fas fa-server mr-3"></i>
-                        AWS 실측 동적 노드 관리 테스트
-                    </h4>
-                </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="border-b-2 border-gov-border bg-gray-50">
-                                <th className="text-left px-6 py-3 font-bold text-gov-text">시점</th>
-                                <th className="text-center px-6 py-3 font-bold text-gov-text">Layer 1</th>
-                                <th className="text-center px-6 py-3 font-bold text-gov-text">Layer 2</th>
-                                <th className="text-center px-6 py-3 font-bold text-gov-text">Representative</th>
-                                <th className="text-center px-6 py-3 font-bold text-gov-text">총 노드</th>
-                                <th className="text-right px-6 py-3 font-bold text-gov-text">TPS</th>
-                                <th className="text-center px-6 py-3 font-bold text-gov-text">변화율</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="border-b border-gov-border hover:bg-gray-50">
-                                <td className="px-6 py-4 font-bold text-gov-text">초기 (T0)</td>
-                                <td className="text-center px-6 py-4">3,400</td>
-                                <td className="text-center px-6 py-4">143</td>
-                                <td className="text-center px-6 py-4">8</td>
-                                <td className="text-center px-6 py-4 font-bold">3,551</td>
-                                <td className="text-right px-6 py-4">278,398</td>
-                                <td className="text-center px-6 py-4">-</td>
-                            </tr>
-                            <tr className="border-b border-gov-border hover:bg-gray-50 bg-green-50">
-                                <td className="px-6 py-4 font-bold text-gov-text">베트남 진입 (T1)</td>
-                                <td className="text-center px-6 py-4">+800</td>
-                                <td className="text-center px-6 py-4">+32</td>
-                                <td className="text-center px-6 py-4">+2</td>
-                                <td className="text-center px-6 py-4 font-bold">4,385</td>
-                                <td className="text-right px-6 py-4 font-bold text-green-700">343,784</td>
-                                <td className="text-center px-6 py-4 font-bold text-green-700">+23.5%</td>
-                            </tr>
-                            <tr className="hover:bg-gray-50 bg-red-50">
-                                <td className="px-6 py-4 font-bold text-gov-text">싱가포르 퇴출 (T2)</td>
-                                <td className="text-center px-6 py-4">-400</td>
-                                <td className="text-center px-6 py-4">-18</td>
-                                <td className="text-center px-6 py-4">-1</td>
-                                <td className="text-center px-6 py-4 font-bold">3,966</td>
-                                <td className="text-right px-6 py-4 font-bold text-red-700">310,934</td>
-                                <td className="text-center px-6 py-4 font-bold text-red-700">-9.6%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="px-6 py-4 bg-gray-50 border-t border-gov-border">
-                    <p className="text-sm text-gov-text-secondary">
-                        <strong>주요 특징:</strong> 노드 수 변화 시 TPS 선형 증감, 무중단 재구성, 데이터 손실 0%
-                    </p>
-                </div>
-            </div>
-
-            {/* 무중단 재구성 타임라인 */}
-            <div className="bg-white rounded-lg shadow-sm border border-gov-border overflow-hidden mb-8">
-                <div className="bg-blue-600 text-white px-6 py-4">
-                    <h4 className="text-lg font-bold flex items-center">
-                        <i className="fas fa-clock mr-3"></i>
-                        무중단 재구성 타임라인
-                    </h4>
-                </div>
-                <div className="p-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* 베트남 진입 */}
-                        <div className="border-2 border-green-500 rounded-lg p-5 bg-green-50">
-                            <h5 className="font-bold text-green-800 mb-4 flex items-center gap-2">
-                                <i className="fas fa-plus-circle"></i>
-                                베트남 진입 (834개 노드 추가)
-                            </h5>
-                            <div className="space-y-3">
-                                <div className="bg-white rounded p-3 border border-green-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">TPS 증가</span>
-                                        <span className="text-green-700 font-bold">+23.5%</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">278,398 → 343,784 TPS</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-green-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">재구성 시간</span>
-                                        <span className="text-green-700 font-bold">23.6ms</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">네트워크 토폴로지 자동 조정</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-green-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">PBFT 임계값</span>
-                                        <span className="text-green-700 font-bold">5-of-8 → 7-of-10</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">Representative 노드 자동 조정</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-green-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">다운타임</span>
-                                        <span className="text-green-700 font-bold">0초</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">무중단 서비스 유지</div>
-                                </div>
-                            </div>
+            {/* 섹션 1: 노드 진입 */}
+            <div className="mb-12">
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-400 rounded-lg p-6 mb-6">
+                    <h5 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                        <i className="fas fa-sign-in-alt mr-3"></i>
+                        노드 진입 (Node Entry)
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">새 노드 ID</label>
+                            <input
+                                type="text"
+                                value={newNodeId}
+                                onChange={(e) => setNewNodeId(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="예: Node_5001"
+                            />
                         </div>
-
-                        {/* 싱가포르 퇴출 */}
-                        <div className="border-2 border-red-500 rounded-lg p-5 bg-red-50">
-                            <h5 className="font-bold text-red-800 mb-4 flex items-center gap-2">
-                                <i className="fas fa-minus-circle"></i>
-                                싱가포르 퇴출 (419개 노드 제거)
-                            </h5>
-                            <div className="space-y-3">
-                                <div className="bg-white rounded p-3 border border-red-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">TPS 감소</span>
-                                        <span className="text-red-700 font-bold">-9.6%</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">343,784 → 310,934 TPS</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-red-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">재구성 시간</span>
-                                        <span className="text-red-700 font-bold">8.98ms</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">라우팅 테이블 자동 업데이트</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-red-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">데이터 손실</span>
-                                        <span className="text-red-700 font-bold">0%</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">상위 계층 자동 백업</div>
-                                </div>
-                                <div className="bg-white rounded p-3 border border-red-300">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-sm font-bold text-gov-text">다운타임</span>
-                                        <span className="text-red-700 font-bold">0초</span>
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">무중단 서비스 유지</div>
-                                </div>
-                            </div>
+                        <div className="flex items-end">
+                            <button
+                                onClick={runNodeEntry}
+                                disabled={isRunning1 || !newNodeId.trim()}
+                                className="w-full px-6 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 disabled:opacity-50"
+                            >
+                                {isRunning1 ? '진입 처리 중...' : '노드 진입 시뮬레이션 실행'}
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded p-4 border border-blue-300">
+                        <div className="text-xs text-gray-600 mb-2">
+                            <strong>시나리오:</strong> Layer 1에 새 노드가 진입하려면 기존 100개 노드의 2/3 이상 승인 필요
+                        </div>
+                        <div className="text-xs text-gray-600">
+                            <strong>BLS 효과:</strong> 100개 서명(7KB) → 집계 서명 1개(48B) = <span className="text-red-600 font-bold">145배 감소</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Representative 노드 재선정 프로세스 */}
-            <div className="bg-white rounded-lg shadow-sm border border-gov-border overflow-hidden mb-8">
-                <div className="bg-purple-600 text-white px-6 py-4">
-                    <h4 className="text-lg font-bold flex items-center">
-                        <i className="fas fa-crown mr-3"></i>
-                        Representative 노드 자동 재선정
-                    </h4>
-                </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                        <tbody>
-                            <tr className="border-b border-gov-border">
-                                <th className="text-left px-6 py-4 bg-gray-50 font-bold text-gov-text" style={{width: '200px'}}>선정 기준</th>
-                                <td className="px-6 py-4 text-gov-text-secondary">Layer 2 노드 중 상위 10% 처리량 + 지리적 분산 고려</td>
-                            </tr>
-                            <tr className="border-b border-gov-border">
-                                <th className="text-left px-6 py-4 bg-gray-50 font-bold text-gov-text">임기</th>
-                                <td className="px-6 py-4 text-gov-text-secondary">1주일 자동 재선정 (처리량, 응답 시간, 신뢰도 평가)</td>
-                            </tr>
-                            <tr className="border-b border-gov-border">
-                                <th className="text-left px-6 py-4 bg-gray-50 font-bold text-gov-text">재선정 조건</th>
-                                <td className="px-6 py-4 text-gov-text-secondary">
-                                    <ul className="list-disc list-inside space-y-1">
-                                        <li>처리량 저하 (평균 대비 20% 이하)</li>
-                                        <li>응답 시간 지연 (100ms 초과)</li>
-                                        <li>신뢰도 점수 하락 (임계값 미달)</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr className="border-b border-gov-border">
-                                <th className="text-left px-6 py-4 bg-gray-50 font-bold text-gov-text">노드 수 변화</th>
-                                <td className="px-6 py-4 text-gov-text-secondary">
-                                    베트남 진입 시: 8개 → 10개 (5-of-8 → 7-of-10 임계값 자동 조정)
-                                </td>
-                            </tr>
-                            <tr>
-                                <th className="text-left px-6 py-4 bg-gray-50 font-bold text-gov-text">배치 위치</th>
-                                <td className="px-6 py-4 text-gov-text-secondary">Layer 3 (광역시도 계층), PBFT 변형 합의 수행</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* 노드 진입/탈퇴 프로세스 */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="border-2 border-green-500 rounded-lg p-6 bg-green-50">
-                    <h5 className="font-bold text-green-800 mb-4 flex items-center gap-2">
-                        <i className="fas fa-sign-in-alt"></i>
-                        노드 진입 프로세스
-                    </h5>
-                    <ol className="space-y-3 text-sm">
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                            <span className="text-gov-text"><strong>진입 요청:</strong> 신규 노드가 네트워크 참여 신청</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                            <span className="text-gov-text"><strong>신원 검증:</strong> BLS 서명으로 노드 인증</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                            <span className="text-gov-text"><strong>계층 배정:</strong> 행정 구역에 따라 Layer 결정</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                            <span className="text-gov-text"><strong>동기화:</strong> Merkle Tree 동기화</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
-                            <span className="text-gov-text"><strong>활성화:</strong> 네트워크 참여 완료</span>
-                        </li>
-                    </ol>
+                <div className="bg-white rounded-lg shadow-sm border border-gov-border overflow-hidden mb-6">
+                    <div className="bg-blue-600 text-white px-6 py-4">
+                        <h4 className="text-lg font-bold flex items-center">
+                            <i className="fas fa-tasks mr-3"></i>노드 진입 프로세스 (BLS 서명 집계)
+                        </h4>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr className="border-b-2 border-gov-border bg-gray-50">
+                                    <th className="text-center px-4 py-3 font-bold" style={{width: '80px'}}>단계</th>
+                                    <th className="text-left px-4 py-3 font-bold">작업</th>
+                                    <th className="text-left px-4 py-3 font-bold">설명</th>
+                                    <th className="text-left px-4 py-3 font-bold" style={{width: '400px'}}>시뮬레이션</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {stepsEntry.map((step, idx) => (
+                                    <tr key={idx} className={'border-b hover:bg-gray-50 ' + (currentStep1 >= step.num ? 'bg-blue-50' : '')}>
+                                        <td className="text-center px-4 py-3">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full font-bold text-sm">{step.num}</span>
+                                        </td>
+                                        <td className="px-4 py-3 font-medium">{step.title}</td>
+                                        <td className="px-4 py-3 text-gray-600">{step.desc}</td>
+                                        <td className="text-left px-4 py-3">
+                                            {currentStep1 >= step.num ? (
+                                                <div className="flex items-center gap-2 fade-in">
+                                                    <i className="fas fa-check-circle text-green-600"></i>
+                                                    <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded break-all">
+                                                        {getSimValue1(step.num)}
+                                                    </span>
+                                                </div>
+                                            ) : currentStep1 === step.num - 1 && isRunning1 ? (
+                                                <i className="fas fa-spinner fa-spin text-blue-600 text-xl"></i>
+                                            ) : (
+                                                <i className="fas fa-circle text-gray-300 text-xl"></i>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div className="border-2 border-red-500 rounded-lg p-6 bg-red-50">
-                    <h5 className="font-bold text-red-800 mb-4 flex items-center gap-2">
-                        <i className="fas fa-sign-out-alt"></i>
-                        노드 탈퇴 프로세스
-                    </h5>
-                    <ol className="space-y-3 text-sm">
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                            <span className="text-gov-text"><strong>탈퇴 요청:</strong> 노드가 네트워크 이탈 통보</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                            <span className="text-gov-text"><strong>데이터 이관:</strong> 보유 데이터를 상위 계층으로 전송</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                            <span className="text-gov-text"><strong>연결 재구성:</strong> 주변 노드들의 라우팅 업데이트</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                            <span className="text-gov-text"><strong>검증:</strong> Merkle Root 재계산</span>
-                        </li>
-                        <li className="flex gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
-                            <span className="text-gov-text"><strong>제거 완료:</strong> 네트워크에서 안전하게 제거</span>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-
-            {/* 실시간 시뮬레이터 */}
-            <div className="bg-gov-gray rounded-lg p-6 border border-gov-border mb-8">
-                <h5 className="font-bold text-gov-text mb-4">실시간 노드 관리 시뮬레이터</h5>
-                
-                <div className="flex gap-3 mb-6">
-                    <button
-                        onClick={handleJoinNode}
-                        disabled={selectedAction !== null}
-                        className="px-4 py-2 bg-green-600 text-white rounded font-bold hover:bg-green-700 disabled:opacity-50"
-                    >
-                        <i className="fas fa-plus mr-2"></i>
-                        노드 추가
-                    </button>
-                </div>
-
-                <div className="space-y-3">
-                    {nodes.map(node => (
-                        <div key={node.id} className={`bg-white rounded-lg p-4 border-2 flex items-center justify-between ${
-                            node.status === 'active' ? 'border-green-500' :
-                            node.status === 'joining' ? 'border-blue-500 animate-pulse' :
-                            'border-red-500 animate-pulse'
-                        }`}>
-                            <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                                    node.status === 'active' ? 'bg-green-100' :
-                                    node.status === 'joining' ? 'bg-blue-100' :
-                                    'bg-red-100'
-                                }`}>
-                                    <i className={`fas fa-server ${
-                                        node.status === 'active' ? 'text-green-600' :
-                                        node.status === 'joining' ? 'text-blue-600' :
-                                        'text-red-600'
-                                    }`}></i>
-                                </div>
-                                <div>
-                                    <div className="font-bold text-gov-text">{node.name}</div>
-                                    <div className="text-sm text-gov-text-secondary">
-                                        Layer {node.layer} | {node.status === 'active' ? '활성' : node.status === 'joining' ? '진입 중' : '탈퇴 중'}
-                                    </div>
-                                    <div className="text-xs text-gov-text-secondary">가입일: {node.joinTime}</div>
-                                </div>
-                            </div>
-                            {node.status === 'active' && (
-                                <button
-                                    onClick={() => handleLeaveNode(node.id)}
-                                    disabled={selectedAction !== null}
-                                    className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm font-bold hover:bg-red-200 disabled:opacity-50"
-                                >
-                                    제거
-                                </button>
-                            )}
+                {currentStep1 >= 6 && (
+                    <div className="bg-green-50 border-2 border-green-500 rounded-lg p-6 text-center fade-in">
+                        <i className="fas fa-check-circle text-6xl text-green-600 mb-4"></i>
+                        <div className="text-2xl font-bold text-green-900 mb-2">노드 진입 완료!</div>
+                        <div className="text-sm text-green-700 mb-3">
+                            {newNodeId}가 Layer 1에 성공적으로 추가되었습니다.
                         </div>
-                    ))}
-                </div>
+                        <div className="bg-white rounded p-3 inline-block">
+                            <div className="text-xs text-gray-600">
+                                <strong>데이터 절약:</strong> 4,800 bytes → 48 bytes (100배 감소)<br/>
+                                <strong>검증 효율:</strong> 100번 검증 → 1번 검증 (100배 빠름)
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* 핵심 특징 */}
-            <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-blue-50 border border-blue-300 rounded-lg p-4 text-center">
-                    <i className="fas fa-bolt text-3xl text-blue-600 mb-2"></i>
-                    <div className="font-bold text-gov-text">동적 확장</div>
-                    <div className="text-xs text-gov-text-secondary mt-1">서비스 중단 없이 노드 추가</div>
+            {/* 구분선 */}
+            <div className="border-t-4 border-gray-300 my-12"></div>
+
+            {/* 섹션 2: 노드 탈퇴 */}
+            <div className="mb-12">
+                <div className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-400 rounded-lg p-6 mb-6">
+                    <h5 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+                        <i className="fas fa-sign-out-alt mr-3"></i>
+                        노드 탈퇴 (Node Exit)
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">탈퇴 노드 ID</label>
+                            <input
+                                type="text"
+                                value={exitNodeId}
+                                onChange={(e) => setExitNodeId(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                                placeholder="예: Node_4523"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">탈퇴 사유</label>
+                            <input
+                                type="text"
+                                value={exitReason}
+                                onChange={(e) => setExitReason(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                                placeholder="예: 이중 지불 시도 탐지"
+                            />
+                        </div>
+                    </div>
+                    <button
+                        onClick={runNodeExit}
+                        disabled={isRunning2 || !exitNodeId.trim() || !exitReason.trim()}
+                        className="w-full px-6 py-2 bg-red-600 text-white rounded font-bold hover:bg-red-700 disabled:opacity-50"
+                    >
+                        {isRunning2 ? '탈퇴 처리 중...' : '노드 탈퇴 시뮬레이션 실행'}
+                    </button>
+                    <div className="bg-white rounded p-4 border border-red-300 mt-4">
+                        <div className="text-xs text-gray-600 mb-2">
+                            <strong>시나리오:</strong> 악의적 행위가 탐지된 노드를 200개 증인 노드가 탈퇴 처리
+                        </div>
+                        <div className="text-xs text-gray-600">
+                            <strong>BLS 효과:</strong> 200개 서명(14KB) → 집계 서명 1개(48B) = <span className="text-red-600 font-bold">291배 감소</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-green-50 border border-green-300 rounded-lg p-4 text-center">
-                    <i className="fas fa-shield-alt text-3xl text-green-600 mb-2"></i>
-                    <div className="font-bold text-gov-text">무결성 유지</div>
-                    <div className="text-xs text-gov-text-secondary mt-1">자동 Merkle Tree 재계산</div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gov-border overflow-hidden mb-6">
+                    <div className="bg-red-600 text-white px-6 py-4">
+                        <h4 className="text-lg font-bold flex items-center">
+                            <i className="fas fa-tasks mr-3"></i>노드 탈퇴 프로세스 (BLS 서명 집계)
+                        </h4>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr className="border-b-2 border-gov-border bg-gray-50">
+                                    <th className="text-center px-4 py-3 font-bold" style={{width: '80px'}}>단계</th>
+                                    <th className="text-left px-4 py-3 font-bold">작업</th>
+                                    <th className="text-left px-4 py-3 font-bold">설명</th>
+                                    <th className="text-left px-4 py-3 font-bold" style={{width: '400px'}}>시뮬레이션</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {stepsExit.map((step, idx) => (
+                                    <tr key={idx} className={'border-b hover:bg-gray-50 ' + (currentStep2 >= step.num ? 'bg-red-50' : '')}>
+                                        <td className="text-center px-4 py-3">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white rounded-full font-bold text-sm">{step.num}</span>
+                                        </td>
+                                        <td className="px-4 py-3 font-medium">{step.title}</td>
+                                        <td className="px-4 py-3 text-gray-600">{step.desc}</td>
+                                        <td className="text-left px-4 py-3">
+                                            {currentStep2 >= step.num ? (
+                                                <div className="flex items-center gap-2 fade-in">
+                                                    <i className="fas fa-check-circle text-green-600"></i>
+                                                    <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded break-all">
+                                                        {getSimValue2(step.num)}
+                                                    </span>
+                                                </div>
+                                            ) : currentStep2 === step.num - 1 && isRunning2 ? (
+                                                <i className="fas fa-spinner fa-spin text-red-600 text-xl"></i>
+                                            ) : (
+                                                <i className="fas fa-circle text-gray-300 text-xl"></i>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div className="bg-purple-50 border border-purple-300 rounded-lg p-4 text-center">
-                    <i className="fas fa-sync text-3xl text-purple-600 mb-2"></i>
-                    <div className="font-bold text-gov-text">자동 재구성</div>
-                    <div className="text-xs text-gov-text-secondary mt-1">네트워크 토폴로지 자동 조정</div>
-                </div>
+
+                {currentStep2 >= 6 && (
+                    <div className="bg-orange-50 border-2 border-orange-500 rounded-lg p-6 text-center fade-in">
+                        <i className="fas fa-exclamation-triangle text-6xl text-orange-600 mb-4"></i>
+                        <div className="text-2xl font-bold text-orange-900 mb-2">노드 탈퇴 완료!</div>
+                        <div className="text-sm text-orange-700 mb-3">
+                            {exitNodeId}가 "{exitReason}" 사유로 제거되었습니다.
+                        </div>
+                        <div className="bg-white rounded p-3 inline-block">
+                            <div className="text-xs text-gray-600">
+                                <strong>데이터 절약:</strong> 9,600 bytes → 48 bytes (200배 감소)<br/>
+                                <strong>검증 효율:</strong> 200번 검증 → 1번 검증 (200배 빠름)<br/>
+                                <strong>블랙리스트:</strong> 48 bytes로 영구 저장 (14KB 절약)
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
