@@ -125,6 +125,11 @@ government-ai-systems/
 
 ## 📞 문의
 
+- **GitHub Issues**: https://github.com/team-jupeter/government-ai-systems/issues
+- **데모 사이트**: http://100.30.14.224/
+
+상업적 라이선스 문의는 GitHub Issues를 통해 연락 바랍니다.
+
 - **GitHub**: https://github.com/team-jupeter/government-ai-systems
 - **데모 사이트**: http://100.30.14.224/
 - **이슈 트래커**: https://github.com/team-jupeter/government-ai-systems/issues
