@@ -4,6 +4,8 @@ const App = () => {
 
     const tabs = [
         { id: 'overview', name: '개요', icon: 'home', component: Overview },
+        { id: 'issuance', name: '발행과 유통', icon: 'coins', component: IssuanceCirculation },
+        { id: 'record', name: '기록', icon: 'database', component: RecordMechanism },
         { id: 'fpga', name: 'FPGA 하드웨어', icon: 'microchip', component: FPGAHardware },
         { id: 'financial', name: '재무제표', icon: 'file-invoice-dollar', component: FinancialStatement },
         { id: 'tax', name: '세무 자동화', icon: 'calculator', component: TaxAutomation },
