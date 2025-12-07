@@ -63,4 +63,4 @@ git clone https://github.com/team-jupeter/government-ai-systems.git
 
 ---
 
-© 2025 Jupiter AI Lab. Licensed under CC BY-NC-SA 4.0.
+© 2025 AI City Inc. (ACI). Licensed under CC BY-NC-SA 4.0.
