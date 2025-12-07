@@ -209,6 +209,7 @@ const Overview = () => {
         <section className="py-16 bg-gov-gray">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="text-center mb-12">
+                <HashTransmissionAnimation />
                     <h3 className="text-3xl font-bold text-gov-text mb-4">핵심 기술 특징</h3>
                     <p className="text-gov-text-secondary">기존 통신 인프라를 활용한 혁신적인 분산 신뢰 시스템</p>
                 </div>
