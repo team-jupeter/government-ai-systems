@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGCT Ledger 초기화 | 대한민국 정부</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+        }
+        .gov-header {
+            background: #004C9E;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .gov-header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .gov-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .gov-header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .main-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .card-title {
+            color: #004C9E;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #004C9E;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            min-height: 100px;
+            transition: border-color 0.2s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #004C9E;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #004C9E;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #004C9E;
+            color: white;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: #003d7a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #dee2e6;
+            z-index: -1;
+        }
+        .step:last-child::after {
+            display: none;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #dee2e6;
+            color: #6c757d;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .step.active .step-number {
+            background: #004C9E;
+            color: white;
+        }
+        .step-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .step.active .step-label {
+            color: #004C9E;
+            font-weight: 600;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .holder-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .holder-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .holder-info strong {
+            color: #004C9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="gov-header">
+        <div class="container">
+            <h1>🏛️ EGCT Ledger 초기화</h1>
+            <div class="subtitle">대한민국 정부 디지털 화폐 시스템</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="step-indicator">
+            <div class="step active" id="step-ind-1">
+                <div class="step-number">1</div>
+                <div class="step-label">임시 키 입력</div>
+            </div>
+            <div class="step" id="step-ind-2">
+                <div class="step-number">2</div>
+                <div class="step-label">본인 확인</div>
+            </div>
+            <div class="step" id="step-ind-3">
+                <div class="step-number">3</div>
+                <div class="step-label">지갑 생성</div>
+            </div>
+        </div>
+
+        <!-- Step 1: 임시 Public Key 입력 -->
+        <div class="card" id="step1">
+            <div class="card-title">1단계: 임시 Public Key 입력</div>
+            
+            <div class="info-box">
+                <strong>📧 이메일에서 받은 정보:</strong><br>
+                • 익명화된 명단에서 자신의 이름과 이메일 확인<br>
+                • 해당하는 임시 Public Key (66자리) 복사<br>
+                • 형식: 0x로 시작하는 16진수
+            </div>
+
+            <div class="form-group">
+                <label for="tempKeyInput">임시 Public Key (66자리)</label>
+                <textarea id="tempKeyInput" placeholder="0x..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" onclick="verifyTempKey()">확인 및 다음 단계</button>
+            <button class="btn btn-secondary" onclick="location.href='index.html'">← 메인으로 돌아가기</button>
+        </div>
+
+        <!-- Step 2: 본인 확인 -->
+        <div class="card hidden" id="step2">
+            <div class="card-title">2단계: 본인 확인</div>
+            
+            <div class="holder-info" id="holderInfo"></div>
+
+            <div class="info-box">
+                <strong>⚠️ 보안 확인:</strong><br>
+                본인 확인을 위해 다음 정보를 입력하세요
+            </div>
+
+            <div class="form-group">
+                <label for="cityInput">거주 지역 (시 단위)</label>
+                <input type="text" id="cityInput" placeholder="예: 성남시, 서울시, 제주시">
+            </div>
+
+            <div class="form-group">
+                <label for="phonePrefixInput">전화번호 앞 4자리</label>
+                <input type="text" id="phonePrefixInput" placeholder="예: 9529" maxlength="4">
+            </div>
+
+            <button class="btn btn-primary" onclick="verifyIdentity()">본인 확인</button>
+            <button class="btn btn-secondary" onclick="goToStep(1)">← 이전 단계</button>
+        </div>
+
+        <!-- Step 3: 지갑 생성 -->
+        <div class="card hidden" id="step3">
+            <div class="card-title">3단계: 지갑 생성</div>
+            
+            <div class="info-box">
+                <strong>🔐 중요:</strong><br>
+                생성되는 12개의 복구 단어를 반드시 종이에 기록하고 안전하게 보관하세요.<br>
+                복구 단어를 분실하면 자산을 영구적으로 잃게 됩니다.
+            </div>
+
+            <button class="btn btn-primary" onclick="generateWallet()">지갑 생성</button>
+
+            <div id="walletResult" class="hidden" style="margin-top: 20px;">
+                <div class="form-group" style="position: relative;">
+                    <label>복구 단어 (12개, 종이에 기록)
+                        <button onclick="copyToClipboard('mnemonicDisplay')" style="
+                            float: right;
+                            padding: 4px 10px;
+                            background: #004C9E;
+                            color: white;
+                            border: none;
+                            border-radius: 3px;
+                            cursor: pointer;
+                            font-size: 12px;
+                        ">📋 복사</button>
+                    </label>
+                    <textarea id="mnemonicDisplay" readonly style="background: #f8f9fa;"></textarea>
+                </div>
+
+                <div class="form-group" style="position: relative;">
+                    <label>새 Public Key
+                        <button onclick="copyToClipboard('newPublicKeyDisplay')" style="
+                            float: right;
+                            padding: 4px 10px;
+                            background: #004C9E;
+                            color: white;
+                            border: none;
+                            border-radius: 3px;
+                            cursor: pointer;
+                            font-size: 12px;
+                        ">📋 복사</button>
+                    </label>
+                    <input type="text" id="newPublicKeyDisplay" readonly style="background: #f8f9fa; font-family: 'Courier New', monospace;">
+                </div>
+
+                <button class="btn btn-primary" onclick="confirmActivation()">확인 및 Ledger 활성화</button>
+            </div>
+        </div>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+    </div>
+
+    <script>
+        let currentHolder = null;
+
+        function goToStep(stepNum) {
+            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+            document.getElementById('step' + stepNum).classList.remove('hidden');
+            
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-ind-' + stepNum).classList.add('active');
+        }
+
+        async function verifyTempKey() {
+            const tempKey = document.getElementById('tempKeyInput').value.trim();
+            
+            if (!tempKey || !tempKey.startsWith('0x') || tempKey.length !== 66) {
+                showError('올바른 형식의 임시 Public Key를 입력하세요 (66자리, 0x로 시작)');
+                return;
+            }
+
+            try {
+                const response = await fetch('data/holders.json');
+                const data = await response.json();
+                
+                const holder = data.holders.find(h => h.tempPublicKey === tempKey);
+                
+                if (!holder) {
+                    showError('일치하는 보유자를 찾을 수 없습니다. 임시 Public Key를 다시 확인하세요.');
+                    return;
+                }
+
+                if (holder.status === 'activated') {
+                    showError('이미 활성화된 계정입니다.');
+                    return;
+                }
+
+                currentHolder = holder;
+                
+                document.getElementById('holderInfo').innerHTML = `
+                    <p><strong>이름:</strong> ${holder.name.substring(0, 1)}***</p>
+                    <p><strong>EGCT 할당량:</strong> ${holder.balance.toLocaleString()} T</p>
+                    <p><strong>상태:</strong> 대기 중</p>
+                `;
+                
+                goToStep(2);
+                
+            } catch (error) {
+                showError('데이터를 불러오는 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        function verifyIdentity() {
+            const city = document.getElementById('cityInput').value.trim();
+            const phonePrefix = document.getElementById('phonePrefixInput').value.trim();
+
+            if (!city || !phonePrefix) {
+                showError('모든 정보를 입력하세요.');
+                return;
+            }
+
+            if (phonePrefix.length !== 4 || !/^\d{4}$/.test(phonePrefix)) {
+                showError('전화번호 앞 4자리는 숫자 4자리여야 합니다.');
+                return;
+            }
+
+            // 정보가 없는 경우 통과
+            if (!currentHolder.city && !currentHolder.phonePrefix) {
+                goToStep(3);
+                return;
+            }
+
+            // 정보 확인
+            if (currentHolder.city && city !== currentHolder.city) {
+                showError('거주 지역이 일치하지 않습니다.');
+                return;
+            }
+
+            if (currentHolder.phonePrefix && phonePrefix !== currentHolder.phonePrefix) {
+                showError('전화번호가 일치하지 않습니다.');
+                return;
+            }
+
+            goToStep(3);
+        }
+
+        function generateWallet() {
+            const koreanWords = [
+                '가격', '가능', '가족', '간격', '감각', '강도', '개념', '거리', '건물', '결과',
+                '경우', '계획', '고객', '공간', '과정', '관계', '교육', '구조', '국가', '권리',
+                '기간', '기술', '기업', '기회', '능력', '단계', '대상', '도시', '동안', '방법',
+                '범위', '변화', '보호', '분야', '사람', '사회', '상황', '생각', '성과', '세계'
+            ];
+            
+            let mnemonic = '';
+            for (let i = 0; i < 12; i++) {
+                const randomIndex = Math.floor(Math.random() * koreanWords.length);
+                mnemonic += koreanWords[randomIndex] + (i < 11 ? ' ' : '');
+            }
+            
+            const newPublicKey = '0x' + Array.from({length: 64}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+            
+            document.getElementById('mnemonicDisplay').value = mnemonic;
+            document.getElementById('newPublicKeyDisplay').value = newPublicKey;
+            document.getElementById('walletResult').classList.remove('hidden');
+        }
+
+
+        // 클립보드 복사 함수
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.value;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('✅ 복사되었습니다!');
+                }).catch(err => {
+                    console.error('복사 실패:', err);
+                    fallbackCopy(element);
+                });
+            } else {
+                fallbackCopy(element);
+            }
+        }
+        
+        // 구형 브라우저용 복사
+        function fallbackCopy(element) {
+            element.select();
+            element.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                alert('✅ 복사되었습니다!');
+            } catch (err) {
+                alert('❌ 복사 실패: 수동으로 복사하세요.');
+            }
+        }
+
+        function confirmActivation() {
+            const confirmed = confirm(
+                '복구 단어를 안전하게 기록하셨습니까?\n\n' +
+                '⚠️ 이 단어들을 잃어버리면 자산을 영구적으로 잃게 됩니다!\n\n' +
+                '종이에 기록하고 안전한 곳에 보관하셨다면 "확인"을 누르세요.'
+            );
+            
+            if (!confirmed) return;
+
+            const newPublicKey = document.getElementById('newPublicKeyDisplay').value;
+            const mnemonic = document.getElementById('mnemonicDisplay').value;
+            
+            // 로컬 스토리지에 로그인 정보 저장
+            localStorage.setItem('egct_logged_in', 'true');
+            localStorage.setItem('egct_public_key', newPublicKey);
+            localStorage.setItem('egct_holder_name', currentHolder.name);
+            localStorage.setItem('egct_balance', currentHolder.balance);
+            
+            showSuccess(
+                '✅ Ledger 초기화 완료!<br><br>' +
+                '<strong>할당량:</strong> ' + currentHolder.balance.toLocaleString() + ' T<br>' +
+                '<strong>Public Key:</strong> ' + newPublicKey.substring(0, 20) + '...<br><br>' +
+                '3초 후 메인 페이지로 이동합니다...'
+            );
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.innerHTML = '❌ ' + message;
+            alert.style.display = 'block';
+            document.getElementById('successAlert').style.display = 'none';
+            setTimeout(() => { alert.style.display = 'none'; }, 5000);
+        }
+
+        function showSuccess(message) {
+            const alert = document.getElementById('successAlert');
+            alert.innerHTML = message;
+            alert.style.display = 'block';
+            document.getElementById('errorAlert').style.display = 'none';
+        }
+
+        // URL에서 tempKey 파라미터 확인 및 자동 검증
+        const urlParams = new URLSearchParams(window.location.search);
+        const tempKeyParam = urlParams.get('tempKey');
+        if (tempKeyParam) {
+            // Step 1 숨기기
+            document.getElementById('step1').style.display = 'none';
+            // 자동 검증 실행
+            autoVerifyTempKey(tempKeyParam);
+        }
+        
+        // 자동 검증 함수
+        async function autoVerifyTempKey(tempKey) {
+            try {
+                const response = await fetch('data/holders.json');
+                const data = await response.json();
+                
+                const holder = data.holders.find(h => h.tempPublicKey === tempKey);
+                
+                if (!holder) {
+                    showError('일치하는 보유자를 찾을 수 없습니다.');
+                    document.getElementById('step1').style.display = 'block';
+                    return;
+                }
+
+                if (holder.status === 'activated') {
+                    showError('이미 활성화된 계정입니다.');
+                    document.getElementById('step1').style.display = 'block';
+                    return;
+                }
+
+                currentHolder = holder;
+                
+                document.getElementById('holderInfo').innerHTML = `
+                    <p><strong>이름:</strong> ${holder.name.substring(0, 1)}***</p>
+                    <p><strong>EGCT 할당량:</strong> ${holder.balance.toLocaleString()} T</p>
+                    <p><strong>상태:</strong> 대기 중</p>
+                `;
+                
+                // 바로 Step 2로 이동
+                goToStep(2);
+                
+            } catch (error) {
+                showError('데이터를 불러오는 중 오류가 발생했습니다: ' + error.message);
+                document.getElementById('step1').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

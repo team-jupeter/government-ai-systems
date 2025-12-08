@@ -496,7 +496,7 @@
     </style>
 </head>
 <body class="bg-white text-gray-900">
-
+    
     <!-- 데모 배너 -->
         <div style="background:#4B5563;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;">
         <p style="font-size:14px;font-weight:600;margin:0;">⚠️ 본 사이트는 OpenHash 기술의 실증을 위한 데모 시스템입니다 (실제 정부 서비스 아님)</p>
@@ -571,7 +571,349 @@
     </script>
     
 
+
+    <script>
+        // 페이지 로드 시 로그인 상태 확인
+        window.addEventListener('DOMContentLoaded', function() {
+            
+            // "지갑 연결" 버튼 찾아서 이벤트 추가
+            setTimeout(() => {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    if (btn.textContent.includes('지갑 연결') || btn.textContent.includes('지갑연결')) {
+                        btn.onclick = function(e) {
+                            e.preventDefault();
+                            openLoginModal();
+                        };
+                        console.log('✓ 지갑 연결 버튼에 이벤트 추가됨');
+                    }
+                });
+            }, 1000);
+
+            const isLoggedIn = localStorage.getItem('egct_logged_in');
+            const publicKey = localStorage.getItem('egct_public_key');
+            const holderName = localStorage.getItem('egct_holder_name');
+            let balance = parseInt(localStorage.getItem('egct_balance') || '0');
+            
+            // "내 지갑" 섹션 찾기
+            const walletSection = document.querySelector('.wallet-info-section') || 
+                                 Array.from(document.querySelectorAll('div')).find(d => d.textContent.includes('내 지갑'));
+            
+            if (walletSection) {
+                if (isLoggedIn === 'true' && publicKey) {
+                    // 로그인 상태 - 지갑 정보 표시
+                    updateWalletDisplay(balance, holderName, publicKey);
+                } else {
+                    // 로그아웃 상태 - 로그인 버튼 표시
+                    showLoginButton(walletSection);
+                }
+            }
+        });
+        
+        function showLoginButton(container) {
+            // "0 T" 텍스트를 로그인 버튼으로 교체
+            const zeroBalance = Array.from(container.querySelectorAll('*')).find(el => 
+                el.textContent.trim() === '0 T' || el.textContent.includes('0 T')
+            );
+            
+            if (zeroBalance) {
+                zeroBalance.innerHTML = `
+                    <a href="temp-login.html" style="
+                        display: inline-block;
+                        padding: 15px 30px;
+                        background: #004C9E;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 4px;
+                        font-weight: 600;
+                        font-size: 16px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                        transition: all 0.3s;
+                    " onmouseover="this.style.background='#003d7a'" 
+                       onmouseout="this.style.background='#004C9E'">
+                        🔑 지갑 연결 / 로그인
+                    </a>
+                `;
+            }
+        }
+        
+        function updateWalletDisplay(balance, holderName, publicKey) {
+            // "0 T" 텍스트를 실제 잔고로 교체
+            const balanceElements = document.querySelectorAll('*');
+            balanceElements.forEach(el => {
+                if (el.textContent.trim() === '0 T' && el.children.length === 0) {
+                    el.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 36px; font-weight: 700; color: #004C9E; margin-bottom: 10px;">
+                                ${balance.toLocaleString()} T
+                            </div>
+                            <div style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">
+                                보유자: ${holderName || '익명'}
+                            </div>
+                            <button onclick="logout()" style="
+                                padding: 8px 16px;
+                                background: #dc3545;
+                                color: white;
+                                border: none;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                            ">🚪 로그아웃</button>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        // 로그아웃 함수
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('egct_logged_in');
+                localStorage.removeItem('egct_public_key');
+                localStorage.removeItem('egct_holder_name');
+                localStorage.removeItem('egct_balance');
+                alert('로그아웃 되었습니다.');
+                location.reload();
+            }
+        }
+        
+        // 거래 처리 함수 (매수/매도 시 잔고 업데이트)
+        function processTrade(type, amount, price) {
+            const isLoggedIn = localStorage.getItem('egct_logged_in');
+            
+            if (isLoggedIn !== 'true') {
+                alert('거래하려면 먼저 로그인하세요.');
+                window.location.href = 'temp-login.html';
+                return false;
+            }
+            
+            let currentBalance = parseInt(localStorage.getItem('egct_balance') || '0');
+            
+            if (type === 'sell') {
+                // 판매
+                if (currentBalance < amount) {
+                    alert(`잔고가 부족합니다. 현재 잔고: ${currentBalance.toLocaleString()} T`);
+                    return false;
+                }
+                currentBalance -= amount;
+                localStorage.setItem('egct_balance', currentBalance.toString());
+                alert(`${amount.toLocaleString()} T 판매 완료!
+현재 잔고: ${currentBalance.toLocaleString()} T`);
+            } else if (type === 'buy') {
+                // 구매
+                currentBalance += amount;
+                localStorage.setItem('egct_balance', currentBalance.toString());
+                alert(`${amount.toLocaleString()} T 구매 완료!
+현재 잔고: ${currentBalance.toLocaleString()} T`);
+            }
+            
+            // 화면 갱신
+            location.reload();
+            return true;
+        }
+        
+        // 매도 버튼 이벤트 연결
+        document.addEventListener('DOMContentLoaded', function() {
+            // 매도 버튼 찾기
+            const sellButtons = Array.from(document.querySelectorAll('button')).filter(btn => 
+                btn.textContent.includes('매도')
+            );
+            
+            sellButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const amountInput = document.querySelector('input[placeholder*="수량"]');
+                    const priceInput = document.querySelector('input[placeholder*="가격"]');
+                    
+                    if (amountInput && priceInput) {
+                        const amount = parseInt(amountInput.value || '0');
+                        const price = parseInt(priceInput.value || '0');
+                        
+                        if (amount > 0 && price > 0) {
+                            processTrade('sell', amount, price);
+                        } else {
+                            alert('수량과 가격을 입력하세요.');
+                        }
+                    }
+                });
+            });
+            
+            // 매수 버튼 찾기
+            const buyButtons = Array.from(document.querySelectorAll('button')).filter(btn => 
+                btn.textContent.includes('매수')
+            );
+            
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const amountInput = document.querySelector('input[placeholder*="수량"]');
+                    const priceInput = document.querySelector('input[placeholder*="가격"]');
+                    
+                    if (amountInput && priceInput) {
+                        const amount = parseInt(amountInput.value || '0');
+                        const price = parseInt(priceInput.value || '0');
+                        
+                        if (amount > 0 && price > 0) {
+                            processTrade('buy', amount, price);
+                        } else {
+                            alert('수량과 가격을 입력하세요.');
+                        }
+                    }
+                });
+            });
+        });
+        
+        // 기존 connectWallet 함수 수정
+        
+    
+        
+        // 로그인 모달 열기
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        // 로그인 모달 닫기
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('modalTempKeyInput').value = '';
+            document.getElementById('modalAlert').style.display = 'none';
+        }
+        
+        // 모달에서 임시 키 검증
+        async function verifyModalKey() {
+            const tempKey = document.getElementById('modalTempKeyInput').value.trim();
+            
+            if (!tempKey || !tempKey.startsWith('0x') || tempKey.length !== 66) {
+                showModalAlert('올바른 형식의 임시 Public Key를 입력하세요 (66자리, 0x로 시작)', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('data/holders.json');
+                const data = await response.json();
+                
+                const holder = data.holders.find(h => h.tempPublicKey === tempKey);
+                
+                if (!holder) {
+                    showModalAlert('일치하는 보유자를 찾을 수 없습니다. 임시 Public Key를 다시 확인하세요.', 'error');
+                    return;
+                }
+
+                if (holder.status === 'activated') {
+                    showModalAlert('이미 활성화된 계정입니다.', 'error');
+                    return;
+                }
+
+                // activate.html로 이동
+                window.location.href = 'activate.html?tempKey=' + encodeURIComponent(tempKey);
+                
+            } catch (error) {
+                showModalAlert('데이터를 불러오는 중 오류가 발생했습니다: ' + error.message, 'error');
+            }
+        }
+        
+        // 모달 알림 표시
+        function showModalAlert(message, type) {
+            const alert = document.getElementById('modalAlert');
+            alert.innerHTML = (type === 'error' ? '❌ ' : '✅ ') + message;
+            alert.style.display = 'block';
+            alert.style.background = type === 'error' ? '#f8d7da' : '#d4edda';
+            alert.style.color = type === 'error' ? '#721c24' : '#155724';
+            alert.style.border = '1px solid ' + (type === 'error' ? '#f5c6cb' : '#c3e6cb');
+        }
+        
+function connectWallet() {
+            openLoginModal();
+        }
+        </script>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+    ">
+        <div style="
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        ">
+            <h2 style="color: #004C9E; font-size: 24px; font-weight: 700; margin-bottom: 10px; text-align: center;">
+                🔑 EGCT 로그인
+            </h2>
+            <p style="text-align: center; color: #6c757d; margin-bottom: 30px; font-size: 14px;">
+                이메일에서 받은 임시 Public Key를 입력하세요
+            </p>
+            
+            <div style="background: #e7f3ff; border-left: 4px solid #0066cc; padding: 15px; margin-bottom: 25px; font-size: 14px; line-height: 1.6;">
+                <strong>📧 이메일 확인 사항:</strong><br>
+                • 익명화된 명단에서 자신의 이름 찾기<br>
+                • 해당하는 임시 Public Key (66자리) 복사<br>
+                • 형식: 0x로 시작하는 16진수
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #495057;">
+                    임시 Public Key (66자리)
+                </label>
+                <textarea id="modalTempKeyInput" placeholder="0x..." style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #ced4da;
+                    border-radius: 4px;
+                    font-family: 'Courier New', monospace;
+                    font-size: 13px;
+                    min-height: 120px;
+                    resize: vertical;
+                "></textarea>
+            </div>
+            
+            <button onclick="verifyModalKey()" style="
+                width: 100%;
+                padding: 12px 24px;
+                background: #004C9E;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-bottom: 10px;
+            ">확인 및 계속</button>
+            
+            <button onclick="closeLoginModal()" style="
+                width: 100%;
+                padding: 10px 20px;
+                background: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 14px;
+                cursor: pointer;
+            ">닫기</button>
+            
+            <div id="modalAlert" style="
+                margin-top: 20px;
+                padding: 15px;
+                border-radius: 4px;
+                display: none;
+            "></div>
+        </div>
+    </div>
+
 </body>
+
 </html>
         @keyframes slideDown {
             from {

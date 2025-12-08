@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2025-12-08T00:00:00",
+  "totalHolders": 5,
+  "holders": [
+    {
+      "id": 1,
+      "name": "홍길동",
+      "email": "sample1@example.com",
+      "balance": 10000,
+      "tempPublicKey": "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "phonePrefix": "1234",
+      "city": "서울시",
+      "realPublicKey": null,
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "name": "김철수",
+      "email": "sample2@example.com",
+      "balance": 5000,
+      "tempPublicKey": "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "phonePrefix": "5678",
+      "city": "부산시",
+      "realPublicKey": null,
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "name": "이영희",
+      "email": "sample3@example.com",
+      "balance": 3000,
+      "tempPublicKey": "0x3333333333333333333333333333333333333333333333333333333333333333",
+      "phonePrefix": "9012",
+      "city": "대구시",
+      "realPublicKey": null,
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "name": "박민수",
+      "email": "sample4@example.com",
+      "balance": 2000,
+      "tempPublicKey": "0x4444444444444444444444444444444444444444444444444444444444444444",
+      "phonePrefix": "3456",
+      "city": "인천시",
+      "realPublicKey": null,
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "name": "최지연",
+      "email": "sample5@example.com",
+      "balance": 1000,
+      "tempPublicKey": "0x5555555555555555555555555555555555555555555555555555555555555555",
+      "phonePrefix": "7890",
+      "city": "광주시",
+      "realPublicKey": null,
+      "status": "pending"
+    }
+  ]
+}

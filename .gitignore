@@ -49,3 +49,48 @@ currency/data/backup_*/
 # 공개 데이터는 포함 (개인정보 없음)
 !currency/data/*.public.json
 !currency/data/README.md
+
+# EGCT 개인정보 포함 스크립트
+currency/data/generate_initial_data.py
+currency/data/activation_links.csv
+
+# EGCT 개인정보 파일
+currency/data/holders.json
+currency/data/registration_links.csv
+currency/data/holders.public.json
+currency/data/registration_tokens.json
+currency/data/*.csv
+currency/*.backup_*
+currency/*.working_*
+currency/*.bak
+currency/*.old
+currency/js/components/*.modal_structure_ok
+
+# EGCT 개인정보 파일
+currency/data/holders.json
+currency/data/registration_links.csv
+currency/data/holders.public.json
+currency/data/registration_tokens.json
+currency/data/*.csv
+currency/*.backup_*
+currency/*.working_*
+currency/*.bak
+currency/*.old
+currency/js/components/*.modal_structure_ok
+
+# 백업 디렉토리
+backend.bak*/
+js.bak*/
+js_backup*/
+frontend.bak*/
+
+# 백업 파일 패턴
+*.bak*
+*_backup_gov24
+
+# 전역 백업 파일 패턴
+**/index.html.backup*
+**/app.py.backup*
+**/*.backup_gov24
+**/*.backup_3layer
+**/*.backup-*
