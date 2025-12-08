@@ -19,9 +19,9 @@ body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 .btn-danger { background: #c62828; color: #fff; }
 .btn-danger:hover { background: #b71c1c; }
-.btn-primary { background: #003566; color: #fff; }
-.btn-primary:hover { background: #004080; }
-.btn-secondary { background: #fff; color: #333; border: 1px solid #ddd; }
+.btn-primary { background: #0a66c2; color: #fff; }
+.btn-primary:hover { background: #004182; }
+.btn-secondary { background: #fff; color: #333; border: 1px solid #ccc; }
 .btn-secondary:hover { background: #f5f5f5; }
 
 /* 입력 */
@@ -35,8 +35,8 @@ body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-family: inherit;
     font-size: 14px; 
 }
-.form-group input:focus { outline: none; border-color: #003566; }
-.form-group input:disabled { background: #e9ecef; cursor: not-allowed; }
+.form-group input:focus { outline: none; border-color: #0a66c2; }
+.form-group input:disabled { background: #f3f3f3; cursor: not-allowed; }
 
 /* 로그인 */
 .login-container { 
@@ -49,27 +49,27 @@ body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 .login-panel { 
     background: #fff; 
     padding: 48px; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     width: 100%;
     max-width: 420px;
 }
 .login-title { 
     text-align: center; 
     margin-bottom: 32px; 
-    color: #003566;
+    color: #191919;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 600;
 }
 .hidden { display: none !important; }
 
-/* Modal - 정부 공식 사이트 스타일 */
+/* Modal - LinkedIn 스타일 (심플, 미니멀) */
 .modal { 
     display: none; 
     position: fixed; 
     top: 0; left: 0; 
     width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.5); 
+    background: rgba(0,0,0,0.6); 
     align-items: center; 
     justify-content: center; 
     z-index: 1000;
@@ -79,167 +79,84 @@ body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .modal-content { 
     background: #fff; 
-    border-radius: 12px; 
-    max-width: 480px; 
+    border-radius: 8px; 
+    max-width: 400px; 
     width: 100%; 
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .modal-header { 
-    background: linear-gradient(135deg, #003566 0%, #0055a5 100%); 
-    color: #fff; 
-    padding: 20px 24px;
+    padding: 20px 24px 0;
 }
 
 .modal-header h2 {
     font-size: 18px;
     font-weight: 600;
+    color: #191919;
     margin: 0;
 }
 
 .modal-body { 
-    padding: 24px;
-    max-height: 60vh;
-    overflow-y: auto;
+    padding: 16px 24px 24px;
+}
+
+.modal-body p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
 }
 
 .modal-footer { 
-    padding: 16px 24px; 
-    background: #f8f9fa; 
-    text-align: center;
-    border-top: 1px solid #e9ecef;
+    padding: 12px 24px 20px; 
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .modal-footer .btn {
-    min-width: 120px;
-    padding: 12px 32px;
-}
-
-/* 모달 내부 컴포넌트 */
-.modal-summary {
-    background: #f0f7ff;
-    border: 1px solid #d0e3f7;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.modal-summary-label {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.modal-summary-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: #003566;
-    line-height: 1.2;
-}
-
-.modal-summary-sub {
+    padding: 8px 16px;
     font-size: 14px;
-    color: #555;
-    margin-top: 8px;
+    border-radius: 20px;
 }
 
-.modal-section-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.modal-utxo-card {
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
+/* 모달 내부 - 거래 정보 */
+.modal-info {
+    margin-top: 16px;
     padding: 16px;
-    margin-bottom: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
 }
 
-.modal-utxo-header {
+.modal-info-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.modal-utxo-title {
+    padding: 8px 0;
     font-size: 14px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-info-row:last-child {
+    border-bottom: none;
+}
+
+.modal-info-row .label {
+    color: #666;
+}
+
+.modal-info-row .value {
     font-weight: 600;
-    color: #003566;
+    color: #191919;
 }
 
-.modal-utxo-time {
-    font-size: 12px;
-    color: #888;
+.modal-info-row.total {
+    padding-top: 12px;
+    margin-top: 4px;
+    border-top: 1px solid #dee2e6;
+    border-bottom: none;
 }
 
-.modal-utxo-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    font-size: 13px;
-    color: #555;
-}
-
-.modal-utxo-row strong {
-    color: #333;
-    font-weight: 600;
-}
-
-.modal-utxo-row.highlight {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #e5e5e5;
-    font-size: 14px;
-}
-
-.modal-utxo-row.highlight .value {
-    color: #003566;
-    font-weight: 700;
-}
-
-.modal-success-box {
-    background: #e8f5e9;
-    border: 1px solid #c8e6c9;
-    border-radius: 6px;
-    padding: 14px 16px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: #2e7d32;
-    line-height: 1.6;
-}
-
-.modal-warning-box {
-    background: #fff3e0;
-    border: 1px solid #ffe0b2;
-    border-radius: 6px;
-    padding: 14px 16px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: #e65100;
-    line-height: 1.6;
-}
-
-/* 매도 스타일 */
-.modal-summary.sell {
-    background: #fff5f5;
-    border-color: #fecaca;
-}
-
-.modal-summary.sell .modal-summary-value {
-    color: #c62828;
-}
-
-.modal-utxo-title.sell {
-    color: #c62828;
+.modal-info-row.total .value {
+    color: #0a66c2;
+    font-size: 16px;
 }
