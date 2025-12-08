@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGCT 지갑 등록 | AI City Inc.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .step {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #2563eb;
+        }
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .info-box {
+            background: white;
+            border: 2px solid #2563eb;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #64748b;
+        }
+        .info-value {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 18px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .warning-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .warning ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+        .warning li {
+            margin: 8px 0;
+        }
+        .mnemonic-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .mnemonic-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .mnemonic-words {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .mnemonic-word {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+        .mnemonic-word-number {
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+        button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            color: #065f46;
+            text-align: center;
+        }
+        .error {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            padding: 20px;
+            border-radius: 10px;
+            color: #991b1b;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .checkbox-group {
+            margin: 20px 0;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        #downloadSection {
+            background: #f0f9ff;
+            border: 2px solid #2563eb;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .download-btn {
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .download-btn:hover {
+            background: #059669;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 EGCT 지갑 등록</h1>
+            <p>AI City Inc. 디지털 화폐 보유자 지갑 생성</p>
+        </div>
+
+        <div class="content">
+            <!-- Loading -->
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px; color: #64748b;">토큰 검증 중...</p>
+            </div>
+
+            <!-- Error -->
+            <div id="errorSection" class="hidden error">
+                <h3>❌ 오류</h3>
+                <p id="errorMessage"></p>
+            </div>
+
+            <!-- Main Content -->
+            <div id="mainContent" class="hidden">
+                <!-- Step 1: 본인 정보 확인 -->
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        본인 정보 확인
+                    </div>
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-label">성명</span>
+                            <span class="info-value" id="holderName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">이메일</span>
+                            <span class="info-value" id="holderEmail">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">EGCT 할당량</span>
+                            <span class="info-value" id="holderAllocation" style="color: #2563eb;">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: 보안 경고 -->
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        보안 주의사항
+                    </div>
+                    <div class="warning">
+                        <div class="warning-title">⚠️ 반드시 읽어주세요!</div>
+                        <ul>
+                            <li><strong>12개 단어</strong>를 반드시 종이에 적어서 안전한 곳에 보관하세요</li>
+                            <li>단어를 <strong>분실하면 자산을 영구적으로 잃습니다</strong></li>
+                            <li>단어를 <strong>타인에게 절대 공유하지 마세요</strong></li>
+                            <li>스크린샷, 사진 촬영, 클라우드 저장은 위험합니다</li>
+                            <li>Private Key는 서버로 전송되지 않으며, 귀하의 브라우저에서만 생성됩니다</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3: 지갑 생성 -->
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        지갑 생성
+                    </div>
+                    <button onclick="generateWallet()" id="generateBtn">
+                        🔑 지갑 생성하기
+                    </button>
+                </div>
+
+                <!-- Step 4: 니모닉 표시 (생성 후) -->
+                <div id="mnemonicSection" class="step hidden">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        복구 단어 (Mnemonic)
+                    </div>
+                    <div class="mnemonic-box">
+                        <div class="mnemonic-title">📝 이 12개 단어를 종이에 적으세요</div>
+                        <div class="mnemonic-words" id="mnemonicWords"></div>
+                    </div>
+                    <div class="warning">
+                        <p><strong>⚠️ 주의:</strong> 이 단어들은 다시 표시되지 않습니다. 지금 종이에 적어주세요!</p>
+                    </div>
+                </div>
+
+                <!-- Step 5: 확인 체크박스 -->
+                <div id="confirmSection" class="step hidden">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        확인 사항
+                    </div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="check1" onchange="checkAllConfirmed()">
+                            <span>12개 단어를 종이에 적어서 안전한 곳에 보관했습니다</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="check2" onchange="checkAllConfirmed()">
+                            <span>단어를 분실하면 자산을 영구적으로 잃는다는 것을 이해했습니다</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="check3" onchange="checkAllConfirmed()">
+                            <span>단어를 타인과 절대 공유하지 않겠습니다</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 6: 다운로드 -->
+                <div id="downloadSection" class="hidden">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        지갑 파일 다운로드
+                    </div>
+                    <p style="margin-bottom: 15px; color: #64748b;">
+                        암호화된 지갑 파일을 다운로드하세요. 이 파일과 비밀번호로 지갑을 복구할 수 있습니다.
+                    </p>
+                    <button class="download-btn" onclick="downloadKeystore()">
+                        💾 Keystore 파일 다운로드
+                    </button>
+                    <button onclick="completeRegistration()" id="completeBtn" style="background: #10b981; margin-top: 15px;" disabled>
+                        ✅ 등록 완료
+                    </button>
+                </div>
+
+                <!-- Success -->
+                <div id="successSection" class="hidden success">
+                    <h2>✅ 등록 완료!</h2>
+                    <p style="margin-top: 15px; font-size: 16px;">
+                        Public Key: <strong id="finalPublicKey"></strong>
+                    </p>
+                    <p style="margin-top: 10px;">
+                        귀하의 지갑이 성공적으로 등록되었습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tokenData = null;
+        let generatedMnemonic = null;
+        let privateKey = null;
+        let publicKey = null;
+        let keystore = null;
+
+        // URL에서 토큰 추출
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        // 페이지 로드 시 토큰 검증
+        window.onload = async function() {
+            if (!token) {
+                showError('유효하지 않은 접근입니다. 이메일의 링크를 사용해주세요.');
+                return;
+            }
+
+            await verifyToken(token);
+        };
+
+        // 토큰 검증
+        async function verifyToken(token) {
+            try {
+                const response = await fetch(`data/registration_tokens.json`);
+                const data = await response.json();
+                
+                tokenData = data.tokens[token];
+                
+                if (!tokenData) {
+                    showError('유효하지 않은 토큰입니다.');
+                    return;
+                }
+
+                if (tokenData.used) {
+                    showError('이미 사용된 토큰입니다. 이미 등록을 완료하셨습니다.');
+                    return;
+                }
+
+                const expiresAt = new Date(tokenData.expiresAt);
+                if (new Date() > expiresAt) {
+                    showError('만료된 토큰입니다. 관리자에게 문의해주세요.');
+                    return;
+                }
+
+                // 정보 표시
+                document.getElementById('holderName').textContent = tokenData.name;
+                document.getElementById('holderEmail').textContent = tokenData.email;
+                document.getElementById('holderAllocation').textContent = `${tokenData.allocation.toLocaleString()} T`;
+
+                // 메인 컨텐츠 표시
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+
+            } catch (error) {
+                showError('토큰 검증 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        // 지갑 생성
+        function generateWallet() {
+            // BIP39 니모닉 생성 (간단한 버전 - 실제로는 라이브러리 사용)
+            const wordlist = [
+                '사과', '바나나', '체리', '개', '코끼리', '물고기', '포도', '집', '얼음', '주스', '왕', '사자',
+                '원숭이', '바늘', '오렌지', '종이', '퀸', '토끼', '뱀', '호랑이', '우산', '꽃병', '물', '크세논',
+                '요트', '얼룩말', '나무', '새', '고양이', '용', '코끼리', '여우', '거위', '모자', '아이스크림', '잼'
+            ];
+
+            generatedMnemonic = [];
+            for (let i = 0; i < 12; i++) {
+                generatedMnemonic.push(wordlist[Math.floor(Math.random() * wordlist.length)]);
+            }
+
+            // Private Key 생성 (니모닉에서 유도)
+            privateKey = CryptoJS.SHA256(generatedMnemonic.join(' ')).toString();
+            
+            // Public Key 생성 (실제로는 ECDSA 사용, 여기서는 간단히)
+            publicKey = '0x' + CryptoJS.SHA256(privateKey).toString().substring(0, 40);
+
+            // Keystore 생성 (AES 암호화)
+            const password = prompt('지갑 비밀번호를 입력하세요 (8자 이상):');
+            if (!password || password.length < 8) {
+                alert('비밀번호는 8자 이상이어야 합니다.');
+                return;
+            }
+
+            const encryptedKey = CryptoJS.AES.encrypt(privateKey, password).toString();
+            keystore = {
+                version: 1,
+                id: tokenData.holderId,
+                address: publicKey,
+                name: tokenData.name,
+                allocation: tokenData.allocation,
+                crypto: {
+                    cipher: 'aes-256-ctr',
+                    ciphertext: encryptedKey
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // 니모닉 표시
+            displayMnemonic();
+
+            // 버튼 비활성화
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('generateBtn').textContent = '✅ 지갑 생성 완료';
+        }
+
+        // 니모닉 표시
+        function displayMnemonic() {
+            const container = document.getElementById('mnemonicWords');
+            container.innerHTML = '';
+            
+            generatedMnemonic.forEach((word, index) => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'mnemonic-word';
+                wordDiv.innerHTML = `
+                    <span class="mnemonic-word-number">${index + 1}</span>
+                    ${word}
+                `;
+                container.appendChild(wordDiv);
+            });
+
+            document.getElementById('mnemonicSection').classList.remove('hidden');
+            document.getElementById('confirmSection').classList.remove('hidden');
+        }
+
+        // 모든 확인사항 체크 확인
+        function checkAllConfirmed() {
+            const check1 = document.getElementById('check1').checked;
+            const check2 = document.getElementById('check2').checked;
+            const check3 = document.getElementById('check3').checked;
+
+            if (check1 && check2 && check3) {
+                document.getElementById('downloadSection').classList.remove('hidden');
+            }
+        }
+
+        // Keystore 다운로드
+        function downloadKeystore() {
+            const blob = new Blob([JSON.stringify(keystore, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `egct-wallet-${tokenData.name}-${Date.now()}.json`;
+            a.click();
+
+            // 완료 버튼 활성화
+            document.getElementById('completeBtn').disabled = false;
+            alert('지갑 파일이 다운로드되었습니다. 안전한 곳에 보관하세요!');
+        }
+
+        // 등록 완료
+        async function completeRegistration() {
+            if (!confirm('등록을 완료하시겠습니까? 완료 후에는 수정할 수 없습니다.')) {
+                return;
+            }
+
+            // 실제로는 서버에 Public Key 전송
+            // 여기서는 로컬 스토리지에 저장
+            const registrationData = {
+                token: token,
+                name: tokenData.name,
+                publicKey: publicKey,
+                registeredAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('egct_registration', JSON.stringify(registrationData));
+
+            // 성공 표시
+            document.getElementById('mainContent').innerHTML = '';
+            document.getElementById('successSection').classList.remove('hidden');
+            document.getElementById('finalPublicKey').textContent = publicKey;
+
+            // 토큰 사용 처리 (실제로는 서버에서)
+            console.log('Registration completed:', registrationData);
+        }
+
+        function showError(message) {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('errorSection').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+        }
+    </script>
+</body>
+</html>
