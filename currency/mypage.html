@@ -8,422 +8,66 @@
     <link rel="stylesheet" href="common.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .profile-section {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: var(--space-lg);
-            margin-bottom: var(--space-lg);
-        }
-        
-        .profile-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
-        
-        .profile-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            padding: var(--space-xl);
-            text-align: center;
-            color: var(--white);
-        }
-        
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: var(--white);
-            border-radius: 50%;
-            margin: 0 auto var(--space-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: var(--primary);
-        }
-        
-        .profile-name {
-            font-size: var(--font-xl);
-            font-weight: 700;
-            margin-bottom: var(--space-xs);
-        }
-        
-        .profile-id {
-            font-size: var(--font-sm);
-            opacity: 0.85;
-        }
-        
-        .profile-badge {
-            display: inline-block;
-            background: #ffc107;
-            color: #000;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: var(--font-sm);
-            font-weight: 600;
-            margin-top: var(--space-md);
-        }
-        
-        .profile-body {
-            padding: var(--space-lg);
-        }
-        
-        .profile-row {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid var(--gray-200);
-            font-size: var(--font-base);
-        }
-        
-        .profile-row:last-child {
-            border-bottom: none;
-        }
-        
-        .profile-row .label {
-            color: var(--gray-500);
-        }
-        
-        .profile-row .value {
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-        
-        .asset-summary {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            padding: var(--space-xl);
-        }
-        
-        .asset-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-lg);
-        }
-        
-        .asset-header h2 {
-            font-size: var(--font-lg);
-            color: var(--primary);
-        }
-        
-        .asset-total {
-            display: flex;
-            align-items: baseline;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            padding-bottom: var(--space-lg);
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .asset-total .amount {
-            font-size: var(--font-xxl);
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .asset-total .change {
-            font-size: var(--font-base);
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-        }
-        
-        .asset-total .change.up {
-            background: #e8f5e9;
-            color: var(--success);
-        }
-        
-        .asset-breakdown {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-lg);
-        }
-        
-        .asset-item {
-            text-align: center;
-            padding: var(--space-lg);
-            background: var(--gray-100);
-            border-radius: var(--radius-md);
-        }
-        
-        .asset-item .icon {
-            font-size: 28px;
-            color: var(--primary);
-            margin-bottom: var(--space-sm);
-        }
-        
-        .asset-item .label {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-bottom: var(--space-xs);
-        }
-        
-        .asset-item .value {
-            font-size: var(--font-lg);
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-        
-        .asset-item .sub {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-top: var(--space-xs);
-        }
-        
-        .section-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--space-lg);
-        }
-        
-        .section-card .header {
-            padding: var(--space-md) var(--space-lg);
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .section-card .header h3 {
-            font-size: var(--font-md);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-        
-        .section-card .body {
-            padding: var(--space-lg);
-        }
-        
-        .profit-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-md);
-            margin-bottom: var(--space-lg);
-        }
-        
-        .profit-item {
-            text-align: center;
-            padding: var(--space-md);
-            background: var(--gray-100);
-            border-radius: var(--radius-md);
-        }
-        
-        .profit-item .period {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-bottom: var(--space-xs);
-        }
-        
-        .profit-item .rate {
-            font-size: var(--font-lg);
-            font-weight: 700;
-        }
-        
-        .profit-item .rate.up { color: var(--success); }
-        .profit-item .rate.down { color: var(--danger); }
-        
-        .profit-item .amount {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-top: var(--space-xs);
-        }
-        
-        .portfolio-content {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: var(--space-lg);
-            align-items: center;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .legend-item:last-child {
-            border-bottom: none;
-        }
-        
-        .legend-left {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-        
-        .legend-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 4px;
-        }
-        
-        .legend-name {
-            font-size: var(--font-base);
-            font-weight: 500;
-        }
-        
-        .legend-right {
-            text-align: right;
-        }
-        
-        .legend-value {
-            font-size: var(--font-base);
-            font-weight: 600;
-        }
-        
-        .legend-pct {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-        }
-        
-        .order-status {
-            display: flex;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-md);
-        }
-        
-        .status-btn {
-            padding: var(--space-sm) var(--space-md);
-            border: 1px solid var(--gray-300);
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            font-size: var(--font-base);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .status-btn:hover {
-            background: var(--gray-100);
-        }
-        
-        .status-btn.active {
-            background: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
-        }
-        
-        .quick-menu {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-md);
-        }
-        
-        .quick-item {
-            text-align: center;
-            padding: var(--space-lg);
-            background: var(--gray-100);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .quick-item:hover {
-            background: #e3f2fd;
-        }
-        
-        .quick-item i {
-            font-size: 28px;
-            color: var(--primary);
-            margin-bottom: var(--space-sm);
-        }
-        
-        .quick-item .label {
-            font-size: var(--font-base);
-            color: var(--gray-700);
-        }
-        
-        .alert-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-            padding: var(--space-md);
-            background: var(--gray-100);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-sm);
-            border-left: 3px solid var(--accent);
-        }
-        
-        .alert-item i {
-            font-size: 20px;
-            color: var(--accent);
-        }
-        
-        .alert-item .content {
-            flex: 1;
-        }
-        
-        .alert-item .title {
-            font-size: var(--font-base);
-            font-weight: 600;
-        }
-        
-        .alert-item .desc {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-top: 2px;
-        }
-        
-        .alert-item .time {
-            font-size: var(--font-sm);
-            color: var(--gray-400);
-        }
-        
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .setting-row:last-child {
-            border-bottom: none;
-        }
-        
-        .setting-info .title {
-            font-size: var(--font-base);
-            font-weight: 500;
-        }
-        
-        .setting-info .desc {
-            font-size: var(--font-sm);
-            color: var(--gray-500);
-            margin-top: 2px;
-        }
-        
-        .toggle {
-            width: 48px;
-            height: 26px;
-            background: var(--gray-300);
-            border-radius: 13px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .toggle.on {
-            background: var(--primary);
-        }
-        
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: var(--white);
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: left 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .toggle.on::after {
-            left: 24px;
-        }
+        .profile-section { display: grid; grid-template-columns: 320px 1fr; gap: var(--space-lg); margin-bottom: var(--space-lg); }
+        .profile-card { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+        .profile-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: var(--space-xl); text-align: center; color: var(--white); }
+        .profile-avatar { width: 80px; height: 80px; background: var(--white); border-radius: 50%; margin: 0 auto var(--space-md); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--primary); }
+        .profile-name { font-size: var(--font-xl); font-weight: 700; margin-bottom: var(--space-xs); }
+        .profile-id { font-size: var(--font-sm); opacity: 0.85; }
+        .profile-badge { display: inline-block; background: #ffc107; color: #000; padding: 4px 14px; border-radius: 20px; font-size: var(--font-sm); font-weight: 600; margin-top: var(--space-md); }
+        .profile-body { padding: var(--space-lg); }
+        .profile-row { display: flex; justify-content: space-between; padding: var(--space-md) 0; border-bottom: 1px solid var(--gray-200); font-size: var(--font-base); }
+        .profile-row:last-child { border-bottom: none; }
+        .profile-row .label { color: var(--gray-500); }
+        .profile-row .value { font-weight: 600; color: var(--gray-900); }
+        .asset-summary { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: var(--space-xl); }
+        .asset-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+        .asset-header h2 { font-size: var(--font-lg); color: var(--primary); }
+        .asset-total { display: flex; align-items: baseline; gap: var(--space-md); margin-bottom: var(--space-xl); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-200); }
+        .asset-total .amount { font-size: var(--font-xxl); font-weight: 700; color: var(--primary); }
+        .asset-total .change { font-size: var(--font-base); padding: 6px 12px; border-radius: var(--radius-sm); }
+        .asset-total .change.up { background: #e8f5e9; color: var(--success); }
+        .asset-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
+        .asset-item { text-align: center; padding: var(--space-lg); background: var(--gray-100); border-radius: var(--radius-md); }
+        .asset-item .icon { font-size: 28px; color: var(--primary); margin-bottom: var(--space-sm); }
+        .asset-item .label { font-size: var(--font-sm); color: var(--gray-500); margin-bottom: var(--space-xs); }
+        .asset-item .value { font-size: var(--font-lg); font-weight: 700; color: var(--gray-900); }
+        .asset-item .sub { font-size: var(--font-sm); color: var(--gray-500); margin-top: var(--space-xs); }
+        .section-card { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: var(--space-lg); }
+        .section-card .header { padding: var(--space-md) var(--space-lg); border-bottom: 1px solid var(--gray-200); }
+        .section-card .header h3 { font-size: var(--font-md); color: var(--primary); display: flex; align-items: center; gap: var(--space-sm); }
+        .section-card .body { padding: var(--space-lg); }
+        .portfolio-content { display: grid; grid-template-columns: 200px 1fr; gap: var(--space-lg); align-items: center; }
+        .legend-item { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md) 0; border-bottom: 1px solid var(--gray-200); }
+        .legend-item:last-child { border-bottom: none; }
+        .legend-left { display: flex; align-items: center; gap: var(--space-sm); }
+        .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+        .legend-name { font-size: var(--font-base); font-weight: 500; }
+        .legend-right { text-align: right; }
+        .legend-value { font-size: var(--font-base); font-weight: 600; }
+        .legend-pct { font-size: var(--font-sm); color: var(--gray-500); }
+        .quick-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+        .quick-item { text-align: center; padding: var(--space-lg); background: var(--gray-100); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .quick-item:hover { background: #e3f2fd; }
+        .quick-item i { font-size: 28px; color: var(--primary); margin-bottom: var(--space-sm); display: block; }
+        .quick-item .label { font-size: var(--font-base); color: var(--gray-700); }
+        .alert-item { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md); background: var(--gray-100); border-radius: var(--radius-md); margin-bottom: var(--space-sm); border-left: 3px solid var(--accent); }
+        .alert-item i { font-size: 20px; color: var(--accent); }
+        .alert-item .content { flex: 1; }
+        .alert-item .title { font-size: var(--font-base); font-weight: 600; }
+        .alert-item .desc { font-size: var(--font-sm); color: var(--gray-500); margin-top: 2px; }
+        .alert-item .time { font-size: var(--font-sm); color: var(--gray-400); }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-md) 0; border-bottom: 1px solid var(--gray-200); }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-info .title { font-size: var(--font-base); font-weight: 500; }
+        .setting-info .desc { font-size: var(--font-sm); color: var(--gray-500); margin-top: 2px; }
+        .toggle { width: 48px; height: 26px; background: var(--gray-300); border-radius: 13px; position: relative; cursor: pointer; transition: background 0.2s; }
+        .toggle.on { background: var(--primary); }
+        .toggle::after { content: ''; position: absolute; width: 22px; height: 22px; background: var(--white); border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; box-shadow: var(--shadow-sm); }
+        .toggle.on::after { left: 24px; }
+        .no-login { text-align: center; padding: 60px 20px; }
+        .no-login i { font-size: 48px; color: #ccc; margin-bottom: 16px; }
+        .no-login p { color: #666; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -440,73 +84,56 @@
             <a href="holders.html" class="tab"><i class="fas fa-users"></i>EGCT 보유 현황</a>
             <a href="prices.html" class="tab"><i class="fas fa-chart-line"></i>가격 동향</a>
             <a href="mypage.html" class="tab active"><i class="fas fa-user-circle"></i>My Page</a>
+            <a href="pdv.html" class="tab"><i class="fas fa-shield-halved"></i>My PDV</a>
         </div>
     </div>
     
-    <div class="container">
+    <div class="container" id="mainContent">
         <div class="profile-section">
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="profile-avatar"><i class="fas fa-user"></i></div>
-                    <div class="profile-name">홍길동</div>
-                    <div class="profile-id">USER_01 · user01@email.com</div>
+                    <div class="profile-name" id="userName">-</div>
+                    <div class="profile-id" id="userInfo">로그인 필요</div>
                     <div class="profile-badge"><i class="fas fa-crown"></i> VIP 회원</div>
                 </div>
                 <div class="profile-body">
-                    <div class="profile-row">
-                        <span class="label">회원 등급</span>
-                        <span class="value text-primary">VIP</span>
-                    </div>
-                    <div class="profile-row">
-                        <span class="label">가입일</span>
-                        <span class="value">2024.06.15</span>
-                    </div>
-                    <div class="profile-row">
-                        <span class="label">최근 접속</span>
-                        <span class="value">2025.12.08 23:00</span>
-                    </div>
-                    <div class="profile-row">
-                        <span class="label">보안 등급</span>
-                        <span class="value text-success"><i class="fas fa-shield-alt"></i> 높음</span>
-                    </div>
-                    <div class="profile-row">
-                        <span class="label">인증 상태</span>
-                        <span class="value text-success"><i class="fas fa-check-circle"></i> 완료</span>
-                    </div>
-                    <div class="profile-row">
-                        <span class="label">거래 수수료</span>
-                        <span class="value">0.05% (VIP 할인)</span>
-                    </div>
+                    <div class="profile-row"><span class="label">회원 등급</span><span class="value text-primary">VIP</span></div>
+                    <div class="profile-row"><span class="label">가입일</span><span class="value">2024.06.15</span></div>
+                    <div class="profile-row"><span class="label">최근 접속</span><span class="value" id="lastAccess">-</span></div>
+                    <div class="profile-row"><span class="label">보안 등급</span><span class="value text-success"><i class="fas fa-shield-alt"></i> 높음</span></div>
+                    <div class="profile-row"><span class="label">총 거래 건수</span><span class="value" id="txCount">0건</span></div>
+                    <div class="profile-row"><span class="label">거래 수수료</span><span class="value">0.05% (VIP 할인)</span></div>
                 </div>
             </div>
             
             <div class="asset-summary">
                 <div class="asset-header">
                     <h2><i class="fas fa-wallet"></i> 자산 현황</h2>
-                    <span class="text-muted text-sm">2025.12.08 23:00 기준</span>
+                    <span class="text-muted text-sm" id="assetTime">-</span>
                 </div>
                 <div class="asset-total">
-                    <span class="amount">₩40,150,000</span>
-                    <span class="change up"><i class="fas fa-arrow-up"></i> +2.45% (₩960,000)</span>
+                    <span class="amount" id="totalAsset">₩0</span>
+                    <span class="change up" id="assetChange"><i class="fas fa-arrow-up"></i> -</span>
                 </div>
                 <div class="asset-breakdown">
                     <div class="asset-item">
                         <div class="icon"><i class="fas fa-coins"></i></div>
                         <div class="label">보유 EGCT</div>
-                        <div class="value">30,000 T</div>
-                        <div class="sub">₩30,150,000</div>
+                        <div class="value" id="egctBalance">0 T</div>
+                        <div class="sub" id="egctValue">₩0</div>
                     </div>
                     <div class="asset-item">
                         <div class="icon"><i class="fas fa-won-sign"></i></div>
                         <div class="label">보유 현금</div>
-                        <div class="value">₩10,000,000</div>
+                        <div class="value" id="krwBalance">₩0</div>
                         <div class="sub">출금 가능</div>
                     </div>
                     <div class="asset-item">
                         <div class="icon"><i class="fas fa-chart-pie"></i></div>
-                        <div class="label">평가 손익</div>
-                        <div class="value text-success">+₩3,150,000</div>
-                        <div class="sub">+11.67%</div>
+                        <div class="label">총 거래액</div>
+                        <div class="value" id="totalTraded">₩0</div>
+                        <div class="sub" id="tradedCount">0건</div>
                     </div>
                 </div>
             </div>
@@ -514,176 +141,21 @@
         
         <div class="grid-2 mb-lg">
             <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-chart-pie"></i> 포트폴리오 구성</h3>
-                </div>
+                <div class="header"><h3><i class="fas fa-chart-pie"></i> 포트폴리오 구성</h3></div>
                 <div class="body">
                     <div class="portfolio-content">
-                        <div class="chart-container sm">
-                            <canvas id="portfolioChart"></canvas>
-                        </div>
-                        <div class="portfolio-legend">
-                            <div class="legend-item">
-                                <div class="legend-left">
-                                    <div class="legend-dot" style="background:#003566;"></div>
-                                    <span class="legend-name">EGCT</span>
-                                </div>
-                                <div class="legend-right">
-                                    <div class="legend-value">30,000 T</div>
-                                    <div class="legend-pct">75.1%</div>
-                                </div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-left">
-                                    <div class="legend-dot" style="background:#0077cc;"></div>
-                                    <span class="legend-name">KRW (현금)</span>
-                                </div>
-                                <div class="legend-right">
-                                    <div class="legend-value">₩10,000,000</div>
-                                    <div class="legend-pct">24.9%</div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="chart-container sm"><canvas id="portfolioChart"></canvas></div>
+                        <div class="portfolio-legend" id="portfolioLegend"></div>
                     </div>
                 </div>
             </div>
             
             <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-percentage"></i> 수익률 현황</h3>
-                </div>
-                <div class="body">
-                    <div class="profit-grid">
-                        <div class="profit-item">
-                            <div class="period">일간</div>
-                            <div class="rate up">+0.50%</div>
-                            <div class="amount">+₩150,000</div>
-                        </div>
-                        <div class="profit-item">
-                            <div class="period">주간</div>
-                            <div class="rate up">+2.45%</div>
-                            <div class="amount">+₩960,000</div>
-                        </div>
-                        <div class="profit-item">
-                            <div class="period">월간</div>
-                            <div class="rate up">+8.72%</div>
-                            <div class="amount">+₩3,150,000</div>
-                        </div>
-                        <div class="profit-item">
-                            <div class="period">연간</div>
-                            <div class="rate up">+47.80%</div>
-                            <div class="amount">+₩12,980,000</div>
-                        </div>
-                    </div>
-                    <div class="chart-container sm">
-                        <canvas id="profitChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="grid-2 mb-lg">
-            <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-history"></i> 최근 거래 내역</h3>
-                </div>
+                <div class="header"><h3><i class="fas fa-history"></i> 최근 거래 내역</h3></div>
                 <div class="body">
                     <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>일시</th>
-                                <th>구분</th>
-                                <th>수량</th>
-                                <th>가격</th>
-                                <th>금액</th>
-                                <th>상태</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>12.08 22:45</td>
-                                <td><span class="badge badge-success">매수</span></td>
-                                <td class="num">500 T</td>
-                                <td class="num">₩1,005</td>
-                                <td class="num">₩502,500</td>
-                                <td><span class="badge badge-primary">체결</span></td>
-                            </tr>
-                            <tr>
-                                <td>12.08 18:30</td>
-                                <td><span class="badge badge-danger">매도</span></td>
-                                <td class="num">200 T</td>
-                                <td class="num">₩1,010</td>
-                                <td class="num">₩202,000</td>
-                                <td><span class="badge badge-primary">체결</span></td>
-                            </tr>
-                            <tr>
-                                <td>12.07 14:22</td>
-                                <td><span class="badge badge-success">매수</span></td>
-                                <td class="num">1,000 T</td>
-                                <td class="num">₩995</td>
-                                <td class="num">₩995,000</td>
-                                <td><span class="badge badge-primary">체결</span></td>
-                            </tr>
-                            <tr>
-                                <td>12.06 09:15</td>
-                                <td><span class="badge badge-success">매수</span></td>
-                                <td class="num">800 T</td>
-                                <td class="num">₩980</td>
-                                <td class="num">₩784,000</td>
-                                <td><span class="badge badge-primary">체결</span></td>
-                            </tr>
-                            <tr>
-                                <td>12.05 16:40</td>
-                                <td><span class="badge badge-danger">매도</span></td>
-                                <td class="num">300 T</td>
-                                <td class="num">₩1,020</td>
-                                <td class="num">₩306,000</td>
-                                <td><span class="badge badge-primary">체결</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-clipboard-list"></i> 미체결 주문</h3>
-                </div>
-                <div class="body">
-                    <div class="order-status">
-                        <button class="status-btn active">전체 (2)</button>
-                        <button class="status-btn">매수 (1)</button>
-                        <button class="status-btn">매도 (1)</button>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>주문일시</th>
-                                <th>구분</th>
-                                <th>주문수량</th>
-                                <th>주문가격</th>
-                                <th>미체결</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>12.08 23:10</td>
-                                <td><span class="badge badge-danger">매도</span></td>
-                                <td class="num">5,000 T</td>
-                                <td class="num">₩1,050</td>
-                                <td class="num">5,000 T</td>
-                                <td><button class="btn btn-secondary" style="padding:4px 12px;">취소</button></td>
-                            </tr>
-                            <tr>
-                                <td>12.08 22:00</td>
-                                <td><span class="badge badge-success">매수</span></td>
-                                <td class="num">2,000 T</td>
-                                <td class="num">₩980</td>
-                                <td class="num">2,000 T</td>
-                                <td><button class="btn btn-secondary" style="padding:4px 12px;">취소</button></td>
-                            </tr>
-                        </tbody>
+                        <thead><tr><th>일시</th><th>구분</th><th>수량</th><th>단가</th><th>금액</th></tr></thead>
+                        <tbody id="recentTxBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -691,145 +163,121 @@
         
         <div class="grid-3">
             <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-th-large"></i> 빠른 메뉴</h3>
-                </div>
+                <div class="header"><h3><i class="fas fa-th-large"></i> 빠른 메뉴</h3></div>
                 <div class="body">
                     <div class="quick-menu">
-                        <div class="quick-item">
-                            <i class="fas fa-exchange-alt"></i>
-                            <div class="label">거래하기</div>
-                        </div>
-                        <div class="quick-item">
-                            <i class="fas fa-download"></i>
-                            <div class="label">입금</div>
-                        </div>
-                        <div class="quick-item">
-                            <i class="fas fa-upload"></i>
-                            <div class="label">출금</div>
-                        </div>
-                        <div class="quick-item">
-                            <i class="fas fa-file-alt"></i>
-                            <div class="label">거래내역</div>
-                        </div>
+                        <a href="trading.html" class="quick-item"><i class="fas fa-exchange-alt"></i><div class="label">거래하기</div></a>
+                        <a href="pdv.html" class="quick-item"><i class="fas fa-shield-halved"></i><div class="label">My PDV</div></a>
+                        <a href="holders.html" class="quick-item"><i class="fas fa-users"></i><div class="label">보유현황</div></a>
+                        <a href="prices.html" class="quick-item"><i class="fas fa-chart-line"></i><div class="label">가격동향</div></a>
                     </div>
                 </div>
             </div>
             
             <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-bell"></i> 알림</h3>
-                </div>
-                <div class="body">
-                    <div class="alert-item">
-                        <i class="fas fa-check-circle" style="color:#2e7d32;"></i>
-                        <div class="content">
-                            <div class="title">매수 주문 체결</div>
-                            <div class="desc">500 T @ ₩1,005 체결 완료</div>
-                        </div>
-                        <div class="time">22:45</div>
-                    </div>
-                    <div class="alert-item">
-                        <i class="fas fa-info-circle"></i>
-                        <div class="content">
-                            <div class="title">가격 알림</div>
-                            <div class="desc">EGCT ₩1,000 도달</div>
-                        </div>
-                        <div class="time">18:00</div>
-                    </div>
-                    <div class="alert-item">
-                        <i class="fas fa-gift" style="color:#f57c00;"></i>
-                        <div class="content">
-                            <div class="title">VIP 등급 승급</div>
-                            <div class="desc">수수료 할인 0.05% 적용</div>
-                        </div>
-                        <div class="time">어제</div>
-                    </div>
-                </div>
+                <div class="header"><h3><i class="fas fa-bell"></i> 최근 알림</h3></div>
+                <div class="body" id="alertList"></div>
             </div>
             
             <div class="section-card">
-                <div class="header">
-                    <h3><i class="fas fa-cog"></i> 설정</h3>
-                </div>
+                <div class="header"><h3><i class="fas fa-cog"></i> 설정</h3></div>
                 <div class="body">
-                    <div class="setting-row">
-                        <div class="setting-info">
-                            <div class="title">가격 알림</div>
-                            <div class="desc">목표가 도달 시 알림</div>
-                        </div>
-                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-info">
-                            <div class="title">체결 알림</div>
-                            <div class="desc">주문 체결 시 알림</div>
-                        </div>
-                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-info">
-                            <div class="title">2단계 인증</div>
-                            <div class="desc">로그인 시 OTP 인증</div>
-                        </div>
-                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-info">
-                            <div class="title">이메일 수신</div>
-                            <div class="desc">주간 리포트 발송</div>
-                        </div>
-                        <div class="toggle" onclick="this.classList.toggle('on')"></div>
-                    </div>
+                    <div class="setting-row"><div class="setting-info"><div class="title">가격 알림</div><div class="desc">목표가 도달 시 알림</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="setting-row"><div class="setting-info"><div class="title">체결 알림</div><div class="desc">주문 체결 시 알림</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="setting-row"><div class="setting-info"><div class="title">2단계 인증</div><div class="desc">로그인 시 OTP 인증</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
                 </div>
             </div>
         </div>
     </div>
 
 <script>
-new Chart(document.getElementById('portfolioChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['EGCT', 'KRW'],
-        datasets: [{
-            data: [75.1, 24.9],
-            backgroundColor: ['#003566', '#0077cc'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '60%',
-        plugins: { legend: { display: false } }
+(function() {
+    var EGCT_PRICE = 1005;
+    
+    // 사용자 정보 로드
+    var user = JSON.parse(localStorage.getItem('egct_user') || 'null');
+    var egctBalance = parseInt(localStorage.getItem('egct_balance')) || 0;
+    var krwBalance = parseInt(localStorage.getItem('egct_krw')) || 0;
+    var transactions = JSON.parse(localStorage.getItem('egct_pdv_transactions') || '[]');
+    
+    // 프로필 업데이트
+    if (user) {
+        document.getElementById('userName').textContent = user.displayName || user.name || user.id;
+        document.getElementById('userInfo').textContent = user.id + ' · ' + (user.email || 'user@egct.io');
     }
-});
-
-new Chart(document.getElementById('profitChart'), {
-    type: 'line',
-    data: {
-        labels: ['7월', '8월', '9월', '10월', '11월', '12월'],
-        datasets: [{
-            label: '총 자산',
-            data: [25000000, 28500000, 32000000, 35800000, 38200000, 40150000],
-            borderColor: '#003566',
-            backgroundColor: 'rgba(0,53,102,0.1)',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 4,
-            pointBackgroundColor: '#003566'
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 12 } } },
-            y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 12 }, callback: function(v) { return (v/1000000).toFixed(0) + 'M'; } } }
+    
+    document.getElementById('lastAccess').textContent = new Date().toLocaleString('ko-KR');
+    document.getElementById('txCount').textContent = transactions.length + '건';
+    
+    // 자산 현황
+    var egctValue = egctBalance * EGCT_PRICE;
+    var totalAsset = egctValue + krwBalance;
+    
+    document.getElementById('assetTime').textContent = new Date().toLocaleString('ko-KR') + ' 기준';
+    document.getElementById('totalAsset').textContent = '₩' + totalAsset.toLocaleString();
+    document.getElementById('egctBalance').textContent = egctBalance.toLocaleString() + ' T';
+    document.getElementById('egctValue').textContent = '₩' + egctValue.toLocaleString();
+    document.getElementById('krwBalance').textContent = '₩' + krwBalance.toLocaleString();
+    
+    // 총 거래액 계산
+    var totalTraded = 0;
+    for (var i = 0; i < transactions.length; i++) {
+        totalTraded += transactions[i].value || (transactions[i].amount * transactions[i].price);
+    }
+    document.getElementById('totalTraded').textContent = '₩' + totalTraded.toLocaleString();
+    document.getElementById('tradedCount').textContent = transactions.length + '건';
+    
+    // 포트폴리오 비율
+    var egctPct = totalAsset > 0 ? ((egctValue / totalAsset) * 100).toFixed(1) : 0;
+    var krwPct = totalAsset > 0 ? ((krwBalance / totalAsset) * 100).toFixed(1) : 0;
+    
+    document.getElementById('portfolioLegend').innerHTML = 
+        '<div class="legend-item"><div class="legend-left"><div class="legend-dot" style="background:#003566;"></div><span class="legend-name">EGCT</span></div><div class="legend-right"><div class="legend-value">' + egctBalance.toLocaleString() + ' T</div><div class="legend-pct">' + egctPct + '%</div></div></div>' +
+        '<div class="legend-item"><div class="legend-left"><div class="legend-dot" style="background:#0077cc;"></div><span class="legend-name">KRW</span></div><div class="legend-right"><div class="legend-value">₩' + krwBalance.toLocaleString() + '</div><div class="legend-pct">' + krwPct + '%</div></div></div>';
+    
+    // 최근 거래 내역
+    var txHtml = '';
+    var recentTx = transactions.slice(-5).reverse();
+    if (recentTx.length === 0) {
+        txHtml = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">거래 내역이 없습니다</td></tr>';
+    } else {
+        for (var i = 0; i < recentTx.length; i++) {
+            var tx = recentTx[i];
+            var badgeClass = tx.type === 'BUY' ? 'badge-success' : 'badge-danger';
+            var typeLabel = tx.type === 'BUY' ? '매수' : '매도';
+            var time = new Date(tx.timestamp).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+            var value = tx.value || (tx.amount * tx.price);
+            txHtml += '<tr><td>' + time + '</td><td><span class="badge ' + badgeClass + '">' + typeLabel + '</span></td><td class="num">' + tx.amount.toLocaleString() + ' T</td><td class="num">₩' + tx.price.toLocaleString() + '</td><td class="num">₩' + value.toLocaleString() + '</td></tr>';
         }
     }
-});
+    document.getElementById('recentTxBody').innerHTML = txHtml;
+    
+    // 알림
+    var alertHtml = '';
+    if (recentTx.length > 0) {
+        for (var i = 0; i < Math.min(recentTx.length, 3); i++) {
+            var tx = recentTx[i];
+            var icon = tx.type === 'BUY' ? 'fa-arrow-down' : 'fa-arrow-up';
+            var color = tx.type === 'BUY' ? '#2e7d32' : '#c62828';
+            var label = tx.type === 'BUY' ? '매수 체결' : '매도 등록';
+            var time = new Date(tx.timestamp).toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'});
+            alertHtml += '<div class="alert-item"><i class="fas ' + icon + '" style="color:' + color + ';"></i><div class="content"><div class="title">' + label + '</div><div class="desc">' + tx.amount + ' T @ ₩' + tx.price.toLocaleString() + '</div></div><div class="time">' + time + '</div></div>';
+        }
+    } else {
+        alertHtml = '<div style="text-align:center;color:#999;padding:20px;">알림이 없습니다</div>';
+    }
+    document.getElementById('alertList').innerHTML = alertHtml;
+    
+    // 포트폴리오 차트
+    new Chart(document.getElementById('portfolioChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['EGCT', 'KRW'],
+            datasets: [{ data: [parseFloat(egctPct), parseFloat(krwPct)], backgroundColor: ['#003566', '#0077cc'], borderWidth: 0 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+    });
+})();
 </script>
 </body>
 </html>
