@@ -98,3 +98,7 @@ frontend.bak*/
 # EGCTTrading 백업 파일들
 currency/js/components/EGCTTrading.js.before_*
 currency/js/components/EGCTTrading.js.old_*
+
+# EGCTTrading 백업 파일들
+currency/js/components/EGCTTrading.js.before_*
+currency/js/components/EGCTTrading.js.old_*

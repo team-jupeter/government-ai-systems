@@ -1,0 +1,8 @@
+{
+  "note": "등록 상태 추적 (개인정보 없음, 공개키만 저장)",
+  "totalHolders": 0,
+  "registered": 0,
+  "pending": 0,
+  "lastUpdated": null,
+  "registrations": {}
+}
