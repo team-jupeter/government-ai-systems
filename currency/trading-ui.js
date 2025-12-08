@@ -1,4 +1,3 @@
-// UI 렌더링 모듈
 class TradingUI {
     showLoginScreen() {
         document.getElementById('loginScreen').classList.remove('hidden');
@@ -42,9 +41,7 @@ class TradingUI {
                 html += '<span style="font-size:14px;color:#2e7d32;font-weight:600;">' + utxo.amount.toLocaleString() + ' T</span></div>';
                 html += '<div style="font-size:13px;color:#666;line-height:1.6;">';
                 html += '<div><strong>From:</strong> ' + utxo.from + '</div>';
-                html += '<div><strong>Price:</strong> ₩' + utxo.price.toLocaleString() + '</div>';
-                html += '<div style="font-size:12px;color:#999;margin-top:4px;">' + new Date(utxo.timestamp).toLocaleString('ko-KR') + '</div>';
-                html += '</div></div>';
+                html += '<div><strong>Price:</strong> ₩' + utxo.price.toLocaleString() + '</div></div></div>';
             }
             container.innerHTML = html + '</div>';
         }
@@ -99,12 +96,9 @@ class TradingUI {
         var inputPrice = document.getElementById('inputPrice');
         var btnBuy = document.getElementById('btnBuy');
         var btnSell = document.getElementById('btnSell');
-        var btnSubmit = document.getElementById('btnSubmitOrder');
-        
-        if (!btnSubmit) {
-            var cards = document.querySelectorAll('.grid-3 .card');
-            if (cards.length >= 2) btnSubmit = cards[1].querySelector('button[onclick*="executeOrder"]');
-        }
+        var btnSubmit = null;
+        var cards = document.querySelectorAll('.grid-3 .card');
+        if (cards.length >= 2) btnSubmit = cards[1].querySelector('button[onclick*="executeOrder"]');
         
         if (type === 'buy') {
             if (btnBuy) { btnBuy.className = 'btn btn-primary'; btnBuy.style.flex = '1'; }
@@ -126,27 +120,13 @@ class TradingUI {
         if (modalTitle) modalTitle.textContent = '매수 거래 체결';
         
         if (modalBody) {
-            var html = '<div class="modal-summary">';
-            html += '<div class="modal-summary-label">거래 요약</div>';
-            html += '<div class="modal-summary-value">' + totalAmount.toLocaleString() + ' T</div>';
-            html += '<div class="modal-summary-sub">총 결제액: ₩' + totalValue.toLocaleString() + '</div></div>';
-            
-            html += '<div class="modal-section-title">UTXO 거래 내역</div>';
-            
-            for (var i = 0; i < utxos.length; i++) {
-                var utxo = utxos[i];
-                html += '<div class="modal-utxo-card">';
-                html += '<div class="modal-utxo-header"><span class="modal-utxo-title">UTXO #' + (i + 1) + '</span>';
-                html += '<span class="modal-utxo-time">' + new Date(utxo.timestamp).toLocaleString('ko-KR') + '</span></div>';
-                html += '<div class="modal-utxo-row"><strong>TxID</strong><span style="font-family:monospace;font-size:11px;color:#666;">' + utxo.txid + '</span></div>';
-                html += '<div class="modal-utxo-row"><strong>From</strong><span>' + utxo.from + '</span></div>';
-                html += '<div class="modal-utxo-row"><strong>To</strong><span>' + utxo.to + '</span></div>';
-                html += '<div class="modal-utxo-row"><strong>수량</strong><span>' + utxo.amount.toLocaleString() + ' T</span></div>';
-                html += '<div class="modal-utxo-row"><strong>단가</strong><span>₩' + utxo.price.toLocaleString() + '</span></div>';
-                html += '<div class="modal-utxo-row highlight"><strong>거래 금액</strong><span class="value">₩' + utxo.value.toLocaleString() + '</span></div></div>';
-            }
-            
-            html += '<div class="modal-success-box">✓ ' + utxos.length + '개의 UTXO가 생성되었습니다<br>✓ 거래가 블록체인에 기록되었습니다</div>';
+            var html = '<p>' + totalAmount.toLocaleString() + ' T를 ₩' + totalValue.toLocaleString() + '에 매수했습니다.</p>';
+            html += '<div class="modal-info">';
+            html += '<div class="modal-info-row"><span class="label">수량</span><span class="value">' + totalAmount.toLocaleString() + ' T</span></div>';
+            html += '<div class="modal-info-row"><span class="label">평균 단가</span><span class="value">₩' + Math.round(totalValue / totalAmount).toLocaleString() + '</span></div>';
+            html += '<div class="modal-info-row"><span class="label">UTXO 생성</span><span class="value">' + utxos.length + '개</span></div>';
+            html += '<div class="modal-info-row total"><span class="label">결제 금액</span><span class="value">₩' + totalValue.toLocaleString() + '</span></div>';
+            html += '</div>';
             modalBody.innerHTML = html;
         }
         
@@ -161,23 +141,12 @@ class TradingUI {
         if (modalTitle) modalTitle.textContent = '매도 주문 등록';
         
         if (modalBody) {
-            var html = '<div class="modal-summary sell">';
-            html += '<div class="modal-summary-label">매도 주문</div>';
-            html += '<div class="modal-summary-value">' + utxo.amount.toLocaleString() + ' T</div>';
-            html += '<div class="modal-summary-sub">호가: ₩' + utxo.price.toLocaleString() + '</div></div>';
-            
-            html += '<div class="modal-section-title">UTXO 거래 내역</div>';
-            html += '<div class="modal-utxo-card">';
-            html += '<div class="modal-utxo-header"><span class="modal-utxo-title sell">매도 UTXO</span>';
-            html += '<span class="modal-utxo-time">' + new Date(utxo.timestamp).toLocaleString('ko-KR') + '</span></div>';
-            html += '<div class="modal-utxo-row"><strong>TxID</strong><span style="font-family:monospace;font-size:11px;color:#666;">' + utxo.txid + '</span></div>';
-            html += '<div class="modal-utxo-row"><strong>From</strong><span>' + utxo.from + '</span></div>';
-            html += '<div class="modal-utxo-row"><strong>To</strong><span>' + utxo.to + '</span></div>';
-            html += '<div class="modal-utxo-row"><strong>수량</strong><span>' + utxo.amount.toLocaleString() + ' T</span></div>';
-            html += '<div class="modal-utxo-row"><strong>단가</strong><span>₩' + utxo.price.toLocaleString() + '</span></div>';
-            html += '<div class="modal-utxo-row highlight"><strong>예상 수익</strong><span class="value" style="color:#c62828;">₩' + utxo.value.toLocaleString() + '</span></div></div>';
-            
-            html += '<div class="modal-warning-box">✓ 매도 주문이 호가창에 등록되었습니다<br>✓ 매수자가 나타나면 자동으로 체결됩니다</div>';
+            var html = '<p>' + utxo.amount.toLocaleString() + ' T 매도 주문이 호가창에 등록되었습니다.</p>';
+            html += '<div class="modal-info">';
+            html += '<div class="modal-info-row"><span class="label">수량</span><span class="value">' + utxo.amount.toLocaleString() + ' T</span></div>';
+            html += '<div class="modal-info-row"><span class="label">희망 단가</span><span class="value">₩' + utxo.price.toLocaleString() + '</span></div>';
+            html += '<div class="modal-info-row total"><span class="label">예상 수익</span><span class="value">₩' + utxo.value.toLocaleString() + '</span></div>';
+            html += '</div>';
             modalBody.innerHTML = html;
         }
         
