@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGCT 가격 동향</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+    <style>
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-lg);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .price-symbol {
+            font-size: var(--font-sm);
+            color: var(--gray-500);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .price-current {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .price-change {
+            margin-top: var(--space-sm);
+            font-size: var(--font-md);
+        }
+        
+        .price-change.up { color: var(--success); }
+        .price-change.down { color: var(--danger); }
+        
+        .price-stats {
+            display: flex;
+            gap: var(--space-xl);
+        }
+        
+        .stat-item {
+            text-align: right;
+        }
+        
+        .stat-item .label {
+            font-size: var(--font-sm);
+            color: var(--gray-500);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .stat-item .value {
+            font-size: var(--font-md);
+            font-weight: 600;
+        }
+        
+        .chart-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        .period-tabs {
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .period-tab {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            color: var(--gray-600);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .period-tab:hover {
+            background: var(--gray-200);
+        }
+        
+        .period-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .chart-section {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .main-chart {
+            height: 350px;
+            position: relative;
+        }
+        
+        .volume-chart {
+            height: 100px;
+            margin-top: var(--space-md);
+            position: relative;
+        }
+        
+        .info-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+        
+        .info-card h4 {
+            font-size: var(--font-base);
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            font-size: var(--font-base);
+        }
+        
+        .info-row .label { color: var(--gray-600); }
+        .info-row .value { font-weight: 600; }
+        
+        .orderbook-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+        
+        .orderbook-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+        
+        .orderbook-card h4 {
+            font-size: var(--font-base);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .orderbook-card.sell h4 { color: var(--danger); }
+        .orderbook-card.buy h4 { color: var(--success); }
+        
+        .orderbook-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 60px;
+            gap: var(--space-sm);
+            padding: var(--space-xs) 0;
+            font-size: var(--font-sm);
+            font-family: 'Consolas', monospace;
+        }
+        
+        .orderbook-row .price { font-weight: 600; }
+        .orderbook-row .amount { text-align: right; color: var(--gray-500); }
+        .orderbook-row .bar { height: 20px; border-radius: 2px; }
+        
+        .sell .price { color: var(--danger); }
+        .sell .bar { background: rgba(198,40,40,0.2); }
+        .buy .price { color: var(--success); }
+        .buy .bar { background: rgba(46,125,50,0.2); }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-inner">
+            <h1><span class="icon">🪙</span> EGCT 토큰 거래소</h1>
+        </div>
+    </div>
+    <div class="tab-nav">
+        <div class="tab-nav-inner">
+            <a href="trading.html" class="tab"><i class="fas fa-exchange-alt"></i>거래</a>
+            <a href="hashchain-demo.html" class="tab"><i class="fas fa-link"></i>오픈해시</a>
+            <a href="pool.html" class="tab"><i class="fas fa-cubes"></i>자산 POOL</a>
+            <a href="holders.html" class="tab"><i class="fas fa-users"></i>EGCT 보유 현황</a>
+            <a href="prices.html" class="tab active"><i class="fas fa-chart-line"></i>가격 동향</a>
+            <a href="mypage.html" class="tab"><i class="fas fa-user-circle"></i>My Page</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="price-header">
+            <div>
+                <div class="price-symbol">EGCT / KRW · OpenHash Network</div>
+                <div class="price-current">₩1,005</div>
+                <div class="price-change up"><i class="fas fa-caret-up"></i> +5 (+0.50%) 오늘</div>
+            </div>
+            <div class="price-stats">
+                <div class="stat-item">
+                    <div class="label">시가</div>
+                    <div class="value">₩1,000</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">고가</div>
+                    <div class="value text-success">₩1,025</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">저가</div>
+                    <div class="value text-danger">₩990</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">거래량</div>
+                    <div class="value">12,450 T</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">거래대금</div>
+                    <div class="value">₩12.5M</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-controls">
+            <div class="period-tabs">
+                <div class="period-tab" onclick="changePeriod(1, this)">1일</div>
+                <div class="period-tab" onclick="changePeriod(7, this)">1주</div>
+                <div class="period-tab active" onclick="changePeriod(30, this)">1개월</div>
+                <div class="period-tab" onclick="changePeriod(90, this)">3개월</div>
+                <div class="period-tab" onclick="changePeriod(365, this)">1년</div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="main-chart"><canvas id="priceChart"></canvas></div>
+            <div class="volume-chart"><canvas id="volumeChart"></canvas></div>
+        </div>
+        
+        <div class="grid-4 mb-lg">
+            <div class="info-card">
+                <h4><i class="fas fa-chart-bar"></i> 일일 시세</h4>
+                <div class="info-row"><span class="label">시가</span><span class="value">₩1,000</span></div>
+                <div class="info-row"><span class="label">종가</span><span class="value">₩1,005</span></div>
+                <div class="info-row"><span class="label">고가</span><span class="value text-success">₩1,025</span></div>
+                <div class="info-row"><span class="label">저가</span><span class="value text-danger">₩990</span></div>
+                <div class="info-row"><span class="label">변동폭</span><span class="value">₩35 (3.5%)</span></div>
+            </div>
+            <div class="info-card">
+                <h4><i class="fas fa-calendar-week"></i> 주간 통계</h4>
+                <div class="info-row"><span class="label">주간 고가</span><span class="value text-success">₩1,050</span></div>
+                <div class="info-row"><span class="label">주간 저가</span><span class="value text-danger">₩965</span></div>
+                <div class="info-row"><span class="label">주간 변동</span><span class="value text-success">+3.2%</span></div>
+                <div class="info-row"><span class="label">평균 거래량</span><span class="value">8,240 T</span></div>
+                <div class="info-row"><span class="label">거래일수</span><span class="value">5일</span></div>
+            </div>
+            <div class="info-card">
+                <h4><i class="fas fa-calendar-alt"></i> 월간 통계</h4>
+                <div class="info-row"><span class="label">월간 고가</span><span class="value text-success">₩1,080</span></div>
+                <div class="info-row"><span class="label">월간 저가</span><span class="value text-danger">₩920</span></div>
+                <div class="info-row"><span class="label">월간 변동</span><span class="value text-success">+8.6%</span></div>
+                <div class="info-row"><span class="label">총 거래량</span><span class="value">186,400 T</span></div>
+                <div class="info-row"><span class="label">거래대금</span><span class="value">₩185.2M</span></div>
+            </div>
+            <div class="info-card">
+                <h4><i class="fas fa-chart-pie"></i> 52주 통계</h4>
+                <div class="info-row"><span class="label">52주 최고</span><span class="value text-success">₩1,250</span></div>
+                <div class="info-row"><span class="label">52주 최저</span><span class="value text-danger">₩680</span></div>
+                <div class="info-row"><span class="label">연간 변동</span><span class="value text-success">+47.8%</span></div>
+                <div class="info-row"><span class="label">시가총액</span><span class="value">₩120.6M</span></div>
+                <div class="info-row"><span class="label">유통량</span><span class="value">98,400 T</span></div>
+            </div>
+        </div>
+        
+        <div class="orderbook-section">
+            <div class="orderbook-card sell">
+                <h4><i class="fas fa-arrow-down"></i> 매도 호가</h4>
+                <div class="orderbook-row"><span class="price">₩1,050</span><span class="amount">1,000 T</span><div class="bar" style="width:30%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩1,025</span><span class="amount">3,000 T</span><div class="bar" style="width:90%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩1,015</span><span class="amount">2,200 T</span><div class="bar" style="width:66%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩1,010</span><span class="amount">1,500 T</span><div class="bar" style="width:45%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩1,005</span><span class="amount">800 T</span><div class="bar" style="width:24%;"></div></div>
+            </div>
+            <div class="orderbook-card buy">
+                <h4><i class="fas fa-arrow-up"></i> 매수 호가</h4>
+                <div class="orderbook-row"><span class="price">₩1,000</span><span class="amount">1,200 T</span><div class="bar" style="width:40%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩995</span><span class="amount">2,500 T</span><div class="bar" style="width:83%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩990</span><span class="amount">3,000 T</span><div class="bar" style="width:100%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩985</span><span class="amount">1,800 T</span><div class="bar" style="width:60%;"></div></div>
+                <div class="orderbook-row"><span class="price">₩980</span><span class="amount">900 T</span><div class="bar" style="width:30%;"></div></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+var priceData = [], volumeData = [], priceChart, volumeChart;
+
+function generateData(days) {
+    priceData = []; volumeData = [];
+    var price = 950, now = new Date();
+    for (var i = days; i >= 0; i--) {
+        var d = new Date(now); d.setDate(d.getDate() - i);
+        price = Math.max(700, Math.min(1200, price + (Math.random() - 0.48) * 25));
+        priceData.push({ x: d, y: Math.round(price) });
+        var vol = Math.floor(Math.random() * 12000 + 3000);
+        volumeData.push({ x: d, y: vol, c: price > priceData[priceData.length - 2]?.y ? 'rgba(46,125,50,0.6)' : 'rgba(198,40,40,0.6)' });
+    }
+}
+
+function calcMA(data, n) {
+    return data.map(function(d, i) {
+        if (i < n - 1) return { x: d.x, y: null };
+        var sum = 0;
+        for (var j = 0; j < n; j++) sum += data[i - j].y;
+        return { x: d.x, y: sum / n };
+    });
+}
+
+function initCharts() {
+    generateData(30);
+    priceChart = new Chart(document.getElementById('priceChart'), {
+        type: 'line',
+        data: {
+            datasets: [
+                { label: 'EGCT', data: priceData, borderColor: '#003566', backgroundColor: 'rgba(0,53,102,0.1)', fill: true, tension: 0.2, pointRadius: 0 },
+                { label: 'MA5', data: calcMA(priceData, 5), borderColor: '#f57c00', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+                { label: 'MA20', data: calcMA(priceData, 20), borderColor: '#7b1fa2', borderWidth: 1.5, pointRadius: 0, tension: 0.3 }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } },
+            scales: {
+                x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MM/dd' } }, grid: { display: false }, ticks: { font: { size: 11 } } },
+                y: { position: 'right', grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, callback: function(v) { return v; } } }
+            }
+        }
+    });
+    
+    volumeChart = new Chart(document.getElementById('volumeChart'), {
+        type: 'bar',
+        data: {
+            datasets: [{ label: '거래량', data: volumeData, backgroundColor: volumeData.map(function(d) { return d.c; }) }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { display: false } },
+                y: { position: 'right', grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 }, callback: function(v) { return (v/1000).toFixed(0) + 'K'; } } }
+            }
+        }
+    });
+}
+
+function changePeriod(days, el) {
+    document.querySelectorAll('.period-tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    generateData(days);
+    priceChart.data.datasets[0].data = priceData;
+    priceChart.data.datasets[1].data = calcMA(priceData, 5);
+    priceChart.data.datasets[2].data = calcMA(priceData, 20);
+    priceChart.update();
+    volumeChart.data.datasets[0].data = volumeData;
+    volumeChart.data.datasets[0].backgroundColor = volumeData.map(function(d) { return d.c; });
+    volumeChart.update();
+}
+
+window.onload = initCharts;
+</script>
+</body>
+</html>

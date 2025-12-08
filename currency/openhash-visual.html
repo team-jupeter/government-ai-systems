@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHash Network</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, sans-serif; background: #0a0a1a; color: #fff; padding: 20px; min-height: 100vh; }
+        h1 { text-align: center; margin-bottom: 20px; color: #00d4ff; font-size: 24px; }
+        .grid { display: grid; grid-template-columns: 240px 1fr 300px; gap: 20px; max-width: 1300px; margin: 0 auto; }
+        .panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; }
+        h3 { font-size: 13px; margin-bottom: 15px; color: #888; }
+        .user { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; }
+        .user:hover, .user.active { background: rgba(0,212,255,0.25); border-color: #00d4ff; }
+        .user-name { font-weight: 600; font-size: 13px; }
+        .user-sub { font-size: 10px; color: #888; margin-top: 3px; }
+        .layers { display: flex; flex-direction: column; gap: 30px; align-items: center; padding: 10px 0; }
+        .layer-wrap { text-align: center; }
+        .layer-label { font-size: 10px; color: #555; margin-bottom: 8px; }
+        .layer { display: flex; gap: 12px; justify-content: center; }
+        .node { width: 65px; height: 65px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+        .node:hover { transform: scale(1.1); }
+        .node.active { box-shadow: 0 0 20px #00d4ff; }
+        .node.pulse { animation: pulse 0.4s; }
+        @keyframes pulse { 0%,100%{ box-shadow: 0 0 0 rgba(0,255,136,0); } 50%{ box-shadow: 0 0 25px #0f8; } }
+        .node.l1 { background: #1e3a5f; border: 2px solid #3d7ab7; }
+        .node.l2 { background: #3a1e5f; border: 2px solid #7a3db7; }
+        .node.l3 { background: #5f1e3a; border: 2px solid #b73d7a; width: 80px; height: 80px; }
+        .node-id { font-size: 10px; font-weight: 600; }
+        .node-cnt { font-size: 9px; color: rgba(255,255,255,0.5); }
+        .btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 13px; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #7b2fff); color: #fff; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-secondary.on { background: #0f8; color: #000; }
+        .chain-title { background: rgba(123,47,255,0.2); border-radius: 8px; padding: 10px; margin-bottom: 12px; text-align: center; }
+        .chain-title .name { font-size: 15px; font-weight: 700; color: #7b2fff; }
+        .chain-title .info { font-size: 10px; color: #888; margin-top: 3px; }
+        .chain-list { max-height: 380px; overflow-y: auto; }
+        .blk { background: rgba(123,47,255,0.12); border: 1px solid rgba(123,47,255,0.3); border-radius: 6px; padding: 10px; margin-bottom: 6px; }
+        .blk.genesis { background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.4); }
+        .blk.newest { background: rgba(0,255,136,0.15); border-color: #0f8; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .blk-head { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .blk-idx { background: #7b2fff; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 10px; }
+        .blk.genesis .blk-idx { background: #ffd700; color: #000; }
+        .blk.newest .blk-idx { background: #0f8; color: #000; }
+        .blk-time { font-size: 9px; color: #666; }
+        .blk-hash { font-family: monospace; font-size: 9px; color: #aaa; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px; word-break: break-all; margin-top: 6px; }
+        .blk-prev { font-size: 9px; color: #555; margin-top: 4px; }
+        .arrow { text-align: center; color: #7b2fff; font-size: 14px; margin: -2px 0; }
+        .log { margin-top: 15px; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 10px; max-height: 100px; overflow-y: auto; }
+        .log-entry { font-size: 10px; color: #666; padding: 2px 0; }
+        .log-entry span { color: #00d4ff; }
+        .packet { position: fixed; width: 12px; height: 12px; background: #0f8; border-radius: 50%; box-shadow: 0 0 10px #0f8; z-index: 999; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <h1>OpenHash Network Visualization</h1>
+    <div class="grid">
+        <div class="panel">
+            <h3>USERS</h3>
+            <div id="userBox"></div>
+            <button class="btn btn-primary" onclick="doTx()">거래 실행</button>
+            <button class="btn btn-secondary" id="autoBtn" onclick="toggleAuto()">자동 모드</button>
+        </div>
+        <div class="panel">
+            <div class="layers">
+                <div class="layer-wrap">
+                    <div class="layer-label">Layer 3 (Core)</div>
+                    <div class="layer">
+                        <div class="node l3" id="L3-1" onclick="pickNode('L3-1')"><div class="node-id">Core</div><div class="node-cnt" id="c-L3-1">1</div></div>
+                    </div>
+                </div>
+                <div class="layer-wrap">
+                    <div class="layer-label">Layer 2 (Regional)</div>
+                    <div class="layer">
+                        <div class="node l2" id="L2-1" onclick="pickNode('L2-1')"><div class="node-id">R1</div><div class="node-cnt" id="c-L2-1">1</div></div>
+                        <div class="node l2" id="L2-2" onclick="pickNode('L2-2')"><div class="node-id">R2</div><div class="node-cnt" id="c-L2-2">1</div></div>
+                        <div class="node l2" id="L2-3" onclick="pickNode('L2-3')"><div class="node-id">R3</div><div class="node-cnt" id="c-L2-3">1</div></div>
+                    </div>
+                </div>
+                <div class="layer-wrap">
+                    <div class="layer-label">Layer 1 (Edge)</div>
+                    <div class="layer">
+                        <div class="node l1" id="L1-1" onclick="pickNode('L1-1')"><div class="node-id">E1</div><div class="node-cnt" id="c-L1-1">1</div></div>
+                        <div class="node l1" id="L1-2" onclick="pickNode('L1-2')"><div class="node-id">E2</div><div class="node-cnt" id="c-L1-2">1</div></div>
+                        <div class="node l1" id="L1-3" onclick="pickNode('L1-3')"><div class="node-id">E3</div><div class="node-cnt" id="c-L1-3">1</div></div>
+                        <div class="node l1" id="L1-4" onclick="pickNode('L1-4')"><div class="node-id">E4</div><div class="node-cnt" id="c-L1-4">1</div></div>
+                        <div class="node l1" id="L1-5" onclick="pickNode('L1-5')"><div class="node-id">E5</div><div class="node-cnt" id="c-L1-5">1</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="log" id="logBox"></div>
+        </div>
+        <div class="panel">
+            <h3>HASH CHAIN</h3>
+            <div class="chain-title" id="chainTitle"><div class="name">노드 선택</div><div class="info">클릭하여 체인 확인</div></div>
+            <div class="chain-list" id="chainList"></div>
+        </div>
+    </div>
+<script>
+var users = [
+    {id:'USER_01', name:'Alice', loc:'서울 강남', node:'L1-1', chain:[]},
+    {id:'USER_02', name:'Bob', loc:'부산 해운대', node:'L1-3', chain:[]},
+    {id:'USER_03', name:'Carol', loc:'제주 서귀포', node:'L1-5', chain:[]}
+];
+var nodeParent = {'L1-1':'L2-1','L1-2':'L2-1','L1-3':'L2-2','L1-4':'L2-2','L1-5':'L2-3','L2-1':'L3-1','L2-2':'L3-1','L2-3':'L3-1','L3-1':null};
+var nodeName = {'L1-1':'Edge-1 서울','L1-2':'Edge-2 인천','L1-3':'Edge-3 부산','L1-4':'Edge-4 대구','L1-5':'Edge-5 제주','L2-1':'Regional-1','L2-2':'Regional-2','L2-3':'Regional-3','L3-1':'Core Engine'};
+var chains = {};
+var selUser = 0;
+var selNode = 'L1-1';
+var autoInt = null;
+
+function hash(s) {
+    var h = 5381, str = String(s) + Date.now() + Math.random();
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+    return '0x' + Math.abs(h).toString(16).padStart(8,'0') + Math.random().toString(16).substr(2,24);
+}
+
+function initChains() {
+    var g = hash('origin');
+    var allNodes = Object.keys(nodeParent);
+    for (var i = 0; i < allNodes.length; i++) {
+        chains[allNodes[i]] = [{idx:0, hash:g, prev:null, time:new Date().toISOString(), genesis:true}];
+    }
+    for (var j = 0; j < users.length; j++) {
+        users[j].chain = [{idx:0, hash:g, prev:null, time:new Date().toISOString(), genesis:true}];
+    }
+}
+
+function renderUsers() {
+    var html = '';
+    for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        var cls = (selUser === i) ? 'user active' : 'user';
+        html += '<div class="'+cls+'" onclick="pickUser('+i+')">';
+        html += '<div class="user-name">'+u.name+' ('+u.id+')</div>';
+        html += '<div class="user-sub">'+u.loc+' → '+u.node+'</div>';
+        html += '</div>';
+    }
+    document.getElementById('userBox').innerHTML = html;
+}
+
+function pickUser(i) {
+    selUser = i;
+    renderUsers();
+    pickNode(users[i].node);
+}
+
+function pickNode(nid) {
+    selNode = nid;
+    var nodes = document.querySelectorAll('.node');
+    for (var i = 0; i < nodes.length; i++) nodes[i].classList.remove('active');
+    document.getElementById(nid).classList.add('active');
+    document.getElementById('chainTitle').innerHTML = '<div class="name">'+nid+' - '+nodeName[nid]+'</div><div class="info">'+chains[nid].length+' blocks</div>';
+    renderChain(nid);
+}
+
+function renderChain(nid) {
+    var chain = chains[nid];
+    var box = document.getElementById('chainList');
+    if (!chain || chain.length === 0) {
+        box.innerHTML = '<div style="color:#666;text-align:center;padding:20px;">체인 없음</div>';
+        return;
+    }
+    var html = '';
+    for (var i = chain.length - 1; i >= 0; i--) {
+        var b = chain[i];
+        var cls = 'blk';
+        if (b.genesis) cls += ' genesis';
+        else if (i === chain.length - 1) cls += ' newest';
+        html += '<div class="'+cls+'">';
+        html += '<div class="blk-head"><span class="blk-idx">'+(b.genesis ? 'GENESIS' : '#'+b.idx)+'</span><span class="blk-time">'+new Date(b.time).toLocaleTimeString('ko-KR')+'</span></div>';
+        html += '<div class="blk-hash">'+b.hash+'</div>';
+        if (b.prev) html += '<div class="blk-prev">← '+b.prev.substring(0,24)+'...</div>';
+        html += '</div>';
+        if (i > 0) html += '<div class="arrow">▲</div>';
+    }
+    box.innerHTML = html;
+}
+
+function updateCnt(nid) {
+    var el = document.getElementById('c-'+nid);
+    if (el) el.textContent = chains[nid].length;
+}
+
+function addBlock(nid, txHash) {
+    var chain = chains[nid];
+    var prev = chain[chain.length - 1].hash;
+    var newHash = hash(txHash + prev);
+    chain.push({idx: chain.length, hash: newHash, prev: prev, time: new Date().toISOString(), genesis: false});
+    updateCnt(nid);
+    var el = document.getElementById(nid);
+    el.classList.add('pulse');
+    setTimeout(function() { el.classList.remove('pulse'); }, 400);
+    return newHash;
+}
+
+function animatePacket(fromId, toId, cb) {
+    var fromEl = document.getElementById(fromId);
+    var toEl = document.getElementById(toId);
+    var fr = fromEl.getBoundingClientRect();
+    var tr = toEl.getBoundingClientRect();
+    var pkt = document.createElement('div');
+    pkt.className = 'packet';
+    pkt.style.left = (fr.left + fr.width/2 - 6) + 'px';
+    pkt.style.top = (fr.top + fr.height/2 - 6) + 'px';
+    document.body.appendChild(pkt);
+    pkt.style.transition = 'all 0.35s ease-in-out';
+    setTimeout(function() {
+        pkt.style.left = (tr.left + tr.width/2 - 6) + 'px';
+        pkt.style.top = (tr.top + tr.height/2 - 6) + 'px';
+    }, 10);
+    setTimeout(function() {
+        pkt.remove();
+        if (cb) cb();
+    }, 380);
+}
+
+function log(msg) {
+    var box = document.getElementById('logBox');
+    var t = new Date().toLocaleTimeString('ko-KR');
+    box.innerHTML = '<div class="log-entry">['+t+'] <span>'+msg+'</span></div>' + box.innerHTML;
+    if (box.children.length > 15) box.removeChild(box.lastChild);
+}
+
+function doTx() {
+    var u = users[selUser];
+    var txHash = hash(u.id + Math.random());
+    var prevU = u.chain[u.chain.length - 1].hash;
+    u.chain.push({idx: u.chain.length, hash: hash(txHash + prevU), prev: prevU, time: new Date().toISOString()});
+    renderUsers();
+    log(u.name + ' 거래 생성');
+
+    var l1 = u.node;
+    if (Math.random() > 0.75) {
+        var others = ['L1-1','L1-2','L1-3','L1-4','L1-5'];
+        l1 = others[Math.floor(Math.random() * others.length)];
+        log(u.name + ' 이동 → ' + l1);
+    }
+
+    animatePacket(u.node, l1, function() {
+        addBlock(l1, txHash);
+        log(l1 + ' 해시 추가 (#' + (chains[l1].length - 1) + ')');
+
+        var r = Math.random() * 100;
+        var targetL = 1;
+        if (r >= 90) targetL = 3;
+        else if (r >= 70) targetL = 2;
+        log('계층 선택: L' + targetL + ' (확률 ' + r.toFixed(1) + ')');
+
+        if (targetL >= 2) {
+            var l2 = nodeParent[l1];
+            setTimeout(function() {
+                animatePacket(l1, l2, function() {
+                    addBlock(l2, txHash);
+                    log(l2 + ' 해시 추가 (#' + (chains[l2].length - 1) + ')');
+
+                    if (targetL >= 3) {
+                        var l3 = nodeParent[l2];
+                        setTimeout(function() {
+                            animatePacket(l2, l3, function() {
+                                addBlock(l3, txHash);
+                                log(l3 + ' 해시 추가 (#' + (chains[l3].length - 1) + ')');
+                                if (selNode) pickNode(selNode);
+                            });
+                        }, 100);
+                    } else {
+                        if (selNode) pickNode(selNode);
+                    }
+                });
+            }, 100);
+        } else {
+            if (selNode) pickNode(selNode);
+        }
+    });
+}
+
+function toggleAuto() {
+    var btn = document.getElementById('autoBtn');
+    if (autoInt) {
+        clearInterval(autoInt);
+        autoInt = null;
+        btn.classList.remove('on');
+        btn.textContent = '자동 모드';
+        log('자동 모드 중지');
+    } else {
+        btn.classList.add('on');
+        btn.textContent = '중지';
+        log('자동 모드 시작');
+        autoInt = setInterval(function() {
+            pickUser(Math.floor(Math.random() * users.length));
+            setTimeout(doTx, 200);
+        }, 1500);
+    }
+}
+
+function init() {
+    initChains();
+    renderUsers();
+    pickNode('L1-1');
+    log('시스템 초기화 완료');
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

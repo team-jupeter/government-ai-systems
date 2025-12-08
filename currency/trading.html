@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGCT 토큰 거래</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="trading-styles.css">
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-inner">
+            <h1><span class="icon">🪙</span> EGCT 토큰 거래소</h1>
+        </div>
+    </div>
+    <div class="tab-nav">
+        <div class="tab-nav-inner">
+            <a href="trading.html" class="tab active"><i class="fas fa-exchange-alt"></i>거래</a>
+            <a href="hashchain-demo.html" class="tab"><i class="fas fa-link"></i>오픈해시</a>
+            <a href="pool.html" class="tab"><i class="fas fa-cubes"></i>자산 POOL</a>
+            <a href="holders.html" class="tab"><i class="fas fa-users"></i>EGCT 보유 현황</a>
+            <a href="prices.html" class="tab"><i class="fas fa-chart-line"></i>가격 동향</a>
+            <a href="mypage.html" class="tab"><i class="fas fa-user-circle"></i>My Page</a>
+        </div>
+    </div>
+    
+    <div id="loginScreen" class="login-container">
+        <div class="login-panel">
+            <h2 class="login-title"><i class="fas fa-lock"></i> EGCT 거래소 로그인</h2>
+            <div class="form-group">
+                <label>임시 Public Key</label>
+                <input type="text" id="loginPublicKey" placeholder="Public Key 입력">
+            </div>
+            <div class="form-group">
+                <label>전화번호 중간 4자리</label>
+                <input type="text" id="loginPhone" placeholder="예: 9529" maxlength="4">
+            </div>
+            <div class="form-group">
+                <label>거주 도시</label>
+                <input type="text" id="loginCity" placeholder="예: 서울시, 성남시">
+            </div>
+            <button onclick="trading.login()" class="btn btn-primary" style="width:100%;padding:12px;">로그인</button>
+        </div>
+    </div>
+    
+    <div id="tradingScreen" class="container hidden">
+        <div class="grid-2 mb-lg">
+            <div class="card">
+                <div class="card-header"><h3><i class="fas fa-wallet"></i> 내 지갑</h3></div>
+                <div class="card-body">
+                    <div id="walletBalance">
+                        <div style="font-size:var(--font-xxl);font-weight:700;color:var(--primary);">0 T</div>
+                        <div style="font-size:var(--font-lg);font-weight:600;color:var(--success);margin-top:var(--space-sm);">₩0</div>
+                    </div>
+                    <div style="margin-top:var(--space-md);color:var(--gray-500);font-size:var(--font-sm);">사용 가능</div>
+                    <button onclick="trading.logout()" class="btn btn-danger" style="margin-top:var(--space-md);">
+                        <i class="fas fa-sign-out-alt"></i> 로그아웃
+                    </button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3><i class="fas fa-cubes"></i> 보유 UTXO (0개)</h3></div>
+                <div class="card-body">
+                    <div style="text-align:center;color:var(--gray-400);padding:var(--space-xl);">보유 UTXO가 없습니다</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-header"><h3><i class="fas fa-list-ol"></i> 호가창</h3></div>
+                <div class="card-body">
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;font-size:var(--font-sm);font-weight:600;color:var(--gray-500);padding-bottom:var(--space-sm);border-bottom:1px solid var(--gray-200);margin-bottom:var(--space-sm);">
+                        <span>매도자</span><span>가격(KRW)</span><span>수량(T)</span>
+                    </div>
+                    <div id="orderBook"></div>
+                    <div style="text-align:center;padding:var(--space-md);background:var(--gray-100);border-radius:var(--radius-sm);margin-top:var(--space-md);">
+                        <div style="font-size:var(--font-xl);font-weight:700;color:var(--primary);">₩1,005</div>
+                        <div style="font-size:var(--font-sm);color:var(--gray-500);">현재가</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><h3><i class="fas fa-shopping-cart"></i> 주문하기</h3></div>
+                <div class="card-body">
+                    <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md);">
+                        <button id="btnBuy" onclick="trading.setOrderType('buy')" class="btn btn-primary" style="flex:1;">매수</button>
+                        <button id="btnSell" onclick="trading.setOrderType('sell')" class="btn btn-secondary" style="flex:1;">매도</button>
+                    </div>
+                    <div class="form-group" style="margin-bottom:var(--space-md);">
+                        <label style="display:block;margin-bottom:var(--space-xs);font-weight:500;">수량 (T)</label>
+                        <input type="number" id="inputAmount" placeholder="수량 입력" style="width:100%;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:var(--space-md);">
+                        <label style="display:block;margin-bottom:var(--space-xs);font-weight:500;">가격 (KRW)</label>
+                        <input type="number" id="inputPrice" value="1000" disabled style="width:100%;">
+                    </div>
+                    <button onclick="trading.executeOrder()" class="btn btn-primary" style="width:100%;padding:12px;">매수 주문</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><h3><i class="fas fa-history"></i> 최근 거래</h3></div>
+                <div class="card-body">
+                    <div style="display:flex;justify-content:space-between;font-size:var(--font-sm);font-weight:600;color:var(--gray-500);padding-bottom:var(--space-sm);border-bottom:1px solid var(--gray-200);margin-bottom:var(--space-sm);">
+                        <span>시간</span><span>가격</span><span>수량</span>
+                    </div>
+                    <div id="recentTrades"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="modalTitle">거래 완료</h2></div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button onclick="trading.closeModal()" class="btn btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="trading-auth.js"></script>
+    <script src="trading-ui.js"></script>
+    <script src="trading-order.js"></script>
+    <script src="trading-main.js"></script>
+</body>
+</html>

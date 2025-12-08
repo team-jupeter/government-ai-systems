@@ -1,9 +1,9 @@
 // 메인 앱 컴포넌트
 const App = () => {
-    const [currentTab, setCurrentTab] = React.useState('trading');
+    const [currentTab, setCurrentTab] = React.useState('overview');
 
     const tabs = [
-        { id: 'trading', name: 'EGCT 거래', icon: 'exchange-alt', component: EGCTTrading },
+        
         { id: 'overview', name: '개요', icon: 'home', component: Overview },
         { id: 'issuance', name: '발행과 유통', icon: 'coins', component: IssuanceCirculation },
         { id: 'record', name: '기록', icon: 'database', component: RecordMechanism },

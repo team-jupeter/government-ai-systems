@@ -1,0 +1,21 @@
+{
+  "selectedWallets": [
+    {"id": "USER_01", "email": "tensor**@gmail.com", "egctBalance": 30000, "krwBalance": 10000000, "publicKey": "0x0dff246cb9ce8d61dcf663696199efa36702a51680c5e3e5f95e388725877199"},
+    {"id": "USER_07", "email": "mobile******@gmail.com", "egctBalance": 10000, "krwBalance": 10000000, "publicKey": "0x53ad331178dfd6fd0bd96502a49146e8a647da093913d3fa19b4b15ec31d4a1f"},
+    {"id": "USER_08", "email": "dohwa******@gmail.com", "egctBalance": 2000, "krwBalance": 10000000, "publicKey": "0xc3eda9c25a6604f5be6687bfcd2ae5497f19535012c6dff4c775dd83bc6b109e"},
+    {"id": "USER_13", "email": "lee9****@gmail.com", "egctBalance": 2000, "krwBalance": 10000000, "publicKey": "0x197a69a971201b7f1a11ba4a18cda33aeee70f9bc2953abdc9eaa76af921d171"},
+    {"id": "USER_18", "email": "jswo****@empas.com", "egctBalance": 3000, "krwBalance": 10000000, "publicKey": "0x5852d7c970c784621193821b1f4acbf6a6a243ed22fe2baee2aafaa991e5fa45"},
+    {"id": "USER_25", "email": "outt****@naver.com", "egctBalance": 6000, "krwBalance": 10000000, "publicKey": "0xf72d3d6147fe6083c7e403c7bc8e467f49c42255dd6519fde66cd110d2bf7f09"},
+    {"id": "USER_33", "email": "kco***@naver.com", "egctBalance": 2000, "krwBalance": 10000000, "publicKey": "0x9cb32f5428bbd8294a0f84bade7d1320c09732e341f21b78b63204aedac5258c"},
+    {"id": "USER_40", "email": "byeong******@gmail.com", "egctBalance": 2000, "krwBalance": 10000000, "publicKey": "0x74c1cb47878888d54eca836991308fdbb8068c7a10d292d7ccca82cb9e9ae6b9"},
+    {"id": "USER_57", "email": "zzra****@gmail.com", "egctBalance": 3000, "krwBalance": 10000000, "publicKey": "0xe6e3ad34d8ef262b73648be85052ef6cf037c674bce9adb13e59dfa8f4ec0d55"},
+    {"id": "USER_62", "email": "ew***@naver.com", "egctBalance": 1000, "krwBalance": 10000000, "publicKey": "0x59e85c5efa49cbf7e44e20b6f80170e2ea16b082c66944364e63fa3763b8ed25"}
+  ],
+  "orders": [
+    {"seller": "USER_01", "price": 990, "amount": 5000},
+    {"seller": "USER_07", "price": 1000, "amount": 2000},
+    {"seller": "USER_18", "price": 1010, "amount": 1500},
+    {"seller": "USER_25", "price": 1025, "amount": 3000},
+    {"seller": "USER_57", "price": 1050, "amount": 1000}
+  ]
+}

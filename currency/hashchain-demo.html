@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHash 분산원장 시스템</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .controls select {
+            min-width: 220px;
+        }
+        
+        .btn-auto.on {
+            background: var(--success);
+            color: var(--white);
+        }
+        
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .column {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .column-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: var(--space-md);
+            font-weight: 600;
+            font-size: var(--font-base);
+            text-align: center;
+        }
+        
+        .column-body {
+            padding: var(--space-md);
+            min-height: 420px;
+        }
+        
+        .node-section {
+            margin-bottom: var(--space-md);
+        }
+        
+        .node-title {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--primary);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .node-title span {
+            color: var(--gray-500);
+            font-weight: normal;
+        }
+        
+        .chain-scroll {
+            max-height: 130px;
+            overflow-y: auto;
+        }
+        
+        .block {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .block.genesis {
+            border-left-color: var(--warning);
+            background: #fffef5;
+        }
+        
+        .block.new {
+            border-left-color: var(--success);
+            background: #f0fff4;
+        }
+        
+        .block-head {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray-500);
+            margin-bottom: var(--space-xs);
+            font-size: var(--font-sm);
+        }
+        
+        .block-head .idx {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .block.genesis .idx {
+            color: var(--warning);
+        }
+        
+        .block.new .idx {
+            color: var(--success);
+        }
+        
+        .block-hash {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: var(--font-sm);
+            color: var(--gray-600);
+            word-break: break-all;
+            background: var(--white);
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+        }
+        
+        .block-prev {
+            font-size: var(--font-xs);
+            color: var(--gray-400);
+            margin-top: var(--space-xs);
+        }
+        
+        .log-box {
+            margin-top: var(--space-lg);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+        
+        .log-box h4 {
+            font-size: var(--font-base);
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .log-list {
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            padding: var(--space-xs) 0;
+            color: var(--gray-600);
+            border-bottom: 1px solid var(--gray-100);
+            font-size: var(--font-sm);
+        }
+        
+        .log-item b {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-inner">
+            <h1><span class="icon">🪙</span> EGCT 토큰 거래소</h1>
+        </div>
+    </div>
+    <div class="tab-nav">
+        <div class="tab-nav-inner">
+            <a href="trading.html" class="tab"><i class="fas fa-exchange-alt"></i>거래</a>
+            <a href="hashchain-demo.html" class="tab active"><i class="fas fa-link"></i>오픈해시</a>
+            <a href="pool.html" class="tab"><i class="fas fa-cubes"></i>자산 POOL</a>
+            <a href="holders.html" class="tab"><i class="fas fa-users"></i>EGCT 보유 현황</a>
+            <a href="prices.html" class="tab"><i class="fas fa-chart-line"></i>가격 동향</a>
+            <a href="mypage.html" class="tab"><i class="fas fa-user-circle"></i>My Page</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="controls">
+            <select id="userSelect">
+                <option value="0">USER_01 (Alice) - 서울</option>
+                <option value="1">USER_02 (Bob) - 부산</option>
+                <option value="2">USER_03 (Carol) - 제주</option>
+            </select>
+            <button class="btn btn-primary" onclick="executeTx()"><i class="fas fa-bolt"></i> 거래 실행</button>
+            <button class="btn btn-secondary btn-auto" id="autoBtn" onclick="toggleAuto()"><i class="fas fa-sync"></i> 자동</button>
+        </div>
+        
+        <div class="table-grid">
+            <div class="column">
+                <div class="column-header">User</div>
+                <div class="column-body" id="colUser"></div>
+            </div>
+            <div class="column">
+                <div class="column-header">Layer 1 (Edge)</div>
+                <div class="column-body" id="colL1"></div>
+            </div>
+            <div class="column">
+                <div class="column-header">Layer 2 (Regional)</div>
+                <div class="column-body" id="colL2"></div>
+            </div>
+            <div class="column">
+                <div class="column-header">Layer 3 (Core)</div>
+                <div class="column-body" id="colL3"></div>
+            </div>
+        </div>
+        
+        <div class="log-box">
+            <h4><i class="fas fa-list"></i> Transaction Log</h4>
+            <div class="log-list" id="logBox"></div>
+        </div>
+    </div>
+
+<script>
+var users = [
+    {id:'USER_01', name:'Alice', loc:'서울', node:'L1-1', chain:[]},
+    {id:'USER_02', name:'Bob', loc:'부산', node:'L1-2', chain:[]},
+    {id:'USER_03', name:'Carol', loc:'제주', node:'L1-3', chain:[]}
+];
+var nodeParent = {'L1-1':'L2-1','L1-2':'L2-1','L1-3':'L2-2','L2-1':'L3-1','L2-2':'L3-1'};
+var chains = {};
+var autoInt = null;
+
+function hash(s) {
+    var h = 5381, str = s + Date.now() + Math.random();
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+    return '0x' + Math.abs(h).toString(16).padStart(8,'0') + Math.random().toString(16).substr(2,24);
+}
+
+function init() {
+    var g = hash('origin');
+    ['L1-1','L1-2','L1-3','L2-1','L2-2','L3-1'].forEach(function(n) {
+        chains[n] = [{idx:0, hash:g, prev:null, time:new Date(), genesis:true}];
+    });
+    users.forEach(function(u) {
+        u.chain = [{idx:0, hash:g, prev:null, time:new Date(), genesis:true}];
+    });
+    render();
+    log('시스템 초기화', 'Genesis: ' + g.substr(0,16) + '...');
+}
+
+function render() {
+    var sel = parseInt(document.getElementById('userSelect').value);
+    var u = users[sel];
+    document.getElementById('colUser').innerHTML = renderNode(u.id + ' (' + u.name + ')', u.chain, u.loc);
+    
+    document.getElementById('colL1').innerHTML = 
+        renderNode('L1-E1 (서울)', chains['L1-1']) +
+        renderNode('L1-E2 (부산)', chains['L1-2']) +
+        renderNode('L1-E3 (제주)', chains['L1-3']);
+    
+    document.getElementById('colL2').innerHTML = 
+        renderNode('L2-R1 (수도권)', chains['L2-1']) +
+        renderNode('L2-R2 (영남/제주)', chains['L2-2']);
+    
+    document.getElementById('colL3').innerHTML = 
+        renderNode('L3-Core', chains['L3-1']);
+}
+
+function renderNode(title, chain, sub) {
+    var html = '<div class="node-section">';
+    html += '<div class="node-title">' + title + ' <span>' + chain.length + ' blocks</span></div>';
+    html += '<div class="chain-scroll">';
+    for (var i = chain.length - 1; i >= 0; i--) {
+        var b = chain[i];
+        var cls = b.genesis ? 'block genesis' : (i === chain.length - 1 && chain.length > 1 ? 'block new' : 'block');
+        html += '<div class="' + cls + '">';
+        html += '<div class="block-head"><span class="idx">' + (b.genesis ? 'GEN' : '#' + b.idx) + '</span><span>' + b.time.toLocaleTimeString('ko-KR') + '</span></div>';
+        html += '<div class="block-hash">' + b.hash + '</div>';
+        if (b.prev) html += '<div class="block-prev">← ' + b.prev.substr(0,20) + '...</div>';
+        html += '</div>';
+    }
+    html += '</div></div>';
+    return html;
+}
+
+function addBlock(target, tx) {
+    var chain = (typeof target === 'string') ? chains[target] : target.chain;
+    var prev = chain[chain.length - 1].hash;
+    chain.push({idx: chain.length, hash: hash(tx + prev), prev: prev, time: new Date(), genesis: false});
+}
+
+function executeTx() {
+    var u = users[parseInt(document.getElementById('userSelect').value)];
+    var tx = hash(u.id + Date.now());
+    
+    addBlock(u, tx);
+    log(u.name + ' 거래 생성', tx.substr(0,16) + '...');
+    
+    var l1 = u.node;
+    if (Math.random() > 0.7) {
+        l1 = ['L1-1','L1-2','L1-3'][Math.floor(Math.random() * 3)];
+        log('위치 이동', l1);
+    }
+    
+    addBlock(l1, tx);
+    log(l1 + ' 저장', '#' + (chains[l1].length - 1));
+    
+    var r = Math.random() * 100;
+    var layer = r >= 90 ? 3 : r >= 70 ? 2 : 1;
+    log('계층 선택', 'L' + layer + ' (' + r.toFixed(0) + '%)');
+    
+    if (layer >= 2) {
+        var l2 = nodeParent[l1];
+        addBlock(l2, tx);
+        log(l2 + ' 저장', '#' + (chains[l2].length - 1));
+        if (layer >= 3) {
+            addBlock('L3-1', tx);
+            log('L3-Core 저장', '#' + (chains['L3-1'].length - 1));
+        }
+    }
+    render();
+}
+
+function log(t, m) {
+    var box = document.getElementById('logBox');
+    var time = new Date().toLocaleTimeString('ko-KR');
+    box.innerHTML = '<div class="log-item">[' + time + '] <b>' + t + '</b> ' + m + '</div>' + box.innerHTML;
+    if (box.children.length > 20) box.removeChild(box.lastChild);
+}
+
+function toggleAuto() {
+    var btn = document.getElementById('autoBtn');
+    if (autoInt) {
+        clearInterval(autoInt);
+        autoInt = null;
+        btn.classList.remove('on');
+        btn.innerHTML = '<i class="fas fa-sync"></i> 자동';
+    } else {
+        btn.classList.add('on');
+        btn.innerHTML = '<i class="fas fa-stop"></i> 중지';
+        autoInt = setInterval(function() {
+            document.getElementById('userSelect').value = Math.floor(Math.random() * 3);
+            executeTx();
+        }, 1500);
+    }
+}
+
+document.getElementById('userSelect').onchange = render;
+window.onload = init;
+</script>
+</body>
+</html>

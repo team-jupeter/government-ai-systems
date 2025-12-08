@@ -550,7 +550,7 @@
     <script src="js/egct-trading/OpenHashLayer.js"></script>
     <script src="js/egct-trading/TradingEngine.js"></script>
     <script src="js/egct-trading/ValidationModule.js"></script>
-    <script src="js/components/EGCTTrading.js?v=1765185032V3"></script>
+    <script src="js/components/EGCTTrading.js?v=1765192820RESTORED"></script>
 
 
     <!-- EGCT Trading Section -->
@@ -911,6 +911,33 @@ function connectWallet() {
             "></div>
         </div>
     </div>
+
+
+    <!-- EGCT 거래소 Floating Button -->
+    <a href="trading.html" style="
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #004C9E 0%, #0066CC 100%);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        box-shadow: 0 4px 20px rgba(0, 76, 158, 0.4);
+        transition: all 0.3s ease;
+        z-index: 9999;
+        font-weight: 600;
+        font-size: 11px;
+    " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 30px rgba(0, 76, 158, 0.6)';" 
+       onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 20px rgba(0, 76, 158, 0.4)';">
+        <span style="font-size: 24px; margin-bottom: 2px;">🪙</span>
+        <span style="font-size: 10px; line-height: 1.2; text-align: center;">EGCT<br>거래소</span>
+    </a>
 
 </body>
 

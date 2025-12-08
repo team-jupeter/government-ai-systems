@@ -5,17 +5,17 @@ class EGCTTrading extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: { name: '정재효', publicKey: '0x123' },
+            currentUser: { name: 'USER_01', publicKey: '0x123' },
             balance: 800,
             krwBalance: 6090000,
             orderType: 'buy',
             orderAmount: '',
             orderPrice: 1000,
             orderBook: [
-                { seller: '김혜영', amount: 500, price: 1050, timestamp: new Date().toISOString() },
-                { seller: '전도환', amount: 1000, price: 1020, timestamp: new Date().toISOString() },
-                { seller: '안병모', amount: 1500, price: 1000, timestamp: new Date().toISOString() },
-                { seller: '이규선', amount: 3000, price: 1000, timestamp: new Date().toISOString() },
+                { seller: 'USER_06', amount: 500, price: 1050, timestamp: new Date().toISOString() },
+                { seller: 'USER_07', amount: 1000, price: 1020, timestamp: new Date().toISOString() },
+                { seller: 'USER_09', amount: 1500, price: 1000, timestamp: new Date().toISOString() },
+                { seller: 'USER_11', amount: 3000, price: 1000, timestamp: new Date().toISOString() },
                 { seller: '박차장', amount: 2000, price: 995, timestamp: new Date().toISOString() }
             ],
             recentTrades: [
