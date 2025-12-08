@@ -27,6 +27,14 @@ class TradingOrder {
         return 'tx_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
     }
     
+    // PDV에 거래 저장
+    saveTransactionToPDV(tx) {
+        var transactions = JSON.parse(localStorage.getItem('egct_pdv_transactions') || '[]');
+        transactions.push(tx);
+        localStorage.setItem('egct_pdv_transactions', JSON.stringify(transactions));
+        console.log('✅ PDV에 거래 저장:', tx.id);
+    }
+    
     executeBuy(amount, balance, krwBalance, userName) {
         if (!amount) throw new Error('수량을 입력하세요');
         
@@ -42,11 +50,26 @@ class TradingOrder {
             }
             const fill = Math.min(remaining, order.amount);
             
+            const txId = this.generateTxId();
+            
             // UTXO 생성 (실제 판매자)
-            utxos.push({
-                txid: this.generateTxId(),
+            const utxo = {
+                txid: txId,
                 from: order.seller,
-                to: userName || '사용자',
+                to: userName || 'ME',
+                amount: fill,
+                price: order.price,
+                value: fill * order.price,
+                timestamp: Date.now()
+            };
+            utxos.push(utxo);
+            
+            // PDV에 거래 저장
+            this.saveTransactionToPDV({
+                id: txId,
+                type: 'BUY',
+                from: order.seller,
+                to: userName || 'ME',
                 amount: fill,
                 price: order.price,
                 value: fill * order.price,
@@ -83,16 +106,30 @@ class TradingOrder {
         if (!amount) throw new Error('수량을 입력하세요');
         if (balance < amount) throw new Error('잔액 부족');
         
+        const txId = this.generateTxId();
+        
         // UTXO 생성
         const utxo = {
-            txid: this.generateTxId(),
-            from: userName || '사용자',
-            to: '호가장 대기',
+            txid: txId,
+            from: userName || 'ME',
+            to: '호가창 대기',
             amount: amount,
             price: price,
             value: amount * price,
             timestamp: Date.now()
         };
+        
+        // PDV에 거래 저장
+        this.saveTransactionToPDV({
+            id: txId,
+            type: 'SELL',
+            from: userName || 'ME',
+            to: '호가창 대기',
+            amount: amount,
+            price: price,
+            value: amount * price,
+            timestamp: Date.now()
+        });
         
         this.orderBook.push({ seller: userName, price: price, amount: amount });
         
