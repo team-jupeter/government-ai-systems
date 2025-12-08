@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My PDV - Private Data Vault</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .pdv-container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        
+        /* 2컬럼 레이아웃: 거래명세서 | 해시체인 */
+        .pdv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        
+        .column-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 16px;
+        }
+        
+        /* 거래 명세서 카드 - 심플 스타일 */
+        .tx-card {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .tx-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tx-card-id {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0a66c2;
+        }
+        
+        .tx-card-time {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .tx-card-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+        
+        .tx-card-row .label { color: #666; }
+        .tx-card-row .value { font-weight: 500; color: #191919; }
+        
+        .tx-card-amount {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        
+        .tx-card-amount .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a66c2;
+        }
+        
+        /* 해시 카드 - 심플 스타일 */
+        .hash-card {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .hash-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .hash-card-id {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .hash-card-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e3f2fd;
+            color: #0a66c2;
+        }
+        
+        .hash-value {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 11px;
+            color: #555;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+        
+        /* Merkle Root 섹션 */
+        .merkle-section {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+        
+        .merkle-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .merkle-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .merkle-level {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .merkle-node {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #555;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .merkle-node.root {
+            background: #e3f2fd;
+            border-color: #0a66c2;
+            color: #0a66c2;
+            font-weight: 600;
+        }
+        
+        .merkle-arrow {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        /* Layer 연동 섹션 */
+        .chain-section {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+        
+        .chain-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+        
+        .chain-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .chain-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .chain-box.layer1 {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        
+        .chain-box.my-chain {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        
+        .chain-box-label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .chain-box-value {
+            font-family: monospace;
+            font-size: 10px;
+            color: #333;
+            word-break: break-all;
+        }
+        
+        .chain-arrow {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        /* 상태 표시 */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+        
+        .sync-status.pending {
+            background: #fff3e0;
+            color: #e65100;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-header-inner">
+            <h1><span class="icon">🔐</span> My PDV (Private Data Vault)</h1>
+        </div>
+    </div>
+    <div class="tab-nav">
+        <div class="tab-nav-inner">
+            <a href="trading.html" class="tab"><i class="fas fa-exchange-alt"></i>거래</a>
+            <a href="hashchain-demo.html" class="tab"><i class="fas fa-link"></i>오픈해시</a>
+            <a href="pool.html" class="tab"><i class="fas fa-cubes"></i>자산 POOL</a>
+            <a href="holders.html" class="tab"><i class="fas fa-users"></i>EGCT 보유 현황</a>
+            <a href="prices.html" class="tab"><i class="fas fa-chart-line"></i>가격 동향</a>
+            <a href="mypage.html" class="tab"><i class="fas fa-user-circle"></i>My Page</a>
+            <a href="pdv.html" class="tab active"><i class="fas fa-vault"></i>My PDV</a>
+        </div>
+    </div>
+    
+    <div class="pdv-container">
+        <div class="pdv-grid">
+            <!-- 왼쪽: 거래 명세서 -->
+            <div class="tx-column">
+                <div class="column-header">📋 거래 명세서 (UTXO)</div>
+                <div id="txList"></div>
+            </div>
+            
+            <!-- 오른쪽: 해시 체인 -->
+            <div class="hash-column">
+                <div class="column-header">🔗 Hash Chain</div>
+                <div id="hashList"></div>
+            </div>
+        </div>
+        
+        <!-- Merkle Root 섹션 -->
+        <div class="merkle-section" id="merkleSection" style="display:none;">
+            <div class="merkle-title"><i class="fas fa-sitemap"></i> Merkle Tree</div>
+            <div class="merkle-tree" id="merkleTree"></div>
+        </div>
+        
+        <!-- Layer 1 연동 섹션 -->
+        <div class="chain-section" id="chainSection" style="display:none;">
+            <div class="chain-title"><i class="fas fa-link"></i> Layer 1 연동</div>
+            <div class="chain-flow" id="chainFlow"></div>
+            <div class="sync-status" id="syncStatus">
+                <i class="fas fa-check-circle"></i>
+                <span>Hash Chain 상호 연동 완료</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    (function() {
+        // SHA-256 해시 함수
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // 거래 데이터 로드 (localStorage에서)
+        function loadTransactions() {
+            var txs = JSON.parse(localStorage.getItem('egct_transactions') || '[]');
+            // 데모용 데이터 추가
+            if (txs.length === 0) {
+                txs = [
+                    { id: 'TX-001', type: 'BUY', from: 'USER_01', to: 'ME', amount: 100, price: 990, timestamp: Date.now() - 3600000 },
+                    { id: 'TX-002', type: 'BUY', from: 'USER_07', to: 'ME', amount: 50, price: 995, timestamp: Date.now() - 2400000 },
+                    { id: 'TX-003', type: 'BUY', from: 'USER_09', to: 'ME', amount: 200, price: 985, timestamp: Date.now() - 1200000 },
+                    { id: 'TX-004', type: 'SELL', from: 'ME', to: 'USER_06', amount: 30, price: 1010, timestamp: Date.now() - 600000 }
+                ];
+            }
+            return txs;
+        }
+        
+        // 거래 명세서 렌더링
+        function renderTransaction(tx, index) {
+            var value = tx.amount * tx.price;
+            var typeLabel = tx.type === 'BUY' ? '매수' : '매도';
+            var typeColor = tx.type === 'BUY' ? '#0a66c2' : '#c62828';
+            
+            return '<div class="tx-card" data-index="' + index + '">' +
+                '<div class="tx-card-header">' +
+                    '<span class="tx-card-id">#' + (index + 1) + ' ' + tx.id + '</span>' +
+                    '<span class="tx-card-time">' + new Date(tx.timestamp).toLocaleString('ko-KR') + '</span>' +
+                '</div>' +
+                '<div class="tx-card-row"><span class="label">유형</span><span class="value" style="color:' + typeColor + '">' + typeLabel + '</span></div>' +
+                '<div class="tx-card-row"><span class="label">From</span><span class="value">' + tx.from + '</span></div>' +
+                '<div class="tx-card-row"><span class="label">To</span><span class="value">' + tx.to + '</span></div>' +
+                '<div class="tx-card-row"><span class="label">수량</span><span class="value">' + tx.amount.toLocaleString() + ' T</span></div>' +
+                '<div class="tx-card-row"><span class="label">단가</span><span class="value">₩' + tx.price.toLocaleString() + '</span></div>' +
+                '<div class="tx-card-amount"><span class="value">₩' + value.toLocaleString() + '</span></div>' +
+            '</div>';
+        }
+        
+        // 해시 카드 렌더링
+        function renderHashCard(hash, index, type) {
+            var typeLabel = type || 'TX Hash';
+            var bgColor = type === 'Merkle Root' ? '#e8f5e9' : '#e3f2fd';
+            
+            return '<div class="hash-card">' +
+                '<div class="hash-card-header">' +
+                    '<span class="hash-card-id">H' + (index + 1) + '</span>' +
+                    '<span class="hash-card-type" style="background:' + bgColor + '">' + typeLabel + '</span>' +
+                '</div>' +
+                '<div class="hash-value">' + hash + '</div>' +
+            '</div>';
+        }
+        
+        // Merkle Tree 계산
+        async function computeMerkleRoot(hashes) {
+            if (hashes.length === 0) return null;
+            if (hashes.length === 1) return hashes[0];
+            
+            var level = hashes.slice();
+            var tree = [level.slice()];
+            
+            while (level.length > 1) {
+                var nextLevel = [];
+                for (var i = 0; i < level.length; i += 2) {
+                    var left = level[i];
+                    var right = (i + 1 < level.length) ? level[i + 1] : level[i];
+                    var combined = await sha256(left + right);
+                    nextLevel.push(combined);
+                }
+                level = nextLevel;
+                tree.push(level.slice());
+            }
+            
+            return { root: level[0], tree: tree };
+        }
+        
+        // Merkle Tree 시각화
+        function renderMerkleTree(tree) {
+            var html = '';
+            for (var i = tree.length - 1; i >= 0; i--) {
+                var levelClass = i === tree.length - 1 ? 'root' : '';
+                html += '<div class="merkle-level">';
+                for (var j = 0; j < tree[i].length; j++) {
+                    var nodeClass = (i === tree.length - 1) ? 'merkle-node root' : 'merkle-node';
+                    html += '<div class="' + nodeClass + '" title="' + tree[i][j] + '">' + tree[i][j].substring(0, 16) + '...</div>';
+                }
+                html += '</div>';
+                if (i > 0) {
+                    html += '<div class="merkle-arrow">↑</div>';
+                }
+            }
+            return html;
+        }
+        
+        // Layer 1 연동 렌더링
+        async function renderChainFlow(merkleRoot) {
+            var layer1Origin = await sha256('LAYER1_ORIGIN_' + Date.now());
+            var layer1Combined = await sha256(layer1Origin + merkleRoot);
+            var myOrigin = await sha256('MY_ORIGIN_' + localStorage.getItem('egct_user'));
+            var myNewHash = await sha256(myOrigin + layer1Combined);
+            
+            return '<div class="chain-box">' +
+                    '<div class="chain-box-label">Merkle Root</div>' +
+                    '<div class="chain-box-value">' + merkleRoot.substring(0, 24) + '...</div>' +
+                '</div>' +
+                '<div class="chain-arrow">→</div>' +
+                '<div class="chain-box layer1">' +
+                    '<div class="chain-box-label">Layer 1 Origin</div>' +
+                    '<div class="chain-box-value">' + layer1Origin.substring(0, 24) + '...</div>' +
+                '</div>' +
+                '<div class="chain-arrow">→</div>' +
+                '<div class="chain-box layer1">' +
+                    '<div class="chain-box-label">Layer 1 Combined</div>' +
+                    '<div class="chain-box-value">' + layer1Combined.substring(0, 24) + '...</div>' +
+                '</div>' +
+                '<div class="chain-arrow">→</div>' +
+                '<div class="chain-box my-chain">' +
+                    '<div class="chain-box-label">My Origin</div>' +
+                    '<div class="chain-box-value">' + myOrigin.substring(0, 24) + '...</div>' +
+                '</div>' +
+                '<div class="chain-arrow">→</div>' +
+                '<div class="chain-box my-chain">' +
+                    '<div class="chain-box-label">My New Hash</div>' +
+                    '<div class="chain-box-value">' + myNewHash.substring(0, 24) + '...</div>' +
+                '</div>';
+        }
+        
+        // 메인 초기화
+        async function init() {
+            var txs = loadTransactions();
+            var txListEl = document.getElementById('txList');
+            var hashListEl = document.getElementById('hashList');
+            
+            var txHtml = '';
+            var hashHtml = '';
+            var hashes = [];
+            
+            for (var i = 0; i < txs.length; i++) {
+                var tx = txs[i];
+                txHtml += renderTransaction(tx, i);
+                
+                var txString = JSON.stringify(tx);
+                var hash = await sha256(txString);
+                hashes.push(hash);
+                hashHtml += renderHashCard(hash, i, 'TX Hash');
+            }
+            
+            txListEl.innerHTML = txHtml || '<div style="text-align:center;color:#999;padding:40px;">거래 내역이 없습니다</div>';
+            hashListEl.innerHTML = hashHtml || '<div style="text-align:center;color:#999;padding:40px;">해시가 없습니다</div>';
+            
+            // 4건 이상이면 Merkle Root 표시
+            if (hashes.length >= 4) {
+                var merkleResult = await computeMerkleRoot(hashes.slice(0, 4));
+                
+                document.getElementById('merkleSection').style.display = 'block';
+                document.getElementById('merkleTree').innerHTML = renderMerkleTree(merkleResult.tree);
+                
+                document.getElementById('chainSection').style.display = 'block';
+                document.getElementById('chainFlow').innerHTML = await renderChainFlow(merkleResult.root);
+            }
+        }
+        
+        init();
+    })();
+    </script>
+</body>
+</html>
