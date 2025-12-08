@@ -8,191 +8,205 @@
     <link rel="stylesheet" href="common.css">
     <style>
         .pdv-container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        .pdv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .pdv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
         .column-header {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #333;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: #f8f9fa;
-            border-bottom: 1px solid #e5e5e5;
-            margin-bottom: 16px;
-            border-radius: 8px 8px 0 0;
+            border-radius: 6px;
+            margin-bottom: 12px;
         }
         
+        /* 컴팩트 카드 스타일 */
         .tx-card {
             background: #fff;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         
         .tx-card-header {
+            margin-bottom: 8px;
+        }
+        
+        .tx-card-id {
+            font-size: 13px;
+            font-weight: 600;
+            color: #191919;
+        }
+        
+        .tx-card-desc {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+        
+        .tx-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #eee;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f0f0;
         }
         
-        .tx-card-id { font-size: 14px; font-weight: 600; color: #0a66c2; }
-        .tx-card-time { font-size: 12px; color: #666; }
-        
-        .tx-card-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 13px;
+        .tx-card-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
         }
         
-        .tx-card-row .label { color: #666; }
-        .tx-card-row .value { font-weight: 500; color: #191919; }
+        .tx-card-type.buy { background: #e3f2fd; color: #1976d2; }
+        .tx-card-type.sell { background: #ffebee; color: #c62828; }
         
         .tx-card-amount {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #eee;
-            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: #191919;
         }
         
-        .tx-card-amount .value { font-size: 18px; font-weight: 700; color: #0a66c2; }
-        
+        /* 해시 카드 - 더 컴팩트 */
         .hash-card {
             background: #fff;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         
         .hash-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
-        .hash-card-id { font-size: 13px; font-weight: 600; color: #333; }
+        .hash-card-id {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
         
         .hash-card-type {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 10px;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
             background: #e3f2fd;
-            color: #0a66c2;
+            color: #1976d2;
         }
         
         .hash-value {
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 11px;
-            color: #555;
-            background: #f8f9fa;
-            padding: 8px 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 10px;
+            color: #666;
+            background: #f5f5f5;
+            padding: 6px 8px;
             border-radius: 4px;
             word-break: break-all;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         
+        /* Merkle 섹션 */
         .merkle-section {
             background: #fff;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 24px;
+            padding: 16px;
+            margin-top: 20px;
         }
         
         .merkle-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #333;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 14px;
         }
         
         .merkle-tree {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
         
-        .merkle-level { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .merkle-level { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         
         .merkle-node {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 8px 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 6px 10px;
             font-family: monospace;
-            font-size: 10px;
+            font-size: 9px;
             color: #555;
-            max-width: 140px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
         
         .merkle-node.root {
             background: #e8f5e9;
-            border-color: #4caf50;
+            border-color: #81c784;
             color: #2e7d32;
             font-weight: 600;
         }
         
-        .merkle-arrow { color: #999; font-size: 12px; }
+        .merkle-arrow { color: #bbb; font-size: 10px; }
         
+        /* Chain 섹션 */
         .chain-section {
             background: #fff;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 16px;
+            padding: 16px;
+            margin-top: 12px;
         }
         
-        .chain-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 16px; }
+        .chain-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 14px; }
         
-        .chain-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .chain-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         
         .chain-box {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 10px 14px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 8px 10px;
             text-align: center;
-            min-width: 100px;
         }
         
-        .chain-box.layer1 { background: #fff3e0; border-color: #ff9800; }
-        .chain-box.my-chain { background: #e8f5e9; border-color: #4caf50; }
+        .chain-box.layer1 { background: #fff8e1; border-color: #ffb74d; }
+        .chain-box.my-chain { background: #e8f5e9; border-color: #81c784; }
         
-        .chain-box-label { font-size: 10px; color: #666; margin-bottom: 4px; }
-        .chain-box-value { font-family: monospace; font-size: 9px; color: #333; word-break: break-all; }
+        .chain-box-label { font-size: 9px; color: #666; margin-bottom: 2px; }
+        .chain-box-value { font-family: monospace; font-size: 8px; color: #333; }
         
-        .chain-arrow { color: #999; font-size: 14px; }
+        .chain-arrow { color: #bbb; font-size: 12px; }
         
         .sync-status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
+            gap: 6px;
+            padding: 10px 12px;
             background: #e8f5e9;
-            border-radius: 6px;
-            margin-top: 16px;
-            font-size: 13px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 12px;
             color: #2e7d32;
         }
         
         .empty-state {
             text-align: center;
             color: #999;
-            padding: 60px 20px;
-            font-size: 14px;
+            padding: 40px 16px;
+            font-size: 13px;
         }
+        
+        .empty-state i { font-size: 28px; margin-bottom: 10px; display: block; color: #ccc; }
     </style>
 </head>
 <body>
@@ -233,53 +247,40 @@
         <div class="chain-section" id="chainSection" style="display:none;">
             <div class="chain-title"><i class="fas fa-link"></i> Layer 1 Hash Chain 연동</div>
             <div class="chain-flow" id="chainFlow"></div>
-            <div class="sync-status" id="syncStatus">
-                <i class="fas fa-check-circle"></i>
-                <span>Hash Chain 상호 연동 완료</span>
-            </div>
+            <div class="sync-status"><i class="fas fa-check-circle"></i><span>Hash Chain 상호 연동 완료</span></div>
         </div>
     </div>
     
-    <!-- SHA-256 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
     <script>
     (function() {
-        console.log('PDV 페이지 로드됨');
-        console.log('localStorage egct_pdv_transactions:', localStorage.getItem('egct_pdv_transactions'));
-        
         function loadTransactions() {
-            var txs = JSON.parse(localStorage.getItem('egct_pdv_transactions') || '[]');
-            console.log('로드된 거래 수:', txs.length);
-            return txs;
+            return JSON.parse(localStorage.getItem('egct_pdv_transactions') || '[]');
         }
         
         function renderTransaction(tx, index) {
-            var value = tx.amount * tx.price;
+            var typeClass = tx.type === 'BUY' ? 'buy' : 'sell';
             var typeLabel = tx.type === 'BUY' ? '매수' : '매도';
-            var typeColor = tx.type === 'BUY' ? '#0a66c2' : '#c62828';
+            var value = tx.amount * tx.price;
+            var time = new Date(tx.timestamp).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
             
             return '<div class="tx-card">' +
                 '<div class="tx-card-header">' +
-                    '<span class="tx-card-id">#' + (index + 1) + ' ' + (tx.id || tx.txid || 'TX') + '</span>' +
-                    '<span class="tx-card-time">' + new Date(tx.timestamp).toLocaleString('ko-KR') + '</span>' +
+                    '<div class="tx-card-id">#' + (index + 1) + ' ' + (tx.id || tx.txid || 'TX').substring(0, 18) + '</div>' +
+                    '<div class="tx-card-desc">' + tx.from + ' → ' + tx.to + ' · ' + tx.amount + 'T × ₩' + tx.price.toLocaleString() + ' · ' + time + '</div>' +
                 '</div>' +
-                '<div class="tx-card-row"><span class="label">유형</span><span class="value" style="color:' + typeColor + '">' + typeLabel + '</span></div>' +
-                '<div class="tx-card-row"><span class="label">From</span><span class="value">' + tx.from + '</span></div>' +
-                '<div class="tx-card-row"><span class="label">To</span><span class="value">' + tx.to + '</span></div>' +
-                '<div class="tx-card-row"><span class="label">수량</span><span class="value">' + tx.amount.toLocaleString() + ' T</span></div>' +
-                '<div class="tx-card-row"><span class="label">단가</span><span class="value">₩' + tx.price.toLocaleString() + '</span></div>' +
-                '<div class="tx-card-amount"><span class="value">₩' + value.toLocaleString() + '</span></div>' +
+                '<div class="tx-card-footer">' +
+                    '<span class="tx-card-type ' + typeClass + '">' + typeLabel + '</span>' +
+                    '<span class="tx-card-amount">₩' + value.toLocaleString() + '</span>' +
+                '</div>' +
             '</div>';
         }
         
-        function renderHashCard(hash, index, type) {
-            var typeLabel = type || 'TX Hash';
-            var bgColor = type === 'Merkle Root' ? '#e8f5e9' : '#e3f2fd';
-            
+        function renderHashCard(hash, index) {
             return '<div class="hash-card">' +
                 '<div class="hash-card-header">' +
                     '<span class="hash-card-id">H' + (index + 1) + '</span>' +
-                    '<span class="hash-card-type" style="background:' + bgColor + '">' + typeLabel + '</span>' +
+                    '<span class="hash-card-type">TX Hash</span>' +
                 '</div>' +
                 '<div class="hash-value">' + hash + '</div>' +
             '</div>';
@@ -297,13 +298,11 @@
                 for (var i = 0; i < level.length; i += 2) {
                     var left = level[i];
                     var right = (i + 1 < level.length) ? level[i + 1] : level[i];
-                    var combined = sha256(left + right);
-                    nextLevel.push(combined);
+                    nextLevel.push(sha256(left + right));
                 }
                 level = nextLevel;
                 tree.push(level.slice());
             }
-            
             return { root: level[0], tree: tree };
         }
         
@@ -313,7 +312,7 @@
                 var nodeClass = (i === tree.length - 1) ? 'merkle-node root' : 'merkle-node';
                 html += '<div class="merkle-level">';
                 for (var j = 0; j < tree[i].length; j++) {
-                    html += '<div class="' + nodeClass + '" title="' + tree[i][j] + '">' + tree[i][j].substring(0, 16) + '...</div>';
+                    html += '<div class="' + nodeClass + '">' + tree[i][j].substring(0, 12) + '...</div>';
                 }
                 html += '</div>';
                 if (i > 0) html += '<div class="merkle-arrow">↑</div>';
@@ -322,20 +321,20 @@
         }
         
         function renderChainFlow(merkleRoot) {
-            var layer1Origin = sha256('LAYER1_ORIGIN_' + Date.now());
-            var layer1Combined = sha256(layer1Origin + merkleRoot);
-            var myOrigin = sha256('MY_ORIGIN_' + (localStorage.getItem('egct_user') || 'user'));
-            var myNewHash = sha256(myOrigin + layer1Combined);
+            var l1Origin = sha256('L1_' + Date.now());
+            var l1Combined = sha256(l1Origin + merkleRoot);
+            var myOrigin = sha256('MY_' + (localStorage.getItem('egct_user') || 'u'));
+            var myHash = sha256(myOrigin + l1Combined);
             
-            return '<div class="chain-box"><div class="chain-box-label">Merkle Root</div><div class="chain-box-value">' + merkleRoot.substring(0, 20) + '...</div></div>' +
+            return '<div class="chain-box"><div class="chain-box-label">Merkle</div><div class="chain-box-value">' + merkleRoot.substring(0, 14) + '...</div></div>' +
                 '<div class="chain-arrow">→</div>' +
-                '<div class="chain-box layer1"><div class="chain-box-label">Layer 1 Origin</div><div class="chain-box-value">' + layer1Origin.substring(0, 20) + '...</div></div>' +
+                '<div class="chain-box layer1"><div class="chain-box-label">L1 Origin</div><div class="chain-box-value">' + l1Origin.substring(0, 14) + '...</div></div>' +
                 '<div class="chain-arrow">→</div>' +
-                '<div class="chain-box layer1"><div class="chain-box-label">L1 Combined</div><div class="chain-box-value">' + layer1Combined.substring(0, 20) + '...</div></div>' +
+                '<div class="chain-box layer1"><div class="chain-box-label">L1 Combined</div><div class="chain-box-value">' + l1Combined.substring(0, 14) + '...</div></div>' +
                 '<div class="chain-arrow">→</div>' +
-                '<div class="chain-box my-chain"><div class="chain-box-label">My Origin</div><div class="chain-box-value">' + myOrigin.substring(0, 20) + '...</div></div>' +
+                '<div class="chain-box my-chain"><div class="chain-box-label">My Origin</div><div class="chain-box-value">' + myOrigin.substring(0, 14) + '...</div></div>' +
                 '<div class="chain-arrow">→</div>' +
-                '<div class="chain-box my-chain"><div class="chain-box-label">My New Hash</div><div class="chain-box-value">' + myNewHash.substring(0, 20) + '...</div></div>';
+                '<div class="chain-box my-chain"><div class="chain-box-label">My Hash</div><div class="chain-box-value">' + myHash.substring(0, 14) + '...</div></div>';
         }
         
         function init() {
@@ -344,36 +343,29 @@
             var hashListEl = document.getElementById('hashList');
             
             if (txs.length === 0) {
-                txListEl.innerHTML = '<div class="empty-state"><i class="fas fa-inbox" style="font-size:32px;margin-bottom:12px;display:block;"></i>거래 내역이 없습니다.<br>거래 탭에서 매수/매도를 수행하세요.</div>';
-                hashListEl.innerHTML = '<div class="empty-state"><i class="fas fa-link" style="font-size:32px;margin-bottom:12px;display:block;"></i>해시가 없습니다.</div>';
+                txListEl.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>거래 내역이 없습니다</div>';
+                hashListEl.innerHTML = '<div class="empty-state"><i class="fas fa-link"></i>해시가 없습니다</div>';
                 return;
             }
             
-            var txHtml = '';
-            var hashHtml = '';
-            var hashes = [];
+            var txHtml = '', hashHtml = '', hashes = [];
             
             for (var i = 0; i < txs.length; i++) {
-                var tx = txs[i];
-                txHtml += renderTransaction(tx, i);
-                
-                var txString = JSON.stringify(tx);
-                var hash = sha256(txString);
+                txHtml += renderTransaction(txs[i], i);
+                var hash = sha256(JSON.stringify(txs[i]));
                 hashes.push(hash);
-                hashHtml += renderHashCard(hash, i, 'TX Hash');
+                hashHtml += renderHashCard(hash, i);
             }
             
             txListEl.innerHTML = txHtml;
             hashListEl.innerHTML = hashHtml;
             
             if (hashes.length >= 4) {
-                var merkleResult = computeMerkleRoot(hashes.slice(0, 4));
-                
+                var merkle = computeMerkleRoot(hashes.slice(0, 4));
                 document.getElementById('merkleSection').style.display = 'block';
-                document.getElementById('merkleTree').innerHTML = renderMerkleTree(merkleResult.tree);
-                
+                document.getElementById('merkleTree').innerHTML = renderMerkleTree(merkle.tree);
                 document.getElementById('chainSection').style.display = 'block';
-                document.getElementById('chainFlow').innerHTML = renderChainFlow(merkleResult.root);
+                document.getElementById('chainFlow').innerHTML = renderChainFlow(merkle.root);
             }
         }
         
