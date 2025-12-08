@@ -70,83 +70,98 @@
         * { font-family: 'Noto Sans KR', sans-serif; }
         body { background-color: #FFFFFF; }
     
-    /* EGCT Trading Styles */
+    
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .wallet-info-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+    
+
+    
+    /* EGCT Trading - Government Design System */
     .egct-trading-container {
         max-width: 1400px;
-        margin: 40px auto;
-        padding: 0 20px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .egct-trading-container * {
+        box-sizing: border-box;
     }
     
     .trading-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 30px;
-        border-radius: 15px;
+        background: transparent;
+        border: 2px solid #0047AB;
+        padding: 20px 24px;
         margin-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
     
     .trading-header h2 {
-        margin: 0;
-        font-size: 28px;
+        margin: 0 0 16px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #0047AB;
     }
     
     .header-stats {
         display: flex;
-        gap: 30px;
+        gap: 40px;
+        padding-top: 16px;
+        border-top: 1px solid #dee2e6;
     }
     
     .stat-item {
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
     
     .stat-item .label {
-        display: block;
         font-size: 12px;
-        opacity: 0.8;
-        margin-bottom: 5px;
+        color: #6c757d;
+        font-weight: 500;
     }
     
     .stat-item .value {
-        display: block;
-        font-size: 20px;
-        font-weight: bold;
-    }
-    
-    .stat-item .value.positive {
-        color: #10b981;
+        font-size: 16px;
+        font-weight: 600;
+        color: #343a40;
     }
     
     .wallet-connect-section {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 60px 40px;
         text-align: center;
-        padding: 60px 20px;
-        background: #f8f9fa;
-        border-radius: 15px;
         margin-bottom: 30px;
     }
     
     .connect-wallet-btn {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        background: #0047AB;
         color: white;
         border: none;
-        padding: 15px 40px;
-        border-radius: 10px;
-        font-size: 18px;
+        padding: 14px 32px;
+        font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: transform 0.2s;
     }
     
     .connect-wallet-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        background: #003380;
     }
     
     .wallet-hint {
-        margin-top: 15px;
-        color: #64748b;
+        margin-top: 16px;
+        color: #6c757d;
+        font-size: 14px;
     }
     
     .wallet-info-section {
@@ -156,47 +171,43 @@
         margin-bottom: 30px;
     }
     
-    .wallet-balance {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        padding: 25px;
-        border-radius: 15px;
+    .wallet-balance,
+    .utxo-list {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 24px;
     }
     
-    .balance-display {
-        margin-top: 15px;
+    .wallet-balance {
+        border-left: 4px solid #0047AB;
+    }
+    
+    .wallet-balance h3,
+    .utxo-list h4 {
+        margin: 0 0 16px 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #343a40;
     }
     
     .balance-amount {
         display: block;
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 36px;
+        font-weight: 700;
+        color: #0047AB;
+        margin: 12px 0 4px 0;
     }
     
     .balance-label {
-        font-size: 14px;
-        opacity: 0.9;
-    }
-    
-    .utxo-list {
-        background: white;
-        border: 2px solid #e5e7eb;
-        padding: 25px;
-        border-radius: 15px;
-    }
-    
-    .utxo-list h4 {
-        margin: 0 0 15px 0;
-        color: #1e293b;
+        font-size: 13px;
+        color: #6c757d;
     }
     
     .utxo-item {
         display: flex;
         justify-content: space-between;
-        padding: 10px;
+        padding: 12px;
         background: #f8f9fa;
-        border-radius: 8px;
         margin-bottom: 8px;
         font-size: 14px;
     }
@@ -208,67 +219,69 @@
         margin-bottom: 30px;
     }
     
-    .order-book, .order-form, .trade-history {
+    .order-book,
+    .order-form,
+    .trade-history {
         background: white;
-        border: 2px solid #e5e7eb;
-        border-radius: 15px;
-        padding: 25px;
+        border: 1px solid #dee2e6;
+        padding: 24px;
     }
     
-    .order-book h3, .order-form h3, .trade-history h3 {
+    .order-book h3,
+    .order-form h3,
+    .trade-history h3 {
         margin: 0 0 20px 0;
-        color: #1e293b;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #0047AB;
         font-size: 18px;
+        font-weight: 700;
+        color: #343a40;
     }
     
-    .order-header, .history-header {
+    .order-header,
+    .history-header {
         display: flex;
         justify-content: space-between;
-        padding: 10px;
+        padding: 10px 12px;
         background: #f8f9fa;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
-        color: #64748b;
+        color: #6c757d;
+        margin-bottom: 8px;
     }
     
-    .order-row, .history-row {
+    .order-row,
+    .history-row {
         display: flex;
         justify-content: space-between;
-        padding: 10px;
-        border-bottom: 1px solid #f1f5f9;
+        padding: 10px 12px;
         font-size: 14px;
+        border-bottom: 1px solid #e9ecef;
     }
     
-    .order-row.ask {
-        color: #ef4444;
-    }
-    
-    .order-row.bid {
-        color: #3b82f6;
-    }
+    .order-row.ask { color: #dc3545; }
+    .order-row.bid { color: #0047AB; }
     
     .current-price {
         text-align: center;
-        padding: 15px;
-        background: #f0f9ff;
-        border-radius: 8px;
-        margin: 15px 0;
+        padding: 16px;
+        background: #e6f0ff;
+        margin: 16px 0;
+        border-left: 4px solid #0047AB;
     }
     
     .current-price .price {
         display: block;
-        font-size: 24px;
-        font-weight: bold;
-        color: #2563eb;
+        font-size: 28px;
+        font-weight: 700;
+        color: #0047AB;
     }
     
     .current-price .label {
         display: block;
         font-size: 12px;
-        color: #64748b;
-        margin-top: 5px;
+        color: #6c757d;
+        margin-top: 4px;
     }
     
     .order-type-selector {
@@ -280,64 +293,58 @@
     
     .order-type-selector button {
         padding: 12px;
-        border: 2px solid #e5e7eb;
+        border: 1px solid #ced4da;
         background: white;
-        border-radius: 8px;
-        cursor: pointer;
+        font-size: 14px;
         font-weight: 600;
-        transition: all 0.2s;
+        cursor: pointer;
     }
     
-    .order-type-selector button.buy {
-        color: #3b82f6;
-    }
-    
-    .order-type-selector button.sell {
-        color: #ef4444;
-    }
+    .order-type-selector button.buy { color: #0047AB; }
+    .order-type-selector button.sell { color: #dc3545; }
     
     .order-type-selector button.active.buy {
-        background: #3b82f6;
+        background: #0047AB;
         color: white;
-        border-color: #3b82f6;
+        border-color: #0047AB;
     }
     
     .order-type-selector button.active.sell {
-        background: #ef4444;
+        background: #dc3545;
         color: white;
-        border-color: #ef4444;
+        border-color: #dc3545;
     }
     
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
     }
     
     .form-group label {
         display: block;
         margin-bottom: 8px;
-        color: #1e293b;
-        font-weight: 600;
         font-size: 14px;
+        font-weight: 600;
+        color: #343a40;
     }
     
     .form-group input {
         width: 100%;
-        padding: 12px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 16px;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        font-size: 15px;
     }
     
     .form-group input:focus {
         outline: none;
-        border-color: #2563eb;
+        border-color: #0047AB;
+        box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1);
     }
     
     .order-summary {
         background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
+        padding: 16px;
+        margin-bottom: 16px;
+        border-left: 3px solid #0047AB;
     }
     
     .summary-row {
@@ -348,66 +355,53 @@
     }
     
     .summary-row.total {
-        border-top: 2px solid #e5e7eb;
+        border-top: 2px solid #ced4da;
         padding-top: 12px;
         margin-top: 8px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 16px;
     }
     
     .submit-order-btn {
         width: 100%;
-        padding: 15px;
+        padding: 14px;
         border: none;
-        border-radius: 8px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s;
     }
     
     .submit-order-btn.buy {
-        background: #3b82f6;
+        background: #0047AB;
         color: white;
     }
     
     .submit-order-btn.sell {
-        background: #ef4444;
+        background: #dc3545;
         color: white;
     }
     
-    .submit-order-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
     .submit-order-btn:disabled {
-        background: #cbd5e1;
+        background: #e9ecef;
+        color: #6c757d;
         cursor: not-allowed;
-        transform: none;
     }
     
-    .history-row .buy {
-        color: #3b82f6;
-        font-weight: 600;
-    }
-    
-    .history-row .sell {
-        color: #ef4444;
-        font-weight: 600;
-    }
+    .history-row .buy { color: #0047AB; font-weight: 600; }
+    .history-row .sell { color: #dc3545; font-weight: 600; }
     
     .system-stats {
         background: white;
-        border: 2px solid #e5e7eb;
-        border-radius: 15px;
-        padding: 25px;
+        border: 1px solid #dee2e6;
+        border-top: 4px solid #0047AB;
+        padding: 24px;
         margin-bottom: 30px;
     }
     
     .system-stats h3 {
-        margin: 0 0 20px 0;
-        color: #1e293b;
+        margin: 0 0 24px 0;
+        font-size: 18px;
+        font-weight: 700;
     }
     
     .stats-grid {
@@ -418,60 +412,59 @@
     
     .stat-card {
         text-align: center;
-        padding: 20px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e5e7eb 100%);
-        border-radius: 10px;
+        padding: 24px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-left: 3px solid #0047AB;
     }
     
     .stat-card .stat-value {
-        font-size: 28px;
-        font-weight: bold;
-        color: #2563eb;
+        font-size: 32px;
+        font-weight: 700;
+        color: #0047AB;
         margin-bottom: 8px;
     }
     
     .stat-card .stat-label {
-        font-size: 14px;
-        color: #64748b;
+        font-size: 13px;
+        color: #6c757d;
     }
     
     .test-section {
+        background: #e6f0ff;
+        border: 1px solid #0047AB;
+        border-left: 4px solid #0047AB;
+        padding: 24px;
         text-align: center;
-        padding: 30px;
-        background: #fffbeb;
-        border: 2px dashed #fbbf24;
-        border-radius: 15px;
     }
     
     .test-trade-btn {
-        background: #f59e0b;
-        color: white;
-        border: none;
-        padding: 15px 40px;
-        border-radius: 10px;
-        font-size: 16px;
+        background: white;
+        color: #0047AB;
+        border: 2px solid #0047AB;
+        padding: 12px 28px;
+        font-size: 15px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s;
     }
     
     .test-trade-btn:hover {
-        background: #d97706;
-        transform: translateY(-2px);
+        background: #0047AB;
+        color: white;
     }
     
     .test-hint {
-        margin-top: 10px;
-        color: #92400e;
-        font-size: 14px;
+        margin-top: 12px;
+        font-size: 13px;
+        color: #6c757d;
     }
     
     .spinner {
-        border: 4px solid #f3f4f6;
-        border-top: 4px solid #2563eb;
+        border: 3px solid #e9ecef;
+        border-top: 3px solid #0047AB;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         animation: spin 1s linear infinite;
         margin: 20px auto;
     }
@@ -482,28 +475,25 @@
     }
     
     .error-box {
-        background: #fee2e2;
-        border: 2px solid #ef4444;
+        background: #fff5f5;
+        border: 1px solid #dc3545;
+        border-left: 4px solid #dc3545;
         padding: 20px;
-        border-radius: 10px;
-        color: #991b1b;
+    }
+    
+    .error-box h3 {
+        margin: 0 0 8px 0;
+        color: #dc3545;
     }
     
     @media (max-width: 1024px) {
-        .trading-panel {
-            grid-template-columns: 1fr;
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .wallet-info-section {
-            grid-template-columns: 1fr;
-        }
+        .trading-panel { grid-template-columns: 1fr; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .wallet-info-section { grid-template-columns: 1fr; }
+        .header-stats { flex-direction: column; gap: 16px; }
     }
 
-</style>
+    </style>
 </head>
 <body class="bg-white text-gray-900">
 
@@ -552,6 +542,7 @@
     <script type="text/babel" src="js/app.js?v=12"></script>
 
     <!-- EGCT Trading Scripts -->
+    <script src="js/egct-trading/DataLoader.js"></script>
     <script src="js/egct-trading/UTXOSet.js"></script>
     <script src="js/egct-trading/Transaction.js"></script>
     <script src="js/egct-trading/LayerSelector.js"></script>

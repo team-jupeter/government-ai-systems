@@ -32,3 +32,20 @@ logs/
 *.temp
 *.backup*
 *_backup_*
+
+# EGCT 개인정보 보호 (실제 데이터만 제외, 공개 데이터는 포함)
+currency/data/holders.json
+currency/data/genesis_transaction.json
+currency/data/utxo_set.json
+currency/data/registration_tokens.json
+currency/data/registration_links.json
+currency/data/registration_links.csv
+currency/data/personalized_emails/
+currency/data/email_template.html
+currency/data/email_template.txt
+currency/data/generate_personalized_emails.py
+currency/data/backup_*/
+
+# 공개 데이터는 포함 (개인정보 없음)
+!currency/data/*.public.json
+!currency/data/README.md

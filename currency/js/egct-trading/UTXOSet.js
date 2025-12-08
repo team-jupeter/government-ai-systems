@@ -13,8 +13,8 @@ class UTXOSet {
      */
     async loadFromGenesis() {
         try {
-            const response = await fetch('data/utxo_set.json');
-            const data = await response.json();
+            const dataLoader = new DataLoader();
+            const data = await dataLoader.loadUTXOSet();
             
             Object.entries(data.utxos).forEach(([key, utxo]) => {
                 this.utxos.set(key, utxo);
