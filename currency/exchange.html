@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACI 자산 거래소</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 거래소 전용 스타일 */
+        .exchange-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 12px;
+            padding: 16px;
+            height: calc(100vh - 140px);
+            background: #0d1117;
+        }
+        
+        /* 좌측 패널 - 종목 리스트 */
+        .stock-list-panel {
+            background: #161b22;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #30363d;
+            font-weight: 600;
+            color: #e6edf3;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-box {
+            padding: 8px 12px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-size: 13px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+        
+        .category-tabs {
+            display: flex;
+            padding: 8px 12px;
+            gap: 4px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .category-tab {
+            padding: 6px 10px;
+            font-size: 11px;
+            background: transparent;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #8b949e;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .category-tab:hover, .category-tab.active {
+            background: #21262d;
+            color: #58a6ff;
+            border-color: #58a6ff;
+        }
+        
+        .stock-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .stock-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 8px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #21262d;
+            cursor: pointer;
+            transition: background 0.2s;
+            align-items: center;
+        }
+        
+        .stock-item:hover {
+            background: #21262d;
+        }
+        
+        .stock-item.selected {
+            background: #1f3a5f;
+            border-left: 3px solid #58a6ff;
+        }
+        
+        .stock-name {
+            font-size: 13px;
+            color: #e6edf3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .stock-code {
+            font-size: 10px;
+            color: #8b949e;
+            margin-top: 2px;
+        }
+        
+        .stock-price {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e6edf3;
+            text-align: right;
+        }
+        
+        .stock-change {
+            font-size: 12px;
+            text-align: right;
+            min-width: 60px;
+        }
+        
+        .stock-change.up { color: #f85149; }
+        .stock-change.down { color: #3fb950; }
+        .stock-change.flat { color: #8b949e; }
+        
+        /* 중앙 패널 - 차트 및 호가 */
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* 종목 정보 헤더 */
+        .stock-header {
+            background: #161b22;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .stock-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e6edf3;
+        }
+        
+        .stock-subtitle {
+            font-size: 12px;
+            color: #8b949e;
+        }
+        
+        .current-price-box {
+            text-align: right;
+        }
+        
+        .current-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f85149;
+        }
+        
+        .current-price.down {
+            color: #3fb950;
+        }
+        
+        .price-change {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .price-change.up { color: #f85149; }
+        .price-change.down { color: #3fb950; }
+        
+        /* 차트 영역 */
+        .chart-panel {
+            background: #161b22;
+            border-radius: 8px;
+            flex: 1;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-toolbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .chart-type-tabs {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .chart-type-tab {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: transparent;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #8b949e;
+            cursor: pointer;
+        }
+        
+        .chart-type-tab.active {
+            background: #58a6ff;
+            color: #fff;
+            border-color: #58a6ff;
+        }
+        
+        .time-tabs {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .time-tab {
+            padding: 6px 10px;
+            font-size: 11px;
+            background: transparent;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .time-tab.active {
+            background: #21262d;
+            color: #e6edf3;
+        }
+        
+        .chart-area {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b949e;
+        }
+        
+        /* 호가창 */
+        .orderbook-panel {
+            background: #161b22;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .orderbook-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 8px 12px;
+            border-bottom: 1px solid #30363d;
+            font-size: 11px;
+            color: #8b949e;
+            text-align: center;
+        }
+        
+        .orderbook-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .orderbook-asks, .orderbook-bids {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .orderbook-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 4px 12px;
+            font-size: 12px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .orderbook-row .qty {
+            color: #8b949e;
+        }
+        
+        .orderbook-row .price {
+            font-weight: 600;
+        }
+        
+        .orderbook-asks .price { color: #3fb950; }
+        .orderbook-bids .price { color: #f85149; }
+        
+        .orderbook-row .bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            opacity: 0.15;
+        }
+        
+        .orderbook-asks .bar {
+            right: 0;
+            background: #3fb950;
+        }
+        
+        .orderbook-bids .bar {
+            left: 0;
+            background: #f85149;
+        }
+        
+        .orderbook-spread {
+            padding: 8px 12px;
+            text-align: center;
+            background: #0d1117;
+            font-size: 11px;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        /* 우측 패널 - 주문 */
+        .order-panel {
+            background: #161b22;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .order-tabs {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .order-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #8b949e;
+            transition: all 0.2s;
+        }
+        
+        .order-tab.buy.active {
+            color: #f85149;
+            border-bottom: 2px solid #f85149;
+            background: rgba(248, 81, 73, 0.1);
+        }
+        
+        .order-tab.sell.active {
+            color: #3fb950;
+            border-bottom: 2px solid #3fb950;
+            background: rgba(63, 185, 80, 0.1);
+        }
+        
+        .order-type-tabs {
+            display: flex;
+            padding: 12px;
+            gap: 8px;
+        }
+        
+        .order-type-tab {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #8b949e;
+            cursor: pointer;
+        }
+        
+        .order-type-tab.active {
+            background: #0d1117;
+            color: #e6edf3;
+            border-color: #58a6ff;
+        }
+        
+        .order-form {
+            padding: 12px;
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 6px;
+        }
+        
+        .form-input-group {
+            display: flex;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .form-input-group input {
+            flex: 1;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            color: #e6edf3;
+            font-size: 14px;
+            text-align: right;
+        }
+        
+        .form-input-group input:focus {
+            outline: none;
+        }
+        
+        .form-input-group .unit {
+            padding: 10px 12px;
+            color: #8b949e;
+            font-size: 12px;
+            background: #21262d;
+        }
+        
+        .qty-buttons {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        
+        .qty-btn {
+            flex: 1;
+            padding: 6px;
+            font-size: 11px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #8b949e;
+            cursor: pointer;
+        }
+        
+        .qty-btn:hover {
+            background: #30363d;
+            color: #e6edf3;
+        }
+        
+        .order-summary {
+            padding: 12px;
+            background: #0d1117;
+            border-radius: 6px;
+            margin: 12px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px solid #30363d;
+            font-weight: 600;
+        }
+        
+        .summary-label { color: #8b949e; }
+        .summary-value { color: #e6edf3; }
+        
+        .order-btn {
+            margin: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .order-btn.buy {
+            background: linear-gradient(135deg, #f85149, #da3633);
+            color: white;
+        }
+        
+        .order-btn.sell {
+            background: linear-gradient(135deg, #3fb950, #238636);
+            color: white;
+        }
+        
+        .order-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* 하단 패널 - 보유/주문내역 */
+        .bottom-panel {
+            background: #161b22;
+            border-radius: 8px;
+            margin: 0 16px 16px;
+        }
+        
+        .bottom-tabs {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .bottom-tab {
+            padding: 12px 20px;
+            font-size: 13px;
+            color: #8b949e;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+        
+        .bottom-tab.active {
+            color: #e6edf3;
+            border-bottom: 2px solid #58a6ff;
+        }
+        
+        .bottom-content {
+            padding: 16px;
+            min-height: 120px;
+        }
+        
+        .holdings-table {
+            width: 100%;
+            font-size: 13px;
+        }
+        
+        .holdings-table th {
+            text-align: left;
+            padding: 8px 12px;
+            color: #8b949e;
+            font-weight: 500;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .holdings-table td {
+            padding: 10px 12px;
+            color: #e6edf3;
+            border-bottom: 1px solid #21262d;
+        }
+        
+        .holdings-table .profit.up { color: #f85149; }
+        .holdings-table .profit.down { color: #3fb950; }
+        
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .exchange-container {
+                grid-template-columns: 240px 1fr 280px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .exchange-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .stock-list-panel {
+                max-height: 300px;
+            }
+        }
+        
+        /* 자산 유형 뱃지 */
+        .asset-badge {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        
+        .asset-badge.stock {
+            background: #1f3a5f;
+            color: #58a6ff;
+        }
+        
+        .asset-badge.bond {
+            background: #3d2f1f;
+            color: #d29922;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><span class="icon">📊</span> ACI 자산 거래소</h1>
+        </div>
+    </header>
+
+    <div class="tab-nav">
+        <div class="tab-nav-inner">
+            <a href="trading.html" class="tab"><i class="fas fa-exchange-alt"></i>EGCT 거래</a>
+            <a href="hashchain-demo.html" class="tab"><i class="fas fa-link"></i>Hash Chain</a>
+            <a href="pool.html" class="tab"><i class="fas fa-cubes"></i>자산 POOL</a>
+            <a href="exchange.html" class="tab active"><i class="fas fa-chart-line"></i>자산 거래소</a>
+            <a href="holders.html" class="tab"><i class="fas fa-users"></i>보유자 현황</a>
+            <a href="prices.html" class="tab"><i class="fas fa-chart-bar"></i>시세</a>
+            <a href="mypage.html" class="tab"><i class="fas fa-user"></i>My Page</a>
+            <a href="pdv.html" class="tab"><i class="fas fa-file-invoice"></i>My PDV</a>
+        </div>
+    </div>
+
+    <!-- 메인 거래소 레이아웃 -->
+    <div class="exchange-container">
+        <!-- 좌측: 종목 리스트 -->
+        <div class="stock-list-panel">
+            <div class="panel-header">
+                <i class="fas fa-list"></i> ACI 자회사
+            </div>
+            <div class="search-box">
+                <input type="text" id="stockSearch" placeholder="종목명 검색...">
+            </div>
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">전체</button>
+                <button class="category-tab" data-category="stock">주식</button>
+                <button class="category-tab" data-category="bond">채권</button>
+            </div>
+            <div class="stock-list" id="stockList">
+                <!-- 종목 리스트 동적 생성 -->
+            </div>
+        </div>
+
+        <!-- 중앙: 차트 및 호가 -->
+        <div class="main-panel">
+            <!-- 종목 정보 -->
+            <div class="stock-header">
+                <div class="stock-info">
+                    <div>
+                        <div class="stock-title" id="selectedStockName">ACI 기획재정부</div>
+                        <div class="stock-subtitle" id="selectedStockCode">ACI-MOF · 주식</div>
+                    </div>
+                </div>
+                <div class="current-price-box">
+                    <div class="current-price" id="currentPrice">125,000</div>
+                    <div class="price-change up" id="priceChange">+2,500 (+2.04%)</div>
+                </div>
+            </div>
+
+            <!-- 차트 + 호가 -->
+            <div style="display: flex; gap: 12px; flex: 1;">
+                <!-- 차트 -->
+                <div class="chart-panel" style="flex: 1;">
+                    <div class="chart-toolbar">
+                        <div class="chart-type-tabs">
+                            <button class="chart-type-tab active">캔들</button>
+                            <button class="chart-type-tab">라인</button>
+                            <button class="chart-type-tab">영역</button>
+                        </div>
+                        <div class="time-tabs">
+                            <button class="time-tab">1분</button>
+                            <button class="time-tab">5분</button>
+                            <button class="time-tab">15분</button>
+                            <button class="time-tab active">1시간</button>
+                            <button class="time-tab">1일</button>
+                            <button class="time-tab">1주</button>
+                            <button class="time-tab">1월</button>
+                        </div>
+                    </div>
+                    <div class="chart-area">
+                        <div style="text-align: center;">
+                            <i class="fas fa-chart-candlestick" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                            <p>차트 데이터 로딩 중...</p>
+                            <p style="font-size: 12px; margin-top: 8px;">OpenHash 기반 실시간 시세</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 호가창 -->
+                <div class="orderbook-panel" style="width: 220px;">
+                    <div class="panel-header">
+                        <i class="fas fa-table"></i> 호가
+                    </div>
+                    <div class="orderbook-header">
+                        <span>잔량</span>
+                        <span>가격</span>
+                        <span>잔량</span>
+                    </div>
+                    <div class="orderbook-body">
+                        <div class="orderbook-asks" id="orderbookAsks">
+                            <!-- 매도 호가 -->
+                        </div>
+                        <div class="orderbook-spread">
+                            스프레드: <span id="spreadValue">100 (0.08%)</span>
+                        </div>
+                        <div class="orderbook-bids" id="orderbookBids">
+                            <!-- 매수 호가 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 우측: 주문 패널 -->
+        <div class="order-panel">
+            <div class="order-tabs">
+                <button class="order-tab buy active" data-type="buy">매수</button>
+                <button class="order-tab sell" data-type="sell">매도</button>
+            </div>
+            <div class="order-type-tabs">
+                <button class="order-type-tab active">지정가</button>
+                <button class="order-type-tab">시장가</button>
+                <button class="order-type-tab">예약</button>
+            </div>
+            <div class="order-form">
+                <div class="form-group">
+                    <label class="form-label">주문 가격</label>
+                    <div class="form-input-group">
+                        <input type="text" id="orderPrice" value="125,000">
+                        <span class="unit">T</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">주문 수량</label>
+                    <div class="form-input-group">
+                        <input type="text" id="orderQty" value="0">
+                        <span class="unit">주</span>
+                    </div>
+                    <div class="qty-buttons">
+                        <button class="qty-btn" data-pct="10">10%</button>
+                        <button class="qty-btn" data-pct="25">25%</button>
+                        <button class="qty-btn" data-pct="50">50%</button>
+                        <button class="qty-btn" data-pct="100">100%</button>
+                    </div>
+                </div>
+            </div>
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span class="summary-label">주문 가능</span>
+                    <span class="summary-value" id="availableBalance">50,000,000 T</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">수수료 (0%)</span>
+                    <span class="summary-value">0 T</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">총 주문금액</span>
+                    <span class="summary-value" id="totalOrderAmount">0 T</span>
+                </div>
+            </div>
+            <button class="order-btn buy" id="orderBtn">매수</button>
+        </div>
+    </div>
+
+    <!-- 하단: 보유/주문 내역 -->
+    <div class="bottom-panel">
+        <div class="bottom-tabs">
+            <button class="bottom-tab active">보유 자산</button>
+            <button class="bottom-tab">미체결</button>
+            <button class="bottom-tab">체결 내역</button>
+            <button class="bottom-tab">주문 내역</button>
+        </div>
+        <div class="bottom-content">
+            <table class="holdings-table">
+                <thead>
+                    <tr>
+                        <th>종목명</th>
+                        <th>보유수량</th>
+                        <th>매입가</th>
+                        <th>현재가</th>
+                        <th>평가손익</th>
+                        <th>수익률</th>
+                        <th>평가금액</th>
+                    </tr>
+                </thead>
+                <tbody id="holdingsBody">
+                    <tr>
+                        <td>ACI 기획재정부 <span class="asset-badge stock">주식</span></td>
+                        <td>100</td>
+                        <td>120,000 T</td>
+                        <td>125,000 T</td>
+                        <td class="profit up">+500,000 T</td>
+                        <td class="profit up">+4.17%</td>
+                        <td>12,500,000 T</td>
+                    </tr>
+                    <tr>
+                        <td>ACI 대법원 <span class="asset-badge stock">주식</span></td>
+                        <td>50</td>
+                        <td>98,000 T</td>
+                        <td>95,500 T</td>
+                        <td class="profit down">-125,000 T</td>
+                        <td class="profit down">-2.55%</td>
+                        <td>4,775,000 T</td>
+                    </tr>
+                    <tr>
+                        <td>ACI 국채 2030 <span class="asset-badge bond">채권</span></td>
+                        <td>200</td>
+                        <td>10,000 T</td>
+                        <td>10,150 T</td>
+                        <td class="profit up">+30,000 T</td>
+                        <td class="profit up">+1.50%</td>
+                        <td>2,030,000 T</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    // 샘플 종목 데이터 (자산 POOL에서 가져온 자회사들)
+    const stocks = [
+        // 행정부
+        { code: 'ACI-MOF', name: 'ACI 기획재정부', type: 'stock', price: 125000, change: 2.04 },
+        { code: 'ACI-MSIT', name: 'ACI 과학기술정보통신부', type: 'stock', price: 118500, change: 1.28 },
+        { code: 'ACI-MOE', name: 'ACI 교육부', type: 'stock', price: 95200, change: -0.52 },
+        { code: 'ACI-MOFA', name: 'ACI 외교부', type: 'stock', price: 112000, change: 0.89 },
+        { code: 'ACI-MOJ', name: 'ACI 법무부', type: 'stock', price: 108500, change: -1.12 },
+        { code: 'ACI-MND', name: 'ACI 국방부', type: 'stock', price: 142000, change: 3.21 },
+        { code: 'ACI-MOIS', name: 'ACI 행정안전부', type: 'stock', price: 98700, change: 0.15 },
+        { code: 'ACI-NTS', name: 'ACI 국세청', type: 'stock', price: 135000, change: 1.87 },
+        { code: 'ACI-KCS', name: 'ACI 관세청', type: 'stock', price: 87500, change: -0.34 },
+        { code: 'ACI-POLICE', name: 'ACI 경찰청', type: 'stock', price: 105000, change: 0.95 },
+        // 사법부
+        { code: 'ACI-SC', name: 'ACI 대법원', type: 'stock', price: 95500, change: -2.55 },
+        { code: 'ACI-HC', name: 'ACI 고등법원', type: 'stock', price: 78000, change: 0.65 },
+        { code: 'ACI-DC', name: 'ACI 지방법원', type: 'stock', price: 65000, change: -0.15 },
+        { code: 'ACI-PC', name: 'ACI 특허법원', type: 'stock', price: 88500, change: 1.72 },
+        // 입법부
+        { code: 'ACI-NA', name: 'ACI 국회', type: 'stock', price: 155000, change: 0.32 },
+        { code: 'ACI-NAO', name: 'ACI 국회사무처', type: 'stock', price: 72000, change: -0.28 },
+        // 독립헌법기관
+        { code: 'ACI-CC', name: 'ACI 헌법재판소', type: 'stock', price: 132000, change: 1.15 },
+        { code: 'ACI-NEC', name: 'ACI 중앙선거관리위원회', type: 'stock', price: 91000, change: 0.44 },
+        // 자치단체
+        { code: 'ACI-SEOUL', name: 'ACI 서울특별시', type: 'stock', price: 285000, change: 2.85 },
+        { code: 'ACI-BUSAN', name: 'ACI 부산광역시', type: 'stock', price: 165000, change: 1.23 },
+        { code: 'ACI-JEJU', name: 'ACI 제주특별자치도', type: 'stock', price: 128000, change: 3.45 },
+        // 채권
+        { code: 'ACI-BOND-2030', name: 'ACI 국채 2030', type: 'bond', price: 10150, change: 0.15 },
+        { code: 'ACI-BOND-2035', name: 'ACI 국채 2035', type: 'bond', price: 9850, change: -0.10 },
+        { code: 'ACI-BOND-2040', name: 'ACI 국채 2040', type: 'bond', price: 9520, change: 0.21 },
+        { code: 'ACI-SEOUL-BOND', name: 'ACI 서울시채 2028', type: 'bond', price: 10250, change: 0.05 },
+    ];
+
+    // 종목 리스트 렌더링
+    function renderStockList(filter = 'all', search = '') {
+        const list = document.getElementById('stockList');
+        const filtered = stocks.filter(s => {
+            const matchType = filter === 'all' || s.type === filter;
+            const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || 
+                               s.code.toLowerCase().includes(search.toLowerCase());
+            return matchType && matchSearch;
+        });
+
+        list.innerHTML = filtered.map((s, i) => `
+            <div class="stock-item ${i === 0 ? 'selected' : ''}" data-code="${s.code}">
+                <div>
+                    <div class="stock-name">${s.name}</div>
+                    <div class="stock-code">${s.code} <span class="asset-badge ${s.type}">${s.type === 'stock' ? '주식' : '채권'}</span></div>
+                </div>
+                <div class="stock-price">${s.price.toLocaleString()}</div>
+                <div class="stock-change ${s.change > 0 ? 'up' : s.change < 0 ? 'down' : 'flat'}">
+                    ${s.change > 0 ? '+' : ''}${s.change.toFixed(2)}%
+                </div>
+            </div>
+        `).join('');
+
+        // 클릭 이벤트
+        list.querySelectorAll('.stock-item').forEach(item => {
+            item.addEventListener('click', () => selectStock(item.dataset.code));
+        });
+    }
+
+    // 종목 선택
+    function selectStock(code) {
+        const stock = stocks.find(s => s.code === code);
+        if (!stock) return;
+
+        // 선택 상태 업데이트
+        document.querySelectorAll('.stock-item').forEach(item => {
+            item.classList.toggle('selected', item.dataset.code === code);
+        });
+
+        // 헤더 업데이트
+        document.getElementById('selectedStockName').textContent = stock.name;
+        document.getElementById('selectedStockCode').textContent = `${stock.code} · ${stock.type === 'stock' ? '주식' : '채권'}`;
+        
+        const priceEl = document.getElementById('currentPrice');
+        priceEl.textContent = stock.price.toLocaleString();
+        priceEl.className = 'current-price ' + (stock.change < 0 ? 'down' : '');
+
+        const changeEl = document.getElementById('priceChange');
+        const changeAmt = Math.round(stock.price * stock.change / 100);
+        changeEl.textContent = `${changeAmt >= 0 ? '+' : ''}${changeAmt.toLocaleString()} (${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}%)`;
+        changeEl.className = 'price-change ' + (stock.change >= 0 ? 'up' : 'down');
+
+        // 주문 가격 업데이트
+        document.getElementById('orderPrice').value = stock.price.toLocaleString();
+
+        // 호가창 업데이트
+        renderOrderbook(stock.price);
+    }
+
+    // 호가창 렌더링
+    function renderOrderbook(basePrice) {
+        const asksEl = document.getElementById('orderbookAsks');
+        const bidsEl = document.getElementById('orderbookBids');
+        
+        let asksHtml = '';
+        let bidsHtml = '';
+        
+        // 매도 호가 (위에서 아래로, 높은 가격 → 낮은 가격)
+        for (let i = 5; i >= 1; i--) {
+            const price = basePrice + (i * 100);
+            const qty = Math.floor(Math.random() * 500) + 50;
+            const barWidth = Math.min(qty / 5, 100);
+            asksHtml += `
+                <div class="orderbook-row">
+                    <span class="bar" style="width: ${barWidth}%"></span>
+                    <span class="qty">${qty}</span>
+                    <span class="price">${price.toLocaleString()}</span>
+                    <span class="qty"></span>
+                </div>
+            `;
+        }
+        
+        // 매수 호가 (높은 가격 → 낮은 가격)
+        for (let i = 1; i <= 5; i++) {
+            const price = basePrice - (i * 100);
+            const qty = Math.floor(Math.random() * 500) + 50;
+            const barWidth = Math.min(qty / 5, 100);
+            bidsHtml += `
+                <div class="orderbook-row">
+                    <span class="bar" style="width: ${barWidth}%"></span>
+                    <span class="qty"></span>
+                    <span class="price">${price.toLocaleString()}</span>
+                    <span class="qty">${qty}</span>
+                </div>
+            `;
+        }
+        
+        asksEl.innerHTML = asksHtml;
+        bidsEl.innerHTML = bidsHtml;
+    }
+
+    // 카테고리 탭
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderStockList(tab.dataset.category, document.getElementById('stockSearch').value);
+        });
+    });
+
+    // 검색
+    document.getElementById('stockSearch').addEventListener('input', (e) => {
+        const activeCategory = document.querySelector('.category-tab.active').dataset.category;
+        renderStockList(activeCategory, e.target.value);
+    });
+
+    // 매수/매도 탭
+    document.querySelectorAll('.order-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const btn = document.getElementById('orderBtn');
+            if (tab.dataset.type === 'buy') {
+                btn.className = 'order-btn buy';
+                btn.textContent = '매수';
+            } else {
+                btn.className = 'order-btn sell';
+                btn.textContent = '매도';
+            }
+        });
+    });
+
+    // 수량 버튼
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const pct = parseInt(btn.dataset.pct);
+            // 간단한 데모: 최대 100주 기준
+            const qty = Math.floor(100 * pct / 100);
+            document.getElementById('orderQty').value = qty;
+            updateTotal();
+        });
+    });
+
+    // 총 주문금액 계산
+    function updateTotal() {
+        const price = parseInt(document.getElementById('orderPrice').value.replace(/,/g, '')) || 0;
+        const qty = parseInt(document.getElementById('orderQty').value) || 0;
+        const total = price * qty;
+        document.getElementById('totalOrderAmount').textContent = total.toLocaleString() + ' T';
+    }
+
+    document.getElementById('orderPrice').addEventListener('input', updateTotal);
+    document.getElementById('orderQty').addEventListener('input', updateTotal);
+
+    // 주문 버튼
+    document.getElementById('orderBtn').addEventListener('click', () => {
+        const price = document.getElementById('orderPrice').value;
+        const qty = document.getElementById('orderQty').value;
+        const type = document.querySelector('.order-tab.active').dataset.type;
+        const stockName = document.getElementById('selectedStockName').textContent;
+        
+        if (parseInt(qty) <= 0) {
+            alert('주문 수량을 입력하세요.');
+            return;
+        }
+        
+        alert(`${stockName} ${type === 'buy' ? '매수' : '매도'} 주문\n가격: ${price} T\n수량: ${qty}주\n\n주문이 접수되었습니다.`);
+    });
+
+    // 초기화
+    renderStockList();
+    renderOrderbook(125000);
+    </script>
+</body>
+</html>
