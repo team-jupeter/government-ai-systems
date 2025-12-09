@@ -32,7 +32,8 @@ class TradingOrder {
         var transactions = JSON.parse(localStorage.getItem('egct_pdv_transactions') || '[]');
         transactions.push(tx);
         localStorage.setItem('egct_pdv_transactions', JSON.stringify(transactions));
-        console.log('✅ PDV에 거래 저장:', tx.id);
+        console.log('✅ PDV에 거래 저장:', tx.id, tx);
+        console.log('현재 PDV 거래 목록:', localStorage.getItem('egct_pdv_transactions'));
     }
     
     executeBuy(amount, balance, krwBalance, userName) {
