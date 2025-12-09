@@ -14,7 +14,6 @@
             padding: 32px;
             margin-bottom: 32px;
         }
-        
         .pool-intro h2 {
             font-size: 20px;
             font-weight: 700;
@@ -24,21 +23,13 @@
             align-items: center;
             gap: 10px;
         }
-        
         .pool-intro-content {
             font-size: 15px;
             line-height: 1.8;
             color: #333;
         }
-        
-        .pool-intro-content p {
-            margin-bottom: 16px;
-        }
-        
-        .pool-intro-content strong {
-            color: #1a237e;
-        }
-        
+        .pool-intro-content p { margin-bottom: 16px; }
+        .pool-intro-content strong { color: #1a237e; }
         .highlight-box {
             background: #fff;
             border-left: 4px solid #3f51b5;
@@ -46,22 +37,14 @@
             margin: 20px 0;
             border-radius: 0 8px 8px 0;
         }
-        
-        .highlight-box p {
-            margin-bottom: 8px;
-        }
-        
-        .highlight-box p:last-child {
-            margin-bottom: 0;
-        }
-        
+        .highlight-box p { margin-bottom: 8px; }
+        .highlight-box p:last-child { margin-bottom: 0; }
         .stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin: 24px 0;
         }
-        
         .stat-card {
             background: #fff;
             border: 1px solid #c5cae9;
@@ -69,25 +52,9 @@
             padding: 20px;
             text-align: center;
         }
-        
-        .stat-card .icon {
-            font-size: 28px;
-            color: #3f51b5;
-            margin-bottom: 8px;
-        }
-        
-        .stat-card .value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a237e;
-        }
-        
-        .stat-card .label {
-            font-size: 13px;
-            color: #666;
-            margin-top: 4px;
-        }
-        
+        .stat-card .icon { font-size: 28px; color: #3f51b5; margin-bottom: 8px; }
+        .stat-card .value { font-size: 22px; font-weight: 700; color: #1a237e; }
+        .stat-card .label { font-size: 13px; color: #666; margin-top: 4px; }
         .section-title {
             font-size: 18px;
             font-weight: 700;
@@ -99,94 +66,72 @@
             align-items: center;
             gap: 10px;
         }
-        
         .subsidiary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
         }
-        
         .subsidiary-card {
             background: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 10px;
-            padding: 20px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
             display: block;
         }
-        
         .subsidiary-card:hover {
             border-color: #7986cb;
             box-shadow: 0 4px 12px rgba(63, 81, 181, 0.15);
             transform: translateY(-2px);
         }
-        
         .subsidiary-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
-        
         .subsidiary-icon {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #3f51b5;
         }
-        
-        .subsidiary-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a237e;
-        }
-        
+        .subsidiary-name { font-size: 14px; font-weight: 600; color: #1a237e; }
         .subsidiary-desc {
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
-            line-height: 1.5;
-            margin-bottom: 14px;
-            min-height: 40px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            min-height: 34px;
         }
-        
         .subsidiary-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #f0f0f0;
         }
-        
-        .subsidiary-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: #3f51b5;
-        }
-        
+        .subsidiary-value { font-size: 13px; font-weight: 600; color: #3f51b5; }
         .subsidiary-share {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
             background: #f5f5f5;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
         }
-        
-        .category-section {
-            margin-bottom: 32px;
-        }
-        
+        .category-section { margin-bottom: 28px; }
         .category-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: #5c6bc0;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             padding-left: 12px;
             border-left: 3px solid #7986cb;
         }
@@ -211,14 +156,11 @@
     </div>
     
     <div class="container">
-        <!-- 자산 POOL 소개 -->
         <div class="pool-intro">
             <h2><i class="fas fa-info-circle"></i> 자산 POOL의 목적과 용도</h2>
             <div class="pool-intro-content">
                 <p><strong>EGCT</strong>는 <strong>자산담보디지털화폐(Asset Backed Digital Currency)</strong>로서, 그 가치를 담보하는 자산의 POOL을 전제합니다.</p>
-                
                 <p><strong>EAI City Inc.(ACI)</strong>의 총발행 주식 <strong>1억 주</strong>는 EGCT 총 발행량 <strong>1억 T</strong>의 가치를 담보하는 자산입니다.</p>
-                
                 <div class="highlight-box">
                     <p><strong>📌 주식과 EGCT의 차이 - 유통 메커니즘</strong></p>
                     <p>• EGCT는 <strong>거래 수수료가 없습니다</strong></p>
@@ -226,11 +168,8 @@
                     <p>• 거래소나 등기소의 개입 없이 <strong>P2P로 거래</strong>를 수행할 수 있습니다</p>
                     <p>• 모든 거래 내용은 <strong>OpenHash</strong>로 기록됩니다</p>
                 </div>
-                
                 <p>ACI의 가치는 ACI가 그 지분의 <strong>50%</strong>를 보유한 <strong>100여 자회사</strong>의 가치에 의해 재차 보장됩니다.</p>
-                
                 <p>자회사들 각각의 주식과 채권의 가치를 평가하는 <strong>측정 수단</strong>과 이들 증권의 거래 <strong>결제수단</strong>은 EGCT입니다.</p>
-                
                 <div class="highlight-box">
                     <p><strong>🔄 프랙탈 구조</strong></p>
                     <p>• ACI는 자회사 각각의 지분 <strong>50%</strong>를 보유</p>
@@ -239,616 +178,443 @@
                     <p>• 자회사 각각의 가치는 <strong>EGCT를 화폐 단위</strong>로 측정됩니다</p>
                 </div>
             </div>
-            
             <div class="stats-row">
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-building"></i></div>
-                    <div class="value">100+</div>
-                    <div class="label">자회사 수</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-coins"></i></div>
-                    <div class="value">1억 T</div>
-                    <div class="label">EGCT 총 발행량</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-chart-pie"></i></div>
-                    <div class="value">50%</div>
-                    <div class="label">ACI 지분율</div>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-globe"></i></div>
-                    <div class="value">0%</div>
-                    <div class="label">거래 수수료</div>
-                </div>
+                <div class="stat-card"><div class="icon"><i class="fas fa-building"></i></div><div class="value">100+</div><div class="label">자회사 수</div></div>
+                <div class="stat-card"><div class="icon"><i class="fas fa-coins"></i></div><div class="value">1억 T</div><div class="label">EGCT 총 발행량</div></div>
+                <div class="stat-card"><div class="icon"><i class="fas fa-chart-pie"></i></div><div class="value">50%</div><div class="label">ACI 지분율</div></div>
+                <div class="stat-card"><div class="icon"><i class="fas fa-globe"></i></div><div class="value">0%</div><div class="label">거래 수수료</div></div>
             </div>
         </div>
         
-        <!-- 자회사 목록 -->
         <div class="section-title"><i class="fas fa-building"></i> ACI 자회사 목록</div>
         
-        <!-- 교육 분야 -->
+        <!-- 핵심 기술 -->
         <div class="category-section">
-            <div class="category-title">🎓 교육</div>
+            <div class="category-title">🔐 핵심 기술</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="education-preschool">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-child"></i></div>
-                        <div class="subsidiary-name">ACI 유치원 교육</div>
-                    </div>
-                    <div class="subsidiary-desc">유아 교육 서비스 및 시설 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/openhash-system/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-link"></i></div><div class="subsidiary-name">ACI OpenHash</div></div>
+                    <div class="subsidiary-desc">확률적 계층 선택 분산원장 기술</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="education-elementary">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-school"></i></div>
-                        <div class="subsidiary-name">ACI 초등 교육</div>
-                    </div>
-                    <div class="subsidiary-desc">초등 교육 서비스 및 시설 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/private-data-vault/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-vault"></i></div><div class="subsidiary-name">ACI 프라이빗 데이터 금고</div></div>
+                    <div class="subsidiary-desc">개인 데이터 주권 보장 시스템</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="education-secondary">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="subsidiary-name">ACI 중등 교육</div>
-                    </div>
-                    <div class="subsidiary-desc">중·고등 교육 서비스 및 시설 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/national-data-registry/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-database"></i></div><div class="subsidiary-name">ACI 국가 데이터 레지스트리</div></div>
+                    <div class="subsidiary-desc">통합 데이터 관리 체계</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="education-university">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-university"></i></div>
-                        <div class="subsidiary-name">ACI 대학</div>
-                    </div>
-                    <div class="subsidiary-desc">고등 교육 및 연구 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/national-financial-statements/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-file-invoice-dollar"></i></div><div class="subsidiary-name">ACI 국가 재무제표</div></div>
+                    <div class="subsidiary-desc">실시간 재무제표 자동 생성</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/color-code/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-palette"></i></div><div class="subsidiary-name">ACI 색상 코드</div></div>
+                    <div class="subsidiary-desc">16색 기반 IPv6 주소 생성</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 의료/제약 분야 -->
-        <div class="category-section">
-            <div class="category-title">🏥 의료 · 제약</div>
-            <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="medical">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-hospital"></i></div>
-                        <div class="subsidiary-name">ACI 의료</div>
-                    </div>
-                    <div class="subsidiary-desc">의료 서비스 및 병원 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="pharma">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-pills"></i></div>
-                        <div class="subsidiary-name">ACI 제약</div>
-                    </div>
-                    <div class="subsidiary-desc">의약품 연구 개발 및 제조</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="medical-device">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-heartbeat"></i></div>
-                        <div class="subsidiary-name">ACI 의료 기기</div>
-                    </div>
-                    <div class="subsidiary-desc">의료 기기 개발 및 제조</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="medical-supply">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-syringe"></i></div>
-                        <div class="subsidiary-name">ACI 의료 소모품</div>
-                    </div>
-                    <div class="subsidiary-desc">의료 소모품 제조 및 유통</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-        
-        <!-- 금융 분야 -->
-        <div class="category-section">
-            <div class="category-title">💰 금융</div>
-            <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="bank">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-landmark"></i></div>
-                        <div class="subsidiary-name">ACI 은행</div>
-                    </div>
-                    <div class="subsidiary-desc">은행 서비스 및 금융 상품</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="insurance">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="subsidiary-name">ACI 보험</div>
-                    </div>
-                    <div class="subsidiary-desc">보험 상품 및 리스크 관리</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="securities">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-chart-line"></i></div>
-                        <div class="subsidiary-name">ACI 증권</div>
-                    </div>
-                    <div class="subsidiary-desc">증권 거래 및 자산 관리</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-        
-        <!-- 전문 서비스 분야 -->
-        <div class="category-section">
-            <div class="category-title">⚖️ 전문 서비스</div>
-            <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="legal">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-balance-scale"></i></div>
-                        <div class="subsidiary-name">ACI 법률</div>
-                    </div>
-                    <div class="subsidiary-desc">법률 서비스 및 자문</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="tax">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                        <div class="subsidiary-name">ACI 세무</div>
-                    </div>
-                    <div class="subsidiary-desc">세무 서비스 및 자문</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="accounting">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-calculator"></i></div>
-                        <div class="subsidiary-name">ACI 회계</div>
-                    </div>
-                    <div class="subsidiary-desc">회계 서비스 및 감사</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="business">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-briefcase"></i></div>
-                        <div class="subsidiary-name">ACI 비즈니스</div>
-                    </div>
-                    <div class="subsidiary-desc">경영 컨설팅 및 비즈니스 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-        
-        <!-- 공공 서비스 분야 -->
+        <!-- 공공 서비스 -->
         <div class="category-section">
             <div class="category-title">🏛️ 공공 서비스</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="legislative">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-scroll"></i></div>
-                        <div class="subsidiary-name">ACI 입법</div>
-                    </div>
-                    <div class="subsidiary-desc">입법 지원 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/portal/legislature.html" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-scroll"></i></div><div class="subsidiary-name">ACI 입법</div></div>
+                    <div class="subsidiary-desc">AI 기반 법률 입안 및 심사</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="judicial">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-gavel"></i></div>
-                        <div class="subsidiary-name">ACI 사법</div>
-                    </div>
-                    <div class="subsidiary-desc">사법 지원 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/portal/judiciary.html" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-gavel"></i></div><div class="subsidiary-name">ACI 사법</div></div>
+                    <div class="subsidiary-desc">AI 예방적 사법 시스템</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="administrative">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-city"></i></div>
-                        <div class="subsidiary-name">ACI 행정</div>
-                    </div>
-                    <div class="subsidiary-desc">행정 지원 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/portal/government.html" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-city"></i></div><div class="subsidiary-name">ACI 행정</div></div>
+                    <div class="subsidiary-desc">정부 행정 통합 자동화</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/portal/independent.html" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-balance-scale-right"></i></div><div class="subsidiary-name">ACI 독립 헌법기관</div></div>
+                    <div class="subsidiary-desc">헌법재판소·선관위·감사원</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/portal/local.html" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-map-marked-alt"></i></div><div class="subsidiary-name">ACI 자치단체</div></div>
+                    <div class="subsidiary-desc">광역 17개 + 기초 자치단체</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 물류/교통 분야 -->
+        <!-- 금융 -->
+        <div class="category-section">
+            <div class="category-title">💰 금융</div>
+            <div class="subsidiary-grid">
+                <a href="/currency/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-coins"></i></div><div class="subsidiary-name">ACI 디지털 화폐</div></div>
+                    <div class="subsidiary-desc">OpenHash 기반 디지털화폐</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/bank/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-landmark"></i></div><div class="subsidiary-name">ACI 은행</div></div>
+                    <div class="subsidiary-desc">AI 기반 뱅킹 자동화</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/insurance/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-shield-alt"></i></div><div class="subsidiary-name">ACI 보험</div></div>
+                    <div class="subsidiary-desc">스마트 보험 계약 시스템</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/securities/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-chart-line"></i></div><div class="subsidiary-name">ACI 증권</div></div>
+                    <div class="subsidiary-desc">AI 증권 거래 플랫폼</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/stock-exchange/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-exchange-alt"></i></div><div class="subsidiary-name">ACI 증권거래소</div></div>
+                    <div class="subsidiary-desc">FPGA 기반 초고속 거래</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/financial-supervision/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-eye"></i></div><div class="subsidiary-name">ACI 금융감독</div></div>
+                    <div class="subsidiary-desc">금융 감독 AI 시스템</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 시장 -->
+        <div class="category-section">
+            <div class="category-title">📊 시장</div>
+            <div class="subsidiary-grid">
+                <a href="/market/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-microchip"></i></div><div class="subsidiary-name">ACI FPGA 시장</div></div>
+                    <div class="subsidiary-desc">FPGA 가속 자율 거래</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 교육 -->
+        <div class="category-section">
+            <div class="category-title">🎓 교육</div>
+            <div class="subsidiary-grid">
+                <a href="/education/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-brain"></i></div><div class="subsidiary-name">ACI AI 맞춤형 교육</div></div>
+                    <div class="subsidiary-desc">1천만 학습자 개인화 학습</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/k12/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-child"></i></div><div class="subsidiary-name">ACI 유치원 교육</div></div>
+                    <div class="subsidiary-desc">유아 교육 서비스 및 시설</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/k12/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-school"></i></div><div class="subsidiary-name">ACI K-12 교육</div></div>
+                    <div class="subsidiary-desc">초·중·고 통합 AI 교육</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/university/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-university"></i></div><div class="subsidiary-name">ACI 대학</div></div>
+                    <div class="subsidiary-desc">대학교육 통합 플랫폼</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 의료/제약 -->
+        <div class="category-section">
+            <div class="category-title">🏥 의료 · 제약</div>
+            <div class="subsidiary-grid">
+                <a href="/healthcare/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-hospital"></i></div><div class="subsidiary-name">ACI 의료</div></div>
+                    <div class="subsidiary-desc">OpenHash 기반 의료 통합 플랫폼</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-pills"></i></div><div class="subsidiary-name">ACI 제약</div></div>
+                    <div class="subsidiary-desc">의약품 연구 개발 및 제조</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-heartbeat"></i></div><div class="subsidiary-name">ACI 의료 기기</div></div>
+                    <div class="subsidiary-desc">의료 기기 개발 및 제조</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-syringe"></i></div><div class="subsidiary-name">ACI 의료 소모품</div></div>
+                    <div class="subsidiary-desc">의료 소모품 제조 및 유통</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 지적재산 -->
+        <div class="category-section">
+            <div class="category-title">💡 지적재산</div>
+            <div class="subsidiary-grid">
+                <a href="/intellectual-property/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-lightbulb"></i></div><div class="subsidiary-name">ACI 지식재산권</div></div>
+                    <div class="subsidiary-desc">AI 기반 지식재산권 관리</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/patents/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-file-signature"></i></div><div class="subsidiary-name">ACI 특허 AI</div></div>
+                    <div class="subsidiary-desc">특허 출원·심사·분석</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 법률 -->
+        <div class="category-section">
+            <div class="category-title">⚖️ 전문 서비스</div>
+            <div class="subsidiary-grid">
+                <a href="/lawsuit/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-balance-scale"></i></div><div class="subsidiary-name">ACI 법률</div></div>
+                    <div class="subsidiary-desc">AI 기반 소송 자동화</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-file-invoice-dollar"></i></div><div class="subsidiary-name">ACI 세무</div></div>
+                    <div class="subsidiary-desc">세무 서비스 및 자문</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-calculator"></i></div><div class="subsidiary-name">ACI 회계</div></div>
+                    <div class="subsidiary-desc">회계 서비스 및 감사</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-briefcase"></i></div><div class="subsidiary-name">ACI 비즈니스</div></div>
+                    <div class="subsidiary-desc">경영 컨설팅 및 서비스</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 고용 -->
+        <div class="category-section">
+            <div class="category-title">👥 고용</div>
+            <div class="subsidiary-grid">
+                <a href="/personnel-innovation/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-users-cog"></i></div><div class="subsidiary-name">ACI 완전고용</div></div>
+                    <div class="subsidiary-desc">AI 기반 인력 매칭 및 관리</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 의식주 -->
+        <div class="category-section">
+            <div class="category-title">🍱 의식주</div>
+            <div class="subsidiary-grid">
+                <a href="/meal/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-utensils"></i></div><div class="subsidiary-name">ACI 식사</div></div>
+                    <div class="subsidiary-desc">전국 급식 통합 관리</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-tshirt"></i></div><div class="subsidiary-name">ACI 의류</div></div>
+                    <div class="subsidiary-desc">의류 제조 및 유통</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-apple-alt"></i></div><div class="subsidiary-name">ACI 식품</div></div>
+                    <div class="subsidiary-desc">식품 제조 및 가공</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-home"></i></div><div class="subsidiary-name">ACI 주택</div></div>
+                    <div class="subsidiary-desc">주택 건설 및 분양</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 물류/교통 -->
         <div class="category-section">
             <div class="category-title">🚚 물류 · 교통</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="transport">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-bus"></i></div>
-                        <div class="subsidiary-name">ACI 교통</div>
-                    </div>
-                    <div class="subsidiary-desc">대중 교통 서비스 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                <a href="/traffic/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-car"></i></div><div class="subsidiary-name">ACI 교통</div></div>
+                    <div class="subsidiary-desc">AI 기반 교통 통합 관리</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="logistics">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-truck"></i></div>
-                        <div class="subsidiary-name">ACI 물류</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-truck"></i></div><div class="subsidiary-name">ACI 물류</div></div>
                     <div class="subsidiary-desc">물류 및 배송 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 1차 산업 분야 -->
+        <!-- 1차 산업 -->
         <div class="category-section">
             <div class="category-title">🌾 1차 산업</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="agriculture">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-seedling"></i></div>
-                        <div class="subsidiary-name">ACI 농산</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-seedling"></i></div><div class="subsidiary-name">ACI 농산</div></div>
                     <div class="subsidiary-desc">농업 생산 및 유통</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="fishery">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-fish"></i></div>
-                        <div class="subsidiary-name">ACI 수산</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-fish"></i></div><div class="subsidiary-name">ACI 수산</div></div>
                     <div class="subsidiary-desc">수산업 및 양식업</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="livestock">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-cow"></i></div>
-                        <div class="subsidiary-name">ACI 축산</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-cow"></i></div><div class="subsidiary-name">ACI 축산</div></div>
                     <div class="subsidiary-desc">축산업 및 낙농업</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 제조/기술 분야 -->
+        <!-- 제조/기술 -->
         <div class="category-section">
             <div class="category-title">🏭 제조 · 기술</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="manufacturing">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-industry"></i></div>
-                        <div class="subsidiary-name">ACI 제조</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-industry"></i></div><div class="subsidiary-name">ACI 제조</div></div>
                     <div class="subsidiary-desc">제조업 및 생산 시설</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="robotics">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-robot"></i></div>
-                        <div class="subsidiary-name">ACI 로보틱스</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-robot"></i></div><div class="subsidiary-name">ACI 로보틱스</div></div>
                     <div class="subsidiary-desc">로봇 개발 및 자동화</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="llm">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-brain"></i></div>
-                        <div class="subsidiary-name">ACI LLM</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-brain"></i></div><div class="subsidiary-name">ACI LLM</div></div>
                     <div class="subsidiary-desc">대규모 언어 모델 개발</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="satellite">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-satellite"></i></div>
-                        <div class="subsidiary-name">ACI 위성</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-satellite"></i></div><div class="subsidiary-name">ACI 위성</div></div>
                     <div class="subsidiary-desc">위성 개발 및 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="telecom">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-broadcast-tower"></i></div>
-                        <div class="subsidiary-name">ACI 통신</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-broadcast-tower"></i></div><div class="subsidiary-name">ACI 통신</div></div>
                     <div class="subsidiary-desc">통신 인프라 및 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 건설/인프라 분야 -->
+        <!-- 건설/인프라 -->
         <div class="category-section">
             <div class="category-title">🏗️ 건설 · 인프라</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="housing">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-home"></i></div>
-                        <div class="subsidiary-name">ACI 주택</div>
-                    </div>
-                    <div class="subsidiary-desc">주택 건설 및 분양</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="road">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-road"></i></div>
-                        <div class="subsidiary-name">ACI 도로</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-road"></i></div><div class="subsidiary-name">ACI 도로</div></div>
                     <div class="subsidiary-desc">도로 건설 및 유지보수</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="civil">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-hard-hat"></i></div>
-                        <div class="subsidiary-name">ACI 토목</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-hard-hat"></i></div><div class="subsidiary-name">ACI 토목</div></div>
                     <div class="subsidiary-desc">토목 공사 및 설계</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="construction">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-building"></i></div>
-                        <div class="subsidiary-name">ACI 건설</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-building"></i></div><div class="subsidiary-name">ACI 건설</div></div>
                     <div class="subsidiary-desc">건축 및 시공</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 에너지 분야 -->
+        <!-- 에너지 -->
         <div class="category-section">
             <div class="category-title">⚡ 에너지</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="wind">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-wind"></i></div>
-                        <div class="subsidiary-name">ACI 풍력</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-wind"></i></div><div class="subsidiary-name">ACI 풍력</div></div>
                     <div class="subsidiary-desc">풍력 발전 및 에너지</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="solar">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-solar-panel"></i></div>
-                        <div class="subsidiary-name">ACI 태양광</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-solar-panel"></i></div><div class="subsidiary-name">ACI 태양광</div></div>
                     <div class="subsidiary-desc">태양광 발전 및 에너지</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="tidal">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-water"></i></div>
-                        <div class="subsidiary-name">ACI 조력</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-water"></i></div><div class="subsidiary-name">ACI 조력</div></div>
                     <div class="subsidiary-desc">조력 발전 및 에너지</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 생활/서비스 분야 -->
-        <div class="category-section">
-            <div class="category-title">🛒 생활 · 서비스</div>
-            <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="clothing">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-tshirt"></i></div>
-                        <div class="subsidiary-name">ACI 의류</div>
-                    </div>
-                    <div class="subsidiary-desc">의류 제조 및 유통</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="food">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-apple-alt"></i></div>
-                        <div class="subsidiary-name">ACI 식품</div>
-                    </div>
-                    <div class="subsidiary-desc">식품 제조 및 가공</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="dining">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-utensils"></i></div>
-                        <div class="subsidiary-name">ACI 식사</div>
-                    </div>
-                    <div class="subsidiary-desc">외식업 및 레스토랑</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="storage">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-warehouse"></i></div>
-                        <div class="subsidiary-name">ACI 저장</div>
-                    </div>
-                    <div class="subsidiary-desc">창고 및 저장 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-                <a href="#" class="subsidiary-card" data-company="franchise">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-store"></i></div>
-                        <div class="subsidiary-name">ACI 프랜차이즈</div>
-                    </div>
-                    <div class="subsidiary-desc">프랜차이즈 사업 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-        
-        <!-- 레저/문화 분야 -->
+        <!-- 레저/문화 -->
         <div class="category-section">
             <div class="category-title">🎯 레저 · 문화</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="sports">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-football-ball"></i></div>
-                        <div class="subsidiary-name">ACI 스포츠</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-football-ball"></i></div><div class="subsidiary-name">ACI 스포츠</div></div>
                     <div class="subsidiary-desc">스포츠 시설 및 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="leisure">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-umbrella-beach"></i></div>
-                        <div class="subsidiary-name">ACI 레저</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-umbrella-beach"></i></div><div class="subsidiary-name">ACI 레저</div></div>
                     <div class="subsidiary-desc">레저 시설 및 서비스</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="park">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-tree"></i></div>
-                        <div class="subsidiary-name">ACI 공원</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-tree"></i></div><div class="subsidiary-name">ACI 공원</div></div>
                     <div class="subsidiary-desc">공원 조성 및 관리</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
-                <a href="#" class="subsidiary-card" data-company="hostel">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-bed"></i></div>
-                        <div class="subsidiary-name">ACI 호스텔</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-bed"></i></div><div class="subsidiary-name">ACI 호스텔</div></div>
                     <div class="subsidiary-desc">숙박 시설 운영</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
         
-        <!-- 위생/환경 분야 -->
+        <!-- 제주 특화 -->
+        <div class="category-section">
+            <div class="category-title">🏝️ 제주 특화</div>
+            <div class="subsidiary-grid">
+                <a href="/jeju-hospital/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-hospital-user"></i></div><div class="subsidiary-name">ACI 제주 병원</div></div>
+                    <div class="subsidiary-desc">제주 의료 통합 플랫폼</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="/jeju-integrated/" class="subsidiary-card" target="_blank">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-umbrella-beach"></i></div><div class="subsidiary-name">ACI 제주 통합</div></div>
+                    <div class="subsidiary-desc">제주 특별자치도 통합 자동화</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 위생/환경 -->
         <div class="category-section">
             <div class="category-title">♻️ 위생 · 환경</div>
             <div class="subsidiary-grid">
-                <a href="#" class="subsidiary-card" data-company="sanitation">
-                    <div class="subsidiary-header">
-                        <div class="subsidiary-icon"><i class="fas fa-pump-soap"></i></div>
-                        <div class="subsidiary-name">ACI 위생</div>
-                    </div>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-pump-soap"></i></div><div class="subsidiary-name">ACI 위생</div></div>
                     <div class="subsidiary-desc">위생 서비스 및 관리</div>
-                    <div class="subsidiary-footer">
-                        <span class="subsidiary-value">- T</span>
-                        <span class="subsidiary-share">ACI 50%</span>
-                    </div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-warehouse"></i></div><div class="subsidiary-name">ACI 저장</div></div>
+                    <div class="subsidiary-desc">창고 및 저장 서비스</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
+                </a>
+                <a href="#" class="subsidiary-card">
+                    <div class="subsidiary-header"><div class="subsidiary-icon"><i class="fas fa-store"></i></div><div class="subsidiary-name">ACI 프랜차이즈</div></div>
+                    <div class="subsidiary-desc">프랜차이즈 사업 운영</div>
+                    <div class="subsidiary-footer"><span class="subsidiary-value">- T</span><span class="subsidiary-share">ACI 50%</span></div>
                 </a>
             </div>
         </div>
