@@ -621,3 +621,37 @@
     </div>
 </body>
 </html>
+
+        <!-- 공공행정 섹션 삽입 -->
+        <div id="governmentSection"></div>
+        <div id="judiciarySection"></div>
+        <div id="legislatureSection"></div>
+    </div>
+
+    <script>
+    // 공공행정 섹션 로드
+    fetch('pool-government.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('governmentSection').innerHTML = html;
+        })
+        .catch(err => console.error('공공행정 섹션 로드 실패:', err));
+
+    // 사법부 섹션 로드
+    fetch('pool-judiciary.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('judiciarySection').innerHTML = html;
+        })
+        .catch(err => console.error('사법부 섹션 로드 실패:', err));
+
+    // 입법부 섹션 로드
+    fetch('pool-legislature.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('legislatureSection').innerHTML = html;
+        })
+        .catch(err => console.error('입법부 섹션 로드 실패:', err));
+    </script>
+</body>
+</html>
