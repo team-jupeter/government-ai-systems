@@ -626,6 +626,7 @@
         <div id="governmentSection"></div>
         <div id="judiciarySection"></div>
         <div id="legislatureSection"></div>
+        <div id="independentSection"></div>
     </div>
 
     <script>
@@ -652,6 +653,14 @@
             document.getElementById('legislatureSection').innerHTML = html;
         })
         .catch(err => console.error('입법부 섹션 로드 실패:', err));
+
+    // 독립헌법기관 섹션 로드
+    fetch('pool-independent.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('independentSection').innerHTML = html;
+        })
+        .catch(err => console.error('독립헌법기관 섹션 로드 실패:', err));
     </script>
 </body>
 </html>
