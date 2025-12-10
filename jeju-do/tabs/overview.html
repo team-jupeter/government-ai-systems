@@ -1,0 +1,384 @@
+<style>
+    /* 정부 공식 스타일 - 개요 탭 */
+    .overview-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    /* 페이지 헤더 */
+    .overview-header {
+        border-bottom: 3px solid #003d82;
+        padding-bottom: 24px;
+        margin-bottom: 48px;
+    }
+
+    .overview-title {
+        font-size: 2em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+    }
+
+    .overview-subtitle {
+        font-size: 1.1em;
+        color: #4a4a4a;
+        line-height: 1.7;
+        max-width: 900px;
+    }
+
+    /* 통계 섹션 */
+    .stats-section {
+        margin-bottom: 56px;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 24px;
+        padding-left: 12px;
+        border-left: 4px solid #003d82;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        margin-bottom: 16px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 32px 24px;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+        border-color: #003d82;
+        box-shadow: 0 2px 8px rgba(0, 61, 130, 0.1);
+    }
+
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: 700;
+        color: #003d82;
+        margin-bottom: 12px;
+    }
+
+    .stat-label {
+        font-size: 1em;
+        color: #666;
+        font-weight: 500;
+    }
+
+    /* 핵심 기술 섹션 */
+    .tech-section {
+        background: #f5f8fb;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 40px;
+        margin-bottom: 56px;
+    }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+    }
+
+    .tech-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 24px;
+        transition: all 0.2s;
+    }
+
+    .tech-card:hover {
+        border-color: #003d82;
+        box-shadow: 0 2px 8px rgba(0, 61, 130, 0.08);
+    }
+
+    .tech-icon {
+        width: 48px;
+        height: 48px;
+        background: #003d82;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 1.5em;
+    }
+
+    .tech-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 12px;
+    }
+
+    .tech-desc {
+        font-size: 0.95em;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* PDV 시스템 섹션 */
+    .pdv-section {
+        border-top: 3px solid #003d82;
+        padding-top: 48px;
+        margin-top: 56px;
+    }
+
+    .pdv-intro {
+        background: #f5f8fb;
+        border-left: 4px solid #003d82;
+        padding: 32px;
+        border-radius: 4px;
+        margin-bottom: 32px;
+    }
+
+    .pdv-intro h3 {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #003d82;
+        margin-bottom: 16px;
+    }
+
+    .pdv-intro-text {
+        font-size: 1.05em;
+        color: #333;
+        line-height: 1.7;
+        margin-bottom: 24px;
+    }
+
+    .pdv-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pdv-features li {
+        padding: 12px 0;
+        color: #333;
+        line-height: 1.6;
+        position: relative;
+        padding-left: 28px;
+        font-size: 0.95em;
+    }
+
+    .pdv-features li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #003d82;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .pdv-features li strong {
+        color: #003d82;
+        font-weight: 600;
+    }
+
+    .pdv-types-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .pdv-type-card {
+        background: white;
+        border: 2px solid #003d82;
+        border-radius: 4px;
+        padding: 28px 20px;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .pdv-type-card:hover {
+        background: #f5f8fb;
+        box-shadow: 0 4px 12px rgba(0, 61, 130, 0.15);
+    }
+
+    .pdv-type-icon {
+        font-size: 2.5em;
+        margin-bottom: 16px;
+    }
+
+    .pdv-type-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        font-size: 1.05em;
+    }
+
+    .pdv-type-desc {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+        .overview-container {
+            padding: 24px 16px;
+        }
+
+        .overview-title {
+            font-size: 1.6em;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            padding: 24px 16px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+        }
+
+        .tech-section {
+            padding: 24px 20px;
+        }
+
+        .tech-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pdv-intro {
+            padding: 24px 20px;
+        }
+
+        .pdv-types-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+    }
+</style>
+
+<div class="overview-container">
+    <!-- 헤더 -->
+    <div class="overview-header">
+        <h1 class="overview-title">제주특별자치도 AI 시스템</h1>
+        <p class="overview-subtitle">
+            OpenHash 기술과 AI 에이전트를 결합하여 도정 업무의 효율성과 투명성을 높이는 차세대 행정 시스템입니다.
+            블록체인 대비 98.5%의 에너지를 절감하면서도 동일한 수준의 데이터 무결성을 보장합니다.
+        </p>
+    </div>
+
+    <!-- 주요 지표 -->
+    <section class="stats-section">
+        <h2 class="section-title">주요 지표</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">68만</div>
+                <div class="stat-label">서비스 대상 도민</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">71</div>
+                <div class="stat-label">연계 부서</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">98.5%</div>
+                <div class="stat-label">에너지 절감율</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">AI 상담 서비스</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 핵심 기술 -->
+    <section class="tech-section">
+        <h2 class="section-title">핵심 기술</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-icon">🔗</div>
+                <div class="tech-title">OpenHash 기술</div>
+                <div class="tech-desc">
+                    블록체인 대비 98.5% 에너지 절감, 25,907 TPS 처리 속도를 달성하며 
+                    암호학적 해시체인으로 데이터 무결성을 보장합니다.
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🔒</div>
+                <div class="tech-title">프라이빗 데이터 금고(PDV)</div>
+                <div class="tech-desc">
+                    개인정보 주권을 보장하며, 원본 데이터는 도민과 단체의 단말기에만 저장됩니다. 
+                    행정기관은 해시값만 보관합니다.
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🤖</div>
+                <div class="tech-title">AI 에이전트</div>
+                <div class="tech-desc">
+                    Claude 기반의 자연어 민원 상담 및 업무 자동화를 제공합니다. 
+                    71개 부서별 전문 상담이 가능합니다.
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">✓</div>
+                <div class="tech-title">교차 검증</div>
+                <div class="tech-desc">
+                    거래 당사자 간 자동 검증으로 허위 데이터를 실시간으로 탐지하며, 
+                    투명한 행정 처리를 보장합니다.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDV 시스템 -->
+    <section class="pdv-section">
+        <h2 class="section-title">개인정보 금고(PDV) 시스템</h2>
+        
+        <div class="pdv-intro">
+            <h3>시스템 개요</h3>
+            <p class="pdv-intro-text">
+                PDV(Private Data Vault)는 도민과 단체의 개인 데이터를 안전하게 보호하고 관리하는 시스템입니다.
+                모든 데이터는 소유자의 단말기에만 원본이 저장되며, 행정기관은 해시값만 보관하여 개인정보 주권을 보장합니다.
+            </p>
+            
+            <ul class="pdv-features">
+                <li>휴대폰 번호 또는 고유 아이디로 PDV를 생성할 수 있습니다</li>
+                <li>모든 개인정보는 본인만 접근할 수 있으며, 브라우저 로컬 저장소에 안전하게 보관됩니다</li>
+                <li><strong>도민 PDV:</strong> 주민등록증, 등본, 초본, 인감증명, 재산세 등의 정보가 자동 생성됩니다</li>
+                <li><strong>단체 PDV:</strong> 법인등기부등본, 사업자등록증, 재무제표 등 단체별 맞춤 문서가 생성됩니다</li>
+                <li>AI 상담 내역도 함께 저장되어 투명한 이력 관리가 가능합니다</li>
+            </ul>
+        </div>
+
+        <div class="pdv-types-grid">
+            <div class="pdv-type-card">
+                <div class="pdv-type-icon">👤</div>
+                <div class="pdv-type-title">도민 PDV</div>
+                <div class="pdv-type-desc">개인 문서 관리 및 행정 서비스</div>
+            </div>
+            <div class="pdv-type-card">
+                <div class="pdv-type-icon">🏢</div>
+                <div class="pdv-type-title">단체 PDV</div>
+                <div class="pdv-type-desc">법인·사업자 문서 관리</div>
+            </div>
+            <div class="pdv-type-card">
+                <div class="pdv-type-icon">🔐</div>
+                <div class="pdv-type-title">OpenHash 보안</div>
+                <div class="pdv-type-desc">블록체인급 데이터 무결성</div>
+            </div>
+            <div class="pdv-type-card">
+                <div class="pdv-type-icon">💬</div>
+                <div class="pdv-type-title">AI 상담 연동</div>
+                <div class="pdv-type-desc">대화 내역 자동 저장</div>
+            </div>
+        </div>
+    </section>
+</div>

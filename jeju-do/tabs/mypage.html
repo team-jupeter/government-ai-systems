@@ -1,0 +1,276 @@
+<style>
+    .mypage-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .mypage-search {
+        background: white;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .mypage-search-input {
+        width: 100%;
+        padding: 12px 16px 12px 40px;
+        border: 1px solid #c8c8c8;
+        border-radius: 4px;
+        font-size: 1em;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: 12px center;
+    }
+
+    .mypage-search-input:focus {
+        outline: none;
+        border-color: #003d82;
+    }
+
+    .mypage-timeline {
+        background: white;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 32px;
+    }
+
+    .mypage-timeline-title {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .timeline-filters {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: 1px solid #d5d5d5;
+        background: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+        border-color: #003d82;
+        color: #003d82;
+    }
+
+    .filter-btn.active {
+        background: #003d82;
+        color: white;
+        border-color: #003d82;
+    }
+
+    .timeline-list {
+        position: relative;
+        padding-left: 40px;
+    }
+
+    .timeline-list::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e0e0e0;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+        cursor: pointer;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -32px;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid #003d82;
+        z-index: 1;
+    }
+
+    .timeline-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        padding: 16px;
+        background: #f5f8fb;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .timeline-item:hover .timeline-item-header {
+        border-color: #003d82;
+        box-shadow: 0 2px 8px rgba(0,61,130,0.1);
+    }
+
+    .timeline-item-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .timeline-item-icon {
+        font-size: 1.2em;
+    }
+
+    .timeline-item-meta {
+        font-size: 0.85em;
+        color: #666;
+    }
+
+    .timeline-item-time {
+        font-size: 0.85em;
+        color: #888;
+        white-space: nowrap;
+    }
+
+    .timeline-item-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-top: none;
+        border-radius: 0 0 4px 4px;
+    }
+
+    .timeline-item.expanded .timeline-item-body {
+        max-height: 1000px;
+        transition: max-height 0.5s ease-in;
+    }
+
+    .timeline-item-content {
+        padding: 20px;
+    }
+
+    .timeline-item-detail {
+        margin-bottom: 12px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .timeline-item-detail-label {
+        font-weight: 600;
+        color: #666;
+        min-width: 100px;
+    }
+
+    .timeline-item-detail-value {
+        color: #333;
+        flex: 1;
+    }
+
+    .timeline-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .timeline-empty-icon {
+        font-size: 3em;
+        margin-bottom: 16px;
+    }
+
+    .event-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+
+    .event-badge.created {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .event-badge.sent {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+
+    .event-badge.received {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .event-badge.viewed {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+
+    .event-badge.acknowledged {
+        background: #e0f2f1;
+        color: #00796b;
+    }
+
+    .event-badge.rejected {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .event-badge.consultation {
+        background: #e1f5fe;
+        color: #0277bd;
+    }
+</style>
+
+<div class="mypage-container">
+    <!-- 검색 -->
+    <div class="mypage-search">
+        <input 
+            type="text" 
+            id="timeline-search" 
+            class="mypage-search-input" 
+            placeholder="이벤트 검색 (제목, 내용, 날짜)"
+            oninput="filterTimeline()"
+        >
+    </div>
+
+    <!-- 타임라인 -->
+    <div class="mypage-timeline">
+        <h3 class="mypage-timeline-title">PDV 활동 타임라인</h3>
+        
+        <!-- 필터 -->
+        <div class="timeline-filters">
+            <button class="filter-btn active" data-filter="all" onclick="filterByType('all')">전체</button>
+            <button class="filter-btn" data-filter="created" onclick="filterByType('created')">생성</button>
+            <button class="filter-btn" data-filter="sent" onclick="filterByType('sent')">송신</button>
+            <button class="filter-btn" data-filter="received" onclick="filterByType('received')">수신</button>
+            <button class="filter-btn" data-filter="viewed" onclick="filterByType('viewed')">열람</button>
+            <button class="filter-btn" data-filter="acknowledged" onclick="filterByType('acknowledged')">확인</button>
+            <button class="filter-btn" data-filter="consultation" onclick="filterByType('consultation')">상담</button>
+        </div>
+
+        <!-- 타임라인 리스트 -->
+        <div id="timeline-list" class="timeline-list">
+            <div class="timeline-empty">
+                <div class="timeline-empty-icon">📭</div>
+                <p>로그인하면 PDV 활동 내역을 확인할 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+</div>

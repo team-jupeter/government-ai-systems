@@ -1,0 +1,214 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Nanum Gothic', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.8;
+}
+
+.dept-header {
+    background: #1a5c9e;
+    color: white;
+    padding: 40px 20px;
+}
+
+.dept-header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.dept-breadcrumb {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 16px;
+}
+
+.dept-breadcrumb a {
+    color: white;
+    text-decoration: none;
+}
+
+.dept-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.dept-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.dept-subtitle {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+.dept-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.dept-section {
+    background: white;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.dept-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a5c9e;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.dept-section p {
+    margin-bottom: 16px;
+    color: #374151;
+}
+
+.dept-section p:last-child {
+    margin-bottom: 0;
+}
+
+.dept-list {
+    list-style: none;
+    padding: 0;
+}
+
+.dept-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    color: #374151;
+}
+
+.dept-list li:last-child {
+    border-bottom: none;
+}
+
+.dept-list li::before {
+    content: "•";
+    color: #1a5c9e;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.dept-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dept-table th,
+.dept-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dept-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+    width: 140px;
+}
+
+.dept-table td {
+    color: #374151;
+}
+
+.dept-org-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dept-org-item {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 16px 20px;
+}
+
+.dept-org-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.dept-org-role {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.dept-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.dept-contact-item {
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.dept-contact-label {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.dept-contact-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.dept-footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 40px;
+}
+
+.dept-back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #1a5c9e;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dept-back-link:hover {
+    text-decoration: underline;
+}
+
+.legal-reference {
+    background: #f0f9ff;
+    border-left: 4px solid #1a5c9e;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #1e40af;
+}
+
+@media (max-width: 768px) {
+    .dept-contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dept-table th {
+        width: 100px;
+    }
+}

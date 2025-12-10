@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주특별자치도 AI 시스템</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="warning-banner">
+        <p>⚠️ 본 사이트는 OpenHash 기술 실증 및 테스트용이며, 실제 정부 서비스가 아닙니다.</p>
+        <div class="banner-links">
+            <a href="http://100.30.14.224/openhash-system/">OpenHash</a>
+            <a href="http://100.30.14.224/national-data-registry/">국가 데이터처</a>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>🍊 제주특별자치도 AI 시스템</h1>
+                <p>Jeju Special Self-Governing Province AI System</p>
+            </div>
+            <div class="auth-section">
+                <div id="auth-logged-out" class="auth-buttons" style="display: flex;">
+                    <button class="auth-btn login-btn" onclick="showLoginModal()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                        로그인
+                    </button>
+                </div>
+                <div id="auth-logged-in" class="auth-status" style="display: none;">
+                    <span class="auth-user-info">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                        <span id="auth-user-name">사용자</span>
+                    </span>
+                    <button class="auth-btn mypage-btn" onclick="showMyPage()" style="margin-right: 8px;">My Page</button>
+                    <button class="auth-btn logout-btn" onclick="logout()">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="dochung">제주도청</button>
+        <button class="tab-btn" data-tab="jejusi">제주시청</button>
+        <button class="tab-btn" data-tab="seogwipo">서귀포시청</button>
+        <button class="tab-btn" data-tab="openhash">오픈해시</button>
+        <button class="tab-btn" data-tab="overview">시스템 소개</button>
+    </nav>
+        </div>
+
+    <main class="main-content">
+        <div id="overview" class="tab-content"></div>
+        
+        
+        <div id="mypage" class="tab-content"></div>
+        <div id="openhash" class="tab-content"></div>
+        <div id="dochung" class="tab-content active"></div>
+        <div id="jejusi" class="tab-content"></div>
+        <div id="seogwipo" class="tab-content"></div>
+    </main>
+
+    <button id="floating-help-btn" class="floating-help-btn" title="AI 상담">?</button>
+
+    <div id="general-chat-panel" class="general-chat-panel">
+        <div class="general-chat-header">
+            <div class="general-chat-title">🍊 제주 AI 상담</div>
+            <button id="general-chat-close" class="general-chat-close">×</button>
+        </div>
+        <div id="general-chat-messages" class="general-chat-messages">
+            <div class="general-chat-message assistant">
+                <div class="general-chat-bubble">안녕하세요! 제주특별자치도 AI 상담 서비스입니다. 무엇을 도와드릴까요?</div>
+            </div>
+        </div>
+        <div class="general-chat-input-area">
+            <input type="text" id="general-chat-input" class="general-chat-input" placeholder="질문을 입력하세요..." />
+            <button id="general-chat-send" class="general-chat-send">전송</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2024 제주특별자치도 AI 시스템 - OpenHash 기술 실증</p>
+    </footer>
+
+    <script src="js/pdv-manager.js"></script>
+    <script src="js/transfer-manager.js"></script>
+    <script src="js/transfer-ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/mypage.js"></script>
+    <script src="js/pdv-debug.js"></script>
+    <script src="js/citizen-data.js"></script>
+    <script src="js/organization-manager.js"></script>
+    <script src="js/organization-data.js"></script>
+    <script src="js/data/dochung.js"></script>
+    <script src="js/data/jejusi.js"></script>
+    <script src="js/data/seogwipo.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
+<!-- 로그인 모달 -->
+<div id="login-modal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title">PDV 로그인</h3>
+            <button class="modal-close" onclick="closeLoginModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="color: #666; margin-bottom: 24px;">기존 PDV에 로그인하거나 새로 생성할 수 있습니다.</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">휴대폰 번호</label>
+                    <input type="tel" id="login-phone" class="form-input" placeholder="010-1234-5678">
+                </div>
+                
+                <div class="form-divider"><span>또는</span></div>
+                
+                <div class="form-group">
+                    <label class="form-label">고유 아이디</label>
+                    <input type="text" id="login-id" class="form-input" placeholder="영문 + 숫자 조합">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">사용자 유형</label>
+                    <select id="login-type" class="form-input">
+                        <option value="citizen">도민</option>
+                        <option value="organization">단체</option>
+                    </select>
+                </div>
+                
+                <div id="org-dept-field" class="form-group" style="display: none;">
+                    <label class="form-label">부서명 (선택)</label>
+                    <input type="text" id="login-dept" class="form-input" placeholder="예: 인사팀">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeLoginModal()">취소</button>
+                    <button type="submit" class="btn btn-primary">로그인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

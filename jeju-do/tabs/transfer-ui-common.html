@@ -1,0 +1,108 @@
+<!-- 전송 내역 섹션 (공통) -->
+<div id="transfer-logs-section" class="transfer-logs-section" style="display: none;">
+    <h3 class="pdv-dashboard-title">문서 전송 내역</h3>
+    
+    <div class="transfer-tabs">
+        <button class="transfer-tab active" data-tab="sent" onclick="switchTransferTab('sent')">
+            📤 송신 (0)
+        </button>
+        <button class="transfer-tab" data-tab="received" onclick="switchTransferTab('received')">
+            📥 수신 (0)
+        </button>
+    </div>
+    
+    <div id="sent-transfers" class="transfer-list" style="display: block;">
+        <div id="sent-transfer-list"></div>
+    </div>
+    
+    <div id="received-transfers" class="transfer-list" style="display: none;">
+        <div id="received-transfer-list"></div>
+    </div>
+</div>
+
+<!-- 전송 모달 (공통) -->
+<div id="transfer-modal" class="transfer-modal-overlay">
+    <div class="transfer-modal">
+        <div class="transfer-modal-header">
+            <h3 class="transfer-modal-title">📤 문서 전송</h3>
+        </div>
+        <div class="transfer-modal-body">
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">전송할 문서</label>
+                <div style="padding: 12px; background: #f5f8fb; border-radius: 4px; font-weight: 600;">
+                    <span id="transfer-doc-name"></span>
+                </div>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">수신자 검색</label>
+                <input type="text" class="transfer-form-input" id="transfer-receiver-search" placeholder="이름, 전화번호로 검색...">
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">수신자 선택</label>
+                <div class="transfer-receiver-list" id="transfer-receiver-list">
+                    <div style="padding: 20px; text-align: center; color: #999;">수신자를 불러오는 중...</div>
+                </div>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">전송 목적 카테고리</label>
+                <select class="transfer-form-select" id="transfer-purpose-category">
+                    <option value="EMPLOYMENT">채용/인사</option>
+                    <option value="CONTRACT">계약</option>
+                    <option value="APPLICATION">신청/지원</option>
+                    <option value="VERIFICATION">본인 확인</option>
+                    <option value="FINANCIAL">금융 거래</option>
+                    <option value="MEDICAL">의료</option>
+                    <option value="LEGAL">법적 절차</option>
+                    <option value="OTHER">기타</option>
+                </select>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">상세 설명</label>
+                <textarea class="transfer-form-textarea" id="transfer-purpose-desc" placeholder="예: 입사 지원을 위한 서류 제출"></textarea>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">참조번호 (선택)</label>
+                <input type="text" class="transfer-form-input" id="transfer-reference" placeholder="예: REQ-2025-HR-001">
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">만료일</label>
+                <select class="transfer-form-select" id="transfer-expires">
+                    <option value="1">1일 후</option>
+                    <option value="3">3일 후</option>
+                    <option value="7" selected>7일 후</option>
+                    <option value="14">14일 후</option>
+                    <option value="30">30일 후</option>
+                </select>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label class="transfer-form-label">최대 조회 횟수</label>
+                <select class="transfer-form-select" id="transfer-max-views">
+                    <option value="3">3회</option>
+                    <option value="5">5회</option>
+                    <option value="10" selected>10회</option>
+                    <option value="20">20회</option>
+                    <option value="999">무제한</option>
+                </select>
+            </div>
+            
+            <div class="transfer-form-group">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="transfer-downloadable" checked style="margin-right: 8px;">
+                    <span>다운로드 허용</span>
+                </label>
+            </div>
+            
+            <div class="transfer-modal-actions">
+                <button class="transfer-btn transfer-btn-secondary" onclick="closeTransferModal()">취소</button>
+                <button class="transfer-btn transfer-btn-primary" onclick="executeTransfer()">전송하기</button>
+            </div>
+        </div>
+    </div>
+</div>
