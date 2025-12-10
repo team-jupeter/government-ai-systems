@@ -234,3 +234,16 @@ const ORGANIZATION_CATEGORIES = {
 window.ORGANIZATION_TYPES = ORGANIZATION_TYPES;
 window.CITIZEN_DOCUMENTS = CITIZEN_DOCUMENTS;
 window.ORGANIZATION_CATEGORIES = ORGANIZATION_CATEGORIES;
+
+// 소문자 버전도 export (하위 호환성)
+window.organizationTypes = {};
+
+// documents를 requiredDocuments로 매핑
+Object.keys(ORGANIZATION_TYPES).forEach(orgType => {
+    window.organizationTypes[orgType] = {
+        ...ORGANIZATION_TYPES[orgType],
+        requiredDocuments: ORGANIZATION_TYPES[orgType].documents
+    };
+});
+
+console.log("organizationTypes 로드됨:", Object.keys(window.organizationTypes).length, "종류");

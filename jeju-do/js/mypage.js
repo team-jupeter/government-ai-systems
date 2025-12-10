@@ -13,196 +13,34 @@ function loadMyPageData() {
     const user = window.authManager.getCurrentUser();
     console.log('현재 사용자:', user);
     
-    // 필요 서류 표시 (PDV 정보 표시 제거)
-    displayRequiredDocuments(user);
+    // 이중 리스트박스 표시
+    displayDualListBox(user);
     
     // 활동 타임라인 표시
     displayActivities(user);
 }
 
-function displayRequiredDocuments(user) {
+function displayDualListBox(user) {
     const container = document.getElementById('required-docs-container');
     if (!container) {
         console.error('required-docs-container를 찾을 수 없음');
         return;
     }
     
-    let documents = [];
-    
-    if (user.type === 'citizen') {
-        documents = [
-            '주민등록등본',
-            '주민등록초본',
-            '인감증명서',
-            '본인서명사실확인서',
-            '가족관계증명서',
-            '건강보험자격득실확인서',
-            '소득금액증명원',
-            '재산세납세증명서'
-        ];
-    } else if (user.type === 'organization') {
-        const orgType = user.orgData?.type || '';
-        
-        // 단체 종류별 필요 서류
-        if (window.organizationTypes && window.organizationTypes[orgType]) {
-            documents = window.organizationTypes[orgType].requiredDocuments || [];
-        } else {
-            // 기본 서류
-            documents = [
-                '법인등기부등본',
-                '사업자등록증',
-                '정관',
-                '법인인감증명서',
-                '재무제표',
-                '임대차계약서'
-            ];
-        }
-    }
-    
-    // 사용자가 보유한 서류 추가
-    const userDocNames = user.documents ? user.documents.map(d => d.name) : [];
-    
-    // 중복 제거
-    const allDocs = [...new Set([...documents, ...userDocNames])];
-    
-    let html = `<div style="margin-bottom: 20px;">
-        <button onclick="showAddDocumentModal()" style="
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        " onmouseover="this.style.transform='translateY(-2px)';
-            this.style.boxShadow='0 4px 12px rgba(102,126,234,0.4)'" 
-            onmouseout="this.style.transform='translateY(0)';
-            this.style.boxShadow='none'">
-            ➕ 서류 추가
-        </button>
-    </div>
-    <div class="docs-grid">`;
-    
-    allDocs.forEach(doc => {
-        const hasDoc = userDocNames.includes(doc);
-        html += `
-            <button class="doc-card ${hasDoc ? 'has-doc' : 'no-doc'}" 
-                    onclick="showDocumentActions('${doc}', ${hasDoc})">
-                <span class="doc-icon">${hasDoc ? '✅' : '📄'}</span>
-                <span class="doc-name">${doc}</span>
-                ${hasDoc ? '<span class="doc-status">보유</span>' : '<span class="doc-status">미보유</span>'}
-            </button>
-        `;
-    });
-    html += '</div>';
-    
-    container.innerHTML = html;
-    console.log('필요 서류 표시 완료');
-}
-
-function displayActivities(user) {
-    const container = document.getElementById('activities-list');
-    if (!container) {
-        console.error('activities-list를 찾을 수 없음');
-        return;
-    }
-    
-    const activities = user.activities || [];
-    
-    if (activities.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #999;">아직 활동 내역이 없습니다.</p>';
-        return;
-    }
-    
-    let html = '';
-    activities.forEach((activity, index) => {
-        const date = new Date(activity.timestamp).toLocaleString('ko-KR');
-        html += `
-            <div class="activity-item">
-                <div class="activity-number">#${activity.serialNumber || index + 1}</div>
-                <div class="activity-content">
-                    <div class="activity-type">${activity.type || '활동'}</div>
-                    <div class="activity-desc">${activity.description || ''}</div>
-                    <div class="activity-time">${date}</div>
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-    
-    // OpenHash 생성 버튼 표시 여부
-    const createHashBtn = document.getElementById('create-hash-btn-container');
-    if (createHashBtn) {
-        if (activities.length >= 5) {
-            createHashBtn.innerHTML = '<button onclick="createOpenHashGroups()" style="padding: 12px 24px; background: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 20px;">🔗 OpenHash 생성</button>';
-        } else {
-            createHashBtn.innerHTML = '';
-        }
-    }
-    
-    console.log('활동 타임라인 표시 완료');
-}
-
-// My Page 탭이 열릴 때 자동 로드
-function showMyPage() {
-    console.log('showMyPage 호출됨');
-    switchTab('mypage');
-    
-    // 잠시 후 데이터 로드 (DOM이 준비될 시간 확보)
-    setTimeout(() => {
-        loadMyPageData();
-    }, 100);
-}
-
-// ===== 서류 추가 기능 =====
-function showAddDocumentModal() {
-    const modal = document.getElementById('add-document-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        populateDocumentDatalist();
-    }
-}
-
-function closeAddDocumentModal() {
-    const modal = document.getElementById('add-document-modal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.getElementById('document-name-input').value = '';
-    }
-}
-
-function populateDocumentDatalist() {
-    const datalist = document.getElementById('document-list');
-    if (!datalist) {
-        console.error('document-list datalist를 찾을 수 없음');
-        return;
-    }
-    
-    const user = window.authManager?.getCurrentUser();
-    if (!user) {
-        console.error('현재 사용자 정보 없음');
-        return;
-    }
-    
-    datalist.innerHTML = '';
-    
-    let availableDocuments = [];
+    // 사용 가능한 모든 서류 목록
+    let allDocuments = [];
     
     if (user.type === 'citizen') {
         if (window.citizenDocuments) {
-            availableDocuments = Object.keys(window.citizenDocuments).sort();
+            allDocuments = Object.keys(window.citizenDocuments).sort();
         }
     } else if (user.type === 'organization') {
         const orgType = user.orgData?.type || '';
         
         if (window.organizationTypes && window.organizationTypes[orgType]) {
-            const orgTypeData = window.organizationTypes[orgType];
-            availableDocuments = orgTypeData.requiredDocuments || [];
+            allDocuments = window.organizationTypes[orgType].requiredDocuments || [];
         } else {
-            availableDocuments = [
+            allDocuments = [
                 '법인등기부등본',
                 '사업자등록증',
                 '정관',
@@ -215,153 +53,362 @@ function populateDocumentDatalist() {
                 '법인세신고서'
             ];
         }
-        
-        availableDocuments.sort();
+        allDocuments.sort();
     }
     
-    console.log(`드롭다운에 표시할 서류 수: ${availableDocuments.length}`);
+    // 사용자가 보유한 서류
+    const ownedDocuments = user.documents ? user.documents.map(d => d.name) : [];
     
-    availableDocuments.forEach(docName => {
-        const option = document.createElement('option');
-        option.value = docName;
+    // 미보유 서류 (왼쪽 박스)
+    const availableDocuments = allDocuments.filter(doc => !ownedDocuments.includes(doc));
+    
+    container.innerHTML = `
+        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px;">
+            <!-- 왼쪽: 미보유 서류 -->
+            <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #666;">
+                    📋 미보유 서류 (${availableDocuments.length}개)
+                </label>
+                <select id="available-docs" 
+                        multiple 
+                        size="10"
+                        style="
+                            width: 100%;
+                            padding: 8px;
+                            border: 2px solid #d5d5d5;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            background: #f9f9f9;
+                        ">
+                    ${availableDocuments.map(doc => `<option value="${doc}">${doc}</option>`).join('')}
+                </select>
+            </div>
+            
+            <!-- 중간: 이동 버튼 -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button onclick="addSelectedDocuments()" 
+                        title="선택한 서류 추가"
+                        style="
+                            padding: 12px 16px;
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 18px;
+                            font-weight: bold;
+                            transition: transform 0.2s;
+                        "
+                        onmouseover="this.style.transform='scale(1.1)'"
+                        onmouseout="this.style.transform='scale(1)'">
+                    →
+                </button>
+                
+                <button onclick="removeSelectedDocuments()" 
+                        title="선택한 서류 제거"
+                        style="
+                            padding: 12px 16px;
+                            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 18px;
+                            font-weight: bold;
+                            transition: transform 0.2s;
+                        "
+                        onmouseover="this.style.transform='scale(1.1)'"
+                        onmouseout="this.style.transform='scale(1)'">
+                    ←
+                </button>
+            </div>
+            
+            <!-- 오른쪽: 보유 서류 -->
+            <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2e7d32;">
+                    ✅ 보유 서류 (${ownedDocuments.length}개)
+                </label>
+                <select id="owned-docs" 
+                        multiple 
+                        size="10"
+                        onchange="handleOwnedDocSelection()"
+                        style="
+                            width: 100%;
+                            padding: 8px;
+                            border: 2px solid #2e7d32;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            background: #e8f5e9;
+                        ">
+                    ${ownedDocuments.map(doc => `<option value="${doc}">${doc}</option>`).join('')}
+                </select>
+            </div>
+        </div>
         
-        if (user.type === 'citizen' && window.citizenDocuments && window.citizenDocuments[docName]) {
-            const doc = window.citizenDocuments[docName];
-            option.textContent = `${docName} (${doc.category})`;
-        } else {
-            option.textContent = docName;
-        }
-        
-        datalist.appendChild(option);
-    });
+        <!-- 서류 액션 버튼 (보유 서류 선택 시 표시) -->
+        <div id="document-actions" style="display: none; padding: 24px; background: #f8f9fa; border-radius: 8px; border: 2px solid #003d82;">
+            <h3 style="margin: 0 0 16px 0; font-size: 1.1em; color: #003d82;">
+                📄 <span id="selected-doc-name"></span>
+            </h3>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button onclick="handleDocumentView()" style="
+                    flex: 1;
+                    min-width: 100px;
+                    padding: 12px 20px;
+                    background: #667eea;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: background 0.2s;
+                "
+                onmouseover="this.style.background='#5568d3'"
+                onmouseout="this.style.background='#667eea'">
+                    👁️ 열람
+                </button>
+                
+                <button onclick="showRecipientSelector()" style="
+                    flex: 1;
+                    min-width: 100px;
+                    padding: 12px 20px;
+                    background: #0072ff;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: background 0.2s;
+                "
+                onmouseover="this.style.background='#0060d9'"
+                onmouseout="this.style.background='#0072ff'">
+                    📤 전송
+                </button>
+                
+                <button onclick="handleDocumentRenew()" style="
+                    flex: 1;
+                    min-width: 100px;
+                    padding: 12px 20px;
+                    background: #f5576c;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: background 0.2s;
+                "
+                onmouseover="this.style.background='#e0495d'"
+                onmouseout="this.style.background='#f5576c'">
+                    🔄 갱신
+                </button>
+            </div>
+        </div>
+    `;
+    
+    console.log('이중 리스트박스 표시 완료');
 }
 
-function addDocumentToPDV() {
-    if (!window.authManager || !window.authManager.getCurrentUser()) {
-        alert('로그인이 필요합니다.');
+// 선택한 서류를 보유 목록으로 추가
+function addSelectedDocuments() {
+    const availableSelect = document.getElementById('available-docs');
+    const selectedOptions = Array.from(availableSelect.selectedOptions);
+    
+    if (selectedOptions.length === 0) {
+        alert('추가할 서류를 선택해주세요.');
         return;
     }
     
-    const docNameInput = document.getElementById('document-name-input');
-    const docName = docNameInput.value.trim();
-    
-    if (!docName) {
-        alert('서류 이름을 입력해주세요.');
-        return;
-    }
-    
-    const user = window.authManager.getCurrentUser();
-    
-    if (user.documents && user.documents.some(d => d.name === docName)) {
-        alert('이미 보유한 서류입니다.');
-        return;
-    }
+    const user = window.authManager?.getCurrentUser();
+    if (!user) return;
     
     if (!user.documents) {
         user.documents = [];
     }
     
-    const newDocument = {
-        name: docName,
-        addedAt: new Date().toISOString(),
-        status: '보유'
-    };
+    selectedOptions.forEach(option => {
+        const docName = option.value;
+        
+        // 중복 확인
+        if (!user.documents.some(d => d.name === docName)) {
+            const newDocument = {
+                name: docName,
+                addedAt: new Date().toISOString(),
+                status: '보유'
+            };
+            
+            if (window.citizenDocuments && window.citizenDocuments[docName]) {
+                const docInfo = window.citizenDocuments[docName];
+                newDocument.category = docInfo.category;
+                newDocument.description = docInfo.description;
+                newDocument.issuer = docInfo.issuer;
+            }
+            
+            user.documents.push(newDocument);
+        }
+    });
     
-    if (window.citizenDocuments && window.citizenDocuments[docName]) {
-        const docInfo = window.citizenDocuments[docName];
-        newDocument.category = docInfo.category;
-        newDocument.description = docInfo.description;
-        newDocument.issuer = docInfo.issuer;
-    }
-    
-    user.documents.push(newDocument);
-    
+    // PDV 업데이트
     if (window.pdvManager) {
         window.pdvManager.updatePDV(user);
         window.authManager.currentUser = user;
         localStorage.setItem('currentUser', JSON.stringify(user));
     }
     
-    closeAddDocumentModal();
+    // UI 새로고침
     loadMyPageData();
     
-    alert(`"${docName}" 서류가 추가되었습니다.`);
+    alert(`${selectedOptions.length}개 서류가 추가되었습니다.`);
 }
 
-// ===== 서류 액션 메뉴 =====
-function showDocumentActions(docName, hasDoc) {
-    if (!hasDoc) {
-        alert(`"${docName}" 서류를 먼저 추가해주세요.`);
+// 선택한 서류를 보유 목록에서 제거
+function removeSelectedDocuments() {
+    const ownedSelect = document.getElementById('owned-docs');
+    const selectedOptions = Array.from(ownedSelect.selectedOptions);
+    
+    if (selectedOptions.length === 0) {
+        alert('제거할 서류를 선택해주세요.');
         return;
     }
     
-    currentDocumentName = docName;
+    if (!confirm(`선택한 ${selectedOptions.length}개 서류를 제거하시겠습니까?`)) {
+        return;
+    }
     
-    const modal = document.getElementById('document-action-modal');
-    const title = document.getElementById('action-modal-title');
+    const user = window.authManager?.getCurrentUser();
+    if (!user || !user.documents) return;
     
-    if (modal && title) {
-        title.textContent = `📄 ${docName}`;
-        modal.style.display = 'flex';
+    const docNamesToRemove = selectedOptions.map(opt => opt.value);
+    
+    user.documents = user.documents.filter(d => !docNamesToRemove.includes(d.name));
+    
+    // PDV 업데이트
+    if (window.pdvManager) {
+        window.pdvManager.updatePDV(user);
+        window.authManager.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    // UI 새로고침
+    loadMyPageData();
+    
+    alert(`${selectedOptions.length}개 서류가 제거되었습니다.`);
+}
+
+// 보유 서류 선택 시 액션 버튼 표시
+function handleOwnedDocSelection() {
+    const ownedSelect = document.getElementById('owned-docs');
+    const actionsDiv = document.getElementById('document-actions');
+    const selectedDocName = document.getElementById('selected-doc-name');
+    
+    if (ownedSelect.selectedOptions.length === 1) {
+        currentDocumentName = ownedSelect.selectedOptions[0].value;
+        selectedDocName.textContent = currentDocumentName;
+        actionsDiv.style.display = 'block';
+    } else {
+        actionsDiv.style.display = 'none';
+        currentDocumentName = null;
     }
 }
 
-function closeDocumentActionModal() {
-    const modal = document.getElementById('document-action-modal');
-    if (modal) {
-        modal.style.display = 'none';
+function displayActivities(user) {
+    const container = document.getElementById('activities-list');
+    if (!container) {
+        console.error('activities-list를 찾을 수 없음');
+        return;
     }
-    currentDocumentName = null;
+    
+    const activities = user.activities || [];
+    
+    if (activities.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">아직 활동 내역이 없습니다.</p>';
+        return;
+    }
+    
+    let html = '';
+    activities.forEach((activity, index) => {
+        const date = new Date(activity.timestamp).toLocaleString('ko-KR');
+        html += `
+            <div class="activity-item">
+                <div class="activity-number">#${activity.serialNumber || index + 1}</div>
+                <div class="activity-content">
+                    <div style="font-weight: 600; margin-bottom: 4px;">${activity.type || '활동'}</div>
+                    <div style="color: #666; font-size: 0.9em; margin-bottom: 4px;">${activity.description || ''}</div>
+                    <div style="color: #999; font-size: 0.85em;">${date}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // OpenHash 생성 버튼
+    const createHashBtn = document.getElementById('create-hash-btn-container');
+    if (createHashBtn) {
+        if (activities.length >= 5) {
+            createHashBtn.innerHTML = `
+                <button onclick="createOpenHashGroups()" style="
+                    padding: 14px 24px;
+                    background: #2e7d32;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    margin-top: 20px;
+                    transition: background 0.2s;
+                "
+                onmouseover="this.style.background='#1b5e20'"
+                onmouseout="this.style.background='#2e7d32'">
+                    🔗 OpenHash 생성 (${activities.length}개 활동)
+                </button>
+            `;
+        } else {
+            createHashBtn.innerHTML = '';
+        }
+    }
+    
+    console.log('활동 타임라인 표시 완료');
 }
 
+// My Page 탭이 열릴 때 자동 로드
+function showMyPage() {
+    console.log("showMyPage 호출됨");
+    switchTab("mypage");
+    
+    // 즉시 실행 + 지연 실행 (이중 보장)
+    loadMyPageData();
+    
+    setTimeout(() => {
+        console.log("setTimeout에서 loadMyPageData 재실행");
+        loadMyPageData();
+    }, 100);
+    
+    setTimeout(() => {
+        console.log("500ms 후 loadMyPageData 재실행");
+        loadMyPageData();
+    }, 500);
+}
+
+// 서류 액션 함수들
 function handleDocumentView() {
     if (!currentDocumentName) return;
-    
     alert(`"${currentDocumentName}" 열람 기능은 준비 중입니다.`);
-    closeDocumentActionModal();
 }
 
 function handleDocumentRenew() {
     if (!currentDocumentName) return;
-    
     alert(`"${currentDocumentName}" 갱신 기능은 준비 중입니다.`);
-    closeDocumentActionModal();
 }
 
-function handleDocumentDelete() {
-    if (!currentDocumentName) return;
-    
-    if (!confirm(`"${currentDocumentName}" 서류를 삭제하시겠습니까?`)) {
-        return;
-    }
-    
-    const user = window.authManager.getCurrentUser();
-    if (!user.documents) return;
-    
-    user.documents = user.documents.filter(d => d.name !== currentDocumentName);
-    
-    if (window.pdvManager) {
-        window.pdvManager.updatePDV(user);
-        window.authManager.currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-    }
-    
-    closeDocumentActionModal();
-    loadMyPageData();
-    
-    alert(`"${currentDocumentName}" 서류가 삭제되었습니다.`);
-}
-
-// ===== 수신자 선택 =====
+// 수신자 선택 모달
 function showRecipientSelector() {
-    closeDocumentActionModal();
+    if (!currentDocumentName) return;
     
     const modal = document.getElementById('recipient-selector-modal');
     if (modal) {
         modal.style.display = 'flex';
         loadRecipientList();
         
-        // 검색 입력 이벤트
         const searchInput = document.getElementById('recipient-search-input');
         if (searchInput) {
             searchInput.oninput = () => filterRecipients(searchInput.value);
@@ -381,11 +428,9 @@ function loadRecipientList() {
     const container = document.getElementById('recipient-list');
     if (!container) return;
     
-    // 모든 PDV 가져오기
     const allPDVs = window.pdvManager?.getAllPDVs() || [];
     const currentUser = window.authManager?.getCurrentUser();
     
-    // 본인 제외
     const recipients = allPDVs.filter(pdv => pdv.pdvId !== currentUser?.pdvId);
     
     if (recipients.length === 0) {
@@ -458,7 +503,6 @@ function sendDocument(recipientId, recipientName) {
     const user = window.authManager?.getCurrentUser();
     if (!user) return;
     
-    // 활동 기록 추가
     if (!user.activities) {
         user.activities = [];
     }
@@ -475,7 +519,6 @@ function sendDocument(recipientId, recipientName) {
     
     user.activities.push(activity);
     
-    // PDV 업데이트
     if (window.pdvManager) {
         window.pdvManager.updatePDV(user);
         window.authManager.currentUser = user;
@@ -521,11 +564,7 @@ async function createOpenHashGroups() {
     }
 }
 
-// 페이지 로드 시 초기화
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('My Page 스크립트 로드됨');
-    });
-} else {
-    console.log('My Page 스크립트 로드됨');
-}
+// 초기화
+console.log('My Page 스크립트 로드됨');
+console.log('citizenDocuments 로드 확인:', typeof window.citizenDocuments);
+console.log('organizationTypes 로드 확인:', typeof window.organizationTypes);

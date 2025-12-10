@@ -115,6 +115,23 @@ class PDVManager {
         return true;
     }
 
+    // PDV 업데이트 (pdvId 기준)
+    updatePDV(pdv) {
+        const allPDVs = this.getAllPDVs();
+        const index = allPDVs.findIndex(p => p.pdvId === pdv.pdvId);
+        
+        if (index !== -1) {
+            allPDVs[index] = pdv;
+            localStorage.setItem(this.storageKey, JSON.stringify(allPDVs));
+            console.log("PDV 업데이트 완료:", pdv.pdvId);
+            return true;
+        } else {
+            console.warn("PDV를 찾을 수 없어 새로 저장:", pdv.pdvId);
+            return this.savePDV(pdv);
+        }
+    }
+
+
     // 전체 초기화 (개발용)
     clearAll() {
         localStorage.removeItem(this.storageKey);
