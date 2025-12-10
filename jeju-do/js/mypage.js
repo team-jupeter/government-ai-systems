@@ -108,7 +108,6 @@ function displayRequiredDocuments(user) {
     
     if (user.type === 'citizen') {
         documents = [
-            '주민등록증',
             '주민등록등본',
             '주민등록초본',
             '인감증명서',
@@ -137,14 +136,41 @@ function displayRequiredDocuments(user) {
         }
     }
     
-    let html = '<div class="docs-grid">';
-    documents.forEach(doc => {
-        const hasDoc = user.documents && user.documents.some(d => d.name === doc);
+    // 사용자가 보유한 서류 추가
+    const userDocNames = user.documents ? user.documents.map(d => d.name) : [];
+    
+    // 중복 제거
+    const allDocs = [...new Set([...documents, ...userDocNames])];
+    
+    let html = `<div style="margin-bottom: 20px;">
+        <button onclick="showAddDocumentModal()" style="
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        " onmouseover="this.style.transform='translateY(-2px)';
+            this.style.boxShadow='0 4px 12px rgba(102,126,234,0.4)'" 
+            onmouseout="this.style.transform='translateY(0)';
+            this.style.boxShadow='none'">
+            ➕ 서류 추가
+        </button>
+    </div>
+    <div class="docs-grid">`;
+    
+    allDocs.forEach(doc => {
+        const hasDoc = userDocNames.includes(doc);
         html += `
-            <button class="doc-card ${hasDoc ? 'has-doc' : 'no-doc'}">
+            <button class="doc-card ${hasDoc ? 'has-doc' : 'no-doc'}" 
+                    onclick="${hasDoc ? `removeDocumentFromPDV('${doc}')` : ''}">
                 <span class="doc-icon">${hasDoc ? '✅' : '📄'}</span>
                 <span class="doc-name">${doc}</span>
                 ${hasDoc ? '<span class="doc-status">보유</span>' : '<span class="doc-status">미보유</span>'}
+                ${hasDoc ? '<span class="doc-delete">🗑️</span>' : ''}
             </button>
         `;
     });
@@ -207,6 +233,195 @@ function showMyPage() {
     setTimeout(() => {
         loadMyPageData();
     }, 100);
+}
+
+// 서류 추가 기능
+function showAddDocumentModal() {
+    const modal = document.getElementById('add-document-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        
+        // 서류 목록 datalist 생성 (사용자 유형별 필터링)
+        populateDocumentDatalist();
+    }
+}
+
+function closeAddDocumentModal() {
+    const modal = document.getElementById('add-document-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        // 입력 필드 초기화
+        document.getElementById('document-name-input').value = '';
+    }
+}
+
+function populateDocumentDatalist() {
+    const datalist = document.getElementById('document-list');
+    if (!datalist) {
+        console.error('document-list datalist를 찾을 수 없음');
+        return;
+    }
+    
+    const user = window.authManager?.getCurrentUser();
+    if (!user) {
+        console.error('현재 사용자 정보 없음');
+        return;
+    }
+    
+    // datalist 초기화
+    datalist.innerHTML = '';
+    
+    let availableDocuments = [];
+    
+    if (user.type === 'citizen') {
+        // 개인: 시민용 서류 전체
+        if (window.citizenDocuments) {
+            availableDocuments = Object.keys(window.citizenDocuments).sort();
+        }
+    } else if (user.type === 'organization') {
+        // 단체: 단체 유형별 서류
+        const orgType = user.orgData?.type || '';
+        
+        if (window.organizationTypes && window.organizationTypes[orgType]) {
+            const orgTypeData = window.organizationTypes[orgType];
+            availableDocuments = orgTypeData.requiredDocuments || [];
+            
+            console.log(`단체 유형: ${orgType}, 필요 서류 수: ${availableDocuments.length}`);
+        } else {
+            console.warn(`단체 유형 "${orgType}"의 데이터를 찾을 수 없음`);
+            // 기본 단체 서류
+            availableDocuments = [
+                '법인등기부등본',
+                '사업자등록증',
+                '정관',
+                '법인인감증명서',
+                '재무제표',
+                '손익계산서',
+                '재무상태표',
+                '임대차계약서',
+                '사업자등록증명원',
+                '법인세신고서'
+            ];
+        }
+        
+        // 정렬
+        availableDocuments.sort();
+    }
+    
+    console.log(`드롭다운에 표시할 서류 수: ${availableDocuments.length}`);
+    
+    // datalist에 옵션 추가
+    availableDocuments.forEach(docName => {
+        const option = document.createElement('option');
+        option.value = docName;
+        
+        // 개인인 경우 카테고리 정보 추가
+        if (user.type === 'citizen' && window.citizenDocuments && window.citizenDocuments[docName]) {
+            const doc = window.citizenDocuments[docName];
+            option.textContent = `${docName} (${doc.category})`;
+        } else {
+            option.textContent = docName;
+        }
+        
+        datalist.appendChild(option);
+    });
+}
+
+function addDocumentToPDV() {
+    if (!window.authManager || !window.authManager.getCurrentUser()) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+    
+    const docNameInput = document.getElementById('document-name-input');
+    const docName = docNameInput.value.trim();
+    
+    if (!docName) {
+        alert('서류 이름을 입력해주세요.');
+        return;
+    }
+    
+    // 현재 사용자 PDV 가져오기
+    const user = window.authManager.getCurrentUser();
+    
+    // 이미 보유한 서류인지 확인
+    if (user.documents && user.documents.some(d => d.name === docName)) {
+        alert('이미 보유한 서류입니다.');
+        return;
+    }
+    
+    // 서류 추가
+    if (!user.documents) {
+        user.documents = [];
+    }
+    
+    const newDocument = {
+        name: docName,
+        addedAt: new Date().toISOString(),
+        status: '보유'
+    };
+    
+    // 서류 정보가 데이터베이스에 있으면 추가
+    if (window.citizenDocuments && window.citizenDocuments[docName]) {
+        const docInfo = window.citizenDocuments[docName];
+        newDocument.category = docInfo.category;
+        newDocument.description = docInfo.description;
+        newDocument.issuer = docInfo.issuer;
+    }
+    
+    user.documents.push(newDocument);
+    
+    // PDV 업데이트
+    if (window.pdvManager) {
+        window.pdvManager.updatePDV(user);
+        
+        // 현재 사용자 정보도 업데이트
+        window.authManager.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    // 모달 닫기
+    closeAddDocumentModal();
+    
+    // UI 새로고침
+    loadMyPageData();
+    
+    alert(`"${docName}" 서류가 추가되었습니다.`);
+}
+
+// 서류 삭제 기능
+function removeDocumentFromPDV(docName) {
+    if (!window.authManager || !window.authManager.getCurrentUser()) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+    
+    if (!confirm(`"${docName}" 서류를 삭제하시겠습니까?`)) {
+        return;
+    }
+    
+    const user = window.authManager.getCurrentUser();
+    
+    if (!user.documents) {
+        return;
+    }
+    
+    // 서류 제거
+    user.documents = user.documents.filter(d => d.name !== docName);
+    
+    // PDV 업데이트
+    if (window.pdvManager) {
+        window.pdvManager.updatePDV(user);
+        
+        // 현재 사용자 정보도 업데이트
+        window.authManager.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    // UI 새로고침
+    loadMyPageData();
+    
+    alert(`"${docName}" 서류가 삭제되었습니다.`);
 }
 
 // 페이지 로드 시 초기화
