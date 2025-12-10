@@ -156,6 +156,7 @@ class AuthManager {
         const loggedIn = document.getElementById('auth-logged-in');
         const loggedOut = document.getElementById('auth-logged-out');
         const mypageTab = document.getElementById('mypage-tab');
+            if (mypageTab) mypageTab.style.display = "none";
         const userDisplayName = document.getElementById('user-display-name');
         
         if (this.currentUser) {

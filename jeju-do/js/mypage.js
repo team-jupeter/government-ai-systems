@@ -209,6 +209,7 @@ async function displayDualListBox(user) {
 }
 
 // 선택한 서류를 보유 목록으로 추가
+
 async function addSelectedDocuments() {
     const availableSelect = document.getElementById('available-docs');
     const selectedOptions = Array.from(availableSelect.selectedOptions);
@@ -218,49 +219,73 @@ async function addSelectedDocuments() {
         return;
     }
     
-    const user = window.authManager?.getCurrentUser();
-    if (!user) return;
+    // 현재 사용자 가져오기 (await 필수!)
+    const user = await window.authManager?.getCurrentUser();
     
+    if (!user || !user.pdvId) {
+        console.error('사용자 정보 없음:', user);
+        alert('로그인이 필요합니다.');
+        return;
+    }
+    
+    console.log('서류 추가 시작:', user.pdvId);
+    
+    // documents 배열 확인
     if (!user.documents) {
         user.documents = [];
     }
     
+    // 선택한 서류 추가
     selectedOptions.forEach(option => {
         const docName = option.value;
+        const docInfo = window.citizenDocuments?.[docName] || {};
         
-        // 중복 확인
-        if (!user.documents.some(d => d.name === docName)) {
-            const newDocument = {
-                name: docName,
-                addedAt: new Date().toISOString(),
-                status: '보유'
-            };
-            
-            if (window.citizenDocuments && window.citizenDocuments[docName]) {
-                const docInfo = window.citizenDocuments[docName];
-                newDocument.category = docInfo.category;
-                newDocument.description = docInfo.description;
-                newDocument.issuer = docInfo.issuer;
-            }
-            
-            user.documents.push(newDocument);
-        }
+        const newDoc = {
+            name: docName,
+            addedAt: new Date().toISOString(),
+            status: '보유',
+            category: docInfo.category || '기타',
+            issuer: docInfo.issuer || '발급기관'
+        };
+        
+        user.documents.push(newDoc);
+        console.log('서류 추가:', docName);
     });
+    
+    // 활동 기록 추가
+    if (!user.activities) {
+        user.activities = [];
+    }
+    
+    const activity = {
+        serialNumber: user.activities.length + 1,
+        type: '서류 추가',
+        description: `${selectedOptions.length}개 서류가 추가되었습니다`,
+        timestamp: new Date().toISOString()
+    };
+    user.activities.push(activity);
     
     // PDV 업데이트
     if (window.pdvManager) {
-        window.pdvManager.updatePDV(user);
-        window.authManager.currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        try {
+            await window.pdvManager.updatePDV(user);
+            console.log('PDV 업데이트 완료:', user.pdvId);
+            
+            // authManager에도 업데이트
+            window.authManager.currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        } catch (error) {
+            console.error('PDV 업데이트 오류:', error);
+        }
     }
     
-    // UI 새로고침
+    // UI 새로고침 (중요!)
     await loadMyPageData();
     
     alert(`${selectedOptions.length}개 서류가 추가되었습니다.`);
 }
-
 // 선택한 서류를 보유 목록에서 제거
+
 async function removeSelectedDocuments() {
     const ownedSelect = document.getElementById('owned-docs');
     const selectedOptions = Array.from(ownedSelect.selectedOptions);
@@ -270,30 +295,55 @@ async function removeSelectedDocuments() {
         return;
     }
     
-    if (!confirm(`선택한 ${selectedOptions.length}개 서류를 제거하시겠습니까?`)) {
+    // 현재 사용자 가져오기 (await 필수!)
+    const user = await window.authManager?.getCurrentUser();
+    
+    if (!user || !user.pdvId) {
+        console.error('사용자 정보 없음:', user);
+        alert('로그인이 필요합니다.');
         return;
     }
     
-    const user = window.authManager?.getCurrentUser();
-    if (!user || !user.documents) return;
+    console.log('서류 제거 시작:', user.pdvId);
     
-    const docNamesToRemove = selectedOptions.map(opt => opt.value);
+    // 선택한 서류 제거
+    const removeNames = selectedOptions.map(opt => opt.value);
+    user.documents = user.documents.filter(doc => !removeNames.includes(doc.name));
     
-    user.documents = user.documents.filter(d => !docNamesToRemove.includes(d.name));
+    console.log('서류 제거:', removeNames);
+    
+    // 활동 기록 추가
+    if (!user.activities) {
+        user.activities = [];
+    }
+    
+    const activity = {
+        serialNumber: user.activities.length + 1,
+        type: '서류 제거',
+        description: `${selectedOptions.length}개 서류가 제거되었습니다`,
+        timestamp: new Date().toISOString()
+    };
+    user.activities.push(activity);
     
     // PDV 업데이트
     if (window.pdvManager) {
-        window.pdvManager.updatePDV(user);
-        window.authManager.currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        try {
+            await window.pdvManager.updatePDV(user);
+            console.log('PDV 업데이트 완료:', user.pdvId);
+            
+            // authManager에도 업데이트
+            window.authManager.currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        } catch (error) {
+            console.error('PDV 업데이트 오류:', error);
+        }
     }
     
-    // UI 새로고침
+    // UI 새로고침 (중요!)
     await loadMyPageData();
     
     alert(`${selectedOptions.length}개 서류가 제거되었습니다.`);
 }
-
 // 보유 서류 선택 시 액션 버튼 표시
 async function handleOwnedDocSelection() {
     const ownedSelect = document.getElementById('owned-docs');
@@ -372,43 +422,6 @@ async function displayActivities(user) {
 
 // My Page 탭이 열릴 때 자동 로드
 
-async function showMyPage() {
-    console.log("showMyPage 호출됨");
-    
-    // 1. 탭 전환
-    switchTab("mypage");
-    
-    // 2. HTML이 로드될 때까지 대기
-    await new Promise(resolve => {
-        const checkInterval = setInterval(() => {
-            const container = document.getElementById('required-docs-container');
-            if (container) {
-                clearInterval(checkInterval);
-                resolve();
-            }
-        }, 100);
-        
-        // 5초 타임아웃
-        setTimeout(() => {
-            clearInterval(checkInterval);
-            resolve();
-        }, 5000);
-    });
-    
-    // 3. HTML이 로드되었으면 데이터 로드
-    const container = document.getElementById('required-docs-container');
-    if (container) {
-        console.log("My Page HTML 로드 확인, 데이터 로드 시작");
-        try {
-            await loadMyPageData();
-            console.log("My Page 데이터 로드 완료");
-        } catch (error) {
-            console.error("My Page 데이터 로드 오류:", error);
-        }
-    } else {
-        console.error("My Page HTML 로드 실패");
-    }
-}
 // 서류 액션 함수들
 async function handleDocumentView() {
     if (!currentDocumentName) return;

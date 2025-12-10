@@ -37,7 +37,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    loadTabContent('dochung');
+    // 저장된 탭 또는 기본 탭 로드
+    const savedTab = localStorage.getItem('activeTab') || 'dochung';
+    loadTabContent(savedTab);
+    // My Page 자동 로드
+    if (savedTab === 'mypage' && typeof loadMyPageData === 'function') {
+        setTimeout(async () => {
+            await loadMyPageData();
+        }, 500);
+    }
+    
+    // 탭 버튼 활성화 상태 복원
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === savedTab) {
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    // 탭 콘텐츠 활성화 상태 복원
+    document.querySelectorAll('.tab-content').forEach(content => {
+        if (content.id === savedTab) {
+            content.classList.add('active');
+        } else {
+            content.classList.remove('active');
+        }
+    });
 
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -48,8 +73,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
+            localStorage.setItem("activeTab", tabId);
             document.getElementById(tabId).classList.add('active');
             loadTabContent(tabId);
+            // My Page 특별 처리
+            if (tabId === "mypage" && typeof loadMyPageData === "function") {
+                setTimeout(async () => {
+                    await loadMyPageData();
+                }, 200);
+            }
         });
     });
 
@@ -489,19 +521,3 @@ loadTabContent = async function(tabId) {
 };
 
 // My Page로 이동하는 함수
-function showMyPage() {
-    // 모든 탭 버튼 비활성화
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(btn => btn.classList.remove('active'));
-    
-    // 모든 탭 콘텐츠 비활성화
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(content => content.classList.remove('active'));
-    
-    // mypage 탭 활성화
-    const mypageContent = document.getElementById('mypage');
-    if (mypageContent) {
-        mypageContent.classList.add('active');
-        loadTabContent('mypage');
-    }
-}
