@@ -20,7 +20,7 @@ async function loadMyPageData() {
     displayActivities(user);
 }
 
-function displayDualListBox(user) {
+async function displayDualListBox(user) {
     const container = document.getElementById('required-docs-container');
     if (!container) {
         console.error('required-docs-container를 찾을 수 없음');
@@ -407,7 +407,7 @@ async function showRecipientSelector() {
     const modal = document.getElementById('recipient-selector-modal');
     if (modal) {
         modal.style.display = 'flex';
-        loadRecipientList();
+        await loadRecipientList();
         
         const searchInput = document.getElementById('recipient-search-input');
         if (searchInput) {
@@ -416,7 +416,7 @@ async function showRecipientSelector() {
     }
 }
 
-function closeRecipientSelectorModal() {
+async function closeRecipientSelectorModal() {
     const modal = document.getElementById('recipient-selector-modal');
     if (modal) {
         modal.style.display = 'none';
@@ -424,12 +424,12 @@ function closeRecipientSelectorModal() {
     }
 }
 
-function loadRecipientList() {
+async function loadRecipientList() {
     const container = document.getElementById('recipient-list');
     if (!container) return;
     
-    const allPDVs = window.pdvManager?.getAllPDVs() || [];
-    const currentUser = window.authManager?.getCurrentUser();
+    const allPDVs = await window.pdvManager?.getAllPDVs() || [];
+    const currentUser = await window.authManager?.getCurrentUser();
     
     const recipients = allPDVs.filter(pdv => pdv.pdvId !== currentUser?.pdvId);
     
@@ -441,7 +441,7 @@ function loadRecipientList() {
     displayRecipients(recipients);
 }
 
-function displayRecipients(recipients) {
+async function displayRecipients(recipients) {
     const container = document.getElementById('recipient-list');
     if (!container) return;
     
@@ -472,9 +472,9 @@ function displayRecipients(recipients) {
     container.innerHTML = html;
 }
 
-function filterRecipients(searchTerm) {
-    const allPDVs = window.pdvManager?.getAllPDVs() || [];
-    const currentUser = window.authManager?.getCurrentUser();
+async function filterRecipients(searchTerm) {
+    const allPDVs = await window.pdvManager?.getAllPDVs() || [];
+    const currentUser = await window.authManager?.getCurrentUser();
     
     const recipients = allPDVs.filter(pdv => {
         if (pdv.pdvId === currentUser?.pdvId) return false;
@@ -491,7 +491,7 @@ function filterRecipients(searchTerm) {
     displayRecipients(recipients);
 }
 
-function selectRecipient(recipientId, recipientName) {
+async function selectRecipient(recipientId, recipientName) {
     if (!currentDocumentName) return;
     
     if (confirm(`"${currentDocumentName}" 서류를 "${recipientName}"에게 전송하시겠습니까?`)) {
