@@ -3,29 +3,43 @@
 class AuthManager {
     constructor() {
         this.currentUser = null;
-        this.init();
+        this.initEventListeners();
     }
 
-    init() {
+    initEventListeners() {
         // 페이지 로드 시 로그인 상태 확인
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             this.currentUser = JSON.parse(savedUser);
             this.updateAuthUI();
         }
-        
-        // 로그인 폼 이벤트 리스너
+    }
+
+    attachLoginFormListener() {
         const loginForm = document.getElementById('login-form');
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
+            console.log('로그인 폼 찾음, 이벤트 리스너 연결');
+            loginForm.onsubmit = (e) => {
                 e.preventDefault();
+                console.log('로그인 폼 제출됨');
                 this.handleLogin();
-            });
+            };
+        } else {
+            console.error('로그인 폼을 찾을 수 없음');
         }
     }
 
     async handleLogin() {
-        const phoneNumber = document.getElementById('login-phone').value.trim();
+        console.log('handleLogin 호출됨');
+        const phoneInput = document.getElementById('login-phone');
+        
+        if (!phoneInput) {
+            alert('전화번호 입력 필드를 찾을 수 없습니다.');
+            return;
+        }
+        
+        const phoneNumber = phoneInput.value.trim();
+        console.log('입력된 전화번호:', phoneNumber);
         
         if (!phoneNumber) {
             alert('전화번호를 입력해주세요.');
@@ -34,6 +48,7 @@ class AuthManager {
         
         // PDV 존재 여부 확인
         const pdv = this.findPDVByPhone(phoneNumber);
+        console.log('PDV 검색 결과:', pdv);
         
         if (pdv) {
             // 기존 PDV 로그인
@@ -50,8 +65,14 @@ class AuthManager {
             }
         } else {
             // PDV 없음 - 생성 모달 표시
+            console.log('PDV 없음, 생성 모달 표시');
             closeLoginModal();
-            showPDVCreateModal(phoneNumber);
+            
+            if (typeof showPDVCreateModal === 'function') {
+                showPDVCreateModal(phoneNumber);
+            } else {
+                alert('PDV 생성 기능을 초기화할 수 없습니다.');
+            }
         }
     }
 
@@ -59,12 +80,16 @@ class AuthManager {
         // PDV Manager에서 검색
         if (window.pdvManager) {
             const allPDVs = window.pdvManager.getAllPDVs();
+            console.log('전체 PDV 수:', allPDVs.length);
             return allPDVs.find(pdv => pdv.phoneNumber === phoneNumber);
         }
+        console.warn('pdvManager가 초기화되지 않았습니다');
         return null;
     }
 
     async createPDV(pdvData) {
+        console.log('PDV 생성 시작:', pdvData);
+        
         if (!window.pdvManager) {
             alert('PDV Manager가 초기화되지 않았습니다.');
             return;
@@ -87,6 +112,8 @@ class AuthManager {
         } else if (pdvData.type === 'organization') {
             newPDV.orgData = pdvData.orgData;
         }
+        
+        console.log('생성된 PDV:', newPDV);
         
         // 저장
         window.pdvManager.savePDV(newPDV);
@@ -155,11 +182,26 @@ class AuthManager {
 
 // 전역 함수들
 function openLoginModal() {
-    document.getElementById('login-modal').style.display = 'block';
+    console.log('로그인 모달 열기');
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // 모달이 열린 후 이벤트 리스너 연결
+        setTimeout(() => {
+            if (window.authManager) {
+                window.authManager.attachLoginFormListener();
+            }
+        }, 100);
+    } else {
+        console.error('로그인 모달을 찾을 수 없음');
+    }
 }
 
 function closeLoginModal() {
-    document.getElementById('login-modal').style.display = 'none';
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 function logout() {
@@ -169,4 +211,5 @@ function logout() {
 }
 
 // 전역 인스턴스 생성
+console.log('AuthManager 초기화');
 window.authManager = new AuthManager();
