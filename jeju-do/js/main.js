@@ -460,6 +460,8 @@ loadTabContent = async function(tabId) {
     await originalLoadTabContent3(tabId);
     
     if (tabId === 'mypage' && typeof window.initMyPage === 'function') {
+    } else if (tabId === "openhash" && typeof window.initOpenHashTab === "function") {
+        window.initOpenHashTab();
         window.initMyPage();
     }
 };

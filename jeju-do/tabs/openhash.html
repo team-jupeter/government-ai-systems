@@ -1,4 +1,582 @@
-<div style="text-align: center; padding: 60px 20px; color: #6c757d;">
-    <h3 style="font-size: 1.5em; margin-bottom: 10px;">오픈해시 기술</h3>
-    <p>내용 준비 중입니다.</p>
+<style>
+    .openhash-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .openhash-header {
+        margin-bottom: 40px;
+    }
+
+    .openhash-title {
+        font-size: 2em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+    }
+
+    .openhash-subtitle {
+        font-size: 1.1em;
+        color: #666;
+        line-height: 1.7;
+    }
+
+    .openhash-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-box {
+        background: white;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 24px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2em;
+        font-weight: 700;
+        color: #003d82;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .chain-verification {
+        background: white;
+        border: 2px solid #003d82;
+        border-radius: 4px;
+        padding: 24px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .btn-verify-chain {
+        padding: 14px 32px;
+        background: #003d82;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1em;
+        transition: all 0.2s;
+    }
+
+    .btn-verify-chain:hover {
+        background: #002a5c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,61,130,0.3);
+    }
+
+    .hash-chain {
+        background: white;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px;
+        padding: 32px;
+        margin-bottom: 40px;
+    }
+
+    .chain-title {
+        font-size: 1.5em;
+        font-weight: 600;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .chain-blocks {
+        position: relative;
+    }
+
+    .chain-block {
+        position: relative;
+        border: 2px solid #003d82;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #ffffff 0%, #f5f8fb 100%);
+        transition: all 0.3s;
+    }
+
+    .chain-block:hover {
+        box-shadow: 0 8px 24px rgba(0,61,130,0.15);
+        transform: translateX(8px);
+    }
+
+    .chain-block.genesis {
+        border-color: #2e7d32;
+        background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%);
+    }
+
+    .chain-arrow {
+        text-align: center;
+        font-size: 2em;
+        color: #003d82;
+        margin: -20px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .block-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .block-height {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #003d82;
+    }
+
+    .block-height.genesis {
+        color: #2e7d32;
+    }
+
+    .layer-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        font-weight: 600;
+    }
+
+    .layer-1 {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .layer-2 {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+
+    .layer-3 {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+
+    .block-body {
+        display: grid;
+        gap: 12px;
+    }
+
+    .hash-field {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .hash-field-label {
+        font-weight: 600;
+        color: #666;
+        padding-top: 4px;
+    }
+
+    .hash-field-value {
+        color: #333;
+        font-family: 'Courier New', monospace;
+        word-break: break-all;
+        background: #f9f9f9;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .hash-field-value.highlight {
+        background: #fff3e0;
+        border-left: 3px solid #f57c00;
+        font-weight: 600;
+    }
+
+    .hash-field-value.genesis {
+        background: #e8f5e9;
+        border-left: 3px solid #2e7d32;
+    }
+
+    .block-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .btn-verify {
+        padding: 8px 16px;
+        background: #003d82;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: all 0.2s;
+    }
+
+    .btn-verify:hover {
+        background: #002a5c;
+    }
+
+    .btn-details {
+        padding: 8px 16px;
+        background: white;
+        color: #003d82;
+        border: 1px solid #003d82;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+        background: #f5f8fb;
+    }
+
+    .events-list {
+        margin-top: 16px;
+        padding: 16px;
+        background: #f9f9f9;
+        border-radius: 4px;
+        border-left: 3px solid #003d82;
+        display: none;
+    }
+
+    .events-list.show {
+        display: block;
+    }
+
+    .events-list h4 {
+        margin-bottom: 12px;
+        color: #003d82;
+    }
+
+    .event-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 0.9em;
+    }
+
+    .event-item:last-child {
+        border-bottom: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #999;
+    }
+
+    .empty-state-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+
+    .chain-info {
+        background: #f5f8fb;
+        border-left: 4px solid #003d82;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 24px;
+    }
+
+    .chain-info p {
+        margin: 4px 0;
+        color: #333;
+    }
+</style>
+
+<div class="openhash-container">
+    <div class="openhash-header">
+        <h1 class="openhash-title">🔗 OpenHash Chain</h1>
+        <p class="openhash-subtitle">
+            SHA-256 해시 체인 기반 데이터 무결성 검증 시스템<br>
+            5개 활동 단위로 그룹화하여 블록체인급 보안을 제공합니다.
+        </p>
+    </div>
+
+    <div class="openhash-stats" id="openhash-stats">
+        <div class="stat-box">
+            <div class="stat-number" id="total-groups">0</div>
+            <div class="stat-label">총 블록 수</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number" id="total-events">0</div>
+            <div class="stat-label">총 활동 수</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number" id="layer1-count">0</div>
+            <div class="stat-label">Layer 1 (70%)</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number" id="layer2-count">0</div>
+            <div class="stat-label">Layer 2 (20%)</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number" id="layer3-count">0</div>
+            <div class="stat-label">Layer 3 (10%)</div>
+        </div>
+    </div>
+
+    <div class="chain-verification">
+        <h3 style="margin-bottom: 16px; color: #003d82;">🔐 Hash Chain 검증</h3>
+        <p style="margin-bottom: 20px; color: #666;">전체 Hash Chain의 무결성을 검증합니다</p>
+        <button class="btn-verify-chain" onclick="verifyFullChain()">
+            ✓ 전체 체인 검증
+        </button>
+    </div>
+
+    <div class="hash-chain">
+        <div class="chain-title">
+            <span>⛓️ Hash Chain</span>
+        </div>
+        <div id="chain-info"></div>
+        <div id="hash-chain-list"></div>
+    </div>
 </div>
+
+<script>
+// OpenHash 탭 초기화
+function initOpenHashTab() {
+    const user = window.authManager?.getCurrentUser();
+    
+    if (!user) {
+        showEmptyState();
+        return;
+    }
+    
+    loadOpenHashChain(user);
+}
+
+// OpenHash Chain 로드
+function loadOpenHashChain(user) {
+    const records = window.openHashManager.getHashRecords(user.pdvId);
+    
+    if (!records || records.length === 0) {
+        showEmptyState();
+        return;
+    }
+    
+    // 통계 업데이트
+    updateStatistics(records);
+    
+    // Chain Info 표시
+    displayChainInfo(records);
+    
+    // Hash Chain 렌더링
+    renderHashChain(records);
+}
+
+// 통계 업데이트
+function updateStatistics(records) {
+    const totalGroups = records.length;
+    const totalEvents = records.reduce((sum, r) => sum + r.eventCount, 0);
+    const layer1 = records.filter(r => r.layer === 1).length;
+    const layer2 = records.filter(r => r.layer === 2).length;
+    const layer3 = records.filter(r => r.layer === 3).length;
+    
+    document.getElementById('total-groups').textContent = totalGroups;
+    document.getElementById('total-events').textContent = totalEvents;
+    document.getElementById('layer1-count').textContent = layer1;
+    document.getElementById('layer2-count').textContent = layer2;
+    document.getElementById('layer3-count').textContent = layer3;
+}
+
+// Chain Info 표시
+function displayChainInfo(records) {
+    const container = document.getElementById('chain-info');
+    const firstBlock = records[0];
+    const lastBlock = records[records.length - 1];
+    
+    container.innerHTML = `
+        <div class="chain-info">
+            <p><strong>Chain 길이:</strong> ${records.length} 블록</p>
+            <p><strong>Genesis 블록:</strong> ${new Date(firstBlock.createdAt).toLocaleString('ko-KR')}</p>
+            <p><strong>최신 블록:</strong> ${new Date(lastBlock.createdAt).toLocaleString('ko-KR')}</p>
+            <p><strong>Genesis Hash:</strong> <code style="font-family: monospace; font-size: 0.9em;">${firstBlock.prevHash}</code></p>
+        </div>
+    `;
+}
+
+// Hash Chain 렌더링
+function renderHashChain(records) {
+    const container = document.getElementById('hash-chain-list');
+    
+    let html = '';
+    records.forEach((record, index) => {
+        const isGenesis = index === 0;
+        const blockClass = isGenesis ? 'genesis' : '';
+        
+        html += `
+            <div class="chain-block ${blockClass}">
+                <div class="block-header">
+                    <div class="block-height ${blockClass}">
+                        ${isGenesis ? '🌱 Genesis Block' : `Block #${index}`}
+                    </div>
+                    <span class="layer-badge layer-${record.layer}">Layer ${record.layer}</span>
+                </div>
+                
+                <div class="block-body">
+                    <div class="hash-field">
+                        <span class="hash-field-label">Block Height:</span>
+                        <span class="hash-field-value">${record.blockHeight || index}</span>
+                    </div>
+                    
+                    <div class="hash-field">
+                        <span class="hash-field-label">일련번호 범위:</span>
+                        <span class="hash-field-value">#${record.startSerial} ~ #${record.endSerial} (${record.eventCount}개 활동)</span>
+                    </div>
+                    
+                    <div class="hash-field">
+                        <span class="hash-field-label">Previous Hash:</span>
+                        <span class="hash-field-value ${isGenesis ? 'genesis' : ''}">${formatHash(record.prevHash)}</span>
+                    </div>
+                    
+                    <div class="hash-field">
+                        <span class="hash-field-label">Data Hash:</span>
+                        <span class="hash-field-value">${formatHash(record.originalHash)}</span>
+                    </div>
+                    
+                    <div class="hash-field">
+                        <span class="hash-field-label">Final Hash:</span>
+                        <span class="hash-field-value highlight">${formatHash(record.finalHash)}</span>
+                    </div>
+                    
+                    <div class="hash-field">
+                        <span class="hash-field-label">Timestamp:</span>
+                        <span class="hash-field-value">${record.timestamp}</span>
+                    </div>
+                </div>
+                
+                <div class="block-actions">
+                    <button class="btn-verify" onclick="verifyBlock('${record.id}')">
+                        ✓ 블록 검증
+                    </button>
+                    <button class="btn-details" onclick="toggleEventDetails('${record.id}')">
+                        📋 활동 상세
+                    </button>
+                </div>
+                
+                <div id="events-${record.id}" class="events-list">
+                    ${renderEventsList(record.events)}
+                </div>
+            </div>
+        `;
+        
+        // 화살표 추가 (마지막 블록 제외)
+        if (index < records.length - 1) {
+            html += '<div class="chain-arrow">⬇️</div>';
+        }
+    });
+    
+    container.innerHTML = html;
+}
+
+// 해시 포맷 (앞 8자 + ... + 뒤 8자)
+function formatHash(hash) {
+    if (hash.length === 64) {
+        return `${hash.substring(0, 8)}...${hash.substring(56)}`;
+    }
+    return hash;
+}
+
+// 활동 목록 렌더링
+function renderEventsList(events) {
+    let html = '<h4>포함된 활동:</h4>';
+    events.forEach(event => {
+        html += `
+            <div class="event-item">
+                <strong>#${event.serialNumber}</strong> - ${event.type} | ${event.content}
+                <br><small>${new Date(event.timestamp).toLocaleString('ko-KR')}</small>
+            </div>
+        `;
+    });
+    return html;
+}
+
+// 활동 상세 토글
+function toggleEventDetails(recordId) {
+    const element = document.getElementById(`events-${recordId}`);
+    element.classList.toggle('show');
+}
+
+// 개별 블록 검증
+async function verifyBlock(recordId) {
+    const user = window.authManager?.getCurrentUser();
+    if (!user) return;
+    
+    const result = await window.openHashManager.verifyHashRecord(recordId, user.pdvId);
+    
+    if (result.valid) {
+        alert('✅ 블록 검증 성공\n\n' + result.message);
+    } else {
+        alert('❌ 블록 검증 실패\n\n' + result.message);
+    }
+}
+
+// 전체 Chain 검증
+async function verifyFullChain() {
+    const user = window.authManager?.getCurrentUser();
+    if (!user) return;
+    
+    const button = document.querySelector('.btn-verify-chain');
+    button.disabled = true;
+    button.textContent = '⏳ 검증 중...';
+    
+    try {
+        const result = await window.openHashManager.verifyHashChain(user.pdvId);
+        
+        if (result.valid) {
+            alert(`✅ Hash Chain 검증 성공!\n\n${result.message}\n\n모든 블록의 데이터 무결성과 Chain 연결이 확인되었습니다.`);
+        } else {
+            alert(`❌ Hash Chain 검증 실패\n\n${result.message}\n\n블록 #${result.blockHeight}에서 문제가 발견되었습니다.`);
+        }
+    } catch (error) {
+        alert('검증 중 오류가 발생했습니다.');
+        console.error(error);
+    } finally {
+        button.disabled = false;
+        button.textContent = '✓ 전체 체인 검증';
+    }
+}
+
+// 빈 상태 표시
+function showEmptyState() {
+    const container = document.getElementById('hash-chain-list');
+    container.innerHTML = `
+        <div class="empty-state">
+            <div class="empty-state-icon">⛓️</div>
+            <p style="font-size: 1.1em; margin-bottom: 12px;">Hash Chain이 없습니다</p>
+            <p style="color: #999;">My Page에서 5개 이상의 활동을 생성한 후<br>OpenHash를 생성하면 Chain이 시작됩니다.</p>
+        </div>
+    `;
+    
+    document.getElementById('chain-info').innerHTML = '';
+    
+    // 통계 초기화
+    document.getElementById('total-groups').textContent = '0';
+    document.getElementById('total-events').textContent = '0';
+    document.getElementById('layer1-count').textContent = '0';
+    document.getElementById('layer2-count').textContent = '0';
+    document.getElementById('layer3-count').textContent = '0';
+}
+
+// 페이지 로드 시 초기화
+if (typeof window.initOpenHashTab === 'undefined') {
+    window.initOpenHashTab = initOpenHashTab;
+}
+</script>
