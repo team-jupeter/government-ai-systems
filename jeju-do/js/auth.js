@@ -152,28 +152,6 @@ class AuthManager {
         return this.currentUser;
     }
 
-    updateAuthUI() {
-        const loggedIn = document.getElementById('auth-logged-in');
-        const loggedOut = document.getElementById('auth-logged-out');
-        const mypageTab = document.getElementById('mypage-tab');
-        
-        if (this.currentUser) {
-            if (loggedOut) loggedOut.style.display = 'none';
-            if (loggedIn) {
-                loggedIn.style.display = 'flex';
-                const displayName = this.getUserDisplayName();
-                const mypageBtn = loggedIn.querySelector('.mypage-btn');
-                if (mypageBtn) {
-                    mypageBtn.textContent = `${displayName} My Page`;
-                }
-            }
-            if (mypageTab) mypageTab.style.display = 'inline-block';
-        } else {
-            if (loggedOut) loggedOut.style.display = 'flex';
-            if (loggedIn) loggedIn.style.display = 'none';
-            if (mypageTab) mypageTab.style.display = 'none';
-        }
-    }
 
     logout() {
         this.currentUser = null;
