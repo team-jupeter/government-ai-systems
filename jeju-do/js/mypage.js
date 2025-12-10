@@ -1,331 +1,219 @@
-// My Page - PDV 활동 타임라인
+// My Page 관리
 
-let allEvents = [];
-let filteredEvents = [];
-let currentFilter = 'all';
-
-// My Page 초기화
-function initMyPage() {
-    const user = window.authManager?.getCurrentUser();
+function loadMyPageData() {
+    console.log('My Page 데이터 로드 시작');
     
-    if (!user) {
-        showEmptyTimeline();
+    if (!window.authManager || !window.authManager.getCurrentUser()) {
+        console.error('로그인되지 않음');
+        document.getElementById('pdv-info-container').innerHTML = '<p style="color: red;">로그인이 필요합니다.</p>';
         return;
     }
     
-    loadTimelineEvents(user);
+    const user = window.authManager.getCurrentUser();
+    console.log('현재 사용자:', user);
+    
+    // PDV 정보 표시
+    displayPDVInfo(user);
+    
+    // 필요 서류 표시
+    displayRequiredDocuments(user);
+    
+    // 활동 타임라인 표시
+    displayActivities(user);
 }
 
-// 타임라인 이벤트 로드
-function loadTimelineEvents(user) {
-    allEvents = [];
+function displayPDVInfo(user) {
+    const container = document.getElementById('pdv-info-container');
+    if (!container) {
+        console.error('pdv-info-container를 찾을 수 없음');
+        return;
+    }
     
-    // PDV 가져오기
-    let pdv = null;
+    let html = '<div class="pdv-info-grid">';
+    
     if (user.type === 'citizen') {
-        pdv = window.pdvManager.loadPDV(user.phoneNumber, user.uniqueId);
-    } else {
-        pdv = window.organizationManager.loadOrgPDV(user.phoneNumber, user.uniqueId, user.department);
+        // 개인 정보
+        const person = user.personData || {};
+        html += `
+            <div class="info-item">
+                <span class="info-label">👤 이름</span>
+                <span class="info-value">${person.name || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">📍 주소</span>
+                <span class="info-value">${person.address || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">📞 전화번호</span>
+                <span class="info-value">${user.phoneNumber || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">✉️ 이메일</span>
+                <span class="info-value">${person.email || '미입력'}</span>
+            </div>
+        `;
+    } else if (user.type === 'organization') {
+        // 단체 정보
+        const org = user.orgData || {};
+        html += `
+            <div class="info-item">
+                <span class="info-label">🏢 단체명</span>
+                <span class="info-value">${org.name || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">📋 단체 종류</span>
+                <span class="info-value">${org.type || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">📍 주소</span>
+                <span class="info-value">${org.address || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">📞 전화번호</span>
+                <span class="info-value">${user.phoneNumber || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">👤 대표자</span>
+                <span class="info-value">${org.representative || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">🏢 사업자등록번호</span>
+                <span class="info-value">${org.businessNumber || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">⚖️ 법인등록번호</span>
+                <span class="info-value">${org.corporateNumber || '미입력'}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">✉️ 이메일</span>
+                <span class="info-value">${org.email || '미입력'}</span>
+            </div>
+        `;
     }
     
-    if (!pdv) {
-        showEmptyTimeline();
+    html += '</div>';
+    container.innerHTML = html;
+    
+    console.log('PDV 정보 표시 완료');
+}
+
+function displayRequiredDocuments(user) {
+    const container = document.getElementById('required-docs-container');
+    if (!container) {
+        console.error('required-docs-container를 찾을 수 없음');
         return;
     }
     
-    // PDV 생성 이벤트
-    allEvents.push({
-        type: 'created',
-        timestamp: pdv.createdAt,
-        title: 'PDV 생성',
-        subject: user.name,
-        content: `프라이빗 데이터 금고가 생성되었습니다.`,
-        details: {
-            'PDV ID': pdv.pdvId,
-            '생성 시각': new Date(pdv.createdAt).toLocaleString('ko-KR')
+    let documents = [];
+    
+    if (user.type === 'citizen') {
+        documents = [
+            '주민등록증',
+            '주민등록등본',
+            '주민등록초본',
+            '인감증명서',
+            '본인서명사실확인서',
+            '가족관계증명서',
+            '건강보험자격득실확인서',
+            '소득금액증명원',
+            '재산세납세증명서'
+        ];
+    } else if (user.type === 'organization') {
+        const orgType = user.orgData?.type || '';
+        
+        // 단체 종류별 필요 서류
+        if (window.organizationTypes && window.organizationTypes[orgType]) {
+            documents = window.organizationTypes[orgType].requiredDocuments || [];
+        } else {
+            // 기본 서류
+            documents = [
+                '법인등기부등본',
+                '사업자등록증',
+                '정관',
+                '법인인감증명서',
+                '재무제표',
+                '임대차계약서'
+            ];
         }
+    }
+    
+    let html = '<div class="docs-grid">';
+    documents.forEach(doc => {
+        const hasDoc = user.documents && user.documents.some(d => d.name === doc);
+        html += `
+            <button class="doc-card ${hasDoc ? 'has-doc' : 'no-doc'}">
+                <span class="doc-icon">${hasDoc ? '✅' : '📄'}</span>
+                <span class="doc-name">${doc}</span>
+                ${hasDoc ? '<span class="doc-status">보유</span>' : '<span class="doc-status">미보유</span>'}
+            </button>
+        `;
     });
+    html += '</div>';
     
-    // 문서 전송 이벤트
-    if (pdv.documents) {
-        pdv.documents.forEach(doc => {
-            if (doc.sentTo) {
-                allEvents.push({
-                    type: 'sent',
-                    timestamp: doc.sentAt || pdv.createdAt,
-                    title: '문서 전송',
-                    subject: user.name,
-                    counterparty: doc.sentTo,
-                    content: `${doc.type}을(를) ${doc.sentTo}에게 전송했습니다.`,
-                    details: {
-                        '문서 유형': doc.type,
-                        '수신자': doc.sentTo,
-                        '전송 시각': new Date(doc.sentAt || pdv.createdAt).toLocaleString('ko-KR'),
-                        'OpenHash': doc.openHash || 'N/A'
-                    }
-                });
-            }
-        });
-    }
-    
-    // AI 상담 이벤트
-    if (pdv.consultations) {
-        pdv.consultations.forEach(consultation => {
-            allEvents.push({
-                type: 'consultation',
-                timestamp: consultation.timestamp || new Date().toISOString(),
-                title: 'AI 상담',
-                subject: user.name,
-                counterparty: consultation.department,
-                content: consultation.summary || `${consultation.department}과 AI 상담을 진행했습니다.`,
-                details: {
-                    '부서': consultation.department,
-                    '기관': consultation.organization,
-                    '메시지 수': consultation.messages?.length || 0,
-                    '상담 시각': new Date(consultation.timestamp || new Date()).toLocaleString('ko-KR')
-                }
-            });
-        });
-    }
-    
-    // 시간순 정렬 및 일련번호 부여
-    allEvents.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    allEvents.forEach((event, index) => {
-        event.serialNumber = index + 1;
-    });
-    
-    filteredEvents = [...allEvents];
-    renderTimeline();
-    
-    // OpenHash 그룹 생성 버튼 표시
-    if (allEvents.length >= 5) {
-        showOpenHashButton();
-    }
+    container.innerHTML = html;
+    console.log('필요 서류 표시 완료');
 }
 
-// OpenHash 생성 버튼 표시
-function showOpenHashButton() {
-    const container = document.querySelector('.mypage-timeline');
-    const existingBtn = document.getElementById('create-openhash-btn');
-    
-    if (existingBtn) return;
-    
-    const button = document.createElement('button');
-    button.id = 'create-openhash-btn';
-    button.className = 'btn-primary';
-    button.style.cssText = 'margin: 20px 0; width: 100%;';
-    button.textContent = `🔗 OpenHash 생성 (${allEvents.length}개 활동)`;
-    button.onclick = createOpenHashGroups;
-    
-    container.insertBefore(button, container.firstChild);
-}
-
-// OpenHash 그룹 생성
-async function createOpenHashGroups() {
-    const user = window.authManager?.getCurrentUser();
-    if (!user) return;
-    
-    const button = document.getElementById('create-openhash-btn');
-    button.disabled = true;
-    button.textContent = '⏳ OpenHash 생성 중...';
-    
-    try {
-        const groups = await window.openHashManager.createHashGroups(allEvents);
-        
-        // 각 그룹 저장
-        groups.forEach(group => {
-            window.openHashManager.saveHashRecord(group, user.pdvId);
-        });
-        
-        alert(`✅ ${groups.length}개의 OpenHash 그룹이 생성되었습니다.\n\n오픈해시 탭에서 확인하실 수 있습니다.`);
-        
-        button.textContent = '✓ OpenHash 생성 완료';
-        
-        // 오픈해시 탭으로 이동 제안
-        if (confirm('오픈해시 탭으로 이동하시겠습니까?')) {
-            document.querySelector('[data-tab="openhash"]')?.click();
-        }
-        
-    } catch (error) {
-        console.error('OpenHash 생성 오류:', error);
-        alert('OpenHash 생성 중 오류가 발생했습니다.');
-        button.disabled = false;
-        button.textContent = '🔗 OpenHash 생성';
+function displayActivities(user) {
+    const container = document.getElementById('activities-list');
+    if (!container) {
+        console.error('activities-list를 찾을 수 없음');
+        return;
     }
-}
-
-// 타임라인 렌더링
-function renderTimeline() {
-    const container = document.getElementById('timeline-list');
     
-    if (filteredEvents.length === 0) {
-        showEmptyTimeline();
+    const activities = user.activities || [];
+    
+    if (activities.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999;">아직 활동 내역이 없습니다.</p>';
         return;
     }
     
     let html = '';
-    filteredEvents.forEach(event => {
-        const icon = getEventIcon(event.type);
-        const badge = getEventBadge(event.type);
-        
+    activities.forEach((activity, index) => {
+        const date = new Date(activity.timestamp).toLocaleString('ko-KR');
         html += `
-            <div class="timeline-item" onclick="toggleTimelineItem(this)">
-                <div class="timeline-item-header">
-                    <div>
-                        <div class="timeline-item-title">
-                            <span class="timeline-item-icon">${icon}</span>
-                            <span>#${event.serialNumber} - ${event.title}</span>
-                            ${badge}
-                        </div>
-                        <div class="timeline-item-meta">${event.content}</div>
-                    </div>
-                    <div class="timeline-item-time">${formatTimestamp(event.timestamp)}</div>
-                </div>
-                <div class="timeline-item-body">
-                    <div class="timeline-item-content">
-                        ${renderEventDetails(event)}
-                    </div>
+            <div class="activity-item">
+                <div class="activity-number">#${activity.serialNumber || index + 1}</div>
+                <div class="activity-content">
+                    <div class="activity-type">${activity.type || '활동'}</div>
+                    <div class="activity-desc">${activity.description || ''}</div>
+                    <div class="activity-time">${date}</div>
                 </div>
             </div>
         `;
     });
     
     container.innerHTML = html;
-}
-
-// 이벤트 아이콘
-function getEventIcon(type) {
-    const icons = {
-        'created': '🎉',
-        'sent': '📤',
-        'received': '📥',
-        'viewed': '👁️',
-        'acknowledged': '✓',
-        'consultation': '💬',
-        'rejected': '✗'
-    };
-    return icons[type] || '📌';
-}
-
-// 이벤트 뱃지
-function getEventBadge(type) {
-    return `<span class="event-badge ${type}">${getEventTypeText(type)}</span>`;
-}
-
-// 이벤트 타입 텍스트
-function getEventTypeText(type) {
-    const texts = {
-        'created': '생성',
-        'sent': '송신',
-        'received': '수신',
-        'viewed': '열람',
-        'acknowledged': '확인',
-        'consultation': '상담',
-        'rejected': '거부'
-    };
-    return texts[type] || type;
-}
-
-// 이벤트 상세 정보 렌더링
-function renderEventDetails(event) {
-    if (!event.details) return '';
     
-    let html = '';
-    for (const [key, value] of Object.entries(event.details)) {
-        html += `
-            <div class="timeline-item-detail">
-                <span class="timeline-item-detail-label">${key}:</span>
-                <span class="timeline-item-detail-value">${value}</span>
-            </div>
-        `;
-    }
-    return html;
-}
-
-// 타임스탬프 포맷
-function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diff = now - date;
-    
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-    
-    if (minutes < 1) return '방금 전';
-    if (minutes < 60) return `${minutes}분 전`;
-    if (hours < 24) return `${hours}시간 전`;
-    if (days < 7) return `${days}일 전`;
-    
-    return date.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-// 타임라인 아이템 토글
-function toggleTimelineItem(element) {
-    element.classList.toggle('expanded');
-}
-
-// 타입별 필터
-function filterByType(type) {
-    currentFilter = type;
-    
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    if (type === 'all') {
-        filteredEvents = [...allEvents];
-    } else {
-        filteredEvents = allEvents.filter(e => e.type === type);
+    // OpenHash 생성 버튼 표시 여부
+    const createHashBtn = document.getElementById('create-openhash-btn');
+    if (createHashBtn) {
+        if (activities.length >= 5) {
+            createHashBtn.style.display = 'block';
+        } else {
+            createHashBtn.style.display = 'none';
+        }
     }
     
-    renderTimeline();
+    console.log('활동 타임라인 표시 완료');
 }
 
-// 검색 필터
-function filterTimeline() {
-    const searchTerm = document.getElementById('timeline-search')?.value.toLowerCase() || '';
+// My Page 탭이 열릴 때 자동 로드
+function showMyPage() {
+    console.log('showMyPage 호출됨');
+    switchTab('mypage');
     
-    if (!searchTerm) {
-        filteredEvents = currentFilter === 'all' 
-            ? [...allEvents] 
-            : allEvents.filter(e => e.type === currentFilter);
-    } else {
-        const baseEvents = currentFilter === 'all' 
-            ? allEvents 
-            : allEvents.filter(e => e.type === currentFilter);
-            
-        filteredEvents = baseEvents.filter(event => 
-            event.title.toLowerCase().includes(searchTerm) ||
-            event.content.toLowerCase().includes(searchTerm) ||
-            formatTimestamp(event.timestamp).toLowerCase().includes(searchTerm)
-        );
-    }
-    
-    renderTimeline();
-}
-
-// 빈 타임라인 표시
-function showEmptyTimeline() {
-    const container = document.getElementById('timeline-list');
-    if (container) {
-        container.innerHTML = `
-            <div class="timeline-empty">
-                <div class="timeline-empty-icon">📭</div>
-                <p>로그인하면 PDV 활동 내역을 확인할 수 있습니다.</p>
-            </div>
-        `;
-    }
+    // 잠시 후 데이터 로드 (DOM이 준비될 시간 확보)
+    setTimeout(() => {
+        loadMyPageData();
+    }, 100);
 }
 
 // 페이지 로드 시 초기화
-if (typeof window.initMyPage === 'undefined') {
-    window.initMyPage = initMyPage;
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('My Page 스크립트 로드됨');
+    });
+} else {
+    console.log('My Page 스크립트 로드됨');
 }
