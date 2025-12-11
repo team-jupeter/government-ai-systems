@@ -1,249 +1,67 @@
-// 한국의 단체 종류 및 필요 서류 데이터
+// 조직 타입 데이터 - 안전한 로더
+let organizationTypes = {};
 
-const ORGANIZATION_TYPES = {
-    // 영리 법인
-    "주식회사": {
-        category: "영리법인",
-        documents: [
-            "법인등기부등본",
-            "사업자등록증",
-            "법인인감증명서",
-            "정관",
-            "주주명부",
-            "재무제표",
-            "법인세신고서",
-            "법인통장사본"
-        ]
-    },
-    "유한회사": {
-        category: "영리법인",
-        documents: [
-            "법인등기부등본",
-            "사업자등록증",
-            "법인인감증명서",
-            "정관",
-            "사원명부",
-            "재무제표",
-            "법인세신고서"
-        ]
-    },
-    "유한책임회사": {
-        category: "영리법인",
-        documents: [
-            "법인등기부등본",
-            "사업자등록증",
-            "법인인감증명서",
-            "정관",
-            "사원명부",
-            "재무제표"
-        ]
-    },
-    
-    // 비영리 법인
-    "사단법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "수입지출계산서",
-            "임원명부",
-            "회원명부",
-            "고유번호증"
-        ]
-    },
-    "재단법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "재산목록",
-            "수입지출계산서",
-            "임원명부",
-            "고유번호증"
-        ]
-    },
-    "학교법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "재무제표",
-            "임원명부",
-            "교육부인가서"
-        ]
-    },
-    "사회복지법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "재무제표",
-            "임원명부",
-            "사회복지사업허가증"
-        ]
-    },
-    "의료법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "재무제표",
-            "임원명부",
-            "의료기관개설허가증"
-        ]
-    },
-    "공익법인": {
-        category: "비영리법인",
-        documents: [
-            "법인등기부등본",
-            "법인설립허가증",
-            "정관",
-            "사업계획서",
-            "수입지출계산서",
-            "임원명부",
-            "고유번호증",
-            "공익법인결산서류"
-        ]
-    },
-    
-    // 비영리 단체
-    "비영리민간단체": {
-        category: "비영리단체",
-        documents: [
-            "고유번호증",
-            "정관(회칙)",
-            "회원명부",
-            "사업계획서",
-            "임원명부",
-            "수입지출내역서",
-            "등록증"
-        ]
-    },
-    "비영리임의단체": {
-        category: "비영리단체",
-        documents: [
-            "고유번호증",
-            "정관(회칙)",
-            "회원명부",
-            "임원명부",
-            "수입지출내역서"
-        ]
-    },
-    "사회적협동조합": {
-        category: "협동조합",
-        documents: [
-            "고유번호증",
-            "설립인가증",
-            "정관",
-            "조합원명부",
-            "사업계획서",
-            "재무제표",
-            "사업자등록증"
-        ]
-    },
-    "협동조합": {
-        category: "협동조합",
-        documents: [
-            "고유번호증",
-            "설립신고증",
-            "정관",
-            "조합원명부",
-            "사업계획서",
-            "재무제표"
-        ]
-    },
-    
-    // 협회
-    "사업자협회": {
-        category: "협회",
-        documents: [
-            "고유번호증",
-            "정관",
-            "회원명부",
-            "사업계획서",
-            "임원명부",
-            "수입지출내역서"
-        ]
-    },
-    "직능단체": {
-        category: "협회",
-        documents: [
-            "고유번호증",
-            "정관",
-            "회원명부",
-            "임원명부",
-            "수입지출내역서"
-        ]
-    },
-    
-    // 기타
-    "개인사업자": {
-        category: "기타",
-        documents: [
-            "사업자등록증",
-            "신분증",
-            "사업장임대차계약서",
-            "통장사본"
-        ]
-    },
-    "소상공인": {
-        category: "기타",
-        documents: [
-            "사업자등록증",
-            "신분증",
-            "소상공인확인서",
-            "통장사본"
-        ]
-    }
-};
-
-// 개인 필요 서류
-const CITIZEN_DOCUMENTS = [
-    "주민등록증",
-    "주민등록표 등본",
-    "주민등록표 초본",
-    "인감증명서",
-    "본인서명사실확인서",
-    "가족관계증명서",
-    "건강보험자격득실확인서",
-    "소득금액증명원",
-    "재산세납세증명서"
-];
-
-// 카테고리별 분류
-const ORGANIZATION_CATEGORIES = {
-    "영리법인": ["주식회사", "유한회사", "유한책임회사", "합자회사", "합명회사"],
-    "비영리법인": ["사단법인", "재단법인", "학교법인", "사회복지법인", "의료법인", "공익법인"],
-    "비영리단체": ["비영리민간단체", "비영리임의단체"],
-    "협동조합": ["사회적협동조합", "협동조합", "농협", "수협", "산림조합"],
-    "협회": ["사업자협회", "직능단체", "학회", "연구회"],
-    "기타": ["개인사업자", "소상공인"]
-};
-
-// 전역 export
-window.ORGANIZATION_TYPES = ORGANIZATION_TYPES;
-window.CITIZEN_DOCUMENTS = CITIZEN_DOCUMENTS;
-window.ORGANIZATION_CATEGORIES = ORGANIZATION_CATEGORIES;
-
-// 소문자 버전도 export (하위 호환성)
-window.organizationTypes = {};
-
-// documents를 requiredDocuments로 매핑
-Object.keys(ORGANIZATION_TYPES).forEach(orgType => {
-    window.organizationTypes[orgType] = {
-        ...ORGANIZATION_TYPES[orgType],
-        requiredDocuments: ORGANIZATION_TYPES[orgType].documents
+function waitForDataLoader(callback, maxRetries = 50, interval = 100) {
+    let retries = 0;
+    const check = () => {
+        if (window.dataLoader && typeof window.dataLoader.loadOrganizationTypes === 'function') {
+            callback();
+        } else {
+            retries++;
+            if (retries < maxRetries) {
+                setTimeout(check, interval);
+            } else {
+                console.error('DataLoader 로드 타임아웃 - 원본 데이터 사용');
+                loadOriginalData();
+            }
+        }
     };
-});
+    check();
+}
 
-console.log("organizationTypes 로드됨:", Object.keys(window.organizationTypes).length, "종류");
+function loadOriginalData() {
+    organizationTypes = {
+        '제주특별자치도청': { type: 'government', level: 'province', icon: '🏛️', hasPhoneVerification: false, departments: ['dochung'] },
+        '제주시청': { type: 'government', level: 'city', icon: '🏢', hasPhoneVerification: false, departments: ['jejusi'] },
+        '서귀포시청': { type: 'government', level: 'city', icon: '🏢', hasPhoneVerification: false, departments: ['seogwipo'] },
+        '제주교육청': { type: 'education', level: 'province', icon: '🎓', hasPhoneVerification: false },
+        '제주지방경찰청': { type: 'police', level: 'province', icon: '👮', hasPhoneVerification: false },
+        '제주지방검찰청': { type: 'prosecution', level: 'province', icon: '⚖️', hasPhoneVerification: false },
+        '제주지방법원': { type: 'court', level: 'province', icon: '🏛️', hasPhoneVerification: false },
+        '제주세관': { type: 'customs', level: 'province', icon: '📦', hasPhoneVerification: false },
+        '제주지방국세청': { type: 'tax', level: 'province', icon: '💼', hasPhoneVerification: false },
+        '제주지방병무청': { type: 'military', level: 'province', icon: '🎖️', hasPhoneVerification: false },
+        '제주상공회의소': { type: 'business', level: 'province', icon: '🏪', hasPhoneVerification: true },
+        '제주은행': { type: 'financial', level: 'province', icon: '🏦', hasPhoneVerification: true },
+        '제주관광공사': { type: 'public', level: 'province', icon: '✈️', hasPhoneVerification: true },
+        '제주테크노파크': { type: 'research', level: 'province', icon: '🔬', hasPhoneVerification: true },
+        '제주대학교': { type: 'education', level: 'university', icon: '🎓', hasPhoneVerification: true },
+        '제주한라대학교': { type: 'education', level: 'college', icon: '📚', hasPhoneVerification: true },
+        '제주국제대학교': { type: 'education', level: 'university', icon: '🌏', hasPhoneVerification: true }
+    };
+    console.log('✅ 원본 데이터 폴백 로드 완료:', Object.keys(organizationTypes).length, '종류');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        waitForDataLoader(async () => {
+            try {
+                organizationTypes = await window.dataLoader.loadOrganizationTypes();
+                console.log('✅ organizationTypes 로드 완료 (DataLoader):', Object.keys(organizationTypes).length, '종류');
+            } catch (error) {
+                console.error('organizationTypes 로드 실패, 폴백:', error);
+                loadOriginalData();
+            }
+        });
+    });
+} else {
+    waitForDataLoader(async () => {
+        try {
+            organizationTypes = await window.dataLoader.loadOrganizationTypes();
+            console.log('✅ organizationTypes 로드 완료 (DataLoader):', Object.keys(organizationTypes).length, '종류');
+        } catch (error) {
+            console.error('organizationTypes 로드 실패, 폴백:', error);
+            loadOriginalData();
+        }
+    });
+}

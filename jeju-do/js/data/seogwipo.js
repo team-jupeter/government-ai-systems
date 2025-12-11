@@ -1,29 +1,27 @@
-const seogwipoData = [
-    { name: '총무과', tasks: '인사, 조직, 문서', icon: '📁' },
-    { name: '기획예산과', tasks: '기획, 예산, 감사', icon: '📊' },
-    { name: '자치행정과', tasks: '자치행정, 민원', icon: '🗳️' },
-    { name: '마을활력과', tasks: '마을만들기, 주민자치', icon: '🏡' },
-    { name: '평생교육과', tasks: '평생학습, 인재양성', icon: '📚' },
-    { name: '세무과', tasks: '지방세 부과·징수', icon: '💰' },
-    { name: '주민복지과', tasks: '사회복지, 기초생활', icon: '🤲' },
-    { name: '노인복지과', tasks: '노인복지, 경로시설', icon: '👴' },
-    { name: '장애인복지과', tasks: '장애인 지원', icon: '♿' },
-    { name: '여성가족과', tasks: '여성·아동·청소년', icon: '👩‍👧' },
-    { name: '위생관리과', tasks: '식품·공중위생', icon: '🧼' },
-    { name: '문화예술과', tasks: '문화정책, 예술진흥', icon: '🎨' },
-    { name: '관광진흥과', tasks: '관광마케팅, 관광지', icon: '📸' },
-    { name: '체육진흥과', tasks: '체육진흥, 전국체전', icon: '⚽' },
-    { name: '경제일자리과', tasks: '지역경제, 일자리', icon: '💼' },
-    { name: '친환경농정과', tasks: '농업정책, 친환경', icon: '🌾' },
-    { name: '감귤유통과', tasks: '감귤산업, 유통지원', icon: '🍊' },
-    { name: '해양수산과', tasks: '수산업, 어항', icon: '🎣' },
-    { name: '청정축산과', tasks: '축산업, 방역', icon: '🐄' },
-    { name: '기후환경과', tasks: '기후대응, 환경정책', icon: '🌿' },
-    { name: '생활환경과', tasks: '청소, 폐기물', icon: '♻️' },
-    { name: '공원녹지과', tasks: '공원, 녹지관리', icon: '🌳' },
-    { name: '도시계획과', tasks: '도시계획, 토지', icon: '🗺️' },
-    { name: '건설과', tasks: '도로, 하천, 건설', icon: '🛤️' },
-    { name: '건축주택과', tasks: '건축, 주택정책', icon: '🏢' },
-    { name: '상하수도과', tasks: '상수도, 하수도', icon: '💧' },
-    { name: '교통행정과', tasks: '교통정책, 주차', icon: '🚌' }
-];
+let seogwipoData = {};
+function waitForDataLoader(callback, maxRetries = 50) {
+    let retries = 0;
+    const check = () => {
+        if (window.dataLoader) callback();
+        else if (++retries < maxRetries) setTimeout(check, 100);
+        else callback();
+    };
+    check();
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        waitForDataLoader(async () => {
+            try {
+                seogwipoData = await window.dataLoader.loadDepartment('seogwipo');
+                console.log('✅ seogwipoData 로드 완료');
+            } catch (error) { seogwipoData = {}; }
+        });
+    });
+} else {
+    waitForDataLoader(async () => {
+        try {
+            seogwipoData = await window.dataLoader.loadDepartment('seogwipo');
+            console.log('✅ seogwipoData 로드 완료');
+        } catch (error) { seogwipoData = {}; }
+    });
+}
