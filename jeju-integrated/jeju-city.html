@@ -334,6 +334,61 @@
                 transform: translateY(-10px);
             }
         }
+    
+    .chat-left-buttons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: #F3F4F6;
+        color: #1F2937;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 20px;
+    }
+
+    .icon-button:hover:not(:disabled) {
+        background: #E5E7EB;
+        transform: scale(1.05);
+    }
+
+    .icon-button:disabled {
+        background: #F9FAFB;
+        cursor: not-allowed;
+    }
+
+    .button-icon {
+        width: 22px;
+        height: 22px;
+        filter: brightness(0) saturate(100%);
+    }
+
+    .icon-button:hover:not(:disabled) .button-icon {
+        filter: brightness(0) saturate(100%) invert(10%);
+    }
+
+    .icon-button:disabled .button-icon {
+        filter: brightness(0) saturate(100%) opacity(30%);
+    }
+
+    .send-button {
+        background: #0066FF !important;
+        color: white !important;
+    }
+
+    .send-button:hover {
+        background: #0052CC !important;
+    }
+
     </style>
 </head>
 <body>
@@ -489,12 +544,17 @@
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area">
-            <textarea id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
-            <div class="chat-actions">
-                <input type="file" id="fileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
-                <button class="icon-button" onclick="document.getElementById('fileInput').click()" style="font-size: 26px;">📎</button>
-                <button class="icon-button send-button" id="sendButton" onclick="sendMessage()">➤</button>
+            <div class="chat-left-buttons">
+                <button class="icon-button save-btn" onclick="saveCurrentDeptChat()" disabled title="대화 내용을 PDV에 저장">
+                    <img src="images/save-icon.png" alt="저장" class="button-icon">
+                </button>
+                <input type="file" class="file-input" style="display: none;" accept="image/*,.pdf,.doc,.docx">
+                <button class="icon-button" onclick="this.previousElementSibling.click()" title="파일 업로드">
+                    <img src="images/upload-icon.png" alt="업로드" class="button-icon">
+                </button>
             </div>
+            <textarea id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+            <button class="icon-button send-button" id="sendButton" onclick="sendMessage()">➤</button>
         </div>
     </div>
 

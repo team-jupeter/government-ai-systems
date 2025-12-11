@@ -349,11 +349,11 @@
         <div class="global-chat-input-area">
         <div class="chat-left-buttons">
             <button class="icon-button" id="saveGlobalChatBtn" onclick="saveGlobalConversation()" disabled title="대화 내용을 PDV에 저장">
-                📥
+                <img src="images/save-icon.png" alt="저장" class="button-icon">
             </button>
             <input type="file" id="globalFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
             <button class="icon-button" onclick="document.getElementById('globalFileInput').click()" title="파일 업로드">
-                📤
+                <img src="images/upload-icon.png" alt="업로드" class="button-icon">
             </button>
         </div>
         <textarea id="globalChatInput" class="global-chat-input" placeholder="무엇을 도와드릴까요?" rows="1"></textarea>
@@ -558,6 +558,20 @@
         cursor: not-allowed;
     }
 
+    .button-icon {
+        width: 22px;
+        height: 22px;
+        filter: brightness(0) saturate(100%);
+    }
+
+    .icon-button:hover:not(:disabled) .button-icon {
+        filter: brightness(0) saturate(100%) invert(10%);
+    }
+
+    .icon-button:disabled .button-icon {
+        filter: brightness(0) saturate(100%) opacity(30%);
+    }
+
     .icon-button:active:not(:disabled) {
         transform: scale(0.95);
     }
@@ -596,6 +610,20 @@
         background: #F9FAFB;
         color: #D1D5DB;
         cursor: not-allowed;
+    }
+
+    .button-icon {
+        width: 22px;
+        height: 22px;
+        filter: brightness(0) saturate(100%);
+    }
+
+    .icon-button:hover:not(:disabled) .button-icon {
+        filter: brightness(0) saturate(100%) invert(10%);
+    }
+
+    .icon-button:disabled .button-icon {
+        filter: brightness(0) saturate(100%) opacity(30%);
     }
 
     .icon-button:active:not(:disabled) {

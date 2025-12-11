@@ -195,6 +195,171 @@
         font-size: 14px;
         opacity: 0.8;
     }
+
+    /* 대화 상세 모달 */
+    .conversation-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .conversation-modal.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: modalSlideUp 0.3s ease;
+    }
+
+    @keyframes modalSlideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #E5E7EB;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1F2937;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 32px;
+        color: #6B7280;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        background: #F3F4F6;
+        color: #1F2937;
+    }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+    }
+
+    .modal-metadata {
+        background: #F9FAFB;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .metadata-item {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .metadata-label {
+        font-weight: 700;
+        color: #667eea;
+        min-width: 80px;
+    }
+
+    .metadata-value {
+        color: #4B5563;
+    }
+
+    .modal-messages {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .modal-message {
+        display: flex;
+        gap: 1rem;
+        max-width: 85%;
+    }
+
+    .modal-message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .modal-message.assistant {
+        align-self: flex-start;
+    }
+
+    .message-role {
+        font-size: 12px;
+        font-weight: 700;
+        color: #667eea;
+        text-transform: uppercase;
+        min-width: 80px;
+        padding-top: 0.3rem;
+    }
+
+    .modal-message.user .message-role {
+        color: #2196F3;
+        text-align: right;
+    }
+
+    .message-content {
+        background: #F3F4F6;
+        padding: 1rem 1.2rem;
+        border-radius: 12px;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #1F2937;
+        flex: 1;
+    }
+
+    .modal-message.user .message-content {
+        background: #2196F3;
+        color: white;
+    }
+
 </style>
 
 <div class="pdv-container">
@@ -249,6 +414,21 @@
         <div class="empty-state-text">아직 저장된 대화가 없습니다</div>
         <div class="empty-state-subtext">AI 상담을 시작하면 대화 내용이 자동으로 저장됩니다</div>
     </div>
+
+<!-- 대화 상세 보기 모달 -->
+<div class="conversation-modal" id="conversationModal" onclick="closeConversationModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 id="modalTitle">대화 상세</h2>
+            <button class="modal-close" onclick="closeConversationModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-metadata" id="modalMetadata"></div>
+            <div class="modal-messages" id="modalMessages"></div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <script>
@@ -378,9 +558,7 @@
     }
 
     // 대화 상세 보기 (다음 단계에서 구현)
-    function showConversationDetail(id) {
-        alert('대화 상세 보기 기능은 다음 단계에서 구현됩니다. ID: ' + id);
-    }
+    
 
     // 검색 (다음 단계에서 구현)
     window.searchConversations = function() {
@@ -421,5 +599,89 @@
         updateStats();
         alert('샘플 데이터가 추가되었습니다!');
     };
+    // 대화 상세 보기
+    function showConversationDetail(id) {
+        const conversations = getStoredConversations();
+        const conv = conversations.find(c => c.id === id);
+        
+        if (!conv) {
+            alert('대화를 찾을 수 없습니다.');
+            return;
+        }
+        
+        const modal = document.getElementById('conversationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMetadata = document.getElementById('modalMetadata');
+        const modalMessages = document.getElementById('modalMessages');
+        
+        if (!modal) return;
+        
+        // 제목 설정
+        modalTitle.textContent = conv.what || '대화 상세';
+        
+        // 메타데이터 설정
+        modalMetadata.innerHTML = `
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <span class="metadata-label">Who:</span>
+                    <span class="metadata-value">${conv.who || '-'}</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">When:</span>
+                    <span class="metadata-value">${conv.when || '-'}</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Where:</span>
+                    <span class="metadata-value">${conv.where || '-'}</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Why:</span>
+                    <span class="metadata-value">${conv.why || '-'}</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">How:</span>
+                    <span class="metadata-value">${conv.how || '-'}</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Category:</span>
+                    <span class="metadata-value">${conv.category || '-'}</span>
+                </div>
+            </div>
+        `;
+        
+        // 메시지 설정
+        if (conv.messages && conv.messages.length > 0) {
+            modalMessages.innerHTML = conv.messages.map(msg => {
+                const roleText = msg.role === 'user' ? 'You' : 'AI';
+                return `
+                    <div class="modal-message ${msg.role}">
+                        <div class="message-role">${roleText}</div>
+                        <div class="message-content">${escapeHtml(msg.content)}</div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            modalMessages.innerHTML = '<p style="text-align: center; color: #6B7280;">메시지가 없습니다.</p>';
+        }
+        
+        // 모달 표시
+        modal.classList.add('active');
+    }
+    
+    // 모달 닫기
+    window.closeConversationModal = function(event) {
+        const modal = document.getElementById('conversationModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    };
+    
+    // HTML 이스케이프
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
 })();
 </script>

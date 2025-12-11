@@ -198,6 +198,61 @@
         0%, 60%, 100% { transform: translateY(0); }
         30% { transform: translateY(-8px); }
     }
+
+    .chat-left-buttons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: #F3F4F6;
+        color: #1F2937;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 20px;
+    }
+
+    .icon-button:hover:not(:disabled) {
+        background: #E5E7EB;
+        transform: scale(1.05);
+    }
+
+    .icon-button:disabled {
+        background: #F9FAFB;
+        cursor: not-allowed;
+    }
+
+    .button-icon {
+        width: 22px;
+        height: 22px;
+        filter: brightness(0) saturate(100%);
+    }
+
+    .icon-button:hover:not(:disabled) .button-icon {
+        filter: brightness(0) saturate(100%) invert(10%);
+    }
+
+    .icon-button:disabled .button-icon {
+        filter: brightness(0) saturate(100%) opacity(30%);
+    }
+
+    .send-button {
+        background: #0066FF !important;
+        color: white !important;
+    }
+
+    .send-button:hover {
+        background: #0052CC !important;
+    }
+
 </style>
 
 <div class="market-container">
@@ -212,8 +267,17 @@
         </div>
         <div class="chat-messages" id="buyMessages"></div>
         <div class="chat-input-area">
+            <div class="chat-left-buttons">
+                <button class="icon-button save-btn" id="saveBuyBtn" onclick="saveBuyChat()" disabled title="대화 내용을 PDV에 저장">
+                    <img src="images/save-icon.png" alt="저장" class="button-icon">
+                </button>
+                <input type="file" id="buyFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
+                <button class="icon-button" onclick="document.getElementById('buyFileInput').click()" title="파일 업로드">
+                    <img src="images/upload-icon.png" alt="업로드" class="button-icon">
+                </button>
+            </div>
             <textarea id="buyInput" class="chat-input" placeholder="예: '갤럭시 S24 검색해줘', '노트북 추천해줘'" rows="1"></textarea>
-            <button class="send-button" id="buySendButton" onclick="sendBuyMessage()">➤</button>
+            <button class="icon-button send-button" id="buySendButton" onclick="sendBuyMessage()">➤</button>
         </div>
     </div>
     
@@ -228,8 +292,17 @@
         </div>
         <div class="chat-messages" id="sellMessages"></div>
         <div class="chat-input-area">
+            <div class="chat-left-buttons">
+                <button class="icon-button save-btn" id="saveSellBtn" onclick="saveSellChat()" disabled title="대화 내용을 PDV에 저장">
+                    <img src="images/save-icon.png" alt="저장" class="button-icon">
+                </button>
+                <input type="file" id="sellFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
+                <button class="icon-button" onclick="document.getElementById('sellFileInput').click()" title="파일 업로드">
+                    <img src="images/upload-icon.png" alt="업로드" class="button-icon">
+                </button>
+            </div>
             <textarea id="sellInput" class="chat-input" placeholder="예: '스마트스토어 시작하려면?', '상품 등록 방법'" rows="1"></textarea>
-            <button class="send-button" id="sellSendButton" onclick="sendSellMessage()">➤</button>
+            <button class="icon-button send-button" id="sellSendButton" onclick="sendSellMessage()">➤</button>
         </div>
     </div>
 </div>
@@ -369,5 +442,119 @@
             });
         }
     });
+
+    // 구매 상담 저장
+    window.saveBuyChat = function() {
+        if (!buyHistory || buyHistory.length === 0) {
+            alert('저장할 대화가 없습니다.');
+            return;
+        }
+
+        const userMessages = buyHistory.filter(m => m.role === 'user');
+        const firstUserMsg = userMessages[0]?.content || '';
+        
+        const conversationData = {
+            id: Date.now(),
+            category: '시장',
+            service: '구매 상담',
+            timestamp: new Date().toISOString(),
+            who: '사용자',
+            what: firstUserMsg.substring(0, 50) + (firstUserMsg.length > 50 ? '...' : ''),
+            when: new Date().toLocaleString('ko-KR'),
+            where: '시장 탭 - 구매',
+            why: '상품 검색 및 구매 문의',
+            how: 'AI 쇼핑 상담',
+            messages: [...buyHistory],
+            summary: `구매 상담. 총 ${buyHistory.length}개의 메시지.`
+        };
+
+        if (typeof window.saveToPDV === 'function') {
+            window.saveToPDV(conversationData);
+            alert('✅ 대화가 PDV에 저장되었습니다!');
+            
+            const saveBtn = document.getElementById('saveBuyBtn');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.style.background = '#10B981';
+                setTimeout(() => {
+                    saveBtn.style.background = '';
+                }, 2000);
+            }
+        } else {
+            alert('❌ PDV 저장 기능을 찾을 수 없습니다. PDV 탭을 먼저 열어주세요.');
+        }
+    };
+
+    // 판매 상담 저장
+    window.saveSellChat = function() {
+        if (!sellHistory || sellHistory.length === 0) {
+            alert('저장할 대화가 없습니다.');
+            return;
+        }
+
+        const userMessages = sellHistory.filter(m => m.role === 'user');
+        const firstUserMsg = userMessages[0]?.content || '';
+        
+        const conversationData = {
+            id: Date.now(),
+            category: '시장',
+            service: '판매 상담',
+            timestamp: new Date().toISOString(),
+            who: '사용자',
+            what: firstUserMsg.substring(0, 50) + (firstUserMsg.length > 50 ? '...' : ''),
+            when: new Date().toLocaleString('ko-KR'),
+            where: '시장 탭 - 판매',
+            why: '판매 방법 및 마케팅 문의',
+            how: 'AI 판매 상담',
+            messages: [...sellHistory],
+            summary: `판매 상담. 총 ${sellHistory.length}개의 메시지.`
+        };
+
+        if (typeof window.saveToPDV === 'function') {
+            window.saveToPDV(conversationData);
+            alert('✅ 대화가 PDV에 저장되었습니다!');
+            
+            const saveBtn = document.getElementById('saveSellBtn');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.style.background = '#10B981';
+                setTimeout(() => {
+                    saveBtn.style.background = '';
+                }, 2000);
+            }
+        } else {
+            alert('❌ PDV 저장 기능을 찾을 수 없습니다. PDV 탭을 먼저 열어주세요.');
+        }
+    };
+
+    // sendBuyMessage 수정
+    const originalSendBuy = window.sendBuyMessage;
+    window.sendBuyMessage = function() {
+        if (originalSendBuy) {
+            originalSendBuy();
+        }
+        
+        setTimeout(() => {
+            const saveBtn = document.getElementById('saveBuyBtn');
+            if (saveBtn && buyHistory && buyHistory.length > 0) {
+                saveBtn.disabled = false;
+            }
+        }, 500);
+    };
+
+    // sendSellMessage 수정
+    const originalSendSell = window.sendSellMessage;
+    window.sendSellMessage = function() {
+        if (originalSendSell) {
+            originalSendSell();
+        }
+        
+        setTimeout(() => {
+            const saveBtn = document.getElementById('saveSellBtn');
+            if (saveBtn && sellHistory && sellHistory.length > 0) {
+                saveBtn.disabled = false;
+            }
+        }, 500);
+    };
 })();
 </script>
