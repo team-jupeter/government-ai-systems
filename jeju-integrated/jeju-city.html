@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도청 - 제주 AI 포털</title>
+    <title>제주시청 - 제주 AI 포털</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -24,23 +24,48 @@
             margin: 1.5rem 0;
             flex-wrap: wrap;
         }
-        .governor-box {
-            background: linear-gradient(135deg, #0047B3 0%, #003D99 100%);
+        .mayor-box {
+            background: linear-gradient(135deg, #5B7DBF 0%, #4A6BA8 100%);
             color: white;
             padding: 1.5rem 3rem;
             border-radius: 12px;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(91, 125, 191, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
-        .director-box {
-            background: #1F2937;
-            color: white;
+        .mayor-box:hover {
+            transform: scale(1.05);
+        }
+        .vice-mayor-box {
+            background: white;
+            border: 3px solid #5B7DBF;
+            color: #1F2937;
             padding: 1.25rem 2.5rem;
             border-radius: 10px;
             font-size: 18px;
             font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .vice-mayor-box:hover {
+            transform: scale(1.05);
+        }
+        .support-box {
+            background: white;
+            border: 2px solid #E5E7EB;
+            color: #1F2937;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .support-box:hover {
+            transform: scale(1.05);
         }
         .dept-group {
             display: flex;
@@ -50,7 +75,7 @@
             border: 2px solid #E5E7EB;
             border-radius: 8px;
             padding: 1rem;
-            background: rgba(255, 255, 255, 0.88);
+            background: white;
         }
         .dept-card {
             background: white;
@@ -64,6 +89,7 @@
             font-size: 14px;
             font-weight: 600;
             color: #1F2937;
+            position: relative;
         }
         .dept-card:hover {
             border-color: #0066FF;
@@ -72,8 +98,8 @@
             box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15);
         }
         .dept-header {
-            background: #FEF3C7;
-            color: #78350F;
+            background: #5B7DBF;
+            color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             font-size: 16px;
@@ -88,9 +114,11 @@
             background: #D1D5DB;
             margin: 0 auto;
         }
-
-        /* AI 상담창 스타일 */
-        /* 배경 음영 오버레이 */
+        .phone-info {
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
         .chat-overlay {
             position: fixed;
             top: 0;
@@ -101,13 +129,12 @@
             z-index: 999;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
         .chat-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
         .ai-chat-window {
             position: fixed;
             background: rgba(255, 255, 255, 0.95);
@@ -132,10 +159,7 @@
             height: 700px !important;
         }
         .chat-header {
-        }
-        .ai-chat-window.active .chat-header {
-            opacity: 1;
-            background: linear-gradient(135deg, #0047B3 0%, #003D99 100%);
+            background: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
             color: white;
             padding: 16px 20px;
             border-radius: 16px 16px 0 0;
@@ -144,6 +168,9 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease 0.3s;
+        }
+        .ai-chat-window.active .chat-header {
+            opacity: 1;
         }
         .chat-header h3 {
             margin: 0;
@@ -169,9 +196,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
         .chat-messages {
-        }
-        .ai-chat-window.active .chat-messages {
-            opacity: 1;
             flex: 1;
             overflow-y: auto;
             padding: 20px;
@@ -180,6 +204,9 @@
             gap: 12px;
             opacity: 0;
             transition: opacity 0.3s ease 0.3s;
+        }
+        .ai-chat-window.active .chat-messages {
+            opacity: 1;
         }
         .message {
             display: flex;
@@ -216,13 +243,10 @@
             color: white;
         }
         .message.assistant .message-bubble {
-            background: rgba(243, 244, 246, 0.95);
+            background: #F3F4F6;
             color: #1F2937;
         }
         .chat-input-area {
-        }
-        .ai-chat-window.active .chat-input-area {
-            opacity: 1;
             border-top: 1px solid #E5E7EB;
             padding: 16px;
             display: flex;
@@ -230,6 +254,9 @@
             align-items: flex-end;
             opacity: 0;
             transition: opacity 0.3s ease 0.3s;
+        }
+        .ai-chat-window.active .chat-input-area {
+            opacity: 1;
         }
         .chat-input {
             flex: 1;
@@ -264,11 +291,12 @@
             font-size: 24px;
         }
         .icon-button:hover {
-            background: rgba(243, 244, 246, 0.95);
+            background: #F3F4F6;
         }
         .send-button {
             background: #0066FF;
             color: white;
+            font-size: 20px;
         }
         .send-button:hover {
             background: #0052CC;
@@ -281,7 +309,7 @@
             display: flex;
             gap: 4px;
             padding: 12px 16px;
-            background: rgba(243, 244, 246, 0.95);
+            background: #F3F4F6;
             border-radius: 18px;
             width: fit-content;
         }
@@ -330,221 +358,142 @@
     </header>
 
     <div class="org-chart">
-        <!-- 최상위: 도지사 -->
-        <div class="governor-box">
-            제주특별자치도지사 <span style="font-size: 14px; font-weight: 400;">(기준일: 2025.07.11)</span>
+        <div class="mayor-box" onclick="openDeptChat(this, '시장', '김철수')">
+            시장 ☎
+            <div class="phone-info">☎ 064-728-2001</div>
         </div>
         
         <div class="vertical-line"></div>
 
-        <!-- 중간: 행정부시실, 정무부시실 -->
-        <div class="level">
-            <div class="director-box">행정부시실</div>
-            <div class="director-box">정무부시실</div>
+        <div class="vice-mayor-box" onclick="openDeptChat(this, '부시장', '이영희')">
+            부시장
+            <div class="phone-info">☎ 064-728-2010</div>
         </div>
 
         <div class="vertical-line"></div>
 
-        <!-- 하위: 각 부서들 -->
-        <div class="level" style="max-width: 1400px;">
-            <!-- 대변인 -->
+        <div class="level">
+            <div class="support-box" onclick="openDeptChat(this, '소통청렴 지원실', '박민수')">소통청렴 지원실</div>
+        </div>
+
+        <div class="vertical-line"></div>
+
+        <!-- 첫 번째 줄 -->
+        <div class="level" style="max-width: 1600px;">
             <div class="dept-group">
-                <div class="dept-header">대변인</div>
-                <div class="dept-card" onclick="openDeptChat(this, '대변인', '김철수')">대변인</div>
+                <div class="dept-header">공보실</div>
+                <div class="dept-card" onclick="openDeptChat(this, '공보실', '최수진')">공보실</div>
             </div>
 
-            <!-- 성평등여성정책관 -->
             <div class="dept-group">
-                <div class="dept-header">성평등여성정책관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '성평등여성정책관', '박영희')">성평등여성정책관</div>
+                <div class="dept-header">종합민원실</div>
+                <div class="dept-card" onclick="openDeptChat(this, '종합민원실', '강동욱')">종합민원실</div>
             </div>
 
-            <!-- 가회조정실 -->
             <div class="dept-group">
-                <div class="dept-header">가회조정실</div>
-                <div class="dept-card" onclick="openDeptChat(this, '정책기획관', '이민호')">정책기획관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '인구정책담당관', '정수진')">인구정책담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '예산담당관', '최동욱')">예산담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '청년정책담당관', '강지은')">청년정책담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '특별자치발전담당관', '윤서연')">특별자치발전담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '세정담당관', '한준우')">세정담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '사설관리공단설립준비단', '오혜진')">사설관리공단설립준비단</div>
+                <div class="dept-header">자치행정국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '슬로과', '박준호')">슬로과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '기획예산과', '정서연')">기획예산과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '자치행정과', '최동욱')">자치행정과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '새무과', '강지은')">새무과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '재산세과', '윤민재')">재산세과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '가족정신건강', '한수진')">가족정신건강</div>
+                <div class="dept-card" onclick="openDeptChat(this, '설치준비기획단', '오혜진')">설치준비기획단</div>
             </div>
 
-            <!-- 안전건강실 -->
             <div class="dept-group">
-                <div class="dept-header">안전건강실</div>
-                <div class="dept-card" onclick="openDeptChat(this, '안전정책과', '김태현')">안전정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '자연재난과', '송민재')">자연재난과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '사회재난과', '임지훈')">사회재난과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '보건정책과', '장서윤')">보건정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '건강위생과', '배준호')">건강위생과</div>
+                <div class="dept-header">안전교통위생국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '안전총괄과', '임태현')">안전총괄과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '교통행정과', '송민지')">교통행정과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '자연관리과', '배준영')">자연관리과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '식품안전과', '신유진')">식품안전과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '위생관리과', '류성민')">위생관리과</div>
             </div>
 
-            <!-- 문화체육교육국 -->
             <div class="dept-group">
-                <div class="dept-header">문화체육교육국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '문화정책과', '신유진')">문화정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '체육진흥과', '류성민')">체육진흥과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '교육정책협력과', '홍다은')">교육정책협력과</div>
+                <div class="dept-header">복지가족국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '주민복지과', '홍다은')">주민복지과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '노인복지과', '구민석')">노인복지과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '장애인복지과', '노재훈')">장애인복지과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '기초생활보장과', '문하늘')">기초생활보장과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '여성가족과', '서지원')">여성가족과</div>
             </div>
 
-            <!-- 소방안전본부 -->
             <div class="dept-group">
-                <div class="dept-header">소방안전본부</div>
-                <div class="dept-card" onclick="openDeptChat(this, '소방정책과', '구민석')">소방정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '예방대응과', '노재훈')">예방대응과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '구조구급과', '문하늘')">구조구급과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '119종합상황실', '서지원')">119종합상황실</div>
-                <div class="dept-card" onclick="openDeptChat(this, '119특수대응단', '안보미')">119특수대응단</div>
+                <div class="dept-header">경제산업국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '경제소상공인과', '안보미')">경제소상공인과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '일자리에너지과', '조은지')">일자리에너지과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '마을활력과', '차동현')">마을활력과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '디지털혁신산과', '표수연')">디지털혁신산과</div>
+            </div>
+
+            <div class="dept-group">
+                <div class="dept-header">문화관광체육국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '문화예술과', '황준영')">문화예술과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '관광진흥과', '공지훈')">관광진흥과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '체육진흥과', '남현수')">체육진흥과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '우당도서관', '진소희')">우당도서관</div>
+                <div class="dept-card" onclick="openDeptChat(this, '한라도서관', '변우진')">한라도서관</div>
+                <div class="dept-card" onclick="openDeptChat(this, '제주아트센터', '석민아')">제주아트센터</div>
             </div>
         </div>
 
         <div class="vertical-line"></div>
 
         <!-- 두 번째 줄 -->
-        <div class="level" style="max-width: 1400px;">
-            <!-- 소통청렴담당관 -->
+        <div class="level" style="max-width: 1600px;">
             <div class="dept-group">
-                <div class="dept-header">소통청렴담당관</div>
-                <div class="dept-card" onclick="openDeptChat(this, '소통청렴담당관', '조은지')">소통청렴담당관</div>
+                <div class="dept-header">청정환경국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '기후환경과', '도재은')">기후환경과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '환경지도과', '라진우')">환경지도과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '생활환경과', '마서진')">생활환경과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '공원녹지과', '방예린')">공원녹지과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '절물생태관리소', '사준호')">절물생태관리소</div>
             </div>
 
-            <!-- 특별자치행정국 -->
             <div class="dept-group">
-                <div class="dept-header">특별자치행정국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '총무과', '차동현')">총무과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '자치행정과', '표수연')">자치행정과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '4차인과', '황준영')">4차인과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '회계제산관리과', '공지훈')">회계제산관리과</div>
+                <div class="dept-header">농수축산국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '친환경농정과', '아영민')">친환경농정과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '감귤유통과', '자혜진')">감귤유통과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '해양수산과', '차수빈')">해양수산과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '청정축산과', '카민재')">청정축산과</div>
             </div>
 
-            <!-- 경제혁신국 -->
             <div class="dept-group">
-                <div class="dept-header">경제혁신국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '경제정책과', '남현수')">경제정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '노동정사리과', '진소희')">노동정사리과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '기업투자과', '변우진')">기업투자과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '소상공인과', '석민아')">소상공인과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '통상물류과', '도재은')">통상물류과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '고용센터', '라진우')">고용센터</div>
+                <div class="dept-header">도시건설국</div>
+                <div class="dept-card" onclick="openDeptChat(this, '도시계획과', '타지원')">도시계획과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '도시재생과', '파서연')">도시재생과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '감설과', '하준석')">감설과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '주택과', '갸민지')">주택과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '건축과', '냐동훈')">건축과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '상하수도과', '댜서우')">상하수도과</div>
             </div>
 
-            <!-- 혁신산업국 -->
             <div class="dept-group">
-                <div class="dept-header">혁신산업국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '미래성장과', '마서진')">미래성장과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '에너지산업과', '방예린')">에너지산업과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '우주밀레니드과', '사준호')">우주밀레니드과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '디지털산업과', '아영민')">디지털산업과</div>
-            </div>
-
-            <!-- 관광교류국 -->
-            <div class="dept-group">
-                <div class="dept-header">관광교류국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '관광정책과', '자혜진')">관광정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '관광산업과', '차수빈')">관광산업과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '평화외교과', '카민재')">평화외교과</div>
-            </div>
-        </div>
-
-        <div class="vertical-line"></div>
-
-        <!-- 세 번째 줄 -->
-        <div class="level" style="max-width: 1400px;">
-            <!-- 교통항공국 -->
-            <div class="dept-group">
-                <div class="dept-header">교통항공국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '교통정책과', '타지원')">교통정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '대중교통과', '파서연')">대중교통과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '공항혁증지원과', '하준석')">공항혁증지원과</div>
-            </div>
-
-            <!-- 15분도시추진단 -->
-            <div class="dept-group">
-                <div class="dept-header">15분도시추진단</div>
-                <div class="dept-card" onclick="openDeptChat(this, '도시계획과', '갸민지')">도시계획과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '15분도시과', '냐동훈')">15분도시과</div>
-            </div>
-
-            <!-- 해양수산국 -->
-            <div class="dept-group">
-                <div class="dept-header">해양수산국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '수산정책과', '댜서우')">수산정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '해양산업과', '랴예은')">해양산업과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '해녀문화유산과', '먀진호')">해녀문화유산과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '해운항만과', '뱌수진')">해운항만과</div>
-            </div>
-        </div>
-
-        <div class="vertical-line"></div>
-
-        <!-- 네 번째 줄 -->
-        <div class="level" style="max-width: 1400px;">
-            <!-- 복지가족국 -->
-            <div class="dept-group">
-                <div class="dept-header">복지가족국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '복지정책과', '샤민석')">복지정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '아동보육청소년과', '야지은')">아동보육청소년과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '노인복지과', '쟈준우')">노인복지과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '장애복지과', '챠서진')">장애복지과</div>
-            </div>
-
-            <!-- 기후환경국 -->
-            <div class="dept-group">
-                <div class="dept-header">기후환경국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '환경정책과', '캬동욱')">환경정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '탄소중립정책과', '탸민재')">탄소중립정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '물정책과', '퍄예린')">물정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '자원순환과', '햐준호')">자원순환과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '신업녹지과', '걔서윤')">신업녹지과</div>
-            </div>
-
-            <!-- 건설주택국 -->
-            <div class="dept-group">
-                <div class="dept-header">건설주택국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '건설과', '녜지훈')">건설과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '건축경관과', '뎨민지')">건축경관과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '주택토지과', '례수빈')">주택토지과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '도로관리과', '몌준영')">도로관리과</div>
-            </div>
-
-            <!-- 농축산식품국 -->
-            <div class="dept-group">
-                <div class="dept-header">농축산식품국</div>
-                <div class="dept-card" onclick="openDeptChat(this, '친환경농업정책과', '볘동현')">친환경농업정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '식품산업과', '솨혜진')">식품산업과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '감귤유통과', '욘재은')">감귤유통과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '친환경축산정책과', '죤서진')">친환경축산정책과</div>
-                <div class="dept-card" onclick="openDeptChat(this, '동물방역과', '촨우진')">동물방역과</div>
+                <div class="dept-header">제주보건소 ☎</div>
+                <div class="dept-card" onclick="openDeptChat(this, '보건행정과', '랴예은')">보건행정과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '감염예방의약과', '먀진호')">감염예방의약과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '건강증진과', '뱌수진')">건강증진과</div>
+                <div class="dept-card" onclick="openDeptChat(this, '서부보건소 ☎', '샤민석')">서부보건소 ☎</div>
+                <div class="dept-card" onclick="openDeptChat(this, '동부보건소 ☎', '야지은')">동부보건소 ☎</div>
             </div>
         </div>
     </div>
 
-    <!-- AI 상담창 -->
     <div class="chat-overlay" id="chatOverlay" onclick="closeChat()"></div>
+
     <div class="ai-chat-window" id="aiChatWindow">
         <div class="chat-header">
             <h3 id="chatTitle">AI 상담</h3>
             <button class="close-chat" onclick="closeChat()">×</button>
         </div>
-        <div class="chat-messages" id="chatMessages">
-        </div>
+        <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area">
-            <textarea 
-                id="chatInput" 
-                class="chat-input" 
-                placeholder="메시지를 입력하세요..."
-                rows="1"
-            ></textarea>
+            <textarea id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
             <div class="chat-actions">
                 <input type="file" id="fileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
-                <button class="icon-button" onclick="document.getElementById('fileInput').click()" style="font-size: 26px;">
-                    📎
-                </button>
-                <button class="icon-button send-button" id="sendButton" onclick="sendMessage()">
-                    ➤
-                </button>
+                <button class="icon-button" onclick="document.getElementById('fileInput').click()" style="font-size: 26px;">📎</button>
+                <button class="icon-button send-button" id="sendButton" onclick="sendMessage()">➤</button>
             </div>
         </div>
     </div>
@@ -565,41 +514,41 @@
             currentOfficer = officerName;
             clickedElement = element;
             
-            const chatWindow = document.getElementById("aiChatWindow");
-            const chatTitle = document.getElementById("chatTitle");
-            const chatMessages = document.getElementById("chatMessages");
-            const overlay = document.getElementById("chatOverlay");
+            const chatWindow = document.getElementById('aiChatWindow');
+            const chatTitle = document.getElementById('chatTitle');
+            const chatMessages = document.getElementById('chatMessages');
+            const overlay = document.getElementById('chatOverlay');
             
             const rect = element.getBoundingClientRect();
             
-            chatWindow.style.left = rect.left + "px";
-            chatWindow.style.top = rect.top + "px";
-            chatWindow.style.width = rect.width + "px";
-            chatWindow.style.height = rect.height + "px";
-            chatWindow.style.transform = "none";
+            chatWindow.style.left = rect.left + 'px';
+            chatWindow.style.top = rect.top + 'px';
+            chatWindow.style.width = rect.width + 'px';
+            chatWindow.style.height = rect.height + 'px';
+            chatWindow.style.transform = 'none';
             
-            chatTitle.textContent = deptName + " 상담";
-            chatMessages.innerHTML = "";
+            chatTitle.textContent = deptName + ' 상담';
+            chatMessages.innerHTML = '';
             conversationHistory = [];
             
-            overlay.classList.add("active");
+            overlay.classList.add('active');
             
             setTimeout(() => {
-                chatWindow.classList.add("active");
-                addMessage(`안녕하세요. ${deptName} 과장 ${officerName}입니다. 무엇을 도와드릴까요?`, "assistant");
+                chatWindow.classList.add('active');
+                addMessage(`안녕하세요. ${deptName} 과장 ${officerName}입니다. 무엇을 도와드릴까요?`, 'assistant');
             }, 10);
             
             setTimeout(() => {
-                document.getElementById("chatInput").focus();
+                document.getElementById('chatInput').focus();
             }, 600);
         }
 
         function closeChat() {
-            const chatWindow = document.getElementById("aiChatWindow");
-            const overlay = document.getElementById("chatOverlay");
+            const chatWindow = document.getElementById('aiChatWindow');
+            const overlay = document.getElementById('chatOverlay');
             
-            chatWindow.classList.remove("active");
-            overlay.classList.remove("active");
+            chatWindow.classList.remove('active');
+            overlay.classList.remove('active');
             
             setTimeout(() => {
                 clickedElement = null;
@@ -637,9 +586,7 @@
 
         function removeTypingIndicator() {
             const indicator = document.getElementById('typingIndicator');
-            if (indicator) {
-                indicator.remove();
-            }
+            if (indicator) indicator.remove();
         }
 
         async function sendMessage() {
@@ -652,25 +599,19 @@
             input.value = '';
             input.style.height = 'auto';
             
-            // 부서 컨텍스트 추가
-            const contextMessage = `[부서: ${currentDept}, 담당자: ${currentOfficer}] ${message}`;
-            
             conversationHistory.push({
                 role: 'user',
-                content: contextMessage
+                content: `[부서: ${currentDept}, 담당자: ${currentOfficer}] ${message}`
             });
             
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
-            
             showTypingIndicator();
             
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         messages: conversationHistory,
                         department: currentDept,
@@ -678,21 +619,16 @@
                     })
                 });
                 
-                if (!response.ok) {
-                    throw new Error('API 요청 실패');
-                }
+                if (!response.ok) throw new Error('API 요청 실패');
                 
                 const responseData = await response.json();
-                const aiResponse = responseData.message;
-                
                 conversationHistory.push({
                     role: 'assistant',
-                    content: aiResponse
+                    content: responseData.message
                 });
                 
                 removeTypingIndicator();
-                addMessage(aiResponse, 'assistant');
-                
+                addMessage(responseData.message, 'assistant');
             } catch (error) {
                 console.error('Error:', error);
                 removeTypingIndicator();
