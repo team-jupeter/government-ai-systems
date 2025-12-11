@@ -1,0 +1,425 @@
+<style>
+    .pdv-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .pdv-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .pdv-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .pdv-header p {
+        margin: 0;
+        font-size: 16px;
+        opacity: 0.9;
+    }
+
+    .pdv-search-bar {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .search-input-wrapper {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 15px;
+        font-family: 'Noto Sans KR', sans-serif;
+        transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .search-button {
+        padding: 0.8rem 2rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .search-button:hover {
+        background: #5568d3;
+    }
+
+    .pdv-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: #6B7280;
+    }
+
+    .conversation-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .conversation-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-left: 4px solid #667eea;
+    }
+
+    .conversation-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .card-category {
+        background: #667eea;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .card-date {
+        font-size: 13px;
+        color: #6B7280;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1F2937;
+        margin-bottom: 0.8rem;
+    }
+
+    .card-summary {
+        font-size: 14px;
+        color: #4B5563;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .card-5w1h {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        font-size: 13px;
+    }
+
+    .w-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6B7280;
+    }
+
+    .w-label {
+        font-weight: 600;
+        color: #667eea;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6B7280;
+    }
+
+    .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state-text {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-subtext {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+</style>
+
+<div class="pdv-container">
+    <!-- 헤더 -->
+    <div class="pdv-header">
+        <h1>📚 Personal Data Vault (PDV)</h1>
+        <p>나의 모든 AI 상담 기록을 안전하게 보관하고 검색할 수 있습니다</p>
+    </div>
+
+    <!-- 검색 바 -->
+    <div class="pdv-search-bar">
+        <div class="search-input-wrapper">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="pdvSearchInput" 
+                placeholder="대화 내용, 카테고리, 날짜로 검색하세요..."
+                onkeypress="if(event.key==='Enter') searchConversations()"
+            >
+            <button class="search-button" onclick="searchConversations()">🔍 검색</button>
+        </div>
+    </div>
+
+    <!-- 통계 -->
+    <div class="pdv-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalConversations">0</div>
+            <div class="stat-label">총 대화</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="thisWeekConversations">0</div>
+            <div class="stat-label">이번 주</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="thisMonthConversations">0</div>
+            <div class="stat-label">이번 달</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalMessages">0</div>
+            <div class="stat-label">총 메시지</div>
+        </div>
+    </div>
+
+    <!-- 대화 목록 -->
+    <div class="conversation-list" id="conversationList">
+        <!-- 대화 카드가 여기에 동적으로 추가됩니다 -->
+    </div>
+
+    <!-- 빈 상태 -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-state-icon">💬</div>
+        <div class="empty-state-text">아직 저장된 대화가 없습니다</div>
+        <div class="empty-state-subtext">AI 상담을 시작하면 대화 내용이 자동으로 저장됩니다</div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // PDV 데이터 저장소 (localStorage 사용)
+    const PDV_STORAGE_KEY = 'jeju_integrated_pdv';
+
+    // PDV 데이터 구조
+    // {
+    //   id: timestamp,
+    //   category: '카테고리',
+    //   service: '서비스명',
+    //   timestamp: 'ISO datetime',
+    //   who: '사용자',
+    //   what: '주제',
+    //   when: '날짜/시간',
+    //   where: '위치/탭',
+    //   why: '목적',
+    //   how: '방법/결과',
+    //   messages: [{role, content}, ...],
+    //   summary: '요약'
+    // }
+
+    // 페이지 로드 시 초기화
+    function initPDV() {
+        loadConversations();
+        updateStats();
+    }
+
+    // 대화 목록 로드
+    function loadConversations() {
+        const conversations = getStoredConversations();
+        const listContainer = document.getElementById('conversationList');
+        const emptyState = document.getElementById('emptyState');
+
+        if (conversations.length === 0) {
+            listContainer.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        listContainer.innerHTML = '';
+
+        // 최신순으로 정렬
+        conversations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        conversations.forEach(conv => {
+            const card = createConversationCard(conv);
+            listContainer.appendChild(card);
+        });
+    }
+
+    // 대화 카드 생성
+    function createConversationCard(conv) {
+        const card = document.createElement('div');
+        card.className = 'conversation-card';
+        card.onclick = () => showConversationDetail(conv.id);
+
+        const date = new Date(conv.timestamp);
+        const dateStr = date.toLocaleDateString('ko-KR', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="card-category">${conv.category || '일반'}</span>
+                <span class="card-date">${dateStr}</span>
+            </div>
+            <div class="card-title">${conv.what || '제목 없음'}</div>
+            <div class="card-summary">${conv.summary || '요약 없음'}</div>
+            <div class="card-5w1h">
+                <div class="w-item">
+                    <span class="w-label">Who:</span>
+                    <span>${conv.who || '-'}</span>
+                </div>
+                <div class="w-item">
+                    <span class="w-label">When:</span>
+                    <span>${conv.when || '-'}</span>
+                </div>
+                <div class="w-item">
+                    <span class="w-label">Where:</span>
+                    <span>${conv.where || '-'}</span>
+                </div>
+                <div class="w-item">
+                    <span class="w-label">Why:</span>
+                    <span>${conv.why || '-'}</span>
+                </div>
+            </div>
+        `;
+
+        return card;
+    }
+
+    // localStorage에서 대화 가져오기
+    function getStoredConversations() {
+        const stored = localStorage.getItem(PDV_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    // localStorage에 대화 저장
+    function saveConversation(conversation) {
+        const conversations = getStoredConversations();
+        conversations.push(conversation);
+        localStorage.setItem(PDV_STORAGE_KEY, JSON.stringify(conversations));
+    }
+
+    // 통계 업데이트
+    function updateStats() {
+        const conversations = getStoredConversations();
+        const now = new Date();
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+        const thisWeek = conversations.filter(c => new Date(c.timestamp) > weekAgo).length;
+        const thisMonth = conversations.filter(c => new Date(c.timestamp) > monthStart).length;
+        const totalMessages = conversations.reduce((sum, c) => sum + (c.messages?.length || 0), 0);
+
+        document.getElementById('totalConversations').textContent = conversations.length;
+        document.getElementById('thisWeekConversations').textContent = thisWeek;
+        document.getElementById('thisMonthConversations').textContent = thisMonth;
+        document.getElementById('totalMessages').textContent = totalMessages;
+    }
+
+    // 대화 상세 보기 (다음 단계에서 구현)
+    function showConversationDetail(id) {
+        alert('대화 상세 보기 기능은 다음 단계에서 구현됩니다. ID: ' + id);
+    }
+
+    // 검색 (다음 단계에서 구현)
+    window.searchConversations = function() {
+        const query = document.getElementById('pdvSearchInput').value;
+        alert('검색 기능은 다음 단계에서 구현됩니다. 검색어: ' + query);
+    };
+
+    // 전역 함수로 노출 (다른 탭에서 호출 가능)
+    window.saveToPDV = function(conversationData) {
+        saveConversation(conversationData);
+        console.log('PDV에 대화 저장됨:', conversationData);
+    };
+
+    // 페이지 로드 시 초기화
+    setTimeout(initPDV, 100);
+
+    // 테스트용 샘플 데이터 추가 함수
+    window.addSamplePDVData = function() {
+        const sample = {
+            id: Date.now(),
+            category: '의료',
+            service: '진료 예약',
+            timestamp: new Date().toISOString(),
+            who: '사용자',
+            what: '정형외과 진료 예약 문의',
+            when: new Date().toLocaleString('ko-KR'),
+            where: '의료 탭',
+            why: '무릎 통증 진료',
+            how: 'AI 상담을 통해 예약 방법 안내받음',
+            messages: [
+                { role: 'user', content: '정형외과 예약하고 싶어요' },
+                { role: 'assistant', content: '정형외과 예약을 도와드리겠습니다...' }
+            ],
+            summary: '정형외과 예약 방법에 대해 상담하고 온라인 예약 링크를 받았습니다.'
+        };
+        saveToPDV(sample);
+        loadConversations();
+        updateStats();
+        alert('샘플 데이터가 추가되었습니다!');
+    };
+})();
+</script>

@@ -127,6 +127,7 @@
                 <button class="tab-button" data-tab="tab5" onclick="loadTab('tab5')">금융</button>
                 <button class="tab-button" data-tab="tab6" onclick="loadTab('tab6')">교통 물류</button>
                 <button class="tab-button" data-tab="tab7" onclick="loadTab('tab7')">시장</button>
+                <button class="tab-button" data-tab="tab8" onclick="loadTab('tab8')">PDV</button>
             </div>
         </div>
     </nav>
@@ -341,14 +342,23 @@
     <!-- Global AI Chat Window -->
     <div class="global-ai-chat-window" id="globalAiChatWindow">
         <div class="global-chat-header">
-            <h3 id="globalChatTitle">AI 도우미</h3>
-            <button class="close-global-chat" onclick="closeFloatingChat()">×</button>
-        </div>
+        <h3 id="globalChatTitle">AI 도우미</h3>
+        <button class="close-global-chat" onclick="closeFloatingChat()">×</button>
+    </div>
         <div class="global-chat-messages" id="globalChatMessages"></div>
         <div class="global-chat-input-area">
-            <textarea id="globalChatInput" class="global-chat-input" placeholder="무엇을 도와드릴까요?" rows="1"></textarea>
-            <button class="global-send-button" id="globalSendButton" onclick="sendGlobalMessage()">➤</button>
+        <div class="chat-left-buttons">
+            <button class="icon-button" id="saveGlobalChatBtn" onclick="saveGlobalConversation()" disabled title="대화 내용을 PDV에 저장">
+                📥
+            </button>
+            <input type="file" id="globalFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
+            <button class="icon-button" onclick="document.getElementById('globalFileInput').click()" title="파일 업로드">
+                📤
+            </button>
         </div>
+        <textarea id="globalChatInput" class="global-chat-input" placeholder="무엇을 도와드릴까요?" rows="1"></textarea>
+        <button class="global-send-button" id="globalSendButton" onclick="sendGlobalMessage()">➤</button>
+    </div>
     </div>
 
     <style>
@@ -456,6 +466,20 @@
         font-weight: 600;
     }
 
+    .global-chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    
+
+    
+
+    
+
+    
+
     .close-global-chat {
         background: none;
         border: none;
@@ -502,8 +526,80 @@
         transition: opacity 0.3s ease 0.3s;
     }
 
+    .chat-left-buttons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: #F3F4F6;
+        color: #1F2937;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 20px;
+    }
+
+    .icon-button:hover:not(:disabled) {
+        background: #E5E7EB;
+        transform: scale(1.05);
+    }
+
+    .icon-button:disabled {
+        background: #F9FAFB;
+        color: #D1D5DB;
+        cursor: not-allowed;
+    }
+
+    .icon-button:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
     .global-ai-chat-window.active .global-chat-input-area {
         opacity: 1;
+    }
+
+    .chat-left-buttons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: #F3F4F6;
+        color: #1F2937;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 20px;
+    }
+
+    .icon-button:hover:not(:disabled) {
+        background: #E5E7EB;
+        transform: scale(1.05);
+    }
+
+    .icon-button:disabled {
+        background: #F9FAFB;
+        color: #D1D5DB;
+        cursor: not-allowed;
+    }
+
+    .icon-button:active:not(:disabled) {
+        transform: scale(0.95);
     }
 
     .global-chat-input {
@@ -545,6 +641,12 @@
         background: #E5E7EB;
         cursor: not-allowed;
     }
+
+    
+
+    
+
+    
 
     .global-message {
         display: flex;
@@ -852,6 +954,84 @@
                 });
             }
         }, 100);
+        // PDV 저장 함수
+        window.saveGlobalConversation = function() {
+            if (!globalChatHistory || globalChatHistory.length === 0) {
+                alert('저장할 대화가 없습니다.');
+                return;
+            }
+
+            const activeTab = document.querySelector('.tab-button.active');
+            const currentTab = activeTab ? activeTab.getAttribute('data-tab') : 'default';
+            const tabName = activeTab ? activeTab.textContent : '메인';
+
+            const userMessages = globalChatHistory.filter(m => m.role === 'user');
+            const firstUserMsg = userMessages[0]?.content || '';
+            
+            const conversationData = {
+                id: Date.now(),
+                category: tabName,
+                service: 'AI 도우미',
+                timestamp: new Date().toISOString(),
+                who: '사용자',
+                what: firstUserMsg.substring(0, 50) + (firstUserMsg.length > 50 ? '...' : ''),
+                when: new Date().toLocaleString('ko-KR'),
+                where: tabName + ' 탭',
+                why: '정보 문의',
+                how: 'AI 상담',
+                messages: [...globalChatHistory],
+                summary: `총 ${globalChatHistory.length}개의 메시지. ${userMessages.length}개의 질문.`
+            };
+
+            if (typeof window.saveToPDV === 'function') {
+                window.saveToPDV(conversationData);
+                alert('✅ 대화가 PDV에 저장되었습니다!');
+                
+                // 자동으로 대화창 닫기
+                setTimeout(function() {
+                    closeFloatingChat();
+                }, 500);
+                
+                const saveBtn = document.getElementById('saveGlobalChatBtn');
+                if (saveBtn) {
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<span>✓</span><span>저장됨</span>';
+                }
+            } else {
+                alert('❌ PDV 저장 기능을 찾을 수 없습니다. PDV 탭을 먼저 열어주세요.');
+            }
+        };
+
+        const originalSendGlobal = window.sendGlobalMessage;
+        if (originalSendGlobal) {
+            window.sendGlobalMessage = async function() {
+                await originalSendGlobal.call(this);
+                
+                setTimeout(function() {
+                    const saveBtn = document.getElementById('saveGlobalChatBtn');
+                    if (saveBtn && globalChatHistory && globalChatHistory.length > 0) {
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = '<span>💾</span><span>저장</span>';
+                    }
+                }, 500);
+            };
+        }
+
+        const originalOpenFloating = window.openFloatingChat;
+        if (originalOpenFloating) {
+            window.openFloatingChat = function() {
+                originalOpenFloating.call(this);
+                
+                setTimeout(function() {
+                    const saveBtn = document.getElementById('saveGlobalChatBtn');
+                    if (saveBtn) {
+                        saveBtn.disabled = true;
+                        saveBtn.innerHTML = '<span>💾</span><span>저장</span>';
+                    }
+                }, 100);
+            };
+        }
+
     })();
     </script>
 </body>
