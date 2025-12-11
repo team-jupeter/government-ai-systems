@@ -1,0 +1,321 @@
+/* Header Styles */
+
+.header {
+    background: #1a5c9e;
+    color: #000000;
+    border: 2px solid #6b7280;
+    color: white;
+    padding: 30px 20px;
+}
+
+.header-content { max-width: 1400px; margin: 0 auto; }
+
+.header h1 { font-size: 26px; margin-bottom: 8px; font-weight: 700; }
+
+.header p { font-size: 14px; opacity: 0.9; }
+
+.dept-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+
+.dept-card-icon { font-size: 18px; }
+
+.dept-card-name { font-size: 15px; font-weight: 600; color: #1e293b; }
+
+.dept-card-tasks { font-size: 14px; color: #64748b; }
+
+.emd-section { margin-bottom: 20px; }
+
+.emd-section:last-child { margin-bottom: 0; }
+
+.emd-title { font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 12px; }
+
+.emd-category { margin-bottom: 12px; }
+
+.emd-category-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #059669;
+    margin-bottom: 8px;
+    display: inline-block;
+    background: #ecfdf5;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.emd-category-label.myeon { color: #0891b2; background: #ecfeff; }
+
+.emd-category-label.dong { color: #7c3aed; background: #f5f3ff; }
+
+.emd-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.emd-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.emd-card:hover { border-color: #6366f1; background: #f5f3ff; }
+
+.panel-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 24px;
+    position: relative;
+}
+
+.panel-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.panel-close:hover { background: rgba(255,255,255,0.3); }
+
+.panel-dept-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.panel-dept-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.panel-dept-org {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    padding: 16px;
+    background: #fafafc;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    display: flex;
+}
+
+.chat-message.user { justify-content: flex-end; }
+
+.chat-message.assistant { justify-content: flex-start; }
+
+.chat-bubble {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.chat-message.user .chat-bubble {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-message.assistant .chat-bubble {
+    background: white;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    border-bottom-left-radius: 4px;
+}
+
+.general-chat-header {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.general-chat-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #212529;
+}
+
+.general-chat-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f8f9fa;
+    color: #495057;
+    font-size: 1.3em;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.general-chat-close:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+.general-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.general-chat-message {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.general-chat-message.user {
+    align-items: flex-end;
+}
+
+.general-chat-message.assistant {
+    align-items: flex-start;
+}
+
+.general-chat-bubble {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.general-chat-message.user .general-chat-bubble {
+    background: #ff6b35;
+    color: white;
+}
+
+.general-chat-message.assistant .general-chat-bubble {
+    background: white;
+    color: #212529;
+    border: 1px solid #e9ecef;
+}
+
+.transfer-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.transfer-item-doc {
+    font-weight: 600;
+    font-size: 1.05em;
+    color: #333;
+}
+
+.transfer-item-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.transfer-status-received {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.transfer-status-acknowledged {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.transfer-status-rejected {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.transfer-status-pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.transfer-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.transfer-item-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-title {
+    flex: 1;
+}
+
+.header-title h1 {
+    margin-bottom: 8px;
+}
+
+.header-title p {
+    margin: 0;
+}
+
+/* 반응형: 작은 화면에서는 세로 배치 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .auth-section {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

@@ -1,0 +1,366 @@
+/* Buttons Styles */
+
+.org-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: white;
+    color: #000000;
+    border: 2px solid #6b7280;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-family: inherit;
+}
+
+.org-btn:hover {
+.org-btn.active { border-radius: 10px 10px 0 0; }
+
+.org-icon { font-size: 24px; }
+
+.org-name { font-size: 15px; font-weight: 700; flex: 1; color: #000000; }
+
+.org-info { font-size: 13px; color: #000000; }
+
+.org-btn.active .arrow { transform: rotate(180deg); }
+
+.org-content {
+    max-height: 0;
+    overflow: hidden;
+    background: #f8fafc;
+    border-radius: 0 0 10px 10px;
+    transition: max-height 0.4s ease;
+}
+
+.org-content.open {
+    max-height: 2000px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-top: none;
+}
+
+.dept-category { margin-bottom: 20px; }
+
+.dept-category:last-child { margin-bottom: 0; }
+
+.dept-category-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 12px;
+    padding-left: 4px;
+}
+
+.dept-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.dept-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 170px;
+}
+
+.dept-card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    .org-btn { flex-wrap: wrap; }
+    .org-info { width: 100%; margin-top: 4px; }
+    .slide-panel { width: 100%; right: -100%; }
+}
+
+/* 로딩 애니메이션 */
+.chat-loading-bubble {
+    background: #f8f9fa !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.loading-text {
+    font-size: 13px;
+    color: #6366f1;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.loading-bar-progress {
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 3px;
+    animation: loading-progress 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-progress {
+    0% {
+        width: 0%;
+        margin-left: 0%;
+    }
+    50% {
+        width: 60%;
+        margin-left: 20%;
+    }
+    100% {
+        width: 0%;
+        margin-left: 100%;
+    }
+}
+
+/* 상담 기록 고지 */
+.chat-notice {
+    background: #6b7280;
+    color: white;
+    font-size: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 1px solid #4b5563;
+}
+
+/* ===== 카드 확대 상담창 스타일 ===== */
+.floating-help-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 107, 53, 0.9);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 9997;
+}
+
+.floating-help-btn:hover {
+    background: rgba(255, 107, 53, 1);
+.floating-help-btn:active {
+    .floating-help-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 1.5em;
+    }
+    .general-chat-panel {
+        width: calc(100vw - 40px);
+        height: calc(100vh - 140px);
+        bottom: 90px;
+        right: 20px;
+    }
+}
+
+/* ===== PDV 데이터 전송 UI ===== */
+
+/* 전송 버튼 */
+.transfer-button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+}
+
+.transfer-button:hover {
+    background: #218838;
+}
+
+/* 전송 모달 */
+.transfer-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.transfer-btn-primary {
+    background: #28a745;
+    color: white;
+}
+
+.transfer-btn-primary:hover {
+    background: #218838;
+}
+
+.transfer-btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.transfer-btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* 전송 내역 */
+.transfer-logs-section {
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.transfer-action-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.transfer-action-btn.view {
+    background: #007bff;
+    color: white;
+}
+
+.transfer-action-btn.view:hover {
+    background: #0056b3;
+}
+
+.transfer-action-btn.acknowledge {
+    background: #28a745;
+    color: white;
+}
+
+.transfer-action-btn.acknowledge:hover {
+    background: #218838;
+}
+
+.transfer-action-btn.reject {
+    background: #dc3545;
+    color: white;
+}
+
+.transfer-action-btn.reject:hover {
+    background: #c82333;
+}
+
+.transfer-empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+/* ===== 인증 시스템 스타일 ===== */
+
+.auth-section {
+    display: flex;
+    align-items: center;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.auth-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.login-btn {
+    background: #003d82;
+    color: white;
+}
+
+.login-btn:hover {
+    background: #002d5f;
+}
+
+.auth-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.auth-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    font-weight: 600;
+}
+
+.logout-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.logout-btn:hover {
+    background: #5a6268;
+}
+
+/* 모달 */
+.btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #003d82;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #002d5f;
+}
+
+.btn-secondary {
+    background: white;
+    color: #666;
+    border: 1px solid #d5d5d5;
+}
+
+.btn-secondary:hover {
+    background: #f5f5f5;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .auth-section {
+        margin-top: 16px;
+    }
+}
+
+/* ===== 헤더 레이아웃 수정 ===== */
