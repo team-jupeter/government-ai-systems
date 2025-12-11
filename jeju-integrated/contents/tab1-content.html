@@ -1,0 +1,83 @@
+<style>
+    .service-card {
+        background: white;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
+    }
+    .service-card:hover {
+        border-color: #0066FF;
+        background: linear-gradient(135deg, #F0F7FF 0%, #E6F0FF 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15);
+    }
+    .service-card-text {
+        font-size: 19px;
+        font-weight: 600;
+        color: #1F2937;
+        letter-spacing: -0.02em;
+    }
+</style>
+
+<main class="max-w-7xl mx-auto px-4 pb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
+        <div class="service-card" onclick="loadPage('province')">
+            <span class="service-card-text">🏛️ 제주특별자치도청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('council')">
+            <span class="service-card-text">🏛️ 제주특별자치도의회</span>
+        </div>
+        <div class="service-card" onclick="loadPage('education')">
+            <span class="service-card-text">📚 제주특별자치도교육청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('jeju-city')">
+            <span class="service-card-text">🏢 제주시청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('seogwipo-city')">
+            <span class="service-card-text">🏢 서귀포시청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('jeju-city-council')">
+            <span class="service-card-text">🏛️ 제주시의회</span>
+        </div>
+        <div class="service-card" onclick="loadPage('seogwipo-city-council')">
+            <span class="service-card-text">🏛️ 서귀포시의회</span>
+        </div>
+        <div class="service-card" onclick="loadPage('police')">
+            <span class="service-card-text">🚔 제주지방경찰청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('fire')">
+            <span class="service-card-text">🚒 제주소방안전본부</span>
+        </div>
+        <div class="service-card" onclick="loadPage('customs')">
+            <span class="service-card-text">🛃 제주세관</span>
+        </div>
+        <div class="service-card" onclick="loadPage('labor')">
+            <span class="service-card-text">👷 제주지방고용노동청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('tax')">
+            <span class="service-card-text">💼 제주지방국세청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('court')">
+            <span class="service-card-text">⚖️ 제주지방법원</span>
+        </div>
+        <div class="service-card" onclick="loadPage('prosecution')">
+            <span class="service-card-text">⚖️ 제주지방검찰청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('correctional')">
+            <span class="service-card-text">🏢 제주교도소</span>
+        </div>
+        <div class="service-card" onclick="loadPage('meteorological')">
+            <span class="service-card-text">🌤️ 제주지방기상청</span>
+        </div>
+        <div class="service-card" onclick="loadPage('coast-guard')">
+            <span class="service-card-text">🚢 제주해양경찰서</span>
+        </div>
+    </div>
+</main>
