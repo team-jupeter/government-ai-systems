@@ -545,7 +545,9 @@ window.chatState = window.chatState || {};
 
     window.openDeptChat = function(element, deptName, officerName) {
         currentDept = deptName;
+        window.currentDept = deptName;
         currentOfficer = officerName;
+        window.currentOfficer = officerName;
         clickedElement = element;
         
         const chatWindow = document.getElementById('aiChatWindow');
@@ -648,6 +650,7 @@ window.chatState = window.chatState || {};
             role: 'user',
             content: '[부서: ' + currentDept + ', 담당자: ' + currentOfficer + '] ' + message
         });
+        window.conversationHistory = conversationHistory;
         
         const sendButton = document.getElementById('sendButton');
         if (sendButton) sendButton.disabled = true;
@@ -672,9 +675,17 @@ window.chatState = window.chatState || {};
                 role: 'assistant',
                 content: responseData.message
             });
+            window.conversationHistory = conversationHistory;
             
             removeTypingIndicator();
             addMessage(responseData.message, 'assistant');
+
+            // 저장 버튼 활성화
+            const saveBtn = document.querySelector(".save-btn");
+            if (saveBtn && conversationHistory && conversationHistory.length > 0) {
+                saveBtn.disabled = false;
+                console.log("✅ [제주시청] 저장 버튼 활성화됨!");
+            }
         } catch (error) {
             console.error('Error:', error);
             removeTypingIndicator();
@@ -704,4 +715,112 @@ window.chatState = window.chatState || {};
         }
     }, 100);
 })();
+</script>
+
+// 저장 버튼 활성화
+const saveBtn = document.querySelector(".save-btn");
+if (saveBtn && conversationHistory && conversationHistory.length > 0) {
+    saveBtn.disabled = false;
+    console.log("✅ [제주시청] 저장 버튼 활성화됨!");
+
+        // PDV 저장 함수
+        window.saveCurrentDeptChat = function() {
+            const conversationHistory = window.conversationHistory;
+            const currentDept = window.currentDept;
+            const currentOfficer = window.currentOfficer;
+            
+            if (!conversationHistory || conversationHistory.length === 0) {
+                alert('저장할 대화가 없습니다.');
+                return;
+            }
+
+            const userMessages = conversationHistory.filter(m => m.role === 'user');
+            const firstUserMsg = userMessages[0]?.content || '';
+            
+            const conversationData = {
+                id: Date.now(),
+                category: '제주시청',
+                service: currentDept || 'AI 상담',
+                timestamp: new Date().toISOString(),
+                who: '사용자',
+                what: firstUserMsg.substring(0, 50) + (firstUserMsg.length > 50 ? '...' : ''),
+                when: new Date().toLocaleString('ko-KR'),
+                where: '제주시청 - ' + (currentDept || '부서'),
+                why: '행정 업무 문의',
+                how: 'AI 상담 - ' + (currentOfficer || '담당자'),
+                messages: [...conversationHistory],
+                summary: `${currentDept || '부서'} ${currentOfficer || '담당자'} 상담. 총 ${conversationHistory.length}개의 메시지.`
+            };
+
+            if (typeof window.saveToPDV === 'function') {
+                window.saveToPDV(conversationData);
+                alert('✅ 대화가 PDV에 저장되었습니다!');
+                
+                const saveBtn = document.querySelector('.save-btn');
+                if (saveBtn) {
+                    saveBtn.disabled = true;
+                    saveBtn.style.background = '#10B981';
+                    setTimeout(() => {
+                        saveBtn.style.background = '';
+                    }, 2000);
+                }
+                
+                setTimeout(closeChat, 500);
+            } else {
+                alert('❌ PDV 저장 기능을 찾을 수 없습니다.');
+            }
+        };
+
+    }
+
+<script>
+window.saveCurrentDeptChat = function() {
+    const conversationHistory = window.conversationHistory;
+    const currentDept = window.currentDept;
+    const currentOfficer = window.currentOfficer;
+    
+    if (!conversationHistory || conversationHistory.length === 0) {
+        alert('저장할 대화가 없습니다.');
+        return;
+    }
+
+    const userMessages = conversationHistory.filter(m => m.role === 'user');
+    const firstUserMsg = userMessages[0]?.content || '';
+    
+    const conversationData = {
+        id: Date.now(),
+        category: '제주시청',
+        service: currentDept || 'AI 상담',
+        timestamp: new Date().toISOString(),
+        who: '사용자',
+        what: firstUserMsg.substring(0, 50) + (firstUserMsg.length > 50 ? '...' : ''),
+        when: new Date().toLocaleString('ko-KR'),
+        where: '제주시청 - ' + (currentDept || '부서'),
+        why: '행정 업무 문의',
+        how: 'AI 상담 - ' + (currentOfficer || '담당자'),
+        messages: [...conversationHistory],
+        summary: `${currentDept || '부서'} ${currentOfficer || '담당자'} 상담. 총 ${conversationHistory.length}개의 메시지.`
+    };
+
+    if (typeof window.saveToPDV === 'function') {
+        window.saveToPDV(conversationData);
+        alert('✅ 대화가 PDV에 저장되었습니다!');
+        
+        const saveBtn = document.querySelector('.save-btn');
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.style.background = '#10B981';
+            setTimeout(() => {
+                saveBtn.style.background = '';
+            }, 2000);
+        }
+        
+        setTimeout(() => {
+            const closeBtn = document.querySelector('.chat-overlay');
+            if (closeBtn) closeBtn.style.display = 'none';
+        }, 500);
+    } else {
+        alert('❌ PDV 저장 기능을 찾을 수 없습니다.');
+    }
+};
 </script>
