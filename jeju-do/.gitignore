@@ -27,3 +27,18 @@ logs/
 .idea/
 *.swp
 *.swo
+
+# Archive and backups
+archive/
+*.backup.*
+*.broken
+*.before_*
+*.old
+
+# Development
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+
