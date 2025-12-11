@@ -3,6 +3,7 @@ from flask_cors import CORS
 import logging
 import requests
 from datetime import datetime
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -46,11 +47,43 @@ def chat():
         
         messages = data.get('messages', [])
         user_phone = data.get('userPhone', None)
+        category = data.get('category', '')
+        service = data.get('service', '')
+        
+        # 상품 검색 요청 감지
+        last_message = messages[-1]['content'] if messages else ''
+        is_product_search = any(keyword in last_message for keyword in ['검색', '추천', '상품', '구매', '가격', '어디서'])
         
         # 시스템 메시지 추가
+        if category == '구매' or is_product_search:
+            system_content = f'''당신은 제주특별자치도 AI 포털의 쇼핑 도우미입니다. 
+사용자가 상품을 검색하면 다음 형식으로 답변하세요:
+
+1. 상품명과 간단한 설명
+2. 예상 가격대
+3. 구매 가능한 쇼핑몰 (네이버쇼핑, 쿠팡, G마켓 등)
+
+**중요: 각 쇼핑몰은 반드시 다음 형식으로 링크를 포함하세요:**
+- [네이버쇼핑](https://search.shopping.naver.com/search/all?query=상품명)
+- [쿠팡](https://www.coupang.com/np/search?q=상품명)
+- [G마켓](http://gsearch.gmarket.co.kr/search?query=상품명)
+
+예시:
+삼성 갤럭시 S24를 검색하셨네요!
+
+**가격:** 약 1,000,000원~1,200,000원
+**주요 스펙:** 6.2인치, Snapdragon 8 Gen 3
+
+**구매처:**
+- [네이버쇼핑](https://search.shopping.naver.com/search/all?query=갤럭시S24)
+- [쿠팡](https://www.coupang.com/np/search?q=갤럭시S24)
+- [G마켓](http://gsearch.gmarket.co.kr/search?query=갤럭시S24)'''
+        else:
+            system_content = f'당신은 제주특별자치도 AI 포털의 친절한 상담원입니다. {f"사용자의 전화번호는 {user_phone}입니다." if user_phone else ""} 사용자가 요청하는 {category} {service} 서비스에 대해 안내하고 도와주세요.'
+        
         system_message = {
             'role': 'system',
-            'content': f'당신은 제주특별자치도 AI 포털의 친절한 상담원입니다. {f"사용자의 전화번호는 {user_phone}입니다." if user_phone else ""} 사용자가 요청하는 행정 서비스에 대해 안내하고 도와주세요.'
+            'content': system_content
         }
         
         full_messages = [system_message] + messages
