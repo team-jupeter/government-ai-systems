@@ -349,11 +349,11 @@
         <div class="global-chat-input-area">
         <div class="chat-left-buttons">
             <button class="icon-button" id="saveGlobalChatBtn" onclick="saveGlobalConversation()" disabled title="대화 내용을 PDV에 저장">
-                <img src="images/save-icon.png" alt="저장" class="button-icon">
+                <img src="/jeju-integrated/images/save-icon.svg" alt="저장" class="button-icon">
             </button>
             <input type="file" id="globalFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx">
             <button class="icon-button" onclick="document.getElementById('globalFileInput').click()" title="파일 업로드">
-                <img src="images/upload-icon.png" alt="업로드" class="button-icon">
+                <img src="/jeju-integrated/images/upload-icon.svg" alt="업로드" class="button-icon">
             </button>
         </div>
         <textarea id="globalChatInput" class="global-chat-input" placeholder="무엇을 도와드릴까요?" rows="1"></textarea>
@@ -561,15 +561,15 @@
     .button-icon {
         width: 22px;
         height: 22px;
-        filter: brightness(0) saturate(100%);
+        /* filter removed */
     }
 
     .icon-button:hover:not(:disabled) .button-icon {
-        filter: brightness(0) saturate(100%) invert(10%);
+        /* filter removed */
     }
 
     .icon-button:disabled .button-icon {
-        filter: brightness(0) saturate(100%) opacity(30%);
+        opacity: 0.3;
     }
 
     .icon-button:active:not(:disabled) {
@@ -615,15 +615,15 @@
     .button-icon {
         width: 22px;
         height: 22px;
-        filter: brightness(0) saturate(100%);
+        /* filter removed */
     }
 
     .icon-button:hover:not(:disabled) .button-icon {
-        filter: brightness(0) saturate(100%) invert(10%);
+        /* filter removed */
     }
 
     .icon-button:disabled .button-icon {
-        filter: brightness(0) saturate(100%) opacity(30%);
+        opacity: 0.3;
     }
 
     .icon-button:active:not(:disabled) {
@@ -952,9 +952,24 @@
                     role: 'assistant',
                     content: responseData.message
                 });
+                console.log('📝 대화 추가됨. 총 메시지:', globalChatHistory.length);
 
                 removeGlobalTypingIndicator();
                 addGlobalMessage(responseData.message, 'assistant');
+                
+                // 저장 버튼 활성화
+                console.log('🔍 디버깅:', {
+                    'globalChatHistory 존재': !!globalChatHistory,
+                    'globalChatHistory 길이': globalChatHistory?.length,
+                    'saveBtn 요소': !!document.getElementById('saveGlobalChatBtn')
+                });
+                const saveBtn = document.getElementById('saveGlobalChatBtn');
+                if (saveBtn && globalChatHistory && globalChatHistory.length > 0) {
+                    console.log('✅ 조건 통과: 버튼 활성화 시도');
+                    saveBtn.disabled = false;
+                    console.log('✓ saveBtn.disabled =', saveBtn.disabled);
+                    console.log('✓ 저장 버튼 활성화됨');
+                }
 
             } catch (error) {
                 console.error('Error:', error);
@@ -1030,21 +1045,6 @@
             }
         };
 
-        const originalSendGlobal = window.sendGlobalMessage;
-        if (originalSendGlobal) {
-            window.sendGlobalMessage = async function() {
-                await originalSendGlobal.call(this);
-                
-                setTimeout(function() {
-                    const saveBtn = document.getElementById('saveGlobalChatBtn');
-                    if (saveBtn && globalChatHistory && globalChatHistory.length > 0) {
-                        saveBtn.disabled = false;
-                        saveBtn.innerHTML = '<span>💾</span><span>저장</span>';
-                    }
-                }, 500);
-            };
-        }
-
         const originalOpenFloating = window.openFloatingChat;
         if (originalOpenFloating) {
             window.openFloatingChat = function() {
@@ -1061,6 +1061,26 @@
         }
 
     })();
-    </script>
+    
+        // PDV 저장 함수 (전역)
+        window.saveToPDV = function(conversationData) {
+            const PDV_STORAGE_KEY = 'jeju_integrated_pdv';
+            
+            // 기존 데이터 가져오기
+            const stored = localStorage.getItem(PDV_STORAGE_KEY);
+            const conversations = stored ? JSON.parse(stored) : [];
+            
+            // 새 대화 추가
+            conversations.push(conversationData);
+            
+            // 저장
+            localStorage.setItem(PDV_STORAGE_KEY, JSON.stringify(conversations));
+            
+            console.log('✅ PDV 저장 완료:', conversationData.id);
+            
+            return true;
+        };
+
+</script>
 </body>
 </html>

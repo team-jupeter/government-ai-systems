@@ -261,15 +261,15 @@
     .button-icon {
         width: 22px;
         height: 22px;
-        filter: brightness(0) saturate(100%);
+        /* filter removed */
     }
 
     .icon-button:hover:not(:disabled) .button-icon {
-        filter: brightness(0) saturate(100%) invert(10%);
+        /* filter removed */
     }
 
     .icon-button:disabled .button-icon {
-        filter: brightness(0) saturate(100%) opacity(30%);
+        opacity: 0.3;
     }
 
     .send-button {
@@ -451,11 +451,11 @@
     <div class="chat-input-area">
             <div class="chat-left-buttons">
                 <button class="icon-button save-btn" onclick="saveCurrentChat()" disabled title="대화 내용을 PDV에 저장">
-                    <img src="images/save-icon.png" alt="저장" class="button-icon">
+                    <img src="/jeju-integrated/images/save-icon.svg" alt="저장" class="button-icon">
                 </button>
                 <input type="file" class="file-input" style="display: none;" accept="image/*,.pdf,.doc,.docx">
                 <button class="icon-button" onclick="this.previousElementSibling.click()" title="파일 업로드">
-                    <img src="images/upload-icon.png" alt="업로드" class="button-icon">
+                    <img src="/jeju-integrated/images/upload-icon.svg" alt="업로드" class="button-icon">
                 </button>
             </div>
             <textarea id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
