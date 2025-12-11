@@ -329,3 +329,530 @@
     </script>
 </body>
 </html>
+
+    <!-- Floating Help Button -->
+    <button id="floatingHelpBtn" class="floating-help-btn" onclick="openFloatingChat()">
+        <span class="help-icon">?</span>
+    </button>
+
+    <!-- Global Chat Overlay -->
+    <div class="global-chat-overlay" id="globalChatOverlay" onclick="closeFloatingChat()"></div>
+
+    <!-- Global AI Chat Window -->
+    <div class="global-ai-chat-window" id="globalAiChatWindow">
+        <div class="global-chat-header">
+            <h3 id="globalChatTitle">AI 도우미</h3>
+            <button class="close-global-chat" onclick="closeFloatingChat()">×</button>
+        </div>
+        <div class="global-chat-messages" id="globalChatMessages"></div>
+        <div class="global-chat-input-area">
+            <textarea id="globalChatInput" class="global-chat-input" placeholder="무엇을 도와드릴까요?" rows="1"></textarea>
+            <button class="global-send-button" id="globalSendButton" onclick="sendGlobalMessage()">➤</button>
+        </div>
+    </div>
+
+    <style>
+    /* Floating Help Button */
+    .floating-help-btn {
+        position: fixed;
+        top: 120px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: rgba(33, 150, 243, 0.9);
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        cursor: pointer;
+        z-index: 998;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .floating-help-btn:hover {
+        background: rgba(33, 150, 243, 1);
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(33, 150, 243, 0.6);
+    }
+
+    .help-icon {
+        font-size: 32px;
+        font-weight: bold;
+        color: white;
+        line-height: 1;
+    }
+
+    /* Global Chat Overlay */
+    .global-chat-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .global-chat-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Global AI Chat Window */
+    .global-ai-chat-window {
+        position: fixed;
+        top: 120px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        overflow: hidden;
+    }
+
+    .global-ai-chat-window.active {
+        opacity: 1;
+        visibility: visible;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 700px;
+        border-radius: 16px;
+    }
+
+    .global-chat-header {
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 16px 16px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.3s;
+    }
+
+    .global-ai-chat-window.active .global-chat-header {
+        opacity: 1;
+    }
+
+    .global-chat-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .close-global-chat {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s;
+        line-height: 1;
+    }
+
+    .close-global-chat:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .global-chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.3s;
+    }
+
+    .global-ai-chat-window.active .global-chat-messages {
+        opacity: 1;
+    }
+
+    .global-chat-input-area {
+        border-top: 1px solid #E5E7EB;
+        padding: 16px;
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.3s;
+    }
+
+    .global-ai-chat-window.active .global-chat-input-area {
+        opacity: 1;
+    }
+
+    .global-chat-input {
+        flex: 1;
+        border: 1px solid #E5E7EB;
+        border-radius: 20px;
+        padding: 10px 16px;
+        font-size: 14px;
+        resize: none;
+        max-height: 120px;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .global-chat-input:focus {
+        outline: none;
+        border-color: #2196F3;
+    }
+
+    .global-send-button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: #2196F3;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 20px;
+    }
+
+    .global-send-button:hover {
+        background: #1976D2;
+    }
+
+    .global-send-button:disabled {
+        background: #E5E7EB;
+        cursor: not-allowed;
+    }
+
+    .global-message {
+        display: flex;
+        gap: 8px;
+        max-width: 85%;
+        animation: messageSlideIn 0.3s ease;
+    }
+
+    @keyframes messageSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .global-message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .global-message.assistant {
+        align-self: flex-start;
+    }
+
+    .global-message-bubble {
+        padding: 12px 16px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .global-message.user .global-message-bubble {
+        background: #2196F3;
+        color: white;
+    }
+
+    .global-message.assistant .global-message-bubble {
+        background: #F3F4F6;
+        color: #1F2937;
+    }
+
+    .global-message-bubble a {
+        color: #2196F3;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .global-message.user .global-message-bubble a {
+        color: #FFE57F;
+    }
+
+    .global-typing-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 12px 16px;
+        background: #F3F4F6;
+        border-radius: 18px;
+        width: fit-content;
+    }
+
+    .global-typing-dot {
+        width: 8px;
+        height: 8px;
+        background: #9CA3AF;
+        border-radius: 50%;
+        animation: typing 1.4s infinite;
+    }
+
+    .global-typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .global-typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+        0%, 60%, 100% {
+            transform: translateY(0);
+        }
+        30% {
+            transform: translateY(-8px);
+        }
+    }
+    </style>
+
+    <script>
+    (function() {
+        const API_URL = '/api/jeju-integrated/chat';
+        let globalChatHistory = [];
+
+        // 탭별 맞춤형 인사말
+        const greetings = {
+            'tab1': {
+                title: '정부 서비스 도우미',
+                message: '안녕하세요! 제주특별자치도 정부 서비스 도우미입니다. 제주도청, 제주시청, 서귀포시청, 교육청, 경찰청, 세관 등의 행정 서비스에 대해 안내해드립니다. 무엇을 도와드릴까요?'
+            },
+            'tab2': {
+                title: '의료 서비스 도우미',
+                message: '안녕하세요! 제주대학교병원 의료 서비스 도우미입니다. 진료과, 의료진, 예약, 건강검진 등 병원 이용에 관한 모든 것을 안내해드립니다. 어떤 진료과를 찾으시나요?'
+            },
+            'tab3': {
+                title: '법률 서비스 도우미',
+                message: '안녕하세요! 제주지방법원 법률 서비스 도우미입니다. 민사, 형사, 가사, 행정 사건 및 등기, 공증 등 법원 업무에 대해 안내해드립니다. 무엇이 궁금하신가요?'
+            },
+            'tab4': {
+                title: '교육 서비스 도우미',
+                message: '안녕하세요! 교육 서비스 도우미입니다. 초등학교부터 대학교까지 모든 교육 과정에 대해 안내해드립니다. 어떤 학년이나 과목에 대해 궁금하신가요?'
+            },
+            'tab5': {
+                title: '금융 서비스 도우미',
+                message: '안녕하세요! 금융 서비스 도우미입니다. 은행, 보험, 증권 등 모든 금융 상품과 서비스에 대해 상담해드립니다. 어떤 금융 서비스가 필요하신가요?'
+            },
+            'tab6': {
+                title: '교통·물류 도우미',
+                message: '안녕하세요! 교통·물류 도우미입니다. 버스, 택시, 기차, 항공, 택배, 화물 등 모든 이동과 배송에 관해 안내해드립니다. 무엇을 도와드릴까요?'
+            },
+            'tab7': {
+                title: '시장 서비스 도우미',
+                message: '안녕하세요! 시장 서비스 도우미입니다. 온라인 쇼핑, 상품 검색, 판매 방법 등 모든 거래 활동을 지원합니다. 무엇을 도와드릴까요?'
+            },
+            'default': {
+                title: '제주 통합 포털 도우미',
+                message: '안녕하세요! 제주특별자치도 통합 포털 AI 도우미입니다. 정부, 의료, 법률, 교육, 금융, 교통, 시장 등 모든 서비스를 안내해드립니다. 무엇을 도와드릴까요?'
+            }
+        };
+
+        window.openFloatingChat = function() {
+            const chatWindow = document.getElementById('globalAiChatWindow');
+            const overlay = document.getElementById('globalChatOverlay');
+            const floatingBtn = document.getElementById('floatingHelpBtn');
+            const chatMessages = document.getElementById('globalChatMessages');
+            const chatTitle = document.getElementById('globalChatTitle');
+
+            if (!chatWindow || !overlay || !floatingBtn) return;
+
+            // 현재 활성화된 탭 감지
+            const activeTab = document.querySelector('.tab-button.active');
+            const currentTab = activeTab ? activeTab.getAttribute('data-tab') : 'default';
+
+            // 탭에 맞는 인사말 가져오기
+            const greeting = greetings[currentTab] || greetings['default'];
+
+            // 채팅 초기화
+            chatMessages.innerHTML = '';
+            globalChatHistory = [];
+            
+            // 제목 설정
+            chatTitle.textContent = greeting.title;
+
+            // 오버레이 및 상담창 활성화
+            overlay.classList.add('active');
+            floatingBtn.style.opacity = '0';
+            floatingBtn.style.visibility = 'hidden';
+
+            setTimeout(function() {
+                chatWindow.classList.add('active');
+                // 인사말 추가
+                setTimeout(function() {
+                    addGlobalMessage(greeting.message, 'assistant');
+                }, 300);
+            }, 100);
+
+            // 입력창 포커스
+            setTimeout(function() {
+                const input = document.getElementById('globalChatInput');
+                if (input) input.focus();
+            }, 800);
+        };
+
+        window.closeFloatingChat = function() {
+            const chatWindow = document.getElementById('globalAiChatWindow');
+            const overlay = document.getElementById('globalChatOverlay');
+            const floatingBtn = document.getElementById('floatingHelpBtn');
+
+            if (chatWindow) chatWindow.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+            
+            setTimeout(function() {
+                if (floatingBtn) {
+                    floatingBtn.style.opacity = '1';
+                    floatingBtn.style.visibility = 'visible';
+                }
+            }, 300);
+        };
+
+        function addGlobalMessage(content, role) {
+            const messagesContainer = document.getElementById('globalChatMessages');
+            if (!messagesContainer) return;
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'global-message ' + role;
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'global-message-bubble';
+
+            // 마크다운 링크를 HTML 링크로 변환
+            const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+            const htmlContent = content.replace(linkPattern, '<a href="$2" target="_blank">$1</a>');
+
+            bubbleDiv.innerHTML = htmlContent;
+            messageDiv.appendChild(bubbleDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showGlobalTypingIndicator() {
+            const messagesContainer = document.getElementById('globalChatMessages');
+            if (!messagesContainer) return;
+
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'global-message assistant';
+            typingDiv.id = 'globalTypingIndicator';
+
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'global-typing-indicator';
+            indicatorDiv.innerHTML = '<div class="global-typing-dot"></div><div class="global-typing-dot"></div><div class="global-typing-dot"></div>';
+
+            typingDiv.appendChild(indicatorDiv);
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeGlobalTypingIndicator() {
+            const indicator = document.getElementById('globalTypingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        window.sendGlobalMessage = async function() {
+            const input = document.getElementById('globalChatInput');
+            const sendButton = document.getElementById('globalSendButton');
+
+            if (!input) return;
+
+            const message = input.value.trim();
+            if (!message) return;
+
+            addGlobalMessage(message, 'user');
+            input.value = '';
+            input.style.height = 'auto';
+
+            // 현재 탭 정보 포함
+            const activeTab = document.querySelector('.tab-button.active');
+            const currentTab = activeTab ? activeTab.getAttribute('data-tab') : 'default';
+            const tabName = activeTab ? activeTab.textContent : '메인';
+
+            globalChatHistory.push({
+                role: 'user',
+                content: `[현재 페이지: ${tabName}] ${message}`
+            });
+
+            if (sendButton) sendButton.disabled = true;
+            showGlobalTypingIndicator();
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: globalChatHistory,
+                        category: '통합 도우미'
+                    })
+                });
+
+                if (!response.ok) throw new Error('API 요청 실패');
+
+                const responseData = await response.json();
+
+                globalChatHistory.push({
+                    role: 'assistant',
+                    content: responseData.message
+                });
+
+                removeGlobalTypingIndicator();
+                addGlobalMessage(responseData.message, 'assistant');
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeGlobalTypingIndicator();
+                addGlobalMessage('죄송합니다. 오류가 발생했습니다. 다시 시도해주세요.', 'assistant');
+            } finally {
+                if (sendButton) sendButton.disabled = false;
+            }
+        };
+
+        // 입력창 자동 높이 조정 및 Enter 키 처리
+        setTimeout(function() {
+            const textarea = document.getElementById('globalChatInput');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                });
+
+                textarea.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        window.sendGlobalMessage();
+                    }
+                });
+            }
+        }, 100);
+    })();
+    </script>
+</body>
+</html>
