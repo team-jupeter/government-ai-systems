@@ -188,15 +188,17 @@ class AuthManager {
 
     logout() {
         this.currentUser = null;
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("activeTab");  // 추가!
         this.updateAuthUI();
         
         // 메인 탭으로 이동
-        if (typeof switchTab === 'function') {
-            switchTab('dochung');
+        if (typeof switchTab === "function") {
+            switchTab("dochung");
         }
         
-        alert('로그아웃되었습니다.');
+        alert("로그아웃되었습니다.");
+    }
     }
 }
 
@@ -224,12 +226,3 @@ function closeLoginModal() {
     }
 }
 
-function logout() {
-    if (window.authManager) {
-        window.authManager.logout();
-    }
-}
-
-// 전역 인스턴스 생성
-console.log('AuthManager 초기화');
-window.authManager = new AuthManager();
