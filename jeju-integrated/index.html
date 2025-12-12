@@ -92,27 +92,35 @@
 </head>
 <body>
     <!-- 안내 배너 -->
+    <!-- 안내 배너 (짙은 검청색) -->
     <div class="notice-banner">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-xs text-white">
-                    <span>⚠️</span>
-                    <span>본 사이트는 오픈해시 실증 및 테스트용이며, 정부 공식 사이트가 아닙니다.</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <a href="http://100.30.14.224/openhash-system/" class="btn btn-white">오픈해시 ❓</a>
-                    <a href="http://100.30.14.224/portal/" class="btn btn-white">포털</a>
-                    <button onclick="handleAuth()" class="btn btn-white" id="authBtn">로그인</button>
-                    <span id="userInfo" class="text-xs text-white" style="display: none;"></span>
-                </div>
+            <div class="flex items-center gap-2 text-xs text-white">
+                <span>⚠️</span>
+                <span>본 사이트는 오픈해시 실증 및 테스트용이며, 정부 공식 사이트가 아닙니다.</span>
             </div>
         </div>
     </div>
 
-    <!-- 정부 공식 배너 -->
+    <!-- 정부 공식 배너 (청색) -->
     <header class="gov-banner">
         <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-base font-bold">우리 사회의 모든 것을 Openhash와 AI로 재구성합니다.</h1>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <!-- 왼쪽: 오픈해시, 포털 버튼 -->
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="http://100.30.14.224/openhash-system/" class="btn btn-white">오픈해시 ❓</a>
+                    <a href="http://100.30.14.224/portal/" class="btn btn-white">포털</a>
+                </div>
+                
+                <!-- 중앙: 제목 -->
+                <h1 class="text-base font-bold" style="flex: 1; text-align: center;">우리 사회의 모든 것을 Openhash와 AI로 재구성합니다.</h1>
+                
+                <!-- 오른쪽: 로그인 버튼 -->
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button onclick="handleAuth()" class="btn btn-white" id="authBtn">로그인</button>
+                    <span id="userInfo" class="text-xs text-white" style="display: none;"></span>
+                </div>
+            </div>
         </div>
     </header>
 
