@@ -527,7 +527,7 @@ async function openModal(type) {
             container.innerHTML = html;
         } catch (error) {
             console.error('Modal 로딩 오류:', error);
-            container.innerHTML = '<div class="modal-body"><p style="color: #EF4444;">내용을 불러오는데 실패했습니다.</p></div>';
+            container.innerHTML = '<div class="modal-body"><p class="error-message">내용을 불러오는데 실패했습니다.</p></div>';
         }
     }
     

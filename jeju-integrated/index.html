@@ -109,6 +109,7 @@
                 <!-- 왼쪽: 오픈해시, 포털 버튼 -->
                 <div style="display: flex; gap: 0.5rem;">
                     <a href="http://100.30.14.224/openhash-system/" class="btn btn-white">오픈해시 ❓</a>
+                    <a href="http://100.30.14.224/private-data-vault/" class="btn btn-white" target="_blank">개인정보금고(PDV)</a>
                     <a href="http://100.30.14.224/portal/" class="btn btn-white">국가 포털</a>
                 </div>
                 
@@ -131,7 +132,6 @@
                 <button class="tab-button active" data-tab="tab1" onclick="loadTab('tab1')">포털</button>
                 <button class="tab-button" data-tab="tab8" onclick="loadTab('tab8')">PDV</button>
                 <div style="flex: 1;"></div>
-                <button class="tab-button" data-tab="tab9" onclick="loadTab('tab9')">이용 안내</button>
                 <button class="tab-button" data-tab="tab10" onclick="loadTab('tab10')">How it works</button>
             </div>
         </div>
@@ -344,7 +344,7 @@
 </html>
 
     <!-- Floating Help Button -->
-    <button id="floatingHelpBtn" class="floating-help-btn" onclick="openFloatingChat()">
+    <button id="floatingHelpBtn" class="floating-help-btn" onclick="loadTab('tab9')">
         <span class="help-icon">?</span>
     </button>
 
