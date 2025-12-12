@@ -203,6 +203,13 @@
                 container.innerHTML = html;
                 
                 executeScripts(container);
+                
+                // 이용 안내 탭이면 AI 도우미 자동 열기
+                if (tabName === 'tab9') {
+                    setTimeout(() => {
+                        openFloatingChat();
+                    }, 500);
+                }
             } catch (error) {
                 console.error('Error loading tab:', error);
                 container.innerHTML = '<div class="loading" style="color: #DC2626;">콘텐츠를 불러오는데 실패했습니다.</div>';
