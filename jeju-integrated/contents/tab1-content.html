@@ -1,77 +1,269 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <style>
     .service-card {
         background: white;
         border: 2px solid #E5E7EB;
         border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
+        padding: 1.5rem;
+        text-align: left;
         transition: all 0.3s ease;
         cursor: pointer;
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 80px;
+        gap: 12px;
+    }
+    
+    .service-card:hover {
+        border-color: #1E3A8A;
+        background: #F0F4FF;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12);
+    }
+    
+    .service-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #1E3A8A;
+        color: white;
+        display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 100px;
+        font-size: 14px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
     }
-    .service-card:hover {
-        border-color: #0066FF;
-        background: linear-gradient(135deg, #F0F7FF 0%, #E6F0FF 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15);
+    
+    .service-card:hover .service-icon {
+        background: #2563EB;
+        transform: scale(1.05);
     }
+    
     .service-card-text {
-        font-size: 19px;
+        font-size: 16px;
         font-weight: 600;
         color: #1F2937;
         letter-spacing: -0.02em;
     }
+    
+    .section-divider {
+        height: 2px;
+        background: linear-gradient(to right, transparent, #D1D5DB 20%, #D1D5DB 80%, transparent);
+        margin: 40px 0;
+        position: relative;
+    }
+    
+    .section-divider::after {
+        content: '서비스';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 0 20px;
+        color: #6B7280;
+        font-size: 14px;
+        font-weight: 600;
+    }
 </style>
 
 <main class="max-w-7xl mx-auto px-4 pb-8">
+    <!-- 정부 기관 -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-        <div class="service-card" onclick="loadPage('council')">
-            <span class="service-card-text">🏛️ 제주특별자치도의회</span>
+        <div class="service-card" onclick="openGovPage('council', '도의회')">
+            <div class="service-icon"><i class="fas fa-landmark"></i></div>
+            <span class="service-card-text">도의회</span>
         </div>
-        <div class="service-card" onclick="loadPage('province')">
-            <span class="service-card-text">🏛️ 제주특별자치도청</span>
+        
+        <div class="service-card" onclick="openGovPage('province', '도청')">
+            <div class="service-icon"><i class="fas fa-building"></i></div>
+            <span class="service-card-text">도청</span>
         </div>
-        <div class="service-card" onclick="loadPage('education')">
-            <span class="service-card-text">📚 제주특별자치도교육청</span>
+        
+        <div class="service-card" onclick="openGovPage('education', '교육청')">
+            <div class="service-icon"><i class="fas fa-graduation-cap"></i></div>
+            <span class="service-card-text">교육청</span>
         </div>
-        <div class="service-card" onclick="loadPage('jeju-city')">
-            <span class="service-card-text">🏢 제주시청</span>
+        
+        <div class="service-card" onclick="openGovPage('jeju-city', '제주시청')">
+            <div class="service-icon"><i class="fas fa-city"></i></div>
+            <span class="service-card-text">제주시청</span>
         </div>
-        <div class="service-card" onclick="loadPage('seogwipo-city')">
-            <span class="service-card-text">🏢 서귀포시청</span>
+        
+        <div class="service-card" onclick="openGovPage('seogwipo-city', '서귀포시청')">
+            <div class="service-icon"><i class="fas fa-city"></i></div>
+            <span class="service-card-text">서귀포시청</span>
         </div>
-        <div class="service-card" onclick="loadPage('police')">
-            <span class="service-card-text">🚔 제주지방경찰청</span>
+        
+        <div class="service-card" onclick="openGovPage('police', '경찰청')">
+            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="service-card-text">경찰청</span>
         </div>
-        <div class="service-card" onclick="loadPage('fire')">
-            <span class="service-card-text">🚒 제주소방안전본부</span>
+        
+        <div class="service-card" onclick="openGovPage('fire', '소방안전본부')">
+            <div class="service-icon"><i class="fas fa-fire-extinguisher"></i></div>
+            <span class="service-card-text">소방안전본부</span>
         </div>
-        <div class="service-card" onclick="loadPage('customs')">
-            <span class="service-card-text">🛃 제주세관</span>
+        
+        <div class="service-card" onclick="openGovPage('customs', '세관')">
+            <div class="service-icon"><i class="fas fa-passport"></i></div>
+            <span class="service-card-text">세관</span>
         </div>
-        <div class="service-card" onclick="loadPage('labor')">
-            <span class="service-card-text">👷 제주지방고용노동청</span>
+        
+        <div class="service-card" onclick="openGovPage('labor', '고용노동청')">
+            <div class="service-icon"><i class="fas fa-briefcase"></i></div>
+            <span class="service-card-text">고용노동청</span>
         </div>
-        <div class="service-card" onclick="loadPage('tax')">
-            <span class="service-card-text">💼 제주지방국세청</span>
+        
+        <div class="service-card" onclick="openGovPage('tax', '국세청')">
+            <div class="service-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+            <span class="service-card-text">국세청</span>
         </div>
-        <div class="service-card" onclick="loadPage('court')">
-            <span class="service-card-text">⚖️ 제주지방법원</span>
+        
+        <div class="service-card" onclick="openGovPage('court', '법원')">
+            <div class="service-icon"><i class="fas fa-gavel"></i></div>
+            <span class="service-card-text">법원</span>
         </div>
-        <div class="service-card" onclick="loadPage('prosecution')">
-            <span class="service-card-text">⚖️ 제주지방검찰청</span>
+        
+        <div class="service-card" onclick="openGovPage('prosecution', '공소청')">
+            <div class="service-icon"><i class="fas fa-balance-scale"></i></div>
+            <span class="service-card-text">공소청</span>
         </div>
-        <div class="service-card" onclick="loadPage('correctional')">
-            <span class="service-card-text">🏢 제주교도소</span>
+        
+        <div class="service-card" onclick="openGovPage('prison', '교도소')">
+            <div class="service-icon"><i class="fas fa-door-closed"></i></div>
+            <span class="service-card-text">교도소</span>
         </div>
-        <div class="service-card" onclick="loadPage('meteorological')">
-            <span class="service-card-text">🌤️ 제주지방기상청</span>
+        
+        <div class="service-card" onclick="openGovPage('weather', '기상청')">
+            <div class="service-icon"><i class="fas fa-cloud-sun"></i></div>
+            <span class="service-card-text">기상청</span>
         </div>
-        <div class="service-card" onclick="loadPage('coast-guard')">
-            <span class="service-card-text">🚢 제주해양경찰서</span>
+        
+        <div class="service-card" onclick="openGovPage('coast-guard', '해양경찰서')">
+            <div class="service-icon"><i class="fas fa-anchor"></i></div>
+            <span class="service-card-text">해양경찰서</span>
+        </div>
+    </div>
+    
+    <!-- 구분선 -->
+    <div class="section-divider"></div>
+    
+    <!-- 서비스 카드 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="service-card" onclick="openServiceFromPortal('의료', 'tab2')">
+            <div class="service-icon"><i class="fas fa-hospital"></i></div>
+            <span class="service-card-text">병원</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('법률', 'tab3')">
+            <div class="service-icon"><i class="fas fa-balance-scale-left"></i></div>
+            <span class="service-card-text">법률</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('소송', 'tab3')">
+            <div class="service-icon"><i class="fas fa-file-contract"></i></div>
+            <span class="service-card-text">소송</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('유치원', 'tab4')">
+            <div class="service-icon"><i class="fas fa-child"></i></div>
+            <span class="service-card-text">유치원</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('초등학교', 'tab4')">
+            <div class="service-icon"><i class="fas fa-school"></i></div>
+            <span class="service-card-text">초등학교</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('중고교', 'tab4')">
+            <div class="service-icon"><i class="fas fa-book"></i></div>
+            <span class="service-card-text">중고교</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('대학교', 'tab4')">
+            <div class="service-icon"><i class="fas fa-university"></i></div>
+            <span class="service-card-text">대학교</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('은행', 'tab5')">
+            <div class="service-icon"><i class="fas fa-piggy-bank"></i></div>
+            <span class="service-card-text">은행</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('보험', 'tab5')">
+            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="service-card-text">보험</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('증권', 'tab5')">
+            <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+            <span class="service-card-text">증권</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('교통', 'tab6')">
+            <div class="service-icon"><i class="fas fa-bus"></i></div>
+            <span class="service-card-text">교통</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('물류', 'tab6')">
+            <div class="service-icon"><i class="fas fa-truck"></i></div>
+            <span class="service-card-text">물류</span>
+        </div>
+        
+        <div class="service-card" onclick="openServiceFromPortal('시장', 'tab7')">
+            <div class="service-icon"><i class="fas fa-shopping-cart"></i></div>
+            <span class="service-card-text">시장</span>
         </div>
     </div>
 </main>
+
+<script>
+// 정부 기관 페이지 열기 + AI 상담창
+function openGovPage(pageName, orgName) {
+    // 페이지 로드
+    loadPage(pageName);
+    
+    // 페이지 로딩 후 Floating AI 열기
+    setTimeout(() => {
+        if (typeof openFloatingChat === 'function') {
+            openFloatingChat();
+            
+            // 입력창에 기관명 미리 입력
+            setTimeout(() => {
+                const input = document.getElementById('globalChatInput');
+                if (input) {
+                    input.value = orgName + ' 관련 문의드립니다.';
+                    input.focus();
+                }
+            }, 500);
+        }
+    }, 300);
+}
+
+// 서비스 카드 클릭 시
+function openServiceFromPortal(serviceName, targetTab) {
+    // 먼저 해당 탭으로 이동
+    loadTab(targetTab);
+    
+    // 탭 로딩 후 AI 상담창 열기
+    setTimeout(() => {
+        if (typeof openFloatingChat === 'function') {
+            openFloatingChat();
+            
+            // 입력창에 서비스명 미리 입력
+            setTimeout(() => {
+                const input = document.getElementById('globalChatInput');
+                if (input) {
+                    input.value = serviceName + ' 관련 문의드립니다.';
+                    input.focus();
+                }
+            }, 500);
+        }
+    }, 300);
+}
+</script>

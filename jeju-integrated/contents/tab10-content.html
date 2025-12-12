@@ -1,0 +1,235 @@
+<style>
+    .works-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .works-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .works-header h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1E3A8A;
+        margin-bottom: 15px;
+    }
+    
+    .works-header p {
+        font-size: 18px;
+        color: #6B7280;
+    }
+    
+    .step-container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        margin-top: 40px;
+    }
+    
+    .step {
+        display: flex;
+        gap: 30px;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        border: 2px solid #E5E7EB;
+        align-items: flex-start;
+    }
+    
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    
+    .step-content {
+        flex: 1;
+    }
+    
+    .step-content h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1F2937;
+        margin-bottom: 15px;
+    }
+    
+    .step-content p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #4B5563;
+        margin-bottom: 15px;
+    }
+    
+    .step-content ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .step-content li {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #6B7280;
+        margin-bottom: 8px;
+        padding-left: 25px;
+        position: relative;
+    }
+    
+    .step-content li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #1E3A8A;
+        font-weight: bold;
+    }
+    
+    .tech-section {
+        background: #F9FAFB;
+        border-radius: 12px;
+        padding: 40px;
+        margin-top: 50px;
+        border: 2px solid #E5E7EB;
+    }
+    
+    .tech-section h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1E3A8A;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    
+    .tech-card {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid #E5E7EB;
+    }
+    
+    .tech-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1F2937;
+        margin-bottom: 12px;
+    }
+    
+    .tech-card p {
+        font-size: 14px;
+        color: #6B7280;
+        line-height: 1.6;
+        margin: 0;
+    }
+</style>
+
+<div class="works-container">
+    <div class="works-header">
+        <h1>How it works</h1>
+        <p>제주 통합 포털의 작동 원리를 알아보세요</p>
+    </div>
+    
+    <div class="step-container">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h2>서비스 선택</h2>
+                <p>포털 메인 페이지에서 필요한 서비스를 선택합니다.</p>
+                <ul>
+                    <li>정부 기관: 도청, 시청, 경찰청 등</li>
+                    <li>생활 서비스: 의료, 법률, 교육, 금융 등</li>
+                    <li>원하는 카드를 클릭하면 해당 페이지로 이동</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h2>AI 상담창 자동 열림</h2>
+                <p>서비스를 선택하면 AI 상담창이 자동으로 화면에 표시됩니다.</p>
+                <ul>
+                    <li>Floating AI 도우미가 자동으로 활성화</li>
+                    <li>선택한 서비스명이 자동으로 입력됨</li>
+                    <li>바로 질문을 시작할 수 있는 상태</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h2>대화형 상담</h2>
+                <p>AI 상담사와 자연스러운 대화를 통해 필요한 정보를 얻거나 업무를 처리합니다.</p>
+                <ul>
+                    <li>자연어 처리로 편하게 질문</li>
+                    <li>실시간 답변 제공</li>
+                    <li>추가 질문으로 깊이 있는 상담 가능</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h2>대화 저장 (선택)</h2>
+                <p>중요한 상담 내용은 PDV(Personal Data Vault)에 저장할 수 있습니다.</p>
+                <ul>
+                    <li>💾 버튼 클릭으로 간편 저장</li>
+                    <li>브라우저 로컬 스토리지에 안전하게 보관</li>
+                    <li>언제든지 PDV 탭에서 확인 가능</li>
+                    <li>6하원칙(누가, 무엇을, 언제, 어디서, 왜, 어떻게) 메타데이터 자동 생성</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tech-section">
+        <h2>핵심 기술</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h3>🤖 AI 상담 엔진</h3>
+                <p>최신 자연어 처리 기술을 활용하여 사용자의 질문을 이해하고 정확한 답변을 제공합니다.</p>
+            </div>
+            
+            <div class="tech-card">
+                <h3>🔒 프라이버시 보호</h3>
+                <p>모든 대화 내용은 사용자의 브라우저에만 저장되며, 서버로 전송되지 않아 완벽한 프라이버시를 보장합니다.</p>
+            </div>
+            
+            <div class="tech-card">
+                <h3>⚡ 실시간 처리</h3>
+                <p>빠른 응답 속도로 실시간 상담이 가능하며, 대기 시간 없이 즉시 서비스를 이용할 수 있습니다.</p>
+            </div>
+            
+            <div class="tech-card">
+                <h3>📊 스마트 관리</h3>
+                <p>대화 내용을 자동으로 분류하고 정리하여 나중에 쉽게 찾아볼 수 있도록 관리합니다.</p>
+            </div>
+            
+            <div class="tech-card">
+                <h3>🌐 통합 플랫폼</h3>
+                <p>모든 정부 및 공공 서비스를 하나의 플랫폼에서 제공하여 여러 사이트를 방문할 필요가 없습니다.</p>
+            </div>
+            
+            <div class="tech-card">
+                <h3>📱 반응형 디자인</h3>
+                <p>PC, 태블릿, 모바일 등 모든 기기에서 최적화된 화면으로 이용할 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+</div>
