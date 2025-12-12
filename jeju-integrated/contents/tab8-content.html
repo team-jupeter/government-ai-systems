@@ -6,24 +6,26 @@
     }
 
     .pdv-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: white;
+        
         padding: 2rem;
         border-radius: 12px;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        border: 2px solid #9CA3AF; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .pdv-header h1 {
+        color: #1F2937;
         margin: 0 0 0.5rem 0;
         font-size: 28px;
         font-weight: 700;
     }
 
     .pdv-header p {
+        color: #6B7280;
         margin: 0;
         font-size: 16px;
-        opacity: 0.9;
+        
     }
 
     .pdv-search-bar {
@@ -360,14 +362,386 @@
         color: white;
     }
 
+
+    }
+
+    /* 아코디언 컨테이너를 그리드로 */
+
+    /* PDV 아코디언 그리드 - 6열 강제 */
+    .accordion-grid {
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 0.5rem !important;
+        margin: 1.5rem 0 !important;
+        width: 100% !important;
+    }
+    
+    @media (max-width: 1800px) {
+        .accordion-grid {
+            grid-template-columns: repeat(6, 1fr) !important;
+        }
+    }
+    
+    @media (max-width: 1400px) {
+        .accordion-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+    }
+    
+    @media (max-width: 1024px) {
+        .accordion-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .accordion-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    
+    .accordion-card {
+        background: white !important;
+        border: 2px solid #E5E7EB !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        height: fit-content !important;
+        min-width: 0 !important;
+    }
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    .accordion-card-header {
+        padding: 0.75rem 0.875rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: #F9FAFB;
+        transition: background 0.2s ease;
+        user-select: none;
+        min-height: 70px;
+    }
+    
+    .accordion-card-header:hover {
+        background: #F3F4F6;
+    }
+    
+    .accordion-card-header.active {
+        background: #EFF6FF;
+    }
+    
+    .accordion-icon-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .accordion-icon-title span:first-child {
+        font-size: 20px;
+    }
+    
+    .accordion-icon-title span:last-child {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1F2937;
+        line-height: 1.3;
+    }
+    
+    .accordion-arrow {
+        color: #6B7280;
+        font-size: 14px;
+        align-self: flex-end;
+        transition: transform 0.3s ease;
+    }
+    
+    .accordion-card-header.active .accordion-arrow {
+        transform: rotate(180deg);
+        color: #3B82F6;
+    }
+    
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .accordion-content.active {
+        max-height: 2000px;
+        transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .accordion-content > div {
+        padding: 1.25rem;
+        background: white;
+    }
+
+    /* PDV 전용 Floating 버튼 */
+    .floating-pdv-btn {
+        position: fixed;
+        top: 180px;
+        right: 30px;
+        z-index: 999;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: none;
+    }
+    
+    .floating-pdv-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%);
+    }
+    
+    .floating-pdv-btn span:first-child {
+        font-size: 16px;
+    }
 </style>
 
 <div class="pdv-container">
+<a href="http://100.30.14.224/private-data-vault/" target="_blank" class="floating-pdv-btn">
+<span>🔐</span>
+<span>PDV 공식 사이트</span>
+</a>
     <!-- 헤더 -->
     <div class="pdv-header">
         <h1>📚 Personal Data Vault (PDV)</h1>
         <p>나의 모든 AI 상담 기록을 안전하게 보관하고 검색할 수 있습니다</p>
     </div>
+        <h2 class="pdv-features-title">🔐 PDV 핵심 기능</h2>
+        <div class="accordion-grid">
+        
+        <!-- 1. 3단계 본인 인증 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>🔐</span>
+                    <span>3단계 본인 인증 시스템</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>1단계: 생체정보 + 개인비밀번호</h4>
+                    <ul>
+                        <li><strong>얼굴 인식:</strong> 99.7% 정확도로 본인 확인</li>
+                        <li><strong>지문 인식:</strong> 99.8% 정확도로 지문 매칭</li>
+                        <li><strong>음성 인식:</strong> 99.5% 정확도 (선택 사항)</li>
+                        <li><strong>PIN 비밀번호:</strong> 본인만 아는 숫자 비밀번호</li>
+                    </ul>
+                    <p>종합 점수 95% 이상 + 비밀번호 일치 시 1단계 통과</p>
+                    
+                    <h4>2단계: AI 개인화 질문 + 실시간 인증번호</h4>
+                    <ul>
+                        <li>AI가 개인의 실제 활동 기록을 바탕으로 질문 생성</li>
+                        <li>예: "작년에 가장 많이 구매한 상품은?", "최근 3개월 방문 지역은?"</li>
+                        <li>30초마다 변경되는 동적 인증번호 (시간 + 위치 + 기기 정보 조합)</li>
+                    </ul>
+                    
+                    <h4>3단계: 오픈해시 기반 분산 검증</h4>
+                    <ul>
+                        <li>여러 검증 서버에서 동시에 신원 확인</li>
+                        <li>과반수 이상 승인 시에만 접근 허용</li>
+                        <li>모든 검증 과정이 오픈해시 체인에 투명하게 기록</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 3단계 암호화 보안 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>🛡️</span>
+                    <span>3단계 암호화 보안 시스템</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>최고 수준의 암호화</h4>
+                    <ol>
+                        <li><strong>1단계:</strong> 256비트 랜덤 암호화 키 생성</li>
+                        <li><strong>2단계:</strong> AES-256 방식으로 데이터 완전 암호화</li>
+                        <li><strong>3단계:</strong> RSA-4096으로 암호키 자체를 다시 암호화</li>
+                    </ol>
+                    <p><strong>결과:</strong> 본인의 개인키 없이는 절대 해독 불가능</p>
+                    
+                    <h4>동형암호 기술</h4>
+                    <ul>
+                        <li>개인정보를 해독하지 않고도 AI가 분석 가능</li>
+                        <li>예: 주민번호를 보지 않고도 "19세 이상" 확인</li>
+                        <li>통계 분석 시 개인정보 완전 보호</li>
+                    </ul>
+                    
+                    <h4>영지식 증명</h4>
+                    <ul>
+                        <li>비밀을 공개하지 않고 조건 충족 여부만 증명</li>
+                        <li>필요한 정보만 확인하고 불필요한 정보는 완전 보호</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 오픈해시 기반 무결성 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>🔗</span>
+                    <span>오픈해시 기반 데이터 무결성</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>해시 전용 저장 (Hash-Only Storage)</h4>
+                    <ul>
+                        <li><strong>원본 데이터:</strong> 오직 사용자 단말기에만 저장</li>
+                        <li><strong>클라우드:</strong> SHA-256 해시값(32 bytes)만 저장</li>
+                        <li><strong>효과:</strong> 제3자가 원본 데이터 접근 불가</li>
+                    </ul>
+                    
+                    <h4>4계층 분산 시스템</h4>
+                    <ol>
+                        <li><strong>Layer 1 (70%):</strong> Edge Device - 스마트폰, IoT 기기</li>
+                        <li><strong>Layer 2 (20%):</strong> Edge Server - 지역 서버</li>
+                        <li><strong>Layer 3 (9%):</strong> Core Engine - 중앙 엔진</li>
+                        <li><strong>Layer 4 (1%):</strong> Cloud Archive - 영구 보관</li>
+                    </ol>
+                    
+                    <h4>AWS 실증 실험 성능</h4>
+                    <ul>
+                        <li><strong>처리 속도:</strong> 25,907 records/sec (블록체인 대비 1,727~3,701배)</li>
+                        <li><strong>에너지 효율:</strong> 99% 절감</li>
+                        <li><strong>저장 공간:</strong> 레코드당 32 bytes</li>
+                        <li><strong>정확도:</strong> 98.9% 계층 선택 정확도</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 교차 검증 시스템 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>✅</span>
+                    <span>자동 교차 검증 시스템</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>거래 당사자 간 자동 검증</h4>
+                    <p>거래 발생 시 양측의 PDV에 동일한 거래가 기록되고, 해시값이 오픈해시 시스템에 저장되어 자동으로 일치 여부를 확인합니다.</p>
+                    
+                    <h4>작동 방식</h4>
+                    <ol>
+                        <li>개인 A와 법인 B가 거래 (예: 100만원)</li>
+                        <li>각자 PDV에 거래 내용 기록</li>
+                        <li>해시값 H_A, H_B 생성 및 오픈해시에 저장</li>
+                        <li>시스템이 자동으로 H_A와 H_B 비교</li>
+                        <li>일치 → "검증 완료" / 불일치 → 즉시 경고</li>
+                    </ol>
+                    
+                    <h4>AWS 실증 결과</h4>
+                    <ul>
+                        <li>개인 A: 1,000,000원 기록 → H_A: 1f94c4e14f21f14d...</li>
+                        <li>법인 B: 500,000원 허위 기록 → H_B: b3c4fec6c2a620c2...</li>
+                        <li><strong>결과:</strong> 해시 불일치 즉시 탐지, 양측에 경고 발송</li>
+                    </ul>
+                    
+                    <h4>관련 당국 자동 통보</h4>
+                    <ul>
+                        <li>세금 관련 거래 → 국세청 (해시값 + 거래 유형 + 금액 범위)</li>
+                        <li>의료 거래 → 보건복지부</li>
+                        <li>금융 거래 → 금융감독원</li>
+                        <li><strong>원본 데이터는 전송하지 않음</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 법적 증명력 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>📜</span>
+                    <span>법적 증명력 확보</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>활동 증명 (Activity Proof)</h4>
+                    <p>과거 특정 시점에 특정 행위를 했다는 사실을 오픈해시 체인으로 증명합니다.</p>
+                    
+                    <h4>증명서 구성 요소</h4>
+                    <ul>
+                        <li><strong>해시 체인:</strong> 위조 불가능한 데이터 연결고리</li>
+                        <li><strong>타임스탬프:</strong> 정확한 시간 기록</li>
+                        <li><strong>BLS 서명:</strong> 데이터 무결성 보장</li>
+                        <li><strong>Merkle Proof:</strong> 계층별 검증 증거</li>
+                        <li><strong>QR 코드:</strong> 제3자가 독립적으로 검증 가능</li>
+                    </ul>
+                    
+                    <h4>활용 예시</h4>
+                    <ul>
+                        <li>24개월 급여 기록 증명서 자동 발급</li>
+                        <li>학력 및 경력 증명</li>
+                        <li>의료 이력 증명</li>
+                        <li>재산 거래 내역 증명</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. 접근 권한 관리 -->
+        <div class="accordion-card">
+            <div class="accordion-card-header" onclick="toggleAccordion(this)">
+                <div class="accordion-icon-title">
+                    <span>🔑</span>
+                    <span>세밀한 접근 권한 관리</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div style="padding: 20px;">
+                    <h4>기본 원칙</h4>
+                    <ul>
+                        <li>오직 본인만 자신의 데이터에 접근 가능</li>
+                        <li>시스템 운영자도 원본 데이터를 볼 수 없음</li>
+                        <li>제3자 접근은 본인의 명시적 승인 필요</li>
+                    </ul>
+                    
+                    <h4>제3자 접근 승인 프로세스</h4>
+                    <ol>
+                        <li>제3자가 데이터 접근 요청</li>
+                        <li>본인에게 실시간 알림 전송</li>
+                        <li>접근 범위, 기간, 용도 설정</li>
+                        <li>시간 제한적 임시 복호화 키 생성</li>
+                        <li>모든 접근 내역 감사 로그에 기록</li>
+                    </ol>
+                    
+                    <h4>키 관리 시스템</h4>
+                    <ul>
+                        <li><strong>Master Key:</strong> PBKDF2HMAC (SHA-256, 100,000 iterations)</li>
+                        <li><strong>Secure Enclave:</strong> 하드웨어 기반 안전한 저장소</li>
+                        <li><strong>Shamir 비밀 분산:</strong> N개 조각 중 M개로 복구</li>
+                        <li><strong>재해 복구:</strong> 단말기 분실 시에도 데이터 복구 가능</li>
+                    </ul>
+                </div>
 
     <!-- 검색 바 -->
     <div class="pdv-search-bar">
@@ -382,6 +756,7 @@
             <button class="search-button" onclick="searchConversations()">🔍 검색</button>
         </div>
     </div>
+        </div>
 
     <!-- 통계 -->
     <div class="pdv-stats">
@@ -404,6 +779,12 @@
     </div>
 
     <!-- 대화 목록 -->
+
+    <!-- 핵심 기능 아코디언 -->
+    <div style="margin: 3rem 0 2rem 0;">
+            </div>
+        </div>
+    </div>
     <div class="conversation-list" id="conversationList">
         <!-- 대화 카드가 여기에 동적으로 추가됩니다 -->
     </div>
@@ -684,4 +1065,21 @@
     }
 
 })();
+
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isActive = header.classList.contains('active');
+        
+        // 모든 아코디언 닫기
+        document.querySelectorAll('.accordion-card-header').forEach(h => {
+            h.classList.remove('active');
+            h.nextElementSibling.classList.remove('active');
+        });
+        
+        // 클릭한 아코디언만 토글
+        if (!isActive) {
+            header.classList.add('active');
+            content.classList.add('active');
+        }
+    }
 </script>
