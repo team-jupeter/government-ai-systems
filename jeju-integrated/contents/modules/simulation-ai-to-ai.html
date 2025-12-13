@@ -214,6 +214,35 @@
         font-size: 13px;
         color: #1E40AF;
     }
+    
+    .qr-section {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        text-align: center;
+        border: 2px solid #E5E7EB;
+    }
+    
+    .qr-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1F2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .qr-code {
+        display: inline-block;
+        padding: 0.5rem;
+        background: white;
+        border-radius: 4px;
+    }
+    
+    .qr-description {
+        font-size: 12px;
+        color: #6B7280;
+        margin-top: 0.5rem;
+    }
 </style>
 
 <div class="simulation-container">
@@ -284,6 +313,15 @@
                     <p><strong>성명:</strong> 홍길동</p>
                     <p><strong>생년월일:</strong> 1990-01-01</p>
                     <p><strong>주소:</strong> 제주시 중앙로 123</p>
+                </div>
+                
+                <div class="qr-section">
+                    <div class="qr-title">📱 스마트폰 연동</div>
+                    <div class="qr-code" id="qrcode"></div>
+                    <div class="qr-description">
+                        QR 코드를 스캔하여<br>
+                        스마트폰에서 승인하세요
+                    </div>
                 </div>
                 
                 <h4 style="margin: 1rem 0 0.5rem 0; font-size: 14px;">📂 보유 서류</h4>
@@ -526,4 +564,25 @@
     
     console.log('✅ AI-to-AI 시뮬레이션 로드 완료');
 })();
+</script>
+
+<!-- QR Code 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+// QR 코드 생성
+window.addEventListener('load', function() {
+    const qrcodeContainer = document.getElementById('qrcode');
+    if (qrcodeContainer && typeof QRCode !== 'undefined') {
+        new QRCode(qrcodeContainer, {
+            text: 'http://100.30.14.224/jeju-integrated/chat/',
+            width: 150,
+            height: 150,
+            colorDark: '#0B4DA2',
+            colorLight: '#FFFFFF',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        console.log('✅ QR 코드 생성 완료');
+    }
+});
 </script>
