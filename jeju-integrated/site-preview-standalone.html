@@ -700,12 +700,61 @@
         }
         
         // 시스템 프롬프트 생성
-        function getSystemPrompt() {
+        async function getSystemPrompt() {
             if (!currentSiteData) {
                 return '당신은 친절한 AI 안내원입니다.';
             }
             
             const data = currentSiteData;
+            
+            // 개인 웹사이트인 경우 외부 프롬프트 로드
+            if (data.businessType === 'personal' || data.businessType === '개인' || data.businessType === '개인 웹사이트') {
+                try {
+                    const response = await fetch('/jeju-integrated/contents/prompts/personal-ai-agent.txt');
+                    let prompt = await response.text();
+                    
+                    // 템플릿 변수 치환
+                    prompt = prompt.replace(/{{name}}/g, data.businessName || data.name || '사용자');
+                    prompt = prompt.replace(/{{residentNumber}}/g, data.residentNumber || '[암호화됨]');
+                    prompt = prompt.replace(/{{address}}/g, data.address || '정보 없음');
+                    prompt = prompt.replace(/{{phone}}/g, data.phone || '정보 없음');
+                    prompt = prompt.replace(/{{userId}}/g, data.id || 'unknown');
+                    prompt = prompt.replace(/{{aiId}}/g, 'personal-ai-' + (data.id || 'unknown'));
+                    
+                    // 서류 정보 치환
+                    let documents = '';
+                    if (data.documents) {
+                        documents += '등록된 서류:\n';
+                        Object.entries(data.documents).forEach(([key, value]) => {
+                            documents += `- ${key}: ${value}\n`;
+                        });
+                    } else {
+                        documents = '아직 등록된 서류가 없습니다.';
+                    }
+                    prompt = prompt.replace(/{{documents}}/g, documents);
+                    
+                    // 권한 정보 치환
+                    let permissions = '';
+                    if (data.permissions) {
+                        permissions += '- 서류 자동 제출: ' + (data.permissions.documentSubmission ? '✅ 허용' : '❌ 불허') + '\n';
+                        permissions += '- 금융 거래: ' + (data.permissions.financialTransaction ? '✅ 허용' : '❌ 불허') + '\n';
+                        permissions += '- 기관 협상: ' + (data.permissions.institutionNegotiation ? '✅ 허용' : '❌ 불허') + '\n';
+                        permissions += '- 법적 대리: ' + (data.permissions.legalRepresentation ? '✅ 허용' : '❌ 불허') + '\n';
+                    } else {
+                        permissions = '아직 설정된 권한이 없습니다. 모든 작업에 본인 승인이 필요합니다.';
+                    }
+                    prompt = prompt.replace(/{{permissions}}/g, permissions);
+                    
+                    console.log('✅ 개인 AI 대리인 프롬프트 로드 완료');
+                    return prompt;
+                } catch (error) {
+                    console.error('❌ 개인 AI 프롬프트 로드 실패:', error);
+                    // 폴백: 기본 개인 프롬프트
+                    return `당신은 "${data.businessName || '사용자'}"님의 개인 AI 대리인입니다.\n\n본인을 대신하여 법적 업무를 수행하며, 모든 중요한 결정에는 본인의 승인이 필요합니다.`;
+                }
+            }
+            
+            // 일반 사이트인 경우 기존 로직
             let prompt = `당신은 "${data.businessName}"의 전문 AI 안내원입니다.\n\n`;
             prompt += `업종: ${data.businessType || '일반'}\n`;
             
@@ -748,8 +797,13 @@
         // AI 상담 응답 생성
         async function getAIResponse(userMessage) {
             try {
+                const systemPrompt = await getSystemPrompt();
+                console.log('🔍 DEBUG systemPrompt type:', typeof systemPrompt);
+                console.log('🔍 DEBUG systemPrompt value:', systemPrompt);
+                console.log('🔍 DEBUG systemPrompt length:', systemPrompt?.length);
+                
                 const messages = [
-                    { role: 'system', content: getSystemPrompt() },
+                    { role: 'system', content: systemPrompt },
                     ...chatHistory,
                     { role: 'user', content: userMessage }
                 ];

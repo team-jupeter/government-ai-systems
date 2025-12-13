@@ -418,16 +418,60 @@ window.GeneratorPrompts = {
                 '배송 방법과 기간은?',
                 '베스트셀러 상품은?'
             ]
+        },
+        personal: {
+            name: '개인 웹사이트',
+            sections: ['identity', 'documents', 'health', 'finance', 'property', 'family', 'education', 'legal', 'ai-agent'],
+            questions: [
+                '성함과 생년월일은?',
+                '현재 주소는?',
+                '가족 구성원은?',
+                '최종 학력 및 경력은?',
+                'AI 대리인 권한을 설정하시겠습니까?'
+            ],
+            promptFile: 'contents/prompts/personal.txt'
         }
     },
     
-    getSystemPrompt: function(siteData) {
+    getSystemPrompt: async function(siteData) {
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('🔍 DEBUG getSystemPrompt 시작');
+        console.log('1️⃣ siteData:', siteData);
+        console.log('2️⃣ siteData.industry:', siteData.industry);
+        console.log('3️⃣ siteData.businessType:', siteData.businessType);
+        
         const collected = Object.entries(siteData)
             .filter(([k, v]) => v !== null && v !== '')
             .map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`)
             .join(', ');
         
         const structure = siteData.industry ? this.structures[siteData.industry] : null;
+        console.log('4️⃣ structure:', structure);
+        console.log('5️⃣ structure?.promptFile:', structure?.promptFile);
+        
+        // 외부 프롬프트 파일 로드 (personal인 경우)
+        console.log('6️⃣ 조건 체크:');
+        console.log('   - siteData.industry === "personal":', siteData.industry === 'personal');
+        console.log('   - structure?.promptFile 존재:', !!structure?.promptFile);
+        
+        if (siteData.industry === 'personal' && structure?.promptFile) {
+            console.log('✅ personal 프롬프트 로드 시도');
+            try {
+                console.log('📂 fetch 경로:', structure.promptFile);
+                const response = await fetch(structure.promptFile);
+                console.log('📥 fetch 응답:', response.status, response.ok);
+                const customPrompt = await response.text();
+                console.log('✅ 프롬프트 로드 성공, 길이:', customPrompt.length);
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                return customPrompt.replace('{{collected}}', collected);
+            } catch (error) {
+                console.error('❌ 프롬프트 파일 로드 실패:', error);
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            }
+        } else {
+            console.log('⚠️ personal 조건 불일치 - 일반 프롬프트 사용');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        }
         
         let prompt = `당신은 정부 표준 웹사이트 생성 AI입니다.
 
@@ -436,6 +480,24 @@ window.GeneratorPrompts = {
 2. JSON은 반드시 한 줄로 작성하세요 (줄바꿈 금지)
 3. JSON 형식: JSON_DATA: {"key": "value"}
 4. 배열은 피하고 단순 키-값으로만 저장하세요
+
+【 기존 웹사이트 URL 처리 】
+사용자가 URL을 제공하면 (예: https://example.com 또는 www.example.com):
+1. "해당 사이트의 정보를 분석하겠습니다" 라고 응답
+2. 사용자에게 다음 질문: "이 사이트의 주요 정보를 알려주세요:
+   - 사업자명/상호
+   - 전화번호
+   - 주소
+   - 주요 메뉴/서비스
+   - 영업시간
+   - 기타 중요 정보"
+3. 사용자가 정보를 제공하면 JSON으로 저장
+
+【 URL 예시 처리 】
+사용자: "https://dasarang.com 이 제 기존 사이트입니다"
+AI: 네! 해당 사이트의 정보를 활용하겠습니다. 사이트의 주요 정보를 알려주시겠어요?
+사용자: "다사랑 횟집, 064-123-4567, 제주시 중앙로 123"
+AI: 감사합니다! JSON_DATA: {"business_name": "다사랑 횟집", "phone": "064-123-4567", "address": "제주시 중앙로 123", "existing_website": "https://dasarang.com"}
 
 예시:
 사용자: "다사랑 횟집이고 전화번호는 064-123-4567입니다"
@@ -653,7 +715,7 @@ window.GeneratorCore = {
     init: function() {
         this.siteData = {};
         this.conversationHistory = [];
-        this.addMessage('안녕하세요! 😊<br><br>저는 정부 표준 웹사이트 생성을 도와드리는 AI입니다.<br><br>어떤 업종이신가요? (음식점, 관공서, 의료, 소매, 서비스 등)', 'ai');
+        this.addMessage('안녕하세요! 😊<br><br>어떤 사이트를 만드시겠습니까?<br><br>업종을 말씀해주세요:<br>• 음식점<br>• 카페<br>• 병원<br>• 개인<br>• 기타', 'ai');
     },
     
     addMessage: function(text, sender) {
@@ -704,8 +766,36 @@ window.GeneratorCore = {
         const thinkingId = this.addThinking();
         
         try {
+            // 업종 직접 인식 (첫 메시지)
+            if (Object.keys(this.siteData).length === 0) {
+                const industries = {
+                    '음식점': { type: '음식점', industry: 'food' },
+                    '카페': { type: '카페', industry: 'food' },
+                    '병원': { type: '병원', industry: 'medical' },
+                    '의료': { type: '의료', industry: 'medical' },
+                    '관공서': { type: '관공서', industry: 'government' },
+                    '소매': { type: '소매', industry: 'retail' },
+                    '개인': { type: '개인', industry: 'personal' },
+                    'personal': { type: '개인', industry: 'personal' }
+                };
+                
+                for (const [key, value] of Object.entries(industries)) {
+                    if (message.includes(key)) {
+                        this.siteData.businessType = value.type;
+                        this.siteData.industry = value.industry;
+                        console.log('✅ 업종 인식:', value);
+                        break;
+                    }
+                }
+            }
+            
             const aiMessage = await this.getAIResponse();
             this.removeMessage(thinkingId);
+            
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('🤖 AI 응답 전문:');
+            console.log(aiMessage);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
             
             this.addMessage(aiMessage, 'ai');
             
@@ -715,6 +805,8 @@ window.GeneratorCore = {
             });
             
             const extracted = window.GeneratorJSONParser.extractAndParse(aiMessage, this.siteData);
+            console.log('📊 파싱 결과:', extracted);
+            console.log('📊 현재 siteData:', this.siteData);
             
             // 자동 필드 매핑
             if (this.siteData.businessType && !this.siteData.industry) {
@@ -727,7 +819,10 @@ window.GeneratorCore = {
                     '소매업': 'retail',
                     '서비스': 'service',
                     '서비스업': 'service',
-                    '교육': 'education'
+                    '교육': 'education',
+                    '개인': 'personal',
+                    '개인 웹사이트': 'personal',
+                    'personal': 'personal'
                 };
                 this.siteData.industry = typeToIndustry[this.siteData.businessType] || 'other';
                 console.log('✅ industry 자동 변환:', this.siteData.industry);
@@ -763,7 +858,7 @@ window.GeneratorCore = {
                 messages: [
                     {
                         role: 'system',
-                        content: window.GeneratorPrompts.getSystemPrompt(this.siteData)
+                        content: await window.GeneratorPrompts.getSystemPrompt(this.siteData)
                     },
                     ...this.conversationHistory
                 ],
