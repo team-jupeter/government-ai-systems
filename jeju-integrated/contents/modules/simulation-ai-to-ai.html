@@ -310,9 +310,26 @@
 
 <script>
 (function() {
+    // BroadcastChannel 생성
+    const approvalChannel = new BroadcastChannel('ai-approval-channel');
+    
+    // 스마트폰 앱으로부터 응답 수신
+    approvalChannel.onmessage = (event) => {
+        console.log('📱 스마트폰 응답 수신:', event.data);
+        
+        if (event.data.type === 'APPROVAL_RESPONSE') {
+            if (event.data.approved) {
+                window.SimulationAI.handlePhoneApproval(event.data);
+            } else {
+                window.SimulationAI.handlePhoneRejection(event.data);
+            }
+        }
+    };
+    
     window.SimulationAI = {
         currentRequest: null,
         transactionId: 0,
+        approvalChannel: approvalChannel,
         
         // 현재 시간 반환
         getTimestamp: function() {
@@ -365,13 +382,24 @@
             setTimeout(() => this.showApprovalRequest(docName), 1000);
         },
         
-        // 2단계: 개인에게 승인 요청
+        // 2단계: 개인에게 승인 요청 (웹 + 스마트폰)
         showApprovalRequest: function(docName) {
             this.addLog(`
                 <strong>🔔 승인 요청 전달</strong><br>
-                <strong>수신:</strong> 홍길동님<br>
+                <strong>수신:</strong> 홍길동님 (웹 + 📱 스마트폰)<br>
                 <strong>내용:</strong> 제주지방법원에서 ${docName}을(를) 요청했습니다
             `, 'approval');
+            
+            // 스마트폰 앱으로 메시지 전송
+            this.approvalChannel.postMessage({
+                type: 'APPROVAL_REQUEST',
+                from: '제주지방법원',
+                docName: docName,
+                transactionId: this.transactionId,
+                timestamp: new Date().toISOString()
+            });
+            
+            console.log('📱 스마트폰 앱으로 승인 요청 전송');
             
             const personalApproval = document.getElementById('personalApproval');
             personalApproval.innerHTML = `
@@ -380,9 +408,10 @@
                     <p><strong>요청 기관:</strong> 제주지방법원</p>
                     <p><strong>요청 서류:</strong> ${docName}</p>
                     <p><strong>거래 ID:</strong> #${this.transactionId}</p>
+                    <p style="color: #059669; margin-top: 0.5rem;">📱 스마트폰으로도 전송됨</p>
                     <div style="margin-top: 1rem;">
-                        <button class="btn-approve" onclick="SimulationAI.approveRequest()">✅ 승인</button>
-                        <button class="btn-reject" onclick="SimulationAI.rejectRequest()">❌ 거부</button>
+                        <button class="btn-approve" onclick="SimulationAI.approveRequest()">✅ 승인 (웹)</button>
+                        <button class="btn-reject" onclick="SimulationAI.rejectRequest()">❌ 거부 (웹)</button>
                     </div>
                 </div>
             `;
@@ -410,6 +439,32 @@
             
             // 4단계로 진행
             setTimeout(() => this.transferDocument(docName), 1500);
+        },
+        
+        // 스마트폰 승인 처리
+        handlePhoneApproval: function(data) {
+            this.addLog(`
+                <strong>📱 스마트폰에서 승인</strong><br>
+                <strong>승인자:</strong> 홍길동<br>
+                <strong>서류:</strong> ${data.docName}<br>
+                <strong>거래 ID:</strong> #${data.transactionId}
+            `, 'approval');
+            
+            // approveRequest와 동일한 처리
+            this.approveRequest();
+        },
+        
+        // 스마트폰 거부 처리
+        handlePhoneRejection: function(data) {
+            this.addLog(`
+                <strong>📱 스마트폰에서 거부</strong><br>
+                <strong>거부자:</strong> 홍길동<br>
+                <strong>서류:</strong> ${data.docName}<br>
+                <strong>거래 ID:</strong> #${data.transactionId}
+            `, 'request');
+            
+            // rejectRequest와 동일한 처리
+            this.rejectRequest();
         },
         
         // 거부 처리

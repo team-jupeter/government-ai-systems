@@ -10,6 +10,13 @@
         border: 2px solid #0B4DA2;
         padding: 2rem;
         margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .ai-site-header-text {
+        flex: 1;
     }
     
     .ai-site-header h1 {
@@ -23,6 +30,12 @@
         color: #4B5563;
         margin: 0;
         font-size: 14px;
+    }
+    
+    .ai-site-header-buttons {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
     }
     
     .info-panel {
@@ -66,6 +79,25 @@
         background: #003876;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(11, 77, 162, 0.3);
+    }
+    
+    .btn-header {
+        background: #F97316;
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+    
+    .btn-header:hover {
+        background: #EA580C;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
     }
     
     /* 모달 스타일 */
@@ -184,8 +216,15 @@
 
 <div class="ai-site-container">
     <div class="ai-site-header">
-        <h1>🌐 AI 사이트</h1>
-        <p>모든 웹사이트를 하나의 AI 사이트로 통합합니다</p>
+        <div class="ai-site-header-text">
+            <h1>🌐 AI 사이트</h1>
+            <p>모든 웹사이트를 하나의 AI 사이트로 통합합니다</p>
+        </div>
+        <div class="ai-site-header-buttons">
+            <button class="btn-header" onclick="openGeneratorModal()">➕ 사이트 생성</button>
+            <button class="btn-header" onclick="openSearchModal()">🔍 AI 사이트 검색</button>
+            <button class="btn-header" onclick="loadSimulation()">🔄 AI 통신 시뮬레이션</button>
+        </div>
     </div>
     
     <div class="info-panel">
@@ -236,12 +275,6 @@
         </ol>
         
         <p><strong>핵심 원칙:</strong> AI 간 대화이며, <strong>각기 법원과 개인의 승인 하에 업무를 수행</strong>합니다.</p>
-    </div>
-    
-    <div class="button-container">
-        <button class="btn-large" onclick="openGeneratorModal()">➕ 사이트 생성</button>
-        <button class="btn-large" onclick="openSearchModal()">🔍 AI 사이트 검색</button>
-        <button class="btn-large" onclick="loadSimulation()">🔄 AI 통신 시뮬레이션</button>
     </div>
     
     <div id="simulationModule"></div>
