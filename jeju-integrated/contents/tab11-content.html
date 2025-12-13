@@ -194,12 +194,57 @@
         <p>귀하가 <strong>도청에 용무가 있거나, 은행 계좌에서 누군가에게 송금하거나, 항공권을 구매하거나, 여타 상품을 구매</strong>할 때, 귀하는 해당 기관이나 기업의 사이트를 방문하거나, 앱을 이용해야 합니다.</p>
         
         <p><strong>이 페이지는 이 모든 웹사이트들을 하나의 AI 사이트로 통합합니다.</strong> AI 사이트는 귀하가 원하는 정보나 업무 수행을 AI 상담원이 대행합니다.</p>
+        
+        <hr style="margin: 2rem 0; border: none; border-top: 2px solid #0B4DA2; opacity: 0.3;">
+        
+        <p><strong style="color: #0B4DA2; font-size: 16px;">🔐 개인 웹사이트</strong></p>
+        
+        <p>개인 웹사이트는 <strong>제주 포털 사이트(<a href="http://100.30.14.224/jeju-integrated" style="color: #0B4DA2;">http://100.30.14.224/jeju-integrated</a>)에 로그인한 개인 사용자만 열람</strong>할 수 있습니다.</p>
+        
+        <p><strong>개인 웹사이트 보관 정보:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 2rem; color: #1F2937;">
+            <li>신원: 주민등록증, 운전면허증, 여권</li>
+            <li>주거: 주민등록등본, 주민등록초본</li>
+            <li>인감: 인감증명서</li>
+            <li>학력: 졸업증명서, 성적증명서</li>
+            <li>건강: 건강검진 기록, 병의원 진료 기록</li>
+            <li>생체: 지문, 홍채 등 생체정보</li>
+            <li>가족: 가족관계증명서</li>
+            <li>재산: 부동산, 차량, 금융계좌 등</li>
+        </ul>
+        
+        <p><strong style="color: #0B4DA2;">🤖 개인 AI 대리인</strong></p>
+        
+        <p>개인 웹사이트의 AI 상담창은 해당 개인을 대신하여 <strong>법적 대리인이자 변호사</strong>로 기능합니다:</p>
+        <ul style="margin: 0.5rem 0; padding-left: 2rem; color: #1F2937;">
+            <li>각종 서류를 여타 기관에 자동 제출</li>
+            <li>대금 지불 및 송금</li>
+            <li>법적 대리 업무 수행</li>
+        </ul>
+        
+        <p><strong style="color: #0B4DA2;">💬 AI-to-AI 통신 프로토콜</strong></p>
+        
+        <p><strong>예시: 법원 사이트 방문 시</strong></p>
+        <ol style="margin: 0.5rem 0; padding-left: 2rem; color: #1F2937; line-height: 1.6;">
+            <li>법원 사이트 AI 상담창 → 개인 사이트 AI 상담창: "주민등록등본이 필요합니다"</li>
+            <li>개인 사이트 AI → 개인 본인: "법원에서 등본을 요청했습니다. 승인하시겠습니까?"</li>
+            <li>개인 본인: "승인"</li>
+            <li>개인 사이트 AI → 법원 사이트 AI: 등본 전송</li>
+            <li>법원 사이트 AI → 법원: "등본을 받았습니다. 처리를 진행하시겠습니까?"</li>
+            <li>법원: "승인"</li>
+            <li>업무 완료</li>
+        </ol>
+        
+        <p><strong>핵심 원칙:</strong> AI 간 대화이며, <strong>각기 법원과 개인의 승인 하에 업무를 수행</strong>합니다.</p>
     </div>
     
     <div class="button-container">
         <button class="btn-large" onclick="openGeneratorModal()">➕ 사이트 생성</button>
         <button class="btn-large" onclick="openSearchModal()">🔍 AI 사이트 검색</button>
+        <button class="btn-large" onclick="loadSimulation()">🔄 AI 통신 시뮬레이션</button>
     </div>
+    
+    <div id="simulationModule"></div>
 </div>
 
 <!-- 사이트 생성 모달 -->
@@ -383,6 +428,35 @@
         } catch (error) {
             console.error('프리뷰 로드 오류:', error);
             container.innerHTML = '<div style="text-align:center;padding:2rem;color:#DC2626;">프리뷰를 불러오는데 실패했습니다.</div>';
+        }
+    };
+    // 시뮬레이션 모듈 로드
+    window.loadSimulation = async function() {
+        const container = document.getElementById('simulationModule');
+        container.innerHTML = '<div style="text-align:center;padding:2rem;color:#6B7280;">AI 통신 시뮬레이션을 불러오는 중...</div>';
+        
+        try {
+            const response = await fetch('contents/modules/simulation-ai-to-ai.html');
+            if (!response.ok) throw new Error('시뮬레이션 모듈 로드 실패');
+            
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                newScript.textContent = script.textContent;
+                document.body.appendChild(newScript);
+                script.remove();
+            });
+            
+            // 시뮬레이션 섹션으로 스크롤
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } catch (error) {
+            console.error('시뮬레이션 로드 오류:', error);
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#DC2626;">시뮬레이션을 불러오는데 실패했습니다.</div>';
         }
     };
 })();

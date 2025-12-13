@@ -1,0 +1,474 @@
+<style>
+    .simulation-container {
+        max-width: 1600px;
+        margin: 3rem auto;
+        padding: 2rem;
+        background: white;
+        border: 2px solid #0B4DA2;
+        border-radius: 8px;
+    }
+    
+    .simulation-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #E5E7EB;
+    }
+    
+    .simulation-header h2 {
+        color: #0B4DA2;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .simulation-header p {
+        color: #6B7280;
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    .simulation-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .panel {
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+    }
+    
+    .panel-header {
+        padding: 1rem;
+        font-weight: 700;
+        font-size: 16px;
+        color: white;
+    }
+    
+    .panel-court {
+        background: #DC2626;
+    }
+    
+    .panel-log {
+        background: #059669;
+    }
+    
+    .panel-personal {
+        background: #0B4DA2;
+    }
+    
+    .panel-content {
+        padding: 1.5rem;
+        min-height: 400px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+    
+    .document-list {
+        margin: 1rem 0;
+    }
+    
+    .document-item {
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border: 1px solid #E5E7EB;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .document-item.available {
+        background: #F0FDF4;
+        border-color: #86EFAC;
+    }
+    
+    .btn-request {
+        background: #DC2626;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .btn-request:hover {
+        background: #B91C1C;
+    }
+    
+    .btn-approve {
+        background: #059669;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        margin-right: 0.5rem;
+    }
+    
+    .btn-approve:hover {
+        background: #047857;
+    }
+    
+    .btn-reject {
+        background: #DC2626;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .btn-reject:hover {
+        background: #B91C1C;
+    }
+    
+    .log-entry {
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border-left: 4px solid #E5E7EB;
+        background: #F9FAFB;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+    
+    .log-entry.request {
+        border-left-color: #DC2626;
+    }
+    
+    .log-entry.approval {
+        border-left-color: #059669;
+    }
+    
+    .log-entry.transfer {
+        border-left-color: #0B4DA2;
+    }
+    
+    .log-entry.blockchain {
+        border-left-color: #7C3AED;
+        background: #FAF5FF;
+    }
+    
+    .timestamp {
+        color: #6B7280;
+        font-size: 11px;
+        margin-top: 0.25rem;
+    }
+    
+    .approval-request {
+        background: #FEF3C7;
+        border: 2px solid #F59E0B;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+    }
+    
+    .approval-request h4 {
+        margin: 0 0 0.5rem 0;
+        color: #92400E;
+        font-size: 14px;
+    }
+    
+    .approval-request p {
+        margin: 0.25rem 0;
+        font-size: 13px;
+        color: #78350F;
+    }
+    
+    .blockchain-hash {
+        font-family: monospace;
+        font-size: 11px;
+        color: #7C3AED;
+        background: #F5F3FF;
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        word-break: break-all;
+    }
+    
+    .user-info {
+        background: #EFF6FF;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+    
+    .user-info h4 {
+        margin: 0 0 0.5rem 0;
+        color: #1E3A8A;
+        font-size: 14px;
+    }
+    
+    .user-info p {
+        margin: 0.25rem 0;
+        font-size: 13px;
+        color: #1E40AF;
+    }
+</style>
+
+<div class="simulation-container">
+    <div class="simulation-header">
+        <h2>🔄 AI-to-AI 문서 전송 시뮬레이션</h2>
+        <p>법원 사이트 AI와 개인 사이트 AI 간의 실시간 문서 요청 및 전송 과정을 확인하세요</p>
+    </div>
+    
+    <div class="simulation-grid">
+        <!-- 법원 사이트 패널 -->
+        <div class="panel">
+            <div class="panel-header panel-court">
+                ⚖️ 제주지방법원 AI
+            </div>
+            <div class="panel-content" id="courtPanel">
+                <div class="user-info">
+                    <h4>기관 정보</h4>
+                    <p><strong>기관명:</strong> 제주지방법원</p>
+                    <p><strong>담당:</strong> 민사 1부</p>
+                    <p><strong>사건번호:</strong> 2025가단12345</p>
+                </div>
+                
+                <h4 style="margin: 1rem 0 0.5rem 0; font-size: 14px;">📄 요청 가능한 서류</h4>
+                <div class="document-list">
+                    <div class="document-item">
+                        <span>주민등록등본</span>
+                        <button class="btn-request" onclick="SimulationAI.requestDocument('주민등록등본')">요청</button>
+                    </div>
+                    <div class="document-item">
+                        <span>주민등록초본</span>
+                        <button class="btn-request" onclick="SimulationAI.requestDocument('주민등록초본')">요청</button>
+                    </div>
+                    <div class="document-item">
+                        <span>인감증명서</span>
+                        <button class="btn-request" onclick="SimulationAI.requestDocument('인감증명서')">요청</button>
+                    </div>
+                    <div class="document-item">
+                        <span>졸업증명서</span>
+                        <button class="btn-request" onclick="SimulationAI.requestDocument('졸업증명서')">요청</button>
+                    </div>
+                </div>
+                
+                <div id="courtReceived" style="margin-top: 2rem;"></div>
+            </div>
+        </div>
+        
+        <!-- 통신 로그 패널 -->
+        <div class="panel">
+            <div class="panel-header panel-log">
+                📡 통신 로그
+            </div>
+            <div class="panel-content" id="logPanel">
+                <div class="log-entry">
+                    <strong>시스템 준비 완료</strong>
+                    <div class="timestamp">시뮬레이션 대기 중...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 개인 사이트 패널 -->
+        <div class="panel">
+            <div class="panel-header panel-personal">
+                👤 개인 사이트 AI (홍길동)
+            </div>
+            <div class="panel-content" id="personalPanel">
+                <div class="user-info">
+                    <h4>개인 정보</h4>
+                    <p><strong>성명:</strong> 홍길동</p>
+                    <p><strong>생년월일:</strong> 1990-01-01</p>
+                    <p><strong>주소:</strong> 제주시 중앙로 123</p>
+                </div>
+                
+                <h4 style="margin: 1rem 0 0.5rem 0; font-size: 14px;">📂 보유 서류</h4>
+                <div class="document-list">
+                    <div class="document-item available">
+                        <span>✅ 주민등록등본</span>
+                    </div>
+                    <div class="document-item available">
+                        <span>✅ 주민등록초본</span>
+                    </div>
+                    <div class="document-item available">
+                        <span>✅ 인감증명서</span>
+                    </div>
+                    <div class="document-item available">
+                        <span>✅ 졸업증명서</span>
+                    </div>
+                </div>
+                
+                <div id="personalApproval"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    window.SimulationAI = {
+        currentRequest: null,
+        transactionId: 0,
+        
+        // 현재 시간 반환
+        getTimestamp: function() {
+            const now = new Date();
+            return now.toLocaleTimeString('ko-KR');
+        },
+        
+        // 블록체인 해시 생성 (시뮬레이션)
+        generateHash: function() {
+            return 'OH_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        },
+        
+        // 로그 추가
+        addLog: function(message, type = '') {
+            const logPanel = document.getElementById('logPanel');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `
+                <div>${message}</div>
+                <div class="timestamp">${this.getTimestamp()}</div>
+            `;
+            logPanel.appendChild(entry);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        },
+        
+        // 1단계: 법원 AI → 개인 AI 서류 요청
+        requestDocument: function(docName) {
+            if (this.currentRequest) {
+                alert('이미 처리 중인 요청이 있습니다.');
+                return;
+            }
+            
+            this.transactionId++;
+            this.currentRequest = {
+                id: this.transactionId,
+                docName: docName,
+                from: '제주지방법원',
+                to: '홍길동',
+                timestamp: new Date().toISOString()
+            };
+            
+            this.addLog(`
+                <strong>📤 서류 요청 발송</strong><br>
+                <strong>요청 기관:</strong> 제주지방법원<br>
+                <strong>서류명:</strong> ${docName}<br>
+                <strong>거래 ID:</strong> #${this.transactionId}
+            `, 'request');
+            
+            // 2단계로 진행
+            setTimeout(() => this.showApprovalRequest(docName), 1000);
+        },
+        
+        // 2단계: 개인에게 승인 요청
+        showApprovalRequest: function(docName) {
+            this.addLog(`
+                <strong>🔔 승인 요청 전달</strong><br>
+                <strong>수신:</strong> 홍길동님<br>
+                <strong>내용:</strong> 제주지방법원에서 ${docName}을(를) 요청했습니다
+            `, 'approval');
+            
+            const personalApproval = document.getElementById('personalApproval');
+            personalApproval.innerHTML = `
+                <div class="approval-request">
+                    <h4>🔔 승인 요청</h4>
+                    <p><strong>요청 기관:</strong> 제주지방법원</p>
+                    <p><strong>요청 서류:</strong> ${docName}</p>
+                    <p><strong>거래 ID:</strong> #${this.transactionId}</p>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn-approve" onclick="SimulationAI.approveRequest()">✅ 승인</button>
+                        <button class="btn-reject" onclick="SimulationAI.rejectRequest()">❌ 거부</button>
+                    </div>
+                </div>
+            `;
+        },
+        
+        // 3단계: 승인 처리
+        approveRequest: function() {
+            const docName = this.currentRequest.docName;
+            
+            this.addLog(`
+                <strong>✅ 본인 승인 완료</strong><br>
+                <strong>승인자:</strong> 홍길동<br>
+                <strong>서류:</strong> ${docName}<br>
+                <strong>거래 ID:</strong> #${this.transactionId}
+            `, 'approval');
+            
+            document.getElementById('personalApproval').innerHTML = `
+                <div style="background: #D1FAE5; padding: 1rem; border-radius: 4px; border: 2px solid #10B981;">
+                    <strong style="color: #065F46;">✅ 승인 완료</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 13px; color: #047857;">
+                        ${docName} 전송 중...
+                    </p>
+                </div>
+            `;
+            
+            // 4단계로 진행
+            setTimeout(() => this.transferDocument(docName), 1500);
+        },
+        
+        // 거부 처리
+        rejectRequest: function() {
+            const docName = this.currentRequest.docName;
+            
+            this.addLog(`
+                <strong>❌ 본인 거부</strong><br>
+                <strong>거부자:</strong> 홍길동<br>
+                <strong>서류:</strong> ${docName}<br>
+                <strong>거래 ID:</strong> #${this.transactionId}
+            `, 'request');
+            
+            document.getElementById('personalApproval').innerHTML = `
+                <div style="background: #FEE2E2; padding: 1rem; border-radius: 4px; border: 2px solid #DC2626;">
+                    <strong style="color: #991B1B;">❌ 요청 거부됨</strong>
+                </div>
+            `;
+            
+            this.currentRequest = null;
+        },
+        
+        // 4단계: 문서 전송 및 블록체인 기록
+        transferDocument: function(docName) {
+            const hash = this.generateHash();
+            
+            this.addLog(`
+                <strong>📤 서류 전송 완료</strong><br>
+                <strong>발신:</strong> 개인 AI (홍길동)<br>
+                <strong>수신:</strong> 법원 AI<br>
+                <strong>서류:</strong> ${docName}<br>
+                <strong>거래 ID:</strong> #${this.transactionId}
+            `, 'transfer');
+            
+            this.addLog(`
+                <strong>🔗 OpenHash 블록체인 기록</strong><br>
+                <strong>거래 ID:</strong> #${this.transactionId}<br>
+                <strong>해시:</strong> 
+                <div class="blockchain-hash">${hash}</div>
+                <strong>타임스탬프:</strong> ${this.currentRequest.timestamp}<br>
+                <strong>에너지 절감:</strong> 98.5% (vs 기존 블록체인)
+            `, 'blockchain');
+            
+            // 법원 패널에 수신 표시
+            document.getElementById('courtReceived').innerHTML = `
+                <div style="background: #DBEAFE; padding: 1rem; border-radius: 4px; border: 2px solid #0B4DA2;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #1E3A8A; font-size: 14px;">✅ 서류 수신 완료</h4>
+                    <p style="margin: 0.25rem 0; font-size: 13px; color: #1E40AF;"><strong>서류명:</strong> ${docName}</p>
+                    <p style="margin: 0.25rem 0; font-size: 13px; color: #1E40AF;"><strong>발신:</strong> 홍길동</p>
+                    <p style="margin: 0.25rem 0; font-size: 13px; color: #1E40AF;"><strong>거래 ID:</strong> #${this.transactionId}</p>
+                    <div class="blockchain-hash">${hash}</div>
+                </div>
+            `;
+            
+            document.getElementById('personalApproval').innerHTML = '';
+            this.currentRequest = null;
+        }
+    };
+    
+    console.log('✅ AI-to-AI 시뮬레이션 로드 완료');
+})();
+</script>
