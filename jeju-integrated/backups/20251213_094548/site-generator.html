@@ -620,29 +620,6 @@ window.GeneratorCore = {
             // JSON 추출 및 파싱
             const extracted = window.GeneratorJSONParser.extractAndParse(aiMessage, this.siteData);
             
-            
-            // 자동 필드 매핑
-            if (this.siteData.businessType && !this.siteData.industry) {
-                const typeToIndustry = {
-                    '음식점': 'food',
-                    '관공서': 'government',
-                    '의료': 'medical',
-                    '의료기관': 'medical',
-                    '소매': 'retail',
-                    '소매업': 'retail',
-                    '서비스': 'service',
-                    '서비스업': 'service',
-                    '교육': 'education'
-                };
-                this.siteData.industry = typeToIndustry[this.siteData.businessType] || 'other';
-                console.log('✅ industry 자동 변환:', this.siteData.industry);
-            }
-            
-            // description 자동 생성
-            if (!this.siteData.description && this.siteData.businessName) {
-                this.siteData.description = `${this.siteData.businessName}입니다.`;
-                console.log('✅ description 자동 생성:', this.siteData.description);
-            }
             if (extracted) {
                 this.showCollectedInfo();
             }
