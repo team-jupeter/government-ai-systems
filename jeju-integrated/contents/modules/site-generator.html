@@ -818,19 +818,29 @@ window.GeneratorCore = {
         localStorage.setItem('aiSites', JSON.stringify(sites));
         
         this.addMessage(
-            `🎉 완료!<br><br><strong>${this.siteData.businessName}</strong> 사이트가 생성되었습니다!<br>잠시 후 새 탭에서 프리뷰를 보여드립니다...`,
+            `🎉 완료!<br><br><strong>${this.siteData.businessName}</strong> 사이트가 생성되었습니다!<br><br>새 탭에서 프리뷰가 열립니다...`,
             'ai'
         );
         
+        // 새 탭에서 프리뷰 열기
         setTimeout(() => {
             const previewUrl = `/jeju-integrated/site-preview-standalone.html?siteId=${finalData.id}`;
-            window.open(previewUrl, '_blank');
+            const newWindow = window.open(previewUrl, '_blank');
             
-            if (window.loadSitePreview) {
-                window.loadSitePreview(finalData);
-                document.getElementById('previewModule').scrollIntoView({ behavior: 'smooth' });
+            if (!newWindow) {
+                // 팝업이 차단된 경우
+                this.addMessage(
+                    `⚠️ 팝업이 차단되었습니다.<br><br>아래 버튼을 클릭하여 프리뷰를 열어주세요:<br><br>` +
+                    `<button onclick="window.open('/jeju-integrated/site-preview-standalone.html?siteId=${finalData.id}', '_blank')" ` +
+                    `class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">🔗 프리뷰 열기</button>`,
+                    'ai'
+                );
             }
-        }, 1500);
+        }, 1000);
+        
+        // 대화 초기화
+        this.siteData = {};
+        this.conversationHistory = [];
     }
 };
 
