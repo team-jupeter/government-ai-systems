@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 생성 사이트</title>
+    <title>사이트 프리뷰</title>
     <style>
         * {
             margin: 0;
@@ -12,388 +12,644 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #F9FAFB;
         }
         
-        .site-container {
+        .preview-container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            min-height: 100vh;
+            padding: 2rem;
         }
         
         .site-header {
-            background: linear-gradient(135deg, #0B4DA2, #0066CC);
+            background: linear-gradient(135deg, #0B4DA2 0%, #003876 100%);
             color: white;
             padding: 3rem 2rem;
             text-align: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
         }
         
         .site-title {
-            font-size: 36px;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
         
         .site-subtitle {
-            font-size: 18px;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
         
-        .site-content {
-            padding: 2rem;
-        }
-        
         .section {
-            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .section-title {
-            font-size: 24px;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #1F2937;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
+            color: #0B4DA2;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
             border-bottom: 3px solid #0B4DA2;
         }
         
-        .field-item {
-            margin: 1rem 0;
-            font-size: 16px;
-            line-height: 1.8;
-        }
-        
-        .field-label {
-            font-weight: 600;
-            color: #374151;
-            margin-right: 0.5rem;
-        }
-        
-        .field-value {
-            color: #1F2937;
-        }
-        
-        .card-grid {
+        .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-top: 1rem;
         }
         
-        .card {
-            background: white;
-            border: 2px solid #E5E7EB;
-            padding: 1.5rem;
-            border-radius: 8px;
-            transition: all 0.2s;
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
         }
         
-        .card:hover {
-            border-color: #0B4DA2;
-            box-shadow: 0 4px 12px rgba(11, 77, 162, 0.1);
+        .info-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
         
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1F2937;
-            margin-bottom: 0.5rem;
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            font-size: 1rem;
+            color: #111827;
+            font-weight: 500;
         }
         
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
         
         .gallery-item {
-            position: relative;
-            width: 100%;
-            padding-top: 100%;
-            overflow: hidden;
             border-radius: 8px;
-            border: 2px solid #E5E7EB;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: #F9FAFB;
+            aspect-ratio: 16/9;
+            position: relative;
         }
         
         .gallery-item img,
         .gallery-item video {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        /* AI 상담창 */
-        .ai-helper {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
+        .youtube-embed {
+            padding-top: 56.25%;
+            position: relative;
+            background: #000;
         }
         
-        .ai-toggle-btn {
-            width: 60px;
-            height: 60px;
-            background: #0B4DA2;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(11, 77, 162, 0.4);
+        .youtube-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .menu-item {
+            padding: 1.5rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
             transition: all 0.2s;
         }
         
-        .ai-toggle-btn:hover {
-            transform: scale(1.1);
-            background: #003876;
+        .menu-item:hover {
+            border-color: #0B4DA2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 77, 162, 0.15);
         }
         
-        .ai-chat-window {
+        .menu-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0B4DA2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: #6B7280;
+        }
+        
+        /* ============================================ */
+        /* AI 상담창 스타일 */
+        /* ============================================ */
+        
+        /* 플로팅 버튼 */
+        .ai-chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0B4DA2, #003876);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(11, 77, 162, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            transition: all 0.3s;
+            z-index: 998;
+        }
+        
+        .ai-chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(11, 77, 162, 0.6);
+        }
+        
+        /* 배경 오버레이 */
+        .chat-overlay {
             display: none;
             position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 380px;
-            height: 550px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            flex-direction: column;
-            overflow: hidden;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
-        .ai-chat-window.active {
+        .chat-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* 채팅창 컨테이너 */
+        .ai-chat-container {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 400px;
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .ai-chat-container.open {
             display: flex;
         }
         
-        .ai-chat-header {
-            background: #0B4DA2;
+        .ai-chat-container.expanded {
+            bottom: 50%;
+            right: 50%;
+            transform: translate(50%, 50%);
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            max-height: 700px;
+        }
+        
+        /* 채팅 헤더 */
+        .chat-header {
+            background: linear-gradient(135deg, #0B4DA2, #003876);
             color: white;
-            padding: 1rem;
+            padding: 1.25rem;
+            border-radius: 16px 16px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .ai-chat-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
+        .chat-header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
         }
         
-        .ai-chat-messages {
+        .chat-header-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+        
+        .chat-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .chat-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 메시지 영역 */
+        .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 1.5rem;
             background: #F9FAFB;
         }
         
-        .ai-message {
+        .chat-message {
             margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
         }
         
-        .ai-bubble {
-            display: inline-block;
-            max-width: 80%;
-            padding: 0.75rem 1rem;
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #0B4DA2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .chat-message.user .message-avatar {
+            background: #6B7280;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 0.875rem 1.125rem;
             border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .ai-message.assistant .ai-bubble {
             background: white;
-            border: 2px solid #E5E7EB;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
         }
         
-        .ai-message.user {
-            text-align: right;
-        }
-        
-        .ai-message.user .ai-bubble {
+        .chat-message.user .message-content {
             background: #0B4DA2;
             color: white;
         }
         
-        .ai-chat-input-area {
-            padding: 1rem;
-            border-top: 2px solid #E5E7EB;
-        }
-        
-        .ai-chat-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #E5E7EB;
+        .message-image {
+            max-width: 100%;
             border-radius: 8px;
-            font-size: 14px;
-            resize: none;
-            font-family: inherit;
-        }
-        
-        .ai-file-upload {
             margin-top: 0.5rem;
-            display: flex;
-            gap: 0.5rem;
         }
         
-        .ai-file-btn {
-            background: #F3F4F6;
-            border: 2px solid #D1D5DB;
+        /* 입력 영역 */
+        .chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+            border-radius: 0 0 16px 16px;
+        }
+        
+        .file-preview-area {
+            display: none;
+            padding: 0.75rem;
+            background: #F9FAFB;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .file-preview-area.active {
+            display: block;
+        }
+        
+        .file-preview-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 0.5rem;
-            font-size: 18px;
-            cursor: pointer;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-preview-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .file-preview-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
             border-radius: 4px;
         }
         
-        /* 수정 버튼 */
-        .edit-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #10B981;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        .file-preview-name {
+            flex: 1;
+            font-size: 0.875rem;
+            color: #374151;
         }
         
-        .edit-btn:hover {
-            background: #059669;
+        .file-remove-btn {
+            background: #EF4444;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+        
+        .file-upload-btn {
+            background: #E5E7EB;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .file-upload-btn:hover {
+            background: #D1D5DB;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #0B4DA2;
+        }
+        
+        .chat-send-btn {
+            background: #0B4DA2;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .chat-send-btn:hover {
+            background: #003876;
+        }
+        
+        .chat-send-btn:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+        }
+        
+        /* 타이핑 인디케이터 */
+        .typing-indicator {
+            display: none;
+            padding: 0.875rem 1.125rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: fit-content;
+        }
+        
+        .typing-indicator.active {
+            display: block;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9CA3AF;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* 스크롤바 스타일 */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: #F9FAFB;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
         }
     </style>
 </head>
 <body>
-    <div class="site-container">
-        <div class="site-header">
-            <h1 class="site-title" id="siteTitle">AI 생성 사이트</h1>
-            <p class="site-subtitle" id="siteSubtitle">로딩 중...</p>
-        </div>
-        
-        <div class="site-content" id="siteContent">
-            <!-- 동적으로 생성됨 -->
-        </div>
+    <div class="preview-container" id="previewContainer">
+        <div class="loading">🔄 사이트를 불러오는 중...</div>
     </div>
-    
-    <!-- 수정 버튼 -->
-    <button class="edit-btn" onclick="editSite()">✏️ 사이트 수정</button>
-    
+
     <!-- AI 상담창 -->
-    <div class="ai-helper">
-        <button class="ai-toggle-btn" onclick="toggleAIChat()">?</button>
+    <div class="chat-overlay" id="chatOverlay"></div>
+    
+    <div class="ai-chat-button" id="chatButton">
+        💬
+    </div>
+    
+    <div class="ai-chat-container" id="chatContainer">
+        <div class="chat-header">
+            <div>
+                <div class="chat-header-title" id="chatTitle">AI 안내원</div>
+                <div class="chat-header-subtitle">무엇을 도와드릴까요?</div>
+            </div>
+            <button class="chat-close-btn" id="chatCloseBtn">×</button>
+        </div>
         
-        <div class="ai-chat-window" id="aiChatWindow">
-            <div class="ai-chat-header">
-                <h3>AI 상담원</h3>
-                <button class="ai-chat-close" onclick="toggleAIChat()">×</button>
-            </div>
-            
-            <div class="ai-chat-messages" id="aiChatMessages">
-                <div class="ai-message assistant">
-                    <div class="ai-bubble">
-                        안녕하세요! 😊<br>무엇을 도와드릴까요?
-                    </div>
-                </div>
-            </div>
-            
-            <div class="ai-chat-input-area">
-                <textarea 
-                    class="ai-chat-input" 
-                    id="aiChatInput" 
-                    placeholder="메시지를 입력하세요..."
-                    rows="2"
-                    onkeypress="handleAIChatKeypress(event)"></textarea>
-                
-                <div class="ai-file-upload">
-                    <label class="ai-file-btn" title="사진 업로드">
-                        📷
-                        <input type="file" accept="image/*" multiple onchange="handleAIFileUpload(event, 'image')" style="display:none;">
-                    </label>
-                    <label class="ai-file-btn" title="동영상 업로드">
-                        🎥
-                        <input type="file" accept="video/*" onchange="handleAIFileUpload(event, 'video')" style="display:none;">
-                    </label>
-                    <label class="ai-file-btn" title="오디오 업로드">
-                        🎵
-                        <input type="file" accept="audio/*" onchange="handleAIFileUpload(event, 'audio')" style="display:none;">
-                    </label>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    안녕하세요! 무엇을 도와드릴까요?
                 </div>
             </div>
         </div>
+        
+        <div class="chat-input-container">
+            <div class="file-preview-area" id="filePreviewArea"></div>
+            
+            <div class="chat-input-wrapper">
+                <button class="file-upload-btn" id="fileUploadBtn" title="파일 첨부">📎</button>
+                <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx" style="display: none;" multiple>
+                <textarea 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="메시지를 입력하세요..."
+                    rows="1"
+                ></textarea>
+                <button class="chat-send-btn" id="chatSendBtn">➤</button>
+            </div>
+        </div>
     </div>
-    
+
     <script>
-    (function() {
+        // 전역 변수
         let currentSiteData = null;
         let chatHistory = [];
         let uploadedFiles = [];
         
-        // 페이지 로드 시 사이트 데이터 로드
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const siteId = params.get('siteId');
+        // YouTube ID 추출
+        window.extractYouTubeIdPreview = function(url) {
+            const patterns = [
+                /youtube\.com\/watch\?v=([^&]+)/,
+                /youtu\.be\/([^?]+)/,
+                /youtube\.com\/embed\/([^?]+)/
+            ];
             
-            if (!siteId) {
-                document.getElementById('siteContent').innerHTML = '<p style="text-align:center;padding:2rem;color:#DC2626;">사이트 ID가 없습니다.</p>';
-                return;
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
             }
-            
-            loadSiteData(siteId);
-        });
-        
-        // 사이트 데이터 로드
-        function loadSiteData(siteId) {
-            const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
-            const site = sites.find(s => s.id === siteId);
-            
-            if (!site) {
-                document.getElementById('siteContent').innerHTML = '<p style="text-align:center;padding:2rem;color:#DC2626;">사이트를 찾을 수 없습니다.</p>';
-                return;
-            }
-            
-            currentSiteData = site;
-            renderSite(site);
-        }
+            return '';
+        };
         
         // 사이트 렌더링
         function renderSite(data) {
-            document.getElementById('siteTitle').textContent = data.businessName || 'AI 사이트';
-            document.getElementById('siteSubtitle').textContent = data.description || '';
+            currentSiteData = data;
             
-            const container = document.getElementById('siteContent');
-            let html = '';
-            
-            // 기본 정보 섹션
-            const basicFields = ['phone', 'email', 'address', 'hours'];
-            const basicInfo = basicFields.filter(f => data[f]).map(f => `
-                <div class="field-item">
-                    <span class="field-label">${getFieldLabel(f)}:</span>
-                    <span class="field-value">${data[f]}</span>
+            let html = `
+                <div class="site-header">
+                    <div class="site-title">${data.businessName || '사이트 제목'}</div>
+                    <div class="site-subtitle">${data.description || ''}</div>
                 </div>
-            `).join('');
+            `;
             
-            if (basicInfo) {
-                html += `<div class="section">
+            // 기본 정보
+            html += `
+                <div class="section">
                     <h2 class="section-title">기본 정보</h2>
-                    ${basicInfo}
-                </div>`;
-            }
+                    <div class="info-grid">
+                        ${data.businessType ? `<div class="info-item">
+                            <div class="info-icon">🏢</div>
+                            <div class="info-content">
+                                <div class="info-label">업종</div>
+                                <div class="info-value">${data.businessType}</div>
+                            </div>
+                        </div>` : ''}
+                        ${data.phone ? `<div class="info-item">
+                            <div class="info-icon">📞</div>
+                            <div class="info-content">
+                                <div class="info-label">전화번호</div>
+                                <div class="info-value">${data.phone}</div>
+                            </div>
+                        </div>` : ''}
+                        ${data.email ? `<div class="info-item">
+                            <div class="info-icon">✉️</div>
+                            <div class="info-content">
+                                <div class="info-label">이메일</div>
+                                <div class="info-value">${data.email}</div>
+                            </div>
+                        </div>` : ''}
+                        ${data.address ? `<div class="info-item">
+                            <div class="info-icon">📍</div>
+                            <div class="info-content">
+                                <div class="info-label">주소</div>
+                                <div class="info-value">${data.address}</div>
+                            </div>
+                        </div>` : ''}
+                    </div>
+                </div>
+            `;
             
-            // 나머지 필드 동적 렌더링
-            Object.entries(data).forEach(([key, value]) => {
-                if (!['id', 'createdAt', 'businessName', 'description', ...basicFields].includes(key)) {
-                    html += renderField(key, value);
-                }
-            });
+            // 메뉴/서비스
+            if (data.menu) {
+                html += `
+                    <div class="section">
+                        <h2 class="section-title">메뉴</h2>
+                        <div class="menu-grid">
+                            <div class="menu-item">
+                                <div class="menu-name">${data.menu}</div>
+                                ${data.price ? `<div class="menu-price">${parseInt(data.price).toLocaleString()}원</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             
             // 갤러리
             if (data.gallery && data.gallery.length > 0) {
@@ -401,10 +657,25 @@
                     <h2 class="section-title">갤러리</h2>
                     <div class="gallery-grid">
                         ${data.gallery.map(file => {
-                            if (file.type === 'image') {
-                                return `<div class="gallery-item"><img src="${file.data}" alt="${file.name}"></div>`;
-                            } else if (file.type === 'video') {
-                                return `<div class="gallery-item"><video src="${file.data}" controls></video></div>`;
+                            if (file.isUrl) {
+                                if (file.type === 'image') {
+                                    return `<div class="gallery-item"><img src="${file.url}" alt="${file.name}"></div>`;
+                                } else if (file.type === 'video') {
+                                    if (file.mimeType === 'video/youtube') {
+                                        const videoId = window.extractYouTubeIdPreview(file.url);
+                                        return `<div class="gallery-item youtube-embed">
+                                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                                        </div>`;
+                                    } else {
+                                        return `<div class="gallery-item"><video src="${file.url}" controls></video></div>`;
+                                    }
+                                }
+                            } else {
+                                if (file.type === 'image') {
+                                    return `<div class="gallery-item"><img src="${file.data}" alt="${file.name}"></div>`;
+                                } else if (file.type === 'video') {
+                                    return `<div class="gallery-item"><video src="${file.data}" controls></video></div>`;
+                                }
                             }
                             return '';
                         }).join('')}
@@ -412,210 +683,326 @@
                 </div>`;
             }
             
-            container.innerHTML = html;
+            document.getElementById('previewContainer').innerHTML = html;
+            
+            // AI 채팅 헤더 업데이트
+            updateChatTitle();
         }
         
-        // 필드 렌더링
-        function renderField(key, value) {
-            if (Array.isArray(value)) {
-                return renderArray(key, value);
-            } else if (typeof value === 'object' && value !== null) {
-                return renderObject(key, value);
+        // AI 채팅 제목 업데이트
+        function updateChatTitle() {
+            if (currentSiteData) {
+                const title = document.getElementById('chatTitle');
+                const businessType = currentSiteData.businessType || '사이트';
+                const businessName = currentSiteData.businessName || '';
+                title.textContent = `${businessName} AI 안내원`;
+            }
+        }
+        
+        // 시스템 프롬프트 생성
+        function getSystemPrompt() {
+            if (!currentSiteData) {
+                return '당신은 친절한 AI 안내원입니다.';
+            }
+            
+            const data = currentSiteData;
+            let prompt = `당신은 "${data.businessName}"의 전문 AI 안내원입니다.\n\n`;
+            prompt += `업종: ${data.businessType || '일반'}\n`;
+            
+            if (data.description) prompt += `소개: ${data.description}\n`;
+            if (data.phone) prompt += `전화번호: ${data.phone}\n`;
+            if (data.email) prompt += `이메일: ${data.email}\n`;
+            if (data.address) prompt += `주소: ${data.address}\n`;
+            if (data.businessHours) prompt += `영업시간: ${data.businessHours}\n`;
+            if (data.menu) prompt += `메뉴: ${data.menu} (${data.price ? data.price + '원' : ''})\n`;
+            
+            prompt += `\n당신의 역할:\n`;
+            
+            if (data.businessType === '음식점' || data.businessType === '카페') {
+                prompt += `- 예약 안내 및 접수\n`;
+                prompt += `- 메뉴 설명 및 추천\n`;
+                prompt += `- 영업시간, 주차, 결제 방법 안내\n`;
+                prompt += `- 인원수, 방문 시간, 특별 요청사항 확인\n`;
+            } else if (data.businessType === '병원' || data.businessType === '의료') {
+                prompt += `- 진료 예약 안내\n`;
+                prompt += `- 진료과목 및 의료진 소개\n`;
+                prompt += `- 방문 절차 및 준비사항 안내\n`;
+                prompt += `- 주차 및 찾아오는 길 안내\n`;
+            } else if (data.businessType === '기업' || data.businessType === '회사') {
+                prompt += `- 제품 및 서비스 소개\n`;
+                prompt += `- 문의사항 접수 및 상담\n`;
+                prompt += `- 제휴 및 협력 문의 대응\n`;
+                prompt += `- 회사 정보 및 연락처 안내\n`;
             } else {
-                return `<div class="section">
-                    <h2 class="section-title">${getFieldLabel(key)}</h2>
-                    <div class="field-value">${escapeHtml(String(value))}</div>
-                </div>`;
+                prompt += `- 일반 문의 응대\n`;
+                prompt += `- 서비스 안내\n`;
+                prompt += `- 방문 및 연락처 정보 제공\n`;
             }
+            
+            prompt += `\n항상 친절하고 전문적으로 응대하며, 위 정보를 기반으로 정확한 답변을 제공하세요.`;
+            prompt += `\n한국어로 답변하세요.`;
+            
+            return prompt;
         }
         
-        // 배열 렌더링
-        function renderArray(key, arr) {
-            if (arr.length === 0) return '';
-            
-            if (typeof arr[0] === 'object') {
-                const cards = arr.map(item => `
-                    <div class="card">
-                        ${Object.entries(item).map(([k, v]) => {
-                            if (k === 'reviews' && Array.isArray(v)) {
-                                return `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #E5E7EB;">
-                                    <strong>리뷰:</strong><br>
-                                    ${v.map(r => `⭐ ${r.rating || 5}/5 - ${r.comment || ''} (${r.author || '익명'})`).join('<br>')}
-                                </div>`;
-                            }
-                            return `<div style="margin:0.5rem 0;">
-                                <strong>${k}:</strong> ${escapeHtml(String(v))}
-                            </div>`;
-                        }).join('')}
-                    </div>
-                `).join('');
-                
-                return `<div class="section">
-                    <h2 class="section-title">${getFieldLabel(key)}</h2>
-                    <div class="card-grid">${cards}</div>
-                </div>`;
-            } else {
-                return `<div class="section">
-                    <h2 class="section-title">${getFieldLabel(key)}</h2>
-                    <div class="field-value">${arr.join(', ')}</div>
-                </div>`;
-            }
-        }
-        
-        // 객체 렌더링
-        function renderObject(key, obj) {
-            const fields = Object.entries(obj).map(([k, v]) => `
-                <div class="field-item">
-                    <span class="field-label">${k}:</span>
-                    <span class="field-value">${escapeHtml(String(v))}</span>
-                </div>
-            `).join('');
-            
-            return `<div class="section">
-                <h2 class="section-title">${getFieldLabel(key)}</h2>
-                ${fields}
-            </div>`;
-        }
-        
-        // 필드 라벨
-        function getFieldLabel(key) {
-            const labels = {
-                phone: '전화번호',
-                email: '이메일',
-                address: '주소',
-                hours: '영업시간',
-                menu: '메뉴',
-                services: '서비스',
-                doctors: '의료진',
-                products: '상품',
-                facilities: '시설',
-                reviews: '리뷰',
-                gallery: '갤러리'
-            };
-            return labels[key] || key;
-        }
-        
-        // HTML 이스케이프
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // AI 상담창 토글
-        window.toggleAIChat = function() {
-            const window = document.getElementById('aiChatWindow');
-            window.classList.toggle('active');
-        };
-        
-        // AI 채팅 메시지 추가
-        function addAIChatMessage(text, sender) {
-            const container = document.getElementById('aiChatMessages');
-            const div = document.createElement('div');
-            div.className = `ai-message ${sender}`;
-            
-            const displayText = text.replace(/\n/g, '<br>');
-            div.innerHTML = `<div class="ai-bubble">${displayText}</div>`;
-            
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-        
-        // AI 채팅 Enter 처리
-        window.handleAIChatKeypress = function(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendAIChatMessage();
-            }
-        };
-        
-        // AI 채팅 메시지 전송
-        window.sendAIChatMessage = async function() {
-            const input = document.getElementById('aiChatInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            addAIChatMessage(message, 'user');
-            input.value = '';
-            
-            chatHistory.push({ role: 'user', content: message });
-            
+        // AI 상담 응답 생성
+        async function getAIResponse(userMessage) {
             try {
-                const response = await fetch('http://100.30.14.224:3001', {
+                const messages = [
+                    { role: 'system', content: getSystemPrompt() },
+                    ...chatHistory,
+                    { role: 'user', content: userMessage }
+                ];
+                
+                const response = await fetch('http://100.30.14.224:3001/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'deepseek-chat',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: `당신은 ${currentSiteData?.businessName || '사이트'}의 AI 상담원입니다.\n\n사이트 정보:\n${JSON.stringify(currentSiteData, null, 2)}\n\n친절하고 전문적으로 응답하세요.`
-                            },
-                            ...chatHistory
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1000
+                        messages: messages,
+                        stream: false
                     })
                 });
                 
+                if (!response.ok) throw new Error('API 요청 실패');
+                
                 const data = await response.json();
-                const aiResponse = data.choices[0].message.content;
+                const aiMessage = data.choices[0].message.content;
                 
-                chatHistory.push({ role: 'assistant', content: aiResponse });
-                addAIChatMessage(aiResponse, 'assistant');
+                // 대화 히스토리에 추가
+                chatHistory.push(
+                    { role: 'user', content: userMessage },
+                    { role: 'assistant', content: aiMessage }
+                );
                 
+                return aiMessage;
             } catch (error) {
-                console.error('AI 채팅 오류:', error);
-                addAIChatMessage('죄송합니다. 오류가 발생했습니다.', 'assistant');
+                console.error('AI 응답 오류:', error);
+                return '죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
             }
-        };
+        }
         
-        // AI 채팅 파일 업로드
-        window.handleAIFileUpload = async function(event, type) {
-            const files = event.target.files;
-            if (!files || files.length === 0) return;
+        // 메시지 추가
+        function addMessage(text, isUser = false, imageData = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
             
-            for (let file of files) {
-                try {
-                    const base64 = await fileToBase64(file);
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = text.replace(/\n/g, '<br>');
+            
+            if (imageData) {
+                const img = document.createElement('img');
+                img.src = imageData;
+                img.className = 'message-image';
+                content.appendChild(img);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // 타이핑 인디케이터 표시/숨김
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const indicator = document.createElement('div');
+            indicator.className = 'chat-message';
+            indicator.id = 'typingIndicator';
+            indicator.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="typing-indicator active">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messagesContainer.appendChild(indicator);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+        
+        // 메시지 전송
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message && uploadedFiles.length === 0) return;
+            
+            // 사용자 메시지 표시
+            if (message) {
+                addMessage(message, true);
+            }
+            
+            // 파일이 있으면 표시
+            if (uploadedFiles.length > 0) {
+                uploadedFiles.forEach(file => {
+                    addMessage(`[파일 첨부: ${file.name}]`, true, file.data);
+                });
+            }
+            
+            input.value = '';
+            clearFiles();
+            
+            // 타이핑 인디케이터 표시
+            showTypingIndicator();
+            
+            // AI 응답 생성
+            const aiResponse = await getAIResponse(message);
+            
+            // 타이핑 인디케이터 숨김
+            hideTypingIndicator();
+            
+            // AI 응답 표시
+            addMessage(aiResponse, false);
+        }
+        
+        // 파일 업로드 처리
+        function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            const previewArea = document.getElementById('filePreviewArea');
+            
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedFiles.push({
+                            name: file.name,
+                            type: file.type,
+                            data: e.target.result
+                        });
+                        updateFilePreview();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
                     uploadedFiles.push({
-                        type: type,
                         name: file.name,
-                        data: base64
+                        type: file.type,
+                        data: null
                     });
-                    
-                    addAIChatMessage(`📎 ${file.name} 업로드 완료`, 'assistant');
-                } catch (error) {
-                    console.error('파일 업로드 오류:', error);
+                    updateFilePreview();
                 }
-            }
-            
-            event.target.value = '';
-        };
-        
-        // 파일을 Base64로 변환
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
             });
         }
         
-        // 사이트 수정
-        window.editSite = function() {
-            const password = prompt('사이트 수정을 위해 비밀번호를 입력하세요:');
+        // 파일 미리보기 업데이트
+        function updateFilePreview() {
+            const previewArea = document.getElementById('filePreviewArea');
             
-            // 간단한 인증 (실제로는 서버 사이드 인증 필요)
-            if (password === currentSiteData.phone || password === 'admin') {
-                alert('수정 권한이 확인되었습니다.\n\n수정 기능은 AI 상담창에서 "사이트 정보를 수정하고 싶습니다"라고 입력하세요.');
-                toggleAIChat();
-            } else {
-                alert('비밀번호가 올바르지 않습니다.');
+            if (uploadedFiles.length === 0) {
+                previewArea.classList.remove('active');
+                previewArea.innerHTML = '';
+                return;
             }
-        };
-    })();
+            
+            previewArea.classList.add('active');
+            previewArea.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-preview-item">
+                    ${file.data && file.type.startsWith('image/') 
+                        ? `<img src="${file.data}" class="file-preview-thumb">`
+                        : `<div class="file-preview-thumb" style="background:#E5E7EB;display:flex;align-items:center;justify-content:center;">📄</div>`
+                    }
+                    <span class="file-preview-name">${file.name}</span>
+                    <button class="file-remove-btn" onclick="removeFile(${index})">삭제</button>
+                </div>
+            `).join('');
+        }
+        
+        // 파일 제거
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFilePreview();
+        }
+        
+        // 파일 초기화
+        function clearFiles() {
+            uploadedFiles = [];
+            updateFilePreview();
+            document.getElementById('fileInput').value = '';
+        }
+        
+        // 채팅창 열기/닫기
+        const chatButton = document.getElementById('chatButton');
+        const chatContainer = document.getElementById('chatContainer');
+        const chatOverlay = document.getElementById('chatOverlay');
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const chatInput = document.getElementById('chatInput');
+        
+        chatButton.addEventListener('click', () => {
+            chatContainer.classList.add('open');
+            chatButton.style.display = 'none';
+        });
+        
+        chatCloseBtn.addEventListener('click', () => {
+            chatContainer.classList.remove('open', 'expanded');
+            chatOverlay.classList.remove('active');
+            chatButton.style.display = 'flex';
+        });
+        
+        chatOverlay.addEventListener('click', () => {
+            chatContainer.classList.remove('expanded');
+            chatOverlay.classList.remove('active');
+        });
+        
+        // 입력 포커스 시 확대
+        chatInput.addEventListener('focus', () => {
+            chatContainer.classList.add('expanded');
+            chatOverlay.classList.add('active');
+        });
+        
+        // 전송 버튼
+        document.getElementById('chatSendBtn').addEventListener('click', sendMessage);
+        
+        // 엔터 키 전송
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // 파일 업로드 버튼
+        document.getElementById('fileUploadBtn').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+        
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        
+        // 자동 높이 조절
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+        
+        // 페이지 로드
+        const urlParams = new URLSearchParams(window.location.search);
+        const siteId = urlParams.get('siteId');
+        
+        if (siteId) {
+            const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
+            const site = sites.find(s => s.id === siteId);
+            
+            if (site) {
+                renderSite(site);
+            } else {
+                document.getElementById('previewContainer').innerHTML = `
+                    <div class="loading">❌ 사이트를 찾을 수 없습니다.</div>
+                `;
+            }
+        } else {
+            document.getElementById('previewContainer').innerHTML = `
+                <div class="loading">❌ 사이트 ID가 없습니다.</div>
+            `;
+        }
     </script>
 </body>
 </html>
