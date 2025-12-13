@@ -43,26 +43,121 @@
         margin-bottom: 0;
     }
     
-    .search-section {
-        background: white;
-        padding: 2rem;
-        margin: 2rem 0;
-        border: 2px solid #E5E7EB;
+    .button-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 3rem 0;
     }
     
-    .search-section h2 {
-        color: #1F2937;
+    .btn-large {
+        background: #0B4DA2;
+        color: white;
+        padding: 1.5rem 3rem;
+        border: none;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 4px;
+    }
+    
+    .btn-large:hover {
+        background: #003876;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(11, 77, 162, 0.3);
+    }
+    
+    /* 모달 스타일 */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
+        backdrop-filter: blur(2px);
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-panel {
+        background: white;
+        width: 90%;
+        max-width: 800px;
+        max-height: 85vh;
+        overflow-y: auto;
+        border-radius: 8px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .modal-header {
+        background: #0B4DA2;
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .modal-header h2 {
+        margin: 0;
         font-size: 20px;
         font-weight: 700;
-        margin-bottom: 1rem;
     }
     
+    .modal-close {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+    
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-content {
+        padding: 2rem;
+    }
+    
+    /* 검색 스타일 */
     .search-input {
         width: 100%;
         padding: 0.75rem;
         border: 2px solid #E5E7EB;
         font-size: 14px;
         margin-bottom: 1rem;
+        border-radius: 4px;
     }
     
     .search-input:focus {
@@ -79,74 +174,11 @@
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s;
-        margin-right: 0.5rem;
+        border-radius: 4px;
     }
     
     .btn-primary:hover {
         background: #003876;
-    }
-    
-    .loading {
-        text-align: center;
-        padding: 2rem;
-        color: #6B7280;
-        font-size: 14px;
-    }
-    
-    .sites-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin: 2rem 0;
-    }
-    
-    .site-card {
-        background: white;
-        border: 2px solid #E5E7EB;
-        padding: 1.5rem;
-        transition: all 0.2s;
-    }
-    
-    .site-card:hover {
-        border-color: #0B4DA2;
-        box-shadow: 0 4px 12px rgba(11, 77, 162, 0.1);
-    }
-    
-    .site-card-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1F2937;
-        margin-bottom: 0.5rem;
-    }
-    
-    .site-card-info {
-        font-size: 14px;
-        color: #6B7280;
-        margin: 0.25rem 0;
-    }
-    
-    .site-card-actions {
-        margin-top: 1rem;
-        display: flex;
-        gap: 0.5rem;
-    }
-    
-    .btn-small {
-        padding: 0.5rem 1rem;
-        font-size: 13px;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-    }
-    
-    .btn-view {
-        background: #0B4DA2;
-        color: white;
-    }
-    
-    .btn-delete {
-        background: #DC2626;
-        color: white;
     }
 </style>
 
@@ -164,29 +196,87 @@
         <p><strong>이 페이지는 이 모든 웹사이트들을 하나의 AI 사이트로 통합합니다.</strong> AI 사이트는 귀하가 원하는 정보나 업무 수행을 AI 상담원이 대행합니다.</p>
     </div>
     
-    <div class="search-section">
-        <h2>🔍 AI 사이트 검색</h2>
-        <input type="text" class="search-input" id="siteSearchInput" placeholder="상호명, 성명, 고유번호, 전화번호로 검색하세요" />
-        <button class="btn-primary" onclick="searchAISite()">검색</button>
+    <div class="button-container">
+        <button class="btn-large" onclick="openGeneratorModal()">➕ 사이트 생성</button>
+        <button class="btn-large" onclick="openSearchModal()">🔍 AI 사이트 검색</button>
     </div>
-    
-    <div style="text-align: center; margin: 2rem 0;">
-        <button class="btn-primary" onclick="showMySites()">📋 내 사이트 목록</button>
-        <button class="btn-primary" onclick="loadGeneratorModule()">➕ 새 사이트 만들기</button>
-    </div>
-    
-    <div id="sitesList" style="display: none; margin: 2rem 0;"></div>
-    
-    <div id="generatorModule"></div>
-    <div id="previewModule"></div>
 </div>
+
+<!-- 사이트 생성 모달 -->
+<div id="generatorModal" class="modal-overlay" onclick="closeModalOnOverlay(event, 'generatorModal')">
+    <div class="modal-panel" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>🤖 AI 사이트 생성 상담</h2>
+            <button class="modal-close" onclick="closeModal('generatorModal')">&times;</button>
+        </div>
+        <div class="modal-content" id="generatorContent">
+            <div style="text-align: center; padding: 2rem; color: #6B7280;">
+                사이트 생성 AI를 불러오는 중...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI 사이트 검색 모달 -->
+<div id="searchModal" class="modal-overlay" onclick="closeModalOnOverlay(event, 'searchModal')">
+    <div class="modal-panel" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>🔍 AI 사이트 검색</h2>
+            <button class="modal-close" onclick="closeModal('searchModal')">&times;</button>
+        </div>
+        <div class="modal-content">
+            <p style="margin-bottom: 1rem; color: #4B5563;">상호명, 성명, 고유번호, 전화번호로 검색하세요</p>
+            <input type="text" class="search-input" id="siteSearchInput" placeholder="검색어를 입력하세요" />
+            <button class="btn-primary" onclick="searchAISite()">검색</button>
+            <div id="searchResults" style="margin-top: 2rem;"></div>
+        </div>
+    </div>
+</div>
+
+<div id="previewModule"></div>
 
 <script>
 (function() {
+    // 모달 열기/닫기
+    window.openGeneratorModal = async function() {
+        const modal = document.getElementById('generatorModal');
+        modal.classList.add('active');
+        
+        // 사이트 생성 모듈 로드 (한 번만)
+        if (!window.generatorLoaded) {
+            await loadGeneratorModule();
+            window.generatorLoaded = true;
+        }
+    };
+    
+    window.openSearchModal = function() {
+        const modal = document.getElementById('searchModal');
+        modal.classList.add('active');
+        document.getElementById('siteSearchInput').focus();
+    };
+    
+    window.closeModal = function(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('active');
+    };
+    
+    window.closeModalOnOverlay = function(event, modalId) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closeModal(modalId);
+        }
+    };
+    
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal('generatorModal');
+            closeModal('searchModal');
+        }
+    });
+    
     // 사이트 생성 모듈 로드
-    window.loadGeneratorModule = async function() {
-        const container = document.getElementById('generatorModule');
-        container.innerHTML = '<div class="loading">사이트 생성 AI를 불러오는 중...</div>';
+    async function loadGeneratorModule() {
+        const container = document.getElementById('generatorContent');
         
         try {
             const response = await fetch('contents/modules/site-generator.html');
@@ -204,37 +294,71 @@
             });
         } catch (error) {
             console.error('모듈 로드 오류:', error);
-            container.innerHTML = '<div class="loading" style="color: #DC2626;">모듈을 불러오는데 실패했습니다.</div>';
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#DC2626;">모듈을 불러오는데 실패했습니다.</div>';
         }
-    };
+    }
 
     // 사이트 검색
     window.searchAISite = function() {
         const query = document.getElementById('siteSearchInput').value.trim();
+        const resultsDiv = document.getElementById('searchResults');
+        
         if (!query) {
-            alert('검색어를 입력하세요.');
+            resultsDiv.innerHTML = '<p style="color: #DC2626;">검색어를 입력하세요.</p>';
             return;
         }
         
         const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
-        const found = sites.find(site => 
+        const found = sites.filter(site => 
             site.businessName?.includes(query) ||
             site.ownerName?.includes(query) ||
             site.businessNumber === query ||
             site.phone === query
         );
         
-        if (found) {
-            window.loadSitePreview(found);
-        } else {
-            alert('검색된 사이트가 없습니다.');
+        if (found.length === 0) {
+            resultsDiv.innerHTML = '<p style="color: #6B7280;">검색된 사이트가 없습니다.</p>';
+            return;
         }
+        
+        const html = found.map((site, index) => `
+            <div style="border: 2px solid #E5E7EB; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+                <div style="font-size: 18px; font-weight: 700; color: #1F2937; margin-bottom: 0.5rem;">
+                    ${site.businessName || '이름 없음'}
+                </div>
+                <div style="font-size: 14px; color: #6B7280; margin: 0.25rem 0;">
+                    📍 ${site.address || '주소 없음'}
+                </div>
+                <div style="font-size: 14px; color: #6B7280; margin: 0.25rem 0;">
+                    📞 ${site.phone || '연락처 없음'}
+                </div>
+                <button class="btn-primary" style="margin-top: 0.5rem;" onclick="viewSite(${sites.indexOf(site)})">
+                    사이트 보기
+                </button>
+            </div>
+        `).join('');
+        
+        resultsDiv.innerHTML = `
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 1rem;">
+                검색 결과 (${found.length}개)
+            </h3>
+            ${html}
+        `;
     };
 
+    // 사이트 보기
+    window.viewSite = function(index) {
+        const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
+        if (sites[index]) {
+            closeModal('searchModal');
+            window.loadSitePreview(sites[index]);
+        }
+    };
+    
     // 사이트 프리뷰 로드
     window.loadSitePreview = async function(siteData) {
         const container = document.getElementById('previewModule');
-        container.innerHTML = '<div class="loading">사이트를 생성하는 중...</div>';
+        container.innerHTML = '<div style="text-align:center;padding:2rem;color:#6B7280;">사이트를 생성하는 중...</div>';
         
         try {
             const response = await fetch('contents/modules/site-preview.html');
@@ -258,78 +382,8 @@
             }, 100);
         } catch (error) {
             console.error('프리뷰 로드 오류:', error);
-            container.innerHTML = '<div class="loading" style="color: #DC2626;">프리뷰를 불러오는데 실패했습니다.</div>';
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#DC2626;">프리뷰를 불러오는데 실패했습니다.</div>';
         }
-    };
-    
-    // 내 사이트 목록 표시
-    window.showMySites = function() {
-        const container = document.getElementById('sitesList');
-        const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
-        
-        if (sites.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#6B7280;">저장된 사이트가 없습니다.</div>';
-            container.style.display = 'block';
-            return;
-        }
-        
-        const grid = sites.map((site, index) => `
-            <div class="site-card">
-                <div class="site-card-title">${site.businessName || '이름 없음'}</div>
-                <div class="site-card-info">📍 ${site.address || '주소 없음'}</div>
-                <div class="site-card-info">📞 ${site.phone || '연락처 없음'}</div>
-                <div class="site-card-info">🏷️ ${getIndustryText(site.industry) || '업종 없음'}</div>
-                <div class="site-card-info">📅 ${new Date(site.createdAt).toLocaleDateString('ko-KR')}</div>
-                <div class="site-card-actions">
-                    <button class="btn-small btn-view" onclick="viewSite(${index})">보기</button>
-                    <button class="btn-small btn-delete" onclick="deleteSite(${index})">삭제</button>
-                </div>
-            </div>
-        `).join('');
-        
-        container.innerHTML = `
-            <h2 style="font-size:20px;font-weight:700;margin-bottom:1rem;">내 사이트 목록 (${sites.length}개)</h2>
-            <div class="sites-grid">${grid}</div>
-        `;
-        container.style.display = 'block';
-        container.scrollIntoView({ behavior: 'smooth' });
-    };
-    
-    // 사이트 보기
-    window.viewSite = function(index) {
-        const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
-        if (sites[index]) {
-            window.loadSitePreview(sites[index]);
-        }
-    };
-    
-    // 사이트 삭제
-    window.deleteSite = function(index) {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-        
-        const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
-        sites.splice(index, 1);
-        localStorage.setItem('aiSites', JSON.stringify(sites));
-        
-        showMySites();
-        alert('삭제되었습니다.');
-    };
-    
-    // 업종 텍스트 변환
-    window.getIndustryText = function(industry) {
-        const industries = {
-            food: '음식점',
-            retail: '소매업',
-            service: '서비스업',
-            manufacturing: '제조업',
-            education: '교육',
-            medical: '의료',
-            finance: '금융',
-            transport: '운송',
-            government: '관공서',
-            other: '기타'
-        };
-        return industries[industry] || industry;
     };
 })();
 </script>
