@@ -274,56 +274,243 @@
     
     function getSystemPrompt() {
         const collectedInfo = Object.entries(siteData)
-            .filter(([key, value]) => value !== null)
-            .map(([key, value]) => `${key}: ${value}`)
+            .filter(([key, value]) => value !== null && value !== '')
+            .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
             .join(', ');
         
-        // 업종별 필드 가이드
-        const industryFields = {
-            food: ['menu', 'cuisine', 'chef', 'parking', 'reservations'],
-            retail: ['products', 'brands', 'payment_methods', 'delivery'],
-            service: ['services', 'pricing', 'booking', 'certifications'],
-            medical: ['specialties', 'doctors', 'insurance', 'appointments'],
-            education: ['courses', 'teachers', 'tuition', 'schedule'],
-            government: ['department', 'services', 'office_hours', 'documents']
+        // 업종별 정부 표준 사이트 구조
+        const siteStructures = {
+            food: {
+                name: '음식점',
+                sections: [
+                    'hero (대표 이미지, 슬로건)',
+                    'menu (카테고리별 메뉴, 가격, 설명, 리뷰)',
+                    'facilities (주차, 룸, WiFi, 키즈존)',
+                    'chef (셰프 소개)',
+                    'gallery (매장 사진)',
+                    'hours (영업시간)',
+                    'reservations (예약 방법)',
+                    'contact (연락처, 주소)'
+                ],
+                questions: [
+                    '대표 메뉴는 무엇인가요?',
+                    '메뉴를 카테고리별로 알려주세요 (예: 회류, 구이류, 탕류)',
+                    '각 메뉴의 가격은?',
+                    '시그니처 메뉴의 특징은?',
+                    '주차 가능 대수는?',
+                    '룸이나 단체석이 있나요?',
+                    '셰프님 경력은?',
+                    '예약 필수인가요?',
+                    '주요 고객 리뷰를 알려주세요'
+                ]
+            },
+            government: {
+                name: '관공서',
+                sections: [
+                    'hero (부서명, 미션)',
+                    'departments (부서 구성)',
+                    'services (제공 서비스, 처리시간, 수수료, 이용자 평가)',
+                    'documents (필요 서류)',
+                    'hours (민원 시간)',
+                    'contact (전화, 이메일)',
+                    'faq (자주 묻는 질문)',
+                    'announcements (공지사항)'
+                ],
+                questions: [
+                    '부서의 주요 업무는?',
+                    '제공하는 민원 서비스 목록은?',
+                    '각 서비스의 처리 시간은?',
+                    '필요한 서류는?',
+                    '수수료가 있나요?',
+                    '온라인 신청 가능한가요?',
+                    '자주 묻는 질문 3가지는?',
+                    '현재 공지사항은?'
+                ]
+            },
+            medical: {
+                name: '의료기관',
+                sections: [
+                    'hero (병원명, 전문 분야)',
+                    'specialties (진료 과목)',
+                    'doctors (의료진, 경력, 전문 분야)',
+                    'services (진료 서비스, 환자 평가)',
+                    'facilities (장비, 시설)',
+                    'insurance (보험)',
+                    'hours (진료 시간)',
+                    'appointments (예약 방법)',
+                    'reviews (환자 후기)'
+                ],
+                questions: [
+                    '전문 진료 과목은?',
+                    '의료진 구성은? (이름, 전문분야, 경력)',
+                    '주요 진료 서비스는?',
+                    '보유 의료 장비는?',
+                    '가능한 보험은?',
+                    '과목별 진료 시간은?',
+                    '예약은 어떻게?',
+                    '주요 환자 후기는?'
+                ]
+            },
+            retail: {
+                name: '소매업',
+                sections: [
+                    'hero (브랜드 스토리)',
+                    'products (카테고리, 상품, 가격, 구매자 리뷰)',
+                    'brands (취급 브랜드)',
+                    'delivery (배송 정보)',
+                    'payment (결제 수단)',
+                    'gallery (매장/상품 사진)',
+                    'hours (영업시간)',
+                    'returns (교환/환불)',
+                    'contact (연락처)'
+                ],
+                questions: [
+                    '주력 상품 카테고리는?',
+                    '각 카테고리별 대표 상품은?',
+                    '상품별 가격대는?',
+                    '취급 브랜드는?',
+                    '배송 방법과 기간은?',
+                    '결제 수단은?',
+                    '교환/환불 정책은?',
+                    '베스트셀러 상품과 리뷰는?'
+                ]
+            }
         };
         
-        const additionalFields = siteData.industry ? industryFields[siteData.industry] || [] : [];
+        const currentStructure = siteData.industry ? siteStructures[siteData.industry] : null;
         
-        return `당신은 사이트 생성 AI 어시스턴트입니다. 
-사용자와 자연스럽게 대화하면서 정보를 수집하세요.
+        let prompt = `당신은 정부 공식 웹사이트 디자인 가이드를 준수하는 사이트 생성 AI입니다.
 
-【 1단계: 기본 정보 수집 】
-필수: businessType, businessName, phone, email, address, industry, description
+【 임무 】
+상담자와 대화하여 ${currentStructure ? currentStructure.name : '사이트'} 표준 웹사이트를 구축할 정보를 수집하세요.
 
-【 2단계: 업종별 맞춤 정보 수집 】
-${siteData.industry ? `
-현재 업종: ${siteData.industry}
-추가 수집 권장: ${additionalFields.join(', ')}
+【 정부 웹사이트 표준 원칙 】
+1. 접근성: 모든 정보가 명확하고 찾기 쉬워야 함
+2. 투명성: 가격, 서비스, 리뷰 등 모든 정보 공개
+3. 사용자 중심: 이용자 평가와 피드백 수집
+4. 구조화: 섹션별로 체계적으로 정보 구성
+`;
+
+        if (!siteData.industry) {
+            prompt += `
+【 1단계: 업종 파악 】
+먼저 상담자의 업종을 파악하세요:
+- 음식점 (food)
+- 관공서 (government)  
+- 의료기관 (medical)
+- 소매업 (retail)
+- 서비스업 (service)
+- 교육 (education)
+
+질문: "어떤 업종이신가요?" 또는 "무슨 일을 하시나요?"
+`;
+        } else {
+            prompt += `
+【 현재 업종: ${currentStructure.name} 】
+
+【 수집할 사이트 구조 】
+${currentStructure.sections.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+
+【 질문 가이드 】
+다음 질문들을 자연스럽게 대화로 풀어서 물어보세요:
+${currentStructure.questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+【 중요: 리뷰/평가 수집 】
+모든 상품/서비스/메뉴 항목마다 구매자/이용자 평가를 수집하세요:
+- 평가자 이름 (또는 익명)
+- 평점 (5점 만점)
+- 리뷰 내용
+- 날짜
 
 예시:
-- 음식점이면: "어떤 메뉴를 제공하시나요?", "주차 가능한가요?"
-- 관공서면: "어떤 부서인가요?", "어떤 민원을 처리하시나요?"
-- 의료면: "전문 진료과목은?", "진료 예약 방법은?"
-` : '먼저 업종(industry)을 파악하세요.'}
+"광어회에 대한 고객 리뷰가 있나요?"
+→ reviews: [{"author": "김철수", "rating": 5, "comment": "신선하고 맛있어요", "date": "2025-12"}]
+`;
+        }
+
+        prompt += `
 
 【 현재 수집된 정보 】
 ${collectedInfo || '없음'}
 
+【 JSON 구조 예시 】
+${currentStructure && currentStructure.name === '음식점' ? `
+{
+  "hero": {
+    "title": "다사랑 횟집",
+    "slogan": "제주 바다의 신선함을 그대로",
+    "image": "hero.jpg"
+  },
+  "menu": {
+    "categories": [
+      {
+        "name": "회류",
+        "items": [
+          {
+            "name": "광어회",
+            "price": "30,000원",
+            "description": "당일 제주 바다에서 잡은 광어",
+            "image": "gwangeo.jpg",
+            "reviews": [
+              {"author": "김철수", "rating": 5, "comment": "신선하고 맛있어요", "date": "2025-12-10"},
+              {"author": "이영희", "rating": 4, "comment": "가격대비 좋아요", "date": "2025-12-11"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "facilities": {
+    "parking": "가능 (10대)",
+    "rooms": "단체석 3개",
+    "wifi": "무료",
+    "kids_zone": "있음"
+  },
+  "chef": {
+    "name": "박요리",
+    "experience": "20년",
+    "specialty": "활어회"
+  }
+}` : currentStructure && currentStructure.name === '관공서' ? `
+{
+  "hero": {
+    "title": "제주시청 민원실",
+    "mission": "시민을 위한 빠르고 정확한 서비스"
+  },
+  "services": [
+    {
+      "name": "주민등록 발급",
+      "time": "즉시",
+      "fee": "무료",
+      "documents": ["신분증"],
+      "reviews": [
+        {"author": "시민A", "rating": 5, "comment": "빠르고 친절해요", "date": "2025-12"}
+      ]
+    }
+  ]
+}` : ''}
+
 【 수집 규칙 】
-1. 자연스럽고 친절하게 대화
-2. 사용자가 한 번에 여러 정보 제공 가능
-3. 업종 파악 후 → 맞춤형 질문
-4. 유연하게 추가 정보 수집 (위 목록 외에도 가능)
-5. 필수 정보 완료 시 → "완료되었습니다!"
+1. 한 번에 2-3개 질문 (너무 많으면 부담)
+2. 대화 자연스럽게 이어가기
+3. 사용자가 한 번에 여러 정보 제공 가능
+4. 섹션별로 체계적으로 수집
+5. 리뷰는 반드시 배열로 저장
+6. 가격, 시간 등 구체적 정보 수집
+7. 10-15개 이상의 질문을 통해 풍부한 정보 확보
 
 【 응답 형식 】
-일반 대화 + 정보 파악 시 마지막에 추가:
-JSON_DATA: {"field": "value", "field2": "value2", ...}
+자연스러운 대화 + 정보 파악 시 JSON 추가:
+JSON_DATA: {"field": "value", "nested": {"key": "value"}}
 
-예시:
-"네, 다사랑 횟집이시군요! 어떤 메뉴가 있나요?"
-JSON_DATA: {"businessName": "다사랑 횟집", "industry": "food"}`;
+완료 조건:
+- 기본 정보 (이름, 연락처, 주소) ✓
+- 업종별 핵심 섹션 3개 이상 ✓
+- 상품/서비스별 리뷰 수집 ✓
+→ "완료되었습니다!" 출력
+`;
+
+        return prompt;
     }
     
     function extractInfoFromResponse(aiMessage) {
