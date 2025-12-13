@@ -1,0 +1,237 @@
+<style>
+    .ai-site-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .ai-site-header {
+        background: white;
+        border: 2px solid #0B4DA2;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .ai-site-header h1 {
+        color: #000000;
+        margin: 0 0 0.5rem 0;
+        font-size: 28px;
+        font-weight: 700;
+    }
+    
+    .ai-site-header p {
+        color: #4B5563;
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    .info-panel {
+        background: #F0F4F8;
+        border-left: 4px solid #0B4DA2;
+        padding: 24px;
+        margin: 2rem 0;
+        line-height: 1.8;
+    }
+    
+    .info-panel p {
+        margin-bottom: 16px;
+        color: #1F2937;
+        font-size: 14px;
+    }
+    
+    .info-panel p:last-child {
+        margin-bottom: 0;
+    }
+    
+    .search-section {
+        background: white;
+        padding: 2rem;
+        margin: 2rem 0;
+        border: 2px solid #E5E7EB;
+    }
+    
+    .search-section h2 {
+        color: #1F2937;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #E5E7EB;
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #0B4DA2;
+    }
+    
+    .btn-primary {
+        background: #0B4DA2;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .btn-primary:hover {
+        background: #003876;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #6B7280;
+        font-size: 14px;
+    }
+    
+    #generatorModule,
+    #previewModule {
+        margin: 2rem 0;
+    }
+</style>
+
+<div class="ai-site-container">
+    <!-- 헤더 -->
+    <div class="ai-site-header">
+        <h1>🌐 AI 사이트</h1>
+        <p>모든 웹사이트를 하나의 AI 사이트로 통합합니다</p>
+    </div>
+    
+    <!-- 설명 패널 -->
+    <div class="info-panel">
+        <p>
+            <strong>제주도에는 제주항공, 제주 감귤, 제주대학교, 제주대학병원, 제주지방법원, 제주도청, 삼일공사, 다사랑 횟집, 농협, 제주은행 등 10만 여 개의 다양한 웹사이트들이 있습니다.</strong>
+        </p>
+        
+        <p>
+            귀하가 <strong>도청에 용무가 있거나, 은행 계좌에서 누군가에게 송금하거나, 항공권을 구매하거나, 여타 상품을 구매</strong>할 때, 귀하는 해당 기관이나 기업의 사이트를 방문하거나, 앱을 이용해야 합니다. <strong>법원 업무는 오직 법원 사이트에서 가능하고, 농협 뱅킹은 오직 해당 사이트에서만 가능합니다.</strong>
+        </p>
+        
+        <p>
+            <strong>이 페이지는 이 모든 웹사이트들을 하나의 AI 사이트로 통합합니다.</strong> 기존의 웹은 귀하가 정보를 찾아 다니거나, 업무를 수행하였지만, <strong>AI 사이트는 귀하가 원하는 정보나 업무 수행을 AI 상담원이 대행합니다.</strong>
+        </p>
+        
+        <p>
+            하단의 <strong>사이트 생성 패널은 귀하의 AI 사이트를 즉시 생성</strong>하고, <strong>웹에 등록</strong>합니다. 귀하의 사이트에 배치된 <strong>AI 상담원은 고객의 수요를 정확히 파악</strong>하며, 귀하의 사이트가 제공할 수 없는 물품이나 서비스는 <strong>여타 AI 사이트의 AI 상담원을 호출</strong>하여, 해당 고객과 대화를 이어가게 합니다.
+        </p>
+        
+        <p>
+            그러므로, <strong>고객은 이 사이트 저 사이트를 옮겨다닐 필요가 없습니다.</strong> 하나의 사이트에서 <strong>송금도 하고, 민사 소송 서류도 제출하고, 건강 진단도 예약하고, 도청 업무도 보며, 치킨도 주문</strong>할 수 있습니다. <strong>이 모든 과정은 사람의 개입없이 오직 AI들 간의 소통과 협력으로 진행됩니다.</strong>
+        </p>
+        
+        <p>
+            아래 양식에 <strong>귀하의 정보를 입력</strong>하십시오. 귀하의 <strong>AI 사이트가 즉시 생성</strong>되어, <strong>AI 상담창에 연동</strong>됩니다. 귀하가 생성한 AI 사이트를 보려면, <strong>사이트 검색 필드에 상호나 성명, 고유번호, 전화번호 등을 입력</strong>하십시오.
+        </p>
+    </div>
+    
+    <!-- 사이트 검색 -->
+    <div class="search-section">
+        <h2>🔍 AI 사이트 검색</h2>
+        <input type="text" class="search-input" id="siteSearchInput" placeholder="상호명, 성명, 고유번호, 전화번호로 검색하세요" />
+        <button class="btn-primary" onclick="searchAISite()">검색</button>
+    </div>
+    
+    <!-- 사이트 생성 모듈 (동적 로딩) -->
+    <div id="generatorModule"></div>
+    
+    <!-- 사이트 프리뷰 모듈 (동적 로딩) -->
+    <div id="previewModule"></div>
+</div>
+
+<script>
+(function() {
+    // 사이트 생성 모듈 로드
+    window.loadGeneratorModule = async function() {
+        const container = document.getElementById('generatorModule');
+        container.innerHTML = '<div class="loading">사이트 생성 양식을 불러오는 중...</div>';
+        
+        try {
+            const response = await fetch('contents/modules/site-generator.html');
+            if (!response.ok) throw new Error('모듈 로드 실패');
+            
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            // 스크립트 실행
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                newScript.textContent = script.textContent;
+                document.body.appendChild(newScript);
+                script.remove();
+            });
+        } catch (error) {
+            console.error('모듈 로드 오류:', error);
+            container.innerHTML = '<div class="loading" style="color: #DC2626;">모듈을 불러오는데 실패했습니다.</div>';
+        }
+    };
+
+    // 사이트 검색 기능
+    window.searchAISite = function() {
+        const query = document.getElementById('siteSearchInput').value.trim();
+        if (!query) {
+            alert('검색어를 입력하세요.');
+            return;
+        }
+        
+        // localStorage에서 검색
+        const sites = JSON.parse(localStorage.getItem('aiSites') || '[]');
+        const found = sites.find(site => 
+            site.businessName?.includes(query) ||
+            site.ownerName?.includes(query) ||
+            site.businessNumber === query ||
+            site.phone === query
+        );
+        
+        if (found) {
+            window.loadSitePreview(found);
+        } else {
+            alert('검색된 사이트가 없습니다.');
+        }
+    };
+
+    // 사이트 프리뷰 로드
+    window.loadSitePreview = async function(siteData) {
+        const container = document.getElementById('previewModule');
+        container.innerHTML = '<div class="loading">사이트를 생성하는 중...</div>';
+        
+        try {
+            const response = await fetch('contents/modules/site-preview.html');
+            if (!response.ok) throw new Error('프리뷰 모듈 로드 실패');
+            
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            // 스크립트 실행
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                newScript.textContent = script.textContent;
+                document.body.appendChild(newScript);
+                script.remove();
+            });
+            
+            // 사이트 데이터 렌더링
+            setTimeout(() => {
+                if (window.renderSitePreview) {
+                    window.renderSitePreview(siteData);
+                }
+            }, 100);
+        } catch (error) {
+            console.error('프리뷰 로드 오류:', error);
+            container.innerHTML = '<div class="loading" style="color: #DC2626;">프리뷰를 불러오는데 실패했습니다.</div>';
+        }
+    };
+
+    // 페이지 로드 시 사이트 생성 모듈 자동 로드
+    loadGeneratorModule();
+})();
+</script>
