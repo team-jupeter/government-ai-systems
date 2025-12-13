@@ -317,7 +317,9 @@
                 
                 <div class="qr-section">
                     <div class="qr-title">📱 스마트폰 연동</div>
-                    <div class="qr-code" id="qrcode"></div>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://100.30.14.224/jeju-integrated/chat/" 
+                         alt="QR Code" 
+                         style="display: block; margin: 0.5rem auto; border: 2px solid #E5E7EB; border-radius: 4px;">
                     <div class="qr-description">
                         QR 코드를 스캔하여<br>
                         스마트폰에서 승인하세요
@@ -567,22 +569,6 @@
 </script>
 
 <!-- QR Code 라이브러리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<script>
-// QR 코드 생성
-window.addEventListener('load', function() {
-    const qrcodeContainer = document.getElementById('qrcode');
-    if (qrcodeContainer && typeof QRCode !== 'undefined') {
-        new QRCode(qrcodeContainer, {
-            text: 'http://100.30.14.224/jeju-integrated/chat/',
-            width: 150,
-            height: 150,
-            colorDark: '#0B4DA2',
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.H
-        });
-        console.log('✅ QR 코드 생성 완료');
-    }
-});
-</script>
+
+
