@@ -240,21 +240,18 @@ window.GeneratorJSONParser = {
     // AI 응답에서 JSON 추출 및 파싱
     extractAndParse: function(aiMessage, siteData) {
         try {
-            // 여러 패턴으로 JSON_DATA 찾기
+            // JSON_DATA 찾기
             const patterns = [
-                /JSON_DATA:\s*(\{[\s\S]*?\})\s*$/m,           // 마지막 JSON
-                /JSON_DATA:\s*(\{[^{}]*\{[^{}]*\}[^{}]*\})/,  // 중첩 객체
-                /JSON_DATA:\s*(\{[^{}]+\})/                    // 단순 객체
+                /JSON_DATA:\s*(\{[\s\S]*?\})\s*$/m,
+                /JSON_DATA:\s*(\{[^{}]*\{[^{}]*\}[^{}]*\})/,
+                /JSON_DATA:\s*(\{[^{}]+\})/
             ];
             
             let jsonStr = null;
-            let matchedPattern = null;
-            
             for (const pattern of patterns) {
                 const match = aiMessage.match(pattern);
                 if (match && match[1]) {
                     jsonStr = match[1];
-                    matchedPattern = pattern;
                     break;
                 }
             }
@@ -264,50 +261,58 @@ window.GeneratorJSONParser = {
                 return null;
             }
             
-            // JSON 정규화
-            jsonStr = this.normalizeJSON(jsonStr);
+            console.log('📝 원본 JSON:', jsonStr);
             
-            // 파싱 시도
-            const parsedData = JSON.parse(jsonStr);
-            
-            // 키 이름 변환 (snake_case → camelCase)
-            const normalizedData = {};
-            Object.entries(parsedData).forEach(([key, value]) => {
-                const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-                normalizedData[camelKey] = value;
-            });
-            
-            // siteData 병합 (원본 대신 변환된 키 사용)
-            Object.assign(siteData, normalizedData);
-            
-            console.log('✅ 변환된 데이터:', normalizedData);
-            
-            // siteData 병합
-            
-            console.log('✅ JSON 파싱 성공:', parsedData);
-            return parsedData;
+            // 1차 시도: 원본 그대로
+            try {
+                const parsedData = JSON.parse(jsonStr);
+                console.log('✅ 1차 파싱 성공 (원본)');
+                
+                // 키 변환
+                const normalizedData = {};
+                Object.entries(parsedData).forEach(([key, value]) => {
+                    const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+                    normalizedData[camelKey] = value;
+                });
+                
+                Object.assign(siteData, normalizedData);
+                return normalizedData;
+                
+            } catch (e1) {
+                console.log('⚠️ 1차 파싱 실패, 2차 시도...');
+                
+                // 2차 시도: 정규화 후
+                try {
+                    const normalized = this.normalizeJSON(jsonStr);
+                    console.log('📝 정규화된 JSON:', normalized);
+                    
+                    const parsedData = JSON.parse(normalized);
+                    console.log('✅ 2차 파싱 성공 (정규화)');
+                    
+                    // 키 변환
+                    const normalizedData = {};
+                    Object.entries(parsedData).forEach(([key, value]) => {
+                        const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+                        normalizedData[camelKey] = value;
+                    });
+                    
+                    Object.assign(siteData, normalizedData);
+                    return normalizedData;
+                    
+                } catch (e2) {
+                    console.log('⚠️ 2차 파싱 실패, 3차 시도 (수동 파싱)...');
+                    
+                    // 3차 시도: 수동 파싱
+                    return this.manualParse(aiMessage, siteData);
+                }
+            }
             
         } catch (error) {
-            console.error('❌ JSON 파싱 실패:', error);
-            console.error('원본 메시지:', aiMessage);
-            
-            // 수동 파싱 시도
-            return this.manualParse(aiMessage, siteData);
+            console.error('❌ 모든 파싱 실패:', error);
+            return null;
         }
     },
-    
-    // JSON 정규화
-    normalizeJSON: function(jsonStr) {
-        return jsonStr
-            .replace(/'/g, '"')                    // 작은따옴표 → 큰따옴표
-            .replace(/(\w+):/g, '"$1":')          // 키에 따옴표 추가
-            .replace(/,\s*}/g, '}')               // trailing comma 제거
-            .replace(/,\s*]/g, ']')               // 배열 trailing comma 제거
-            .replace(/"\s*:\s*"([^"]*)"(?=[,}])/g, '":"$1"')  // 값 정규화
-            .trim();
-    },
-    
-    // 수동 파싱 (정규식 실패 시)
+
     manualParse: function(aiMessage, siteData) {
         try {
             // 키-값 쌍 추출
